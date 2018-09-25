@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.12)
 project(Project_SWA)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_MODULE_PATH $(PROJECT_SOURCE_DIR)/CMake)
+find_package(SDL2 REQUIRED)
 
 #------------------------------------------------------------------------------
 # Required CPM Setup - no need to modify - See: https://github.com/iauns/cpm
@@ -26,13 +28,6 @@ include(${CPM_DIR}/CPM.cmake)
 # CPM Modules
 #------------------------------------------------------------------------------
 
-# TODO: Include any modules here...
-
-#CPM_AddModule("SDL2"
-#        GIT_REPOSITORY "https://github.com/davidsiaw/SDL2.git"
-#        GIT_TAG "origin/master"
-#        )
-
 CPM_AddModule("Box2D"
         GIT_REPOSITORY "https://github.com/lb321/CPMBox2D.git"
         GIT_TAG "v2.3.1")
@@ -45,4 +40,4 @@ include_directories(Sources)
 set(SOURCE_FILES TonicEngine/HelloWorld.cpp)
 add_executable(Project_SWA ${SOURCE_FILES})
 
-target_link_libraries(Project_SWA ${CPM_LIBRARIES})
+target_link_libraries(Project_SWA ${CPM_LIBRARIES} -lmingw32 -lSDL2main -lSDL2 -mwindows)

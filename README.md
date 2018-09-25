@@ -1,1 +1,1 @@
-Project-SWA
+The official project repository for the Software Architecture Group I Minor

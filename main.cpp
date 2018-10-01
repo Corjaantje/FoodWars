@@ -1,10 +1,8 @@
-#include "Window.h"
+#include "TonicEngine/Headers/Visual/Window.h"
+#include "TonicEngine/Headers/Visual/VisualFacade.h"
+
 int main(int argc, char** argv)
 {
-    Window window("SDL Window", 640, 480);
-
-    while(!window.isClosed()){
-        window.pollEvents();
-    }
+    VisualFacade* visualFacade = new VisualFacade();
     return 0;
 }

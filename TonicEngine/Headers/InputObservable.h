@@ -10,7 +10,6 @@
 #endif //PROJECT_SWA_INPUTOBSERVABLE_H
 
 class InputObservable {
-
 public:
     InputObservable(InputSystem observer);
     void notify(const SDL_Rect &rect);
@@ -18,6 +17,6 @@ public:
 
     inline bool isClosed() const { return _closed; }
 private:
-    bool _closed = false;
     InputSystem _observer;
+    bool _closed = false;
 };

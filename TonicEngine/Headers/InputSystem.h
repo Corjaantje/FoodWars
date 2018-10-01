@@ -8,17 +8,21 @@
 #ifndef PROJECT_SWA_INPUTSYSTEM_H
 #define PROJECT_SWA_INPUTSYSTEM_H
 
-class InputSystem
-{
+class InputSystem {
 public:
     SDL_Rect _rect;
+
     InputSystem(const int &width, const int &height, const int &x, const int &y);
+    void createWindow();
+    void initializeRectangle();
     void draw() const;
     void update(const SDL_Rect &rect);
 private:
     int _width, _height;
     int _x, _y;
+
     SDL_Renderer *_renderer = nullptr;
+    SDL_Window *_win = nullptr;
 };
 
 #endif //PROJECT_SWA_INPUTSYSTEM_H

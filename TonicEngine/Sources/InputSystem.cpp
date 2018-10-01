@@ -7,24 +7,31 @@
 InputSystem::InputSystem(const int &width, const int &height, const int &x, const int &y) :
         _width(width), _height(height), _x(x), _y(y)
 {
-    SDL_Window *_win = SDL_CreateWindow("Rendering to a texture!", SDL_WINDOWPOS_CENTERED,
-                            SDL_WINDOWPOS_CENTERED, 640, 480, 0);
-    _renderer = SDL_CreateRenderer(_win, -1, SDL_RENDERER_ACCELERATED);
-
-    // Initializes the width, height, x and y position on our rectangle
-    _rect.w = _width;
-    _rect.h = _height;
-    _rect.x = _x;
-    _rect.y = _y;
+    createWindow();
+    initializeRectangle();
+    draw();
 
     // Register as observer on the observable
     InputObservable observable(*this);
-    draw();
 
     // Loop goes on until escape is pressed or you exit the program
     while(!observable.isClosed()) {
         observable.pollEvents(_rect);
     }
+}
+
+void InputSystem::createWindow() {
+    _win = SDL_CreateWindow("Rendering to a texture!", SDL_WINDOWPOS_CENTERED,
+                            SDL_WINDOWPOS_CENTERED, 640, 480, 0);
+    _renderer = SDL_CreateRenderer(_win, -1, SDL_RENDERER_ACCELERATED);
+}
+
+// Initializes the width, height, x and y position on our rectangle
+void InputSystem::initializeRectangle() {
+    _rect.w = _width;
+    _rect.h = _height;
+    _rect.x = _x;
+    _rect.y = _y;
 }
 
 void InputSystem::draw() const {

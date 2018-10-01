@@ -34,7 +34,23 @@ CPM_AddModule("Box2D"
 
 CPM_Finish()
 
-set(SOURCE_FILES TonicEngine/HelloWorld.cpp ${PROJECT_SOURCE_DIR}/TonicEngine/Facades/Audio/AudioFacade.cpp)
+set(SOURCE_FILES  )
+set(SOURCE_FILES main.cpp
+        TonicEngine/Sources/Visual/Window.cpp
+        TonicEngine/Headers/Visual/Window.h
+        TonicEngine/Facades/Visual/VisualFacade.cpp
+        TonicEngine/Headers/Visual/VisualFacade.h
+        TonicEngine/Sources/Visual/WindowManager.cpp
+        TonicEngine/Headers/Visual/WindowManager.h
+        TonicEngine/Sources/Visual/ShapeRectangle.cpp
+        TonicEngine/Headers/Visual/ShapeRectangle.h
+        TonicEngine/Sources/Visual/Colour.cpp
+        TonicEngine/Headers/Visual/Colour.h
+        TonicEngine/Sources/Visual/ShapeSprite.cpp
+        TonicEngine/Headers/Visual/ShapeSprite.h
+        ${PROJECT_SOURCE_DIR}/TonicEngine/Facades/Audio/AudioFacade.cpp
+        )
+
 add_executable(Project_SWA ${SOURCE_FILES})
 
 target_link_libraries(Project_SWA ${CPM_LIBRARIES} -lmingw32 -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)

@@ -34,7 +34,7 @@ CPM_AddModule("Box2D"
 
 CPM_Finish()
 
-set(SOURCE_FILES TonicEngine/HelloWorld.cpp)
+set(SOURCE_FILES TonicEngine/HelloWorld.cpp TonicEngine/Sources/InputSystem.cpp TonicEngine/Headers/InputSystem.h TonicEngine/Facades/InputObservable.cpp TonicEngine/Facades/InputObservable.h)
 add_executable(Project_SWA ${SOURCE_FILES})
 
 target_link_libraries(Project_SWA ${CPM_LIBRARIES} -lmingw32 -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)

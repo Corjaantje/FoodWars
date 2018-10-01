@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include "Headers/InputObservable.h"
 #include "Headers/InputSystem.h"
 
 int main(int argc, char** argv)
@@ -77,11 +78,9 @@ int main(int argc, char** argv)
         printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
     }
 
-    InputSystem inputSystem(120, 120, 100, 100);
-    while(!inputSystem.isClosed()) {
-        inputSystem.pollEvents();
-        inputSystem.draw();
-    }
+    InputSystem(120, 120, 100, 100);
+
+
     // When the world destructor is called, all bodies and joints are freed. This can
     // create orphaned pointers, so be careful about your world management.
 

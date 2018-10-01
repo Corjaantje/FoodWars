@@ -1,59 +1,46 @@
 #include "../Headers/InputSystem.h"
+#include "../Headers/InputObservable.h"
 #include <iostream>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_timer.h>
 
-InputSystem::InputSystem(int width, int height, int x, int y) :
-_width(width), _height(height), _x(x), _y(y)
+InputSystem::InputSystem(const int &width, const int &height, const int &x, const int &y) :
+        _width(width), _height(height), _x(x), _y(y)
 {
-    SDL_Window *win = SDL_CreateWindow("Rendering to a texture!", SDL_WINDOWPOS_CENTERED,
-                                       SDL_WINDOWPOS_CENTERED, 640, 480, 0);
-    _renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+    SDL_Window *_win = SDL_CreateWindow("Rendering to a texture!", SDL_WINDOWPOS_CENTERED,
+                            SDL_WINDOWPOS_CENTERED, 640, 480, 0);
+    _renderer = SDL_CreateRenderer(_win, -1, SDL_RENDERER_ACCELERATED);
+
+    // Initializes the width, height, x and y position on our rectangle
+    _rect.w = _width;
+    _rect.h = _height;
+    _rect.x = _x;
+    _rect.y = _y;
+
+    // Register as observer on the observable
+    InputObservable observable(*this);
+    draw();
+
+    // Loop goes on until escape is pressed or you exit the program
+    while(!observable.isClosed()) {
+        observable.pollEvents(_rect);
+    }
 }
 
 void InputSystem::draw() const {
-    SDL_Rect rect;
 
-    rect.w = _width;
-    rect.h = _height;
-    rect.x = _x;
-    rect.y = _y;
-
-    SDL_SetRenderDrawColor(_renderer, 200, 20, 200, 255);
-    SDL_RenderFillRect(_renderer, &rect);
-
-    SDL_RenderPresent(_renderer);
+    // Draws the background
     SDL_SetRenderDrawColor(_renderer, 0, 0, 200, 255);
     SDL_RenderClear(_renderer);
+
+    // Draws the rectangle
+    SDL_SetRenderDrawColor(_renderer, 200, 20, 200, 255);
+    SDL_RenderFillRect(_renderer, &_rect);
+    SDL_RenderPresent(_renderer);
 }
 
-void InputSystem::pollEvents() {
-    SDL_Event event;
-
-    if(SDL_PollEvent(&event)) {
-        switch(event.type) {
-            case SDL_QUIT:
-                _closed = true;
-                break;
-            case SDL_KEYDOWN:
-                switch(event.key.keysym.sym) {
-                    case SDLK_ESCAPE:
-                        _closed = true;
-                        break;
-                    case SDLK_LEFT:
-                        _x -= 10;
-                        break;
-                    case SDLK_RIGHT:
-                        _x += 10;
-                        break;
-                    case SDLK_UP:
-                        _y -= 10;
-                        break;
-                    case SDLK_DOWN:
-                        _y += 10;
-                        break;
-                }
-            default:
-                break;
-        }
-    }
+// Initializes our rectangle with the updated rectangle from the observable and redraws everything
+void InputSystem::update(const SDL_Rect &rect) {
+    _rect = rect;
+    draw();
 }

@@ -1,8 +1,0 @@
-//
-// Created by svanr on 10/1/2018.
-//
-
-#ifndef PROJECT_SWA_INPUTOBSERVABLE_H
-#define PROJECT_SWA_INPUTOBSERVABLE_H
-
-#endif //PROJECT_SWA_INPUTOBSERVABLE_H

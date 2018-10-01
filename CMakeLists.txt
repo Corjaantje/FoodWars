@@ -46,7 +46,15 @@ set(SOURCE_FILES main.cpp
         TonicEngine/Sources/Visual/Colour.cpp
         TonicEngine/Headers/Visual/Colour.h
         TonicEngine/Sources/Visual/ShapeSprite.cpp
-        TonicEngine/Headers/Visual/ShapeSprite.h)
+        TonicEngine/Headers/Visual/ShapeSprite.h
+        TonicEngine/Sources/Storage/XMLReader.cpp
+        TonicEngine/Headers/Storage/XMLReader.h
+        TonicEngine/Sources/Storage/XMLWriter.cpp
+        TonicEngine/Headers/Storage/XMLWriter.h
+        TonicEngine/Sources/Storage/MyNode.cpp
+        TonicEngine/Headers/Storage/MyNode.h
+        TonicEngine/Sources/Storage/MyDocument.cpp
+        TonicEngine/Headers/Storage/MyDocument.h TonicEngine/Sources/Storage/tinyxml2.cpp TonicEngine/Headers/Storage/tinyxml2.h)
 
 add_executable(Project_SWA ${SOURCE_FILES})
 

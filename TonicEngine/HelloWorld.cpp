@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <string>
+#include "Facades/Audio/AudioFacade.h"
 
 int main(int argc, char** argv)
 {
@@ -77,10 +79,30 @@ int main(int argc, char** argv)
     }
     SDL_Window *win = SDL_CreateWindow("Rendering to a texture!", SDL_WINDOWPOS_CENTERED,
                                        SDL_WINDOWPOS_CENTERED, 640, 480, 0);
-    system("pause");
 
-    // When the world destructor is called, all bodies and joints are freed. This can
-    // create orphaned pointers, so be careful about your world management.
+
+
+    // Sound
+    SDL_Init(SDL_INIT_AUDIO);
+    AudioFacade effect{};
+    AudioFacade background{};
+
+    // Locatie is vanaf de exe file
+    // background
+    background.load("../FoodWars/Assets/Audio/wildwest.wav");
+    background.play();
+
+    SDL_Delay(5600);
+    // oof
+    effect.load("../FoodWars/Assets/Audio/oof.wav");
+    effect.play();
+    SDL_Delay(500);
+    effect.play();
+    SDL_Delay(500);
+    effect.play();
+    SDL_Delay(500);
+    effect.play();
+    SDL_Delay(10000);
 
     return 0;
 }

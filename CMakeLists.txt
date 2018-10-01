@@ -38,7 +38,15 @@ set(SOURCE_FILES main.cpp
         TonicEngine/Sources/Visual/Window.cpp
         TonicEngine/Headers/Visual/Window.h
         TonicEngine/Facades/Visual/VisualFacade.cpp
-        TonicEngine/Headers/Visual/VisualFacade.h TonicEngine/Sources/Visual/VisualManager.cpp TonicEngine/Headers/Visual/VisualManager.h)
+        TonicEngine/Headers/Visual/VisualFacade.h
+        TonicEngine/Sources/Visual/WindowManager.cpp
+        TonicEngine/Headers/Visual/WindowManager.h
+        TonicEngine/Sources/Visual/ShapeRectangle.cpp
+        TonicEngine/Headers/Visual/ShapeRectangle.h
+        TonicEngine/Sources/Visual/Colour.cpp
+        TonicEngine/Headers/Visual/Colour.h
+        TonicEngine/Sources/Visual/ShapeSprite.cpp
+        TonicEngine/Headers/Visual/ShapeSprite.h)
 
 add_executable(Project_SWA ${SOURCE_FILES})
 

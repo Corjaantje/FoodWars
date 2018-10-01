@@ -5,48 +5,57 @@ VisualFacade::VisualFacade() {
     VisualFacade::init();
 }
 
-VisualFacade::~VisualFacade() {}
-
-bool VisualFacade::render() {}
-
-void VisualFacade::setTitle(const std::string &title) {
-
+VisualFacade::~VisualFacade() {
+    delete _windowManager;
 }
-
-void VisualFacade::setResolution(const int height, const int width) {
-
-}
-
-void VisualFacade::enableFullscreen() {
-
-}
-void VisualFacade::disablefullscreen() {
-
-}
-
-bool VisualFacade::setBackground() {
-
-}
-bool VisualFacade::removeBackground() {
-
-}
-
-bool VisualFacade::addSprite() {}
-bool VisualFacade::removeSprite() {}
-bool VisualFacade::updateSprite() {}
-
-bool VisualFacade::addRectangle() {}
-bool VisualFacade::removeRectangle() {}
-bool VisualFacade::updateRectangle() {}
-
-bool VisualFacade::addCircle() {}
-bool VisualFacade::removeCircle() {}
-bool VisualFacade::updateCircle() {}
 
 bool VisualFacade::init(){
-    Window window = Window("SDL Window", 640, 480);
+    _windowManager = new WindowManager();
+}
 
-    while(!window.isClosed()){
-        window.pollEvents();
-    }
+//Code involving the Window Manager
+void VisualFacade::openWindow() {
+    _windowManager->openWindow();
+}
+
+void VisualFacade::closeWindow() {
+    _windowManager->closeWindow();
+}
+
+void VisualFacade::setTitle(const std::string &title){
+    _windowManager->setTitle(title);
+};
+
+void VisualFacade::setResolution(const int width, const int height){
+    _windowManager->setResolution(width, height);
+};
+
+void VisualFacade::enableFullscreen(){
+    _windowManager->enableFullscreen();
+};
+
+void VisualFacade::disablefullscreen(){
+    _windowManager->disablefullscreen();
+};
+//End of code involving the Window Manager
+
+bool VisualFacade::render() {
+    _windowManager->render();
+    return true;
+}
+
+bool VisualFacade::addRectangle(ShapeRectangle rectangle){
+    _windowManager->_rectangleList.push_back(rectangle);
+};
+
+void VisualFacade::pollEvents() {
+    _windowManager->pollEvents();
+}
+
+bool VisualFacade::isWindowClosed() {
+    return _windowManager->isWindowClosed();
+}
+
+bool VisualFacade::addSprite(ShapeSprite sprite) {
+    _windowManager->_spriteList.push_back(sprite);
 }

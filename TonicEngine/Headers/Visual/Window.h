@@ -11,9 +11,12 @@ public:
     Window(const std::string &title, int width, int height);
     ~Window();
 
+    bool createWindow();
+    bool closeWindow();
+    bool setFullscreen(bool state);
     void pollEvents();
     inline bool isClosed() const { return _closed; };
-
+    SDL_Renderer* getRenderer();
 private:
     bool init();
 
@@ -23,8 +26,9 @@ private:
     int _height = SCREEN_HEIGHT;
 
     bool _closed = false;
-
+    bool _fullscreen = false;
     SDL_Window *_window = nullptr;
+    SDL_Renderer *_renderer = nullptr;
 };
 
 

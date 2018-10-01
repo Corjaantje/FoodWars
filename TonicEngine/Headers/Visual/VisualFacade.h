@@ -3,7 +3,9 @@
 
 #include <string>
 #include <SDL2/SDL.h>
+
 #include "Window.h"
+#include "WindowManager.h"
 
 class VisualFacade {
 public:
@@ -13,7 +15,10 @@ public:
     bool render();
 
     void setTitle(const std::string &title);
-    void setResolution(const int height, const int width);
+    void setResolution(const int width, const int height);
+
+    void openWindow();
+    void closeWindow();
 
     void enableFullscreen();
     void disablefullscreen();
@@ -21,19 +26,24 @@ public:
     bool setBackground();
     bool removeBackground();
 
-    bool addSprite();
+    bool addSprite(ShapeSprite sprite);
     bool removeSprite();
     bool updateSprite();
 
-    bool addRectangle();
+    bool addRectangle(ShapeRectangle rectangle);
     bool removeRectangle();
     bool updateRectangle();
 
     bool addCircle();
     bool removeCircle();
     bool updateCircle();
+
+    void pollEvents();
+    bool isWindowClosed();
 private:
     bool init();
+public:
+    WindowManager *_windowManager = nullptr;
 };
 
 

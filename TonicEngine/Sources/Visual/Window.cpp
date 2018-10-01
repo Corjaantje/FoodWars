@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Window.h"
+#include "../../Headers/Visual/Window.h"
 
 Window::Window(const std::string &title, int width, int height) : _title(title), _width(width), _height(height)
 {

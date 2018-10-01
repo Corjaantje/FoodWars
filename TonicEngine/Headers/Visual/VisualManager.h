@@ -1,0 +1,10 @@
+#ifndef PROJECT_SWA_VISUALMANAGER_H
+#define PROJECT_SWA_VISUALMANAGER_H
+
+
+class VisualManager {
+
+};
+
+
+#endif //PROJECT_SWA_VISUALMANAGER_H

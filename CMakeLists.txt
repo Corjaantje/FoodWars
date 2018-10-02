@@ -74,15 +74,15 @@ set(SOURCE_FILES main.cpp
         TonicEngine/Headers/Visual/Colour.h
         TonicEngine/Sources/Visual/ShapeSprite.cpp
         TonicEngine/Headers/Visual/ShapeSprite.h
-		TonicEngine/Headers/communication/CommunicationFacade.h 
-		TonicEngine/Headers/communication/Server.h
-		TonicEngine/Headers/communication/Client.h 
-		TonicEngine/Headers/communication/Packet.h 
-		TonicEngine/Sources/communication/Server.cpp 
-		TonicEngine/Sources/communication/Client.cpp 
-		TonicEngine/Sources/communication/Packet.cpp 
-		TonicEngine/Sources/communication/CommunicationFacade.cpp 
-		TonicEngine/Headers/communication/IConnection.h)
+        TonicEngine/Headers/Communication/CommunicationFacade.h
+        TonicEngine/Headers/Communication/Server.h
+        TonicEngine/Headers/Communication/Client.h
+        TonicEngine/Headers/Communication/Packet.h
+        TonicEngine/Sources/Communication/Server.cpp
+        TonicEngine/Sources/Communication/Client.cpp
+        TonicEngine/Sources/Communication/Packet.cpp
+        TonicEngine/Facades/Communication/CommunicationFacade.cpp
+        TonicEngine/Headers/Communication/IConnection.h)
 
 		add_executable(Project_SWA ${SOURCE_FILES})
 

@@ -74,6 +74,16 @@ set(SOURCE_FILES main.cpp
         TonicEngine/Headers/Visual/Colour.h
         TonicEngine/Sources/Visual/ShapeSprite.cpp
         TonicEngine/Headers/Visual/ShapeSprite.h
+        TonicEngine/Sources/Storage/XMLReader.cpp
+        TonicEngine/Headers/Storage/XMLReader.h
+        TonicEngine/Sources/Storage/XMLWriter.cpp
+        TonicEngine/Headers/Storage/XMLWriter.h
+        TonicEngine/Sources/Storage/MyNode.cpp
+        TonicEngine/Headers/Storage/MyNode.h
+        TonicEngine/Sources/Storage/MyDocument.cpp
+        TonicEngine/Headers/Storage/MyDocument.h 
+		TonicEngine/Sources/Storage/tinyxml2.cpp 
+		TonicEngine/Headers/Storage/tinyxml2.h
         TonicEngine/Headers/Communication/CommunicationFacade.h
         TonicEngine/Headers/Communication/Server.h
         TonicEngine/Headers/Communication/Client.h
@@ -83,7 +93,6 @@ set(SOURCE_FILES main.cpp
         TonicEngine/Sources/Communication/Packet.cpp
         TonicEngine/Facades/Communication/CommunicationFacade.cpp
         TonicEngine/Headers/Communication/IConnection.h)
-
-		add_executable(Project_SWA ${SOURCE_FILES})
+add_executable(Project_SWA ${SOURCE_FILES})
 
 target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)

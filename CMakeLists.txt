@@ -60,8 +60,30 @@ AddLib("https://github.com/lb321/CPMBox2D" Box2D '' "v2.3.1-nocpm")
 AddLib("https://github.com/lsalzman/enet" enet)
 AddLib("https://github.com/leethomason/tinyxml2" tinyxml2)
 
-#link_libraries(${LIBRARIES})
-set(SOURCE_FILES TonicEngine/HelloWorld.cpp TonicEngine/Headers/communication/CommunicationFacade.h TonicEngine/Headers/communication/Server.h TonicEngine/Headers/communication/Client.h TonicEngine/Headers/communication/Packet.h TonicEngine/Sources/communication/Server.cpp TonicEngine/Sources/communication/Client.cpp TonicEngine/Sources/communication/Packet.cpp TonicEngine/Sources/communication/CommunicationFacade.cpp TonicEngine/Headers/communication/IConnection.h)
-add_executable(Project_SWA ${SOURCE_FILES})
+
+set(SOURCE_FILES main.cpp
+        TonicEngine/Sources/Visual/Window.cpp
+        TonicEngine/Headers/Visual/Window.h
+        TonicEngine/Facades/Visual/VisualFacade.cpp
+        TonicEngine/Headers/Visual/VisualFacade.h
+        TonicEngine/Sources/Visual/WindowManager.cpp
+        TonicEngine/Headers/Visual/WindowManager.h
+        TonicEngine/Sources/Visual/ShapeRectangle.cpp
+        TonicEngine/Headers/Visual/ShapeRectangle.h
+        TonicEngine/Sources/Visual/Colour.cpp
+        TonicEngine/Headers/Visual/Colour.h
+        TonicEngine/Sources/Visual/ShapeSprite.cpp
+        TonicEngine/Headers/Visual/ShapeSprite.h
+		TonicEngine/Headers/communication/CommunicationFacade.h 
+		TonicEngine/Headers/communication/Server.h
+		TonicEngine/Headers/communication/Client.h 
+		TonicEngine/Headers/communication/Packet.h 
+		TonicEngine/Sources/communication/Server.cpp 
+		TonicEngine/Sources/communication/Client.cpp 
+		TonicEngine/Sources/communication/Packet.cpp 
+		TonicEngine/Sources/communication/CommunicationFacade.cpp 
+		TonicEngine/Headers/communication/IConnection.h)
+
+		add_executable(Project_SWA ${SOURCE_FILES})
 
 target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)

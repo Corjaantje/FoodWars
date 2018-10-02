@@ -1,4 +1,3 @@
 .idea
 cmake-build-debug
-
-TonicEngine/Libraries/
+TonicEngine/Libraries

@@ -1,4 +1,4 @@
-#include "AudioFacade.h"
+#include "../../Headers/Audio/AudioFacade.h"
 
 AudioFacade::~AudioFacade() {
     SDL_CloseAudioDevice(deviceId);

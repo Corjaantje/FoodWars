@@ -1,5 +1,5 @@
-#include "../../Headers/InputSystem.h"
-#include "../../Headers/InputObservable.h"
+#include "../../Headers/Input/InputSystem.h"
+#include "../../Headers/Input/InputObservable.h"
 #include <iostream>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_timer.h>

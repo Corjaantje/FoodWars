@@ -1,6 +1,6 @@
 #include <list>
 #include <SDL2/SDL_events.h>
-#include "../../Headers/InputObservable.h"
+#include "../../Headers/Input/InputObservable.h"
 
 // Registers the observer
 InputObservable::InputObservable(InputSystem observer) :

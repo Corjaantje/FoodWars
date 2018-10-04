@@ -60,9 +60,8 @@ AddLib("https://github.com/lb321/CPMBox2D" Box2D '' "v2.3.1-nocpm")
 AddLib("https://github.com/lsalzman/enet" enet)
 AddLib("https://github.com/leethomason/tinyxml2" tinyxml2)
 
-
-set(SOURCE_FILES main.cpp
-        TonicEngine/Sources/Visual/Window.cpp
+set(SOURCE_FILES_VISUAL         
+		TonicEngine/Sources/Visual/Window.cpp
         TonicEngine/Headers/Visual/Window.h
         TonicEngine/Facades/Visual/VisualFacade.cpp
         TonicEngine/Headers/Visual/VisualFacade.h
@@ -73,8 +72,10 @@ set(SOURCE_FILES main.cpp
         TonicEngine/Sources/Visual/Colour.cpp
         TonicEngine/Headers/Visual/Colour.h
         TonicEngine/Sources/Visual/ShapeSprite.cpp
-        TonicEngine/Headers/Visual/ShapeSprite.h
-        TonicEngine/Sources/Storage/XMLReader.cpp
+        TonicEngine/Headers/Visual/ShapeSprite.h)
+
+set(SOURCE_FILES_STORAGE 
+		TonicEngine/Sources/Storage/XMLReader.cpp
         TonicEngine/Headers/Storage/XMLReader.h
         TonicEngine/Sources/Storage/XMLWriter.cpp
         TonicEngine/Headers/Storage/XMLWriter.h
@@ -83,8 +84,10 @@ set(SOURCE_FILES main.cpp
         TonicEngine/Sources/Storage/MyDocument.cpp
         TonicEngine/Headers/Storage/MyDocument.h 
 		TonicEngine/Sources/Storage/tinyxml2.cpp 
-		TonicEngine/Headers/Storage/tinyxml2.h
-        TonicEngine/Headers/Communication/CommunicationFacade.h
+		TonicEngine/Headers/Storage/tinyxml2.h)
+		
+set(SOURCE_FILES_COMMUNICATION
+		TonicEngine/Headers/Communication/CommunicationFacade.h
         TonicEngine/Headers/Communication/Server.h
         TonicEngine/Headers/Communication/Client.h
         TonicEngine/Headers/Communication/Packet.h
@@ -92,7 +95,10 @@ set(SOURCE_FILES main.cpp
         TonicEngine/Sources/Communication/Client.cpp
         TonicEngine/Sources/Communication/Packet.cpp
         TonicEngine/Facades/Communication/CommunicationFacade.cpp
-        TonicEngine/Headers/Communication/IConnection.h)
-add_executable(Project_SWA ${SOURCE_FILES})
+        TonicEngine/Headers/Communication/IConnection.h) 
+		
+set(SOURCE_FILES main.cpp)
+		
+add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION})
 
 target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)

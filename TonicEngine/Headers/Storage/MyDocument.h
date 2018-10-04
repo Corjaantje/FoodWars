@@ -4,10 +4,19 @@
 
 #ifndef PROJECT_SWA_MYDOCUMENT_H
 #define PROJECT_SWA_MYDOCUMENT_H
+#pragma once
+#include "MyNode.h"
+class MyDocument
+{
+public:
+    MyDocument(MyNode& root);
+    ~MyDocument();
 
+    MyNode GetRoot();
+    void AddToRoot(MyNode addition);
 
-class MyDocument {
-
+private:
+    MyNode _root;
 };
 
 

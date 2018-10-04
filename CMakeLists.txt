@@ -60,8 +60,8 @@ AddLib("https://github.com/lb321/CPMBox2D" Box2D '' "v2.3.1-nocpm")
 AddLib("https://github.com/lsalzman/enet" enet)
 AddLib("https://github.com/leethomason/tinyxml2" tinyxml2)
 
-set(SOURCE_FILES_VISUAL         
-		TonicEngine/Sources/Visual/Window.cpp
+set(SOURCE_FILES_VISUAL
+	    TonicEngine/Sources/Visual/Window.cpp
         TonicEngine/Headers/Visual/Window.h
         TonicEngine/Facades/Visual/VisualFacade.cpp
         TonicEngine/Headers/Visual/VisualFacade.h
@@ -76,20 +76,28 @@ set(SOURCE_FILES_VISUAL
 set(SOURCE_FILES TonicEngine/HelloWorld.cpp TonicEngine/Sources/InputObservable.cpp TonicEngine/Headers/InputObservable.h TonicEngine/Sources/InputSystem.cpp TonicEngine/Headers/InputSystem.h)
 add_executable(Project_SWA ${SOURCE_FILES})
 
-set(SOURCE_FILES_STORAGE 
-		TonicEngine/Sources/Storage/XMLReader.cpp
+set(SOURCE_FILES_STORAGE
+        TonicEngine/Sources/Storage/XMLReader.cpp
         TonicEngine/Headers/Storage/XMLReader.h
         TonicEngine/Sources/Storage/XMLWriter.cpp
         TonicEngine/Headers/Storage/XMLWriter.h
         TonicEngine/Sources/Storage/MyNode.cpp
         TonicEngine/Headers/Storage/MyNode.h
         TonicEngine/Sources/Storage/MyDocument.cpp
-        TonicEngine/Headers/Storage/MyDocument.h 
-		TonicEngine/Sources/Storage/tinyxml2.cpp 
-		TonicEngine/Headers/Storage/tinyxml2.h)
-		
+        TonicEngine/Headers/Storage/MyDocument.h
+        TonicEngine/Sources/Storage/tinyxml2.cpp
+        TonicEngine/Headers/Storage/tinyxml2.h)
+
+set(SOURCE_FILES_AUDIO
+        TonicEngine/Headers/Audio/AudioDictionary.h
+        TonicEngine/Sources/Audio/AudioDictionary.cpp
+        TonicEngine/Headers/Audio/AudioPlayer.h
+        TonicEngine/Sources/Audio/AudioPlayer.cpp
+        TonicEngine/Facades/Audio/AudioFacade.cpp
+        TonicEngine/Headers/Audio/AudioFacade.h)
+
 set(SOURCE_FILES_COMMUNICATION
-		TonicEngine/Headers/Communication/CommunicationFacade.h
+	    TonicEngine/Headers/Communication/CommunicationFacade.h
         TonicEngine/Headers/Communication/Server.h
         TonicEngine/Headers/Communication/Client.h
         TonicEngine/Headers/Communication/Packet.h
@@ -97,10 +105,10 @@ set(SOURCE_FILES_COMMUNICATION
         TonicEngine/Sources/Communication/Client.cpp
         TonicEngine/Sources/Communication/Packet.cpp
         TonicEngine/Facades/Communication/CommunicationFacade.cpp
-        TonicEngine/Headers/Communication/IConnection.h) 
-		
+        TonicEngine/Headers/Communication/IConnection.h)
+
 set(SOURCE_FILES main.cpp)
-		
-add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION})
+
+add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO})
 
 target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)

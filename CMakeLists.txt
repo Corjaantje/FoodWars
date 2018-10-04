@@ -49,7 +49,7 @@ set(SOURCE_FILES main.cpp
         TonicEngine/Sources/Visual/ShapeSprite.cpp
         TonicEngine/Headers/Visual/ShapeSprite.h
         ${PROJECT_SOURCE_DIR}/TonicEngine/Facades/Audio/AudioFacade.cpp
-        )
+        TonicEngine/Headers/Audio/AudioDictionary.h TonicEngine/Sources/Audio/AudioDictionary.cpp TonicEngine/Headers/Audio/AudioPlayer.h TonicEngine/Sources/Audio/AudioPlayer.cpp)
 
 add_executable(Project_SWA ${SOURCE_FILES})
 

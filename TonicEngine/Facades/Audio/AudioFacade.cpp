@@ -1,16 +1,23 @@
-#include "AudioFacade.h"
+#include "../../Headers/Audio/AudioFacade.h"
+#include "../../Headers/Audio/AudioDictionary.h"
+
+AudioFacade::AudioFacade() {
+    AudioFacade::init();
+}
 
 AudioFacade::~AudioFacade() {
-    SDL_CloseAudioDevice(deviceId);
-    SDL_FreeWAV(wavBuffer);
+    delete _audioPlayer;
+    delete _audioDictionary;
 }
 
-void AudioFacade::load(const char* filename){
-    SDL_LoadWAV(filename, &wavSpec, &wavBuffer, &wavLength);
-    deviceId = SDL_OpenAudioDevice(nullptr, 0, &wavSpec, nullptr, 0);
+void AudioFacade::init(){
+    // Create AudioDictionary
+    _audioDictionary = new AudioDictionary();
+    _audioPlayer = new AudioPlayer();
 }
 
-void AudioFacade::play(){
-    SDL_QueueAudio(deviceId, wavBuffer, wavLength);
-    SDL_PauseAudioDevice(deviceId, 0);
+void AudioFacade::play(const char* filename){
+    // Get the audio path
+    const char* path = _audioDictionary->getAudio(filename);
+    _audioPlayer->playAudio(path);
 }

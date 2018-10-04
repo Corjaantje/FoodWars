@@ -1,0 +1,67 @@
+<root>
+    <weapons>
+        <!-- Very basic weapon. Should everything have ALL possible modifiers in their save?
+             I think it would be better if we run some extra checks during the loading/creating -->
+        <weapon>
+            <id>1</id>
+            <name>Pomegranate</name>
+            <type>Vegetable</type>
+            <damage>20</damage>
+        </weapon>
+        <weapon>
+            <id>2</id>
+            <name>Candypain</name>
+            <type>Sweet</type>
+            <damage>30</damage>
+        </weapon>
+    </weapons>
+
+    <textures>
+        <texture>
+            <id>1</id>
+            <name>fat cook</name>
+            <filepath>../Assets/fatty.png</filepath>
+        </texture>
+        <texture>
+            <id>2</id>
+            <name>skinny cook</name>
+            <filepath>../Assets/impasta.png</filepath>
+        </texture>
+    </textures>
+
+    <musics>
+        <music>
+            <id>1</id>
+            <name>let it go</name>
+            <filepath>../Assets/placeholder.mp3</filepath>
+        </music>
+    </musics>
+
+    <sounds>
+        <sound>
+            <id>1</id>
+            <name>Boomerang</name>
+            <filepath>../Assets/placeholder.ogg</filepath>
+        </sound>
+    </sounds>
+
+    <progression>
+        <player>
+            <id>1</id>
+            <name>Corn(é) beef</name>
+            <storyprogress>3</storyprogress>
+            <skills></skills>
+            <!-- Opslaan van geselecteerde skills, goeie manier van doen? -->
+        </player>
+    </progression>
+    <!-- Seeing as C++ does not support reflection of its own, let's just make concrete factories for all of the "groups" of things we'll have.
+         1: weapons
+         2: textures (maybe a different name)
+         3: musics
+         4: sounds
+         5: progression (maybe a different name? Also need settings, move this under player? Or separate?)
+
+         Would make more sense from the Facade, I suppose.
+         "Give me weapons." Here you go.
+    -->
+</root>

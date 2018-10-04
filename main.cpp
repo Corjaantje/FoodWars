@@ -22,25 +22,25 @@ int main(int argc, char** argv)
     }
 
 //    // Sound
+//    SDL_Init(SDL_INIT_AUDIO);
+//    AudioFacade effect{};
+//    AudioFacade background{};
 //
-//    AudioFacade* audioFacade = new AudioFacade();
-//    audioFacade->play("background");
-//    SDL_Delay(1000);
-//    SDL_Delay(1000);
-//    audioFacade->play("oof");
-//    SDL_Delay(100);
-//    audioFacade->play("oof");
-//    SDL_Delay(100);
-//    audioFacade->play("oof");
-//    SDL_Delay(1000);
-//    audioFacade->play("oof");
-//    SDL_Delay(100);
-//    audioFacade->play("oof");
-//    SDL_Delay(100);
-//    audioFacade->play("oof");
+//    // Locatie is vanaf de exe file
+//    // background
+//    background.load("../FoodWars/Assets/Audio/wildwest.wav");
+//    background.play();
 //
-//
-//
+//    SDL_Delay(5600);
+//    // oof
+//    effect.load("../FoodWars/Assets/Audio/oof.wav");
+//    effect.play();
+//    SDL_Delay(500);
+//    effect.play();
+//    SDL_Delay(500);
+//    effect.play();
+//    SDL_Delay(500);
+//    effect.play();
 //    SDL_Delay(10000);
 
     return 0;

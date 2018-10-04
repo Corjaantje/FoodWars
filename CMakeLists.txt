@@ -100,7 +100,6 @@ set(SOURCE_FILES main.cpp
         TonicEngine/Headers/Communication/IConnection.h
         TonicEngine/Facades/Audio/AudioFacade.cpp)
 		
->>>>>>> 43-audio_afspelen
 add_executable(Project_SWA ${SOURCE_FILES})
 
 target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)

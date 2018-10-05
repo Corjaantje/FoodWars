@@ -2,21 +2,24 @@
 // Created by svanr on 10/1/2018.
 //
 
-#include "InputSystem.h"
+#include <vector>
+#include <SDL2/SDL_events.h>
+#include "IObservable.h"
+#include <memory>
 
 #ifndef PROJECT_SWA_INPUTOBSERVABLE_H
 #define PROJECT_SWA_INPUTOBSERVABLE_H
 
-#endif //PROJECT_SWA_INPUTOBSERVABLE_H
-
-class InputObservable {
-public:
-    InputObservable(InputSystem observer);
-    void notify(const SDL_Rect &rect);
-    void pollEvents(SDL_Rect &rect);
-
-    inline bool isClosed() const { return _closed; }
+class InputObservable: public IObservable {
 private:
-    InputSystem _observer;
-    bool _closed = false;
+    std::vector<IObserver*> _observerList;
+public:
+    InputObservable();
+    ~InputObservable();
+
+    void registerObserver(IObserver& iObserver) override;
+    void notify(std::string key) override;
+    void pollEvents();
 };
+
+#endif //PROJECT_SWA_INPUTOBSERVABLE_H

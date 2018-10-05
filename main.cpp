@@ -1,9 +1,11 @@
 #include "TonicEngine/Headers/Visual/Window.h"
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
+#include "TonicEngine/Headers/Input/InputObservable.h"
 
 int main(int argc, char** argv)
 {
     VisualFacade* visualFacade = new VisualFacade();
+    InputObservable* inputObservable = new InputObservable();
     visualFacade->setTitle("Food Wars");
     //visualFacade->setResolution(1366, 768);
     visualFacade->setResolution(640, 480);
@@ -18,6 +20,7 @@ int main(int argc, char** argv)
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();
         visualFacade->pollEvents();
+        inputObservable->pollEvents();
     }
     return 0;
 }

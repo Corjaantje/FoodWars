@@ -1,46 +1,46 @@
-#include <list>
-#include <SDL2/SDL_events.h>
-#include "../../Headers/InputObservable.h"
+//
+// Created by svanr on 10/4/2018.
+//
+
+#include "../../Headers/Input/InputObservable.h"
+
+InputObservable::InputObservable() {
+}
+
+InputObservable::~InputObservable() {
+}
 
 // Registers the observer
-InputObservable::InputObservable(InputSystem observer) :
-    _observer(observer) { }
+void InputObservable::registerObserver(IObserver& iObserver) {
+    _observerList.push_back(&iObserver);
+}
 
-// Notifies the observer
-void InputObservable::notify(const SDL_Rect &rect) {
-    _observer.update(rect);
+// Notifies all the observers
+void InputObservable::notify(std::string key) {
+    if (!_observerList.empty()) {
+        for (int i = 0; i < _observerList.size(); i++)
+            _observerList[i]->update(key);
+    }
 }
 
 // Polls the key input events
-void InputObservable::pollEvents(SDL_Rect &rect) {
+void InputObservable::pollEvents() {
     SDL_Event event;
-
     if(SDL_PollEvent(&event)) {
         switch(event.type) {
-            // On exit
-            case SDL_QUIT:
-                _closed = true; // sets _closed to true so that we exit the loop and exit the program
-                break;
             case SDL_KEYDOWN:
                 switch(event.key.keysym.sym) {
-                    case SDLK_ESCAPE:
-                        _closed = true;
-                        break;
                     case SDLK_LEFT:
-                        rect.x -= 10;
-                        notify(rect);
+                        notify("left");
                         break;
                     case SDLK_RIGHT:
-                        rect.x += 10;
-                        notify(rect);
+                        notify("right");
                         break;
                     case SDLK_UP:
-                        rect.y -= 10;
-                        notify(rect);
+                        notify("up");
                         break;
                     case SDLK_DOWN:
-                        rect.y += 10;
-                        notify(rect);
+                        notify("down");
                         break;
                     default:
                         break;
@@ -50,3 +50,4 @@ void InputObservable::pollEvents(SDL_Rect &rect) {
         }
     }
 }
+

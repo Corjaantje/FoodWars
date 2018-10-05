@@ -73,8 +73,8 @@ set(SOURCE_FILES_VISUAL
         TonicEngine/Headers/Visual/Colour.h
         TonicEngine/Sources/Visual/ShapeSprite.cpp
         TonicEngine/Headers/Visual/ShapeSprite.h)
-set(SOURCE_FILES TonicEngine/HelloWorld.cpp TonicEngine/Sources/InputObservable.cpp TonicEngine/Headers/InputObservable.h TonicEngine/Sources/InputSystem.cpp TonicEngine/Headers/InputSystem.h)
-add_executable(Project_SWA ${SOURCE_FILES})
+
+set(SOURCE_FILES TonicEngine/HelloWorld.cpp TonicEngine/Headers/Input/InputObservable.h TonicEngine/Sources/InputSystem.cpp TonicEngine/Headers/Input/InputSystem.h)
 
 set(SOURCE_FILES_STORAGE 
 		TonicEngine/Sources/Storage/XMLReader.cpp
@@ -99,7 +99,7 @@ set(SOURCE_FILES_COMMUNICATION
         TonicEngine/Facades/Communication/CommunicationFacade.cpp
         TonicEngine/Headers/Communication/IConnection.h) 
 		
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES main.cpp TonicEngine/Headers/Input/IObservable.h TonicEngine/Headers/Input/IObserver.h TonicEngine/Sources/Input/InputObservable.cpp)
 		
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION})
 

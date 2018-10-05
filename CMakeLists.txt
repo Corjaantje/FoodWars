@@ -74,6 +74,12 @@ set(SOURCE_FILES_VISUAL
         TonicEngine/Sources/Visual/ShapeSprite.cpp
         TonicEngine/Headers/Visual/ShapeSprite.h)
 
+set(SOURCE_FILES_INPUT
+        TonicEngine/Sources/Input/InputObservable.cpp
+        TonicEngine/Headers/Input/InputObservable.h
+        TonicEngine/Headers/Input/IObservable.h
+        TonicEngine/Headers/Input/IObserver.h)
+
 set(SOURCE_FILES_STORAGE
         TonicEngine/Sources/Storage/XMLReader.cpp
         TonicEngine/Headers/Storage/XMLReader.h
@@ -107,6 +113,6 @@ set(SOURCE_FILES_COMMUNICATION
 
 set(SOURCE_FILES main.cpp)
 
-add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO})
+add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO})
 
 target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)

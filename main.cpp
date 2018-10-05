@@ -20,7 +20,7 @@ int main(int argc, char** argv)
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();
         visualFacade->pollEvents();
-        inputObservable->pollEvents();
+        //inputObservable->pollEvents();
     }
 
 //    // Sound

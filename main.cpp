@@ -10,40 +10,22 @@ int main(int argc, char** argv)
     //visualFacade->setResolution(1366, 768);
     visualFacade->setResolution(640, 480);
     visualFacade->disablefullscreen();
-    ShapeRectangle rectangle(150, 150, 0, 0, Colour(0, 255, 0, 255));
-    ShapeRectangle rectangle2(75, 75, 150, 150, Colour(0, 0, 255, 255));
+    ShapeRectangle rectangle(200, 200, 0, 0, Colour(0, 255, 0, 255));
+    ShapeRectangle rectangle2(100, 100, 150, 150, Colour(0, 0, 255, 255));
+    ShapeRectangle rectangle3(50, 50, 225, 225, Colour(255, 0, 0, 255));
+
     visualFacade->addRectangle(rectangle);
     visualFacade->addRectangle(rectangle2);
-    ShapeSprite sprite(150, 150, 200, 0, "../grass.bmp");
-    visualFacade->addSprite(sprite);
+    visualFacade->addRectangle(rectangle3);
+
+//    ShapeSprite sprite(150, 150, 200, 0, "../grass.bmp");
+//    visualFacade->addSprite(sprite);
     visualFacade->openWindow();
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();
         visualFacade->pollEvents();
         //inputObservable->pollEvents();
     }
-
-//    // Sound
-//    SDL_Init(SDL_INIT_AUDIO);
-//    AudioFacade effect{};
-//    AudioFacade background{};
-//
-//    // Locatie is vanaf de exe file
-//    // background
-//    background.load("../FoodWars/Assets/Audio/wildwest.wav");
-//    background.play();
-//
-//    SDL_Delay(5600);
-//    // oof
-//    effect.load("../FoodWars/Assets/Audio/oof.wav");
-//    effect.play();
-//    SDL_Delay(500);
-//    effect.play();
-//    SDL_Delay(500);
-//    effect.play();
-//    SDL_Delay(500);
-//    effect.play();
-//    SDL_Delay(10000);
 
     return 0;
 }

@@ -13,7 +13,6 @@ bool VisualFacade::init(){
     _windowManager = new WindowManager();
 }
 
-//Code involving the Window Manager
 void VisualFacade::openWindow() {
     _windowManager->openWindow();
 }
@@ -26,7 +25,7 @@ void VisualFacade::setTitle(const std::string &title){
     _windowManager->setTitle(title);
 };
 
-void VisualFacade::setResolution(const int width, const int height){
+void VisualFacade::setResolution(int width, int height){
     _windowManager->setResolution(width, height);
 };
 
@@ -37,11 +36,9 @@ void VisualFacade::enableFullscreen(){
 void VisualFacade::disablefullscreen(){
     _windowManager->disablefullscreen();
 };
-//End of code involving the Window Manager
 
-bool VisualFacade::render() {
+void VisualFacade::render() {
     _windowManager->render();
-    return true;
 }
 
 bool VisualFacade::addRectangle(ShapeRectangle rectangle){

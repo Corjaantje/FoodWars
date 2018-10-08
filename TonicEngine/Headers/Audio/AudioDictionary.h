@@ -14,5 +14,4 @@ private:
     std::map<std::string,std::string> *_audioMap = nullptr;
 };
 
-
 #endif //PROJECT_SWA_AUDIODICTIONARY_H

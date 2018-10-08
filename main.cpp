@@ -1,6 +1,7 @@
 #include "TonicEngine/Headers/Visual/Window.h"
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
 #include "TonicEngine/Headers/Input/InputObservable.h"
+#include "TonicEngine/Headers/Audio/AudioFacade.h"
 
 int main(int argc, char** argv)
 {
@@ -17,33 +18,18 @@ int main(int argc, char** argv)
     ShapeSprite sprite(150, 150, 200, 0, "../grass.bmp");
     visualFacade->addSprite(sprite);
     visualFacade->openWindow();
+
+    // Create AudioFacade
+    AudioFacade audioFacade;
+
+    // Play background music
+    audioFacade.play("background");
+
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();
         visualFacade->pollEvents();
         //inputObservable->pollEvents();
     }
-
-//    // Sound
-//    SDL_Init(SDL_INIT_AUDIO);
-//    AudioFacade effect{};
-//    AudioFacade background{};
-//
-//    // Locatie is vanaf de exe file
-//    // background
-//    background.load("../FoodWars/Assets/Audio/wildwest.wav");
-//    background.play();
-//
-//    SDL_Delay(5600);
-//    // oof
-//    effect.load("../FoodWars/Assets/Audio/oof.wav");
-//    effect.play();
-//    SDL_Delay(500);
-//    effect.play();
-//    SDL_Delay(500);
-//    effect.play();
-//    SDL_Delay(500);
-//    effect.play();
-//    SDL_Delay(10000);
 
     return 0;
 }

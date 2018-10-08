@@ -1,5 +1,9 @@
 #include "../../Headers/Communication/CommunicationFacade.h"
 
+/**
+ De facade om te communiceren met een ander over een netwerk. Deze facade is een snelle opzet waarmee een client en server kunnen worden aangemaakt.
+ Wanneer we echt multiplayer gaan gebruiken zal de facade nog heel erg aangepast moeten worden.
+ */
 CommunicationFacade::CommunicationFacade() = default;
 
 CommunicationFacade::~CommunicationFacade() = default;

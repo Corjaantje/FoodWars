@@ -111,7 +111,7 @@ set(SOURCE_FILES_COMMUNICATION
         TonicEngine/Facades/Communication/CommunicationFacade.cpp
         TonicEngine/Headers/Communication/IConnection.h)
 
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES main.cpp TonicEngine/Headers/Events/IEvent.h TonicEngine/Sources/Events/KeyEvent.cpp TonicEngine/Headers/Events/KeyEvent.h TonicEngine/Headers/Events/WindowEvent.h)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO})
 

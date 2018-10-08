@@ -6,6 +6,7 @@
 #define PROJECT_SWA_IOBSERVER_H
 
 #include <iostream>
+#include "../Events/IEvent.h"
 
 class IObserver{
 public:
@@ -13,7 +14,7 @@ public:
 
     }
     virtual ~IObserver() = 0;
-    virtual void update(std::string key) = 0;
+    virtual void update(IEvent keyEvent) = 0; // update for observers that contains the pressed key
 };
 
 #endif //PROJECT_SWA_IOBSERVER_H

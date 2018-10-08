@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "IObserver.h"
+#include "../Events/IEvent.h"
 
 class IObservable {
 public:
@@ -14,7 +15,7 @@ public:
 
     }
     virtual void registerObserver(IObserver& iObserver) = 0;
-    virtual void notify(std::string key) = 0;
+    virtual void notify(IEvent keyEvent) = 0;
 };
 
 #endif //PROJECT_SWA_IOBSERVABLE_H

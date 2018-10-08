@@ -22,6 +22,7 @@ bool Window::init(){
     return true;
 };
 
+//Handle the Quit event on the window. Will be replaced/improved by a Observable based event handler.
 void Window::pollEvents(){
     SDL_Event event;
     if(SDL_PollEvent(&event)){
@@ -36,6 +37,7 @@ void Window::pollEvents(){
     }
 }
 
+//TODO Find a better way to dynamically set more Window Flag settings
 bool Window::createWindow() {
     auto _flags = SDL_WINDOW_RESIZABLE;
     if(_fullscreen) {

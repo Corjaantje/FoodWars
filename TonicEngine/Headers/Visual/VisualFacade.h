@@ -12,10 +12,10 @@ public:
     VisualFacade();
     ~VisualFacade();
 
-    bool render();
+    void render();
 
     void setTitle(const std::string &title);
-    void setResolution(const int width, const int height);
+    void setResolution(int width, int height);
 
     void openWindow();
     void closeWindow();

@@ -11,13 +11,15 @@ AudioFacade::~AudioFacade() {
 }
 
 void AudioFacade::init(){
-    // Create AudioDictionary
     _audioDictionary = new AudioDictionary();
     _audioPlayer = new AudioPlayer();
 }
 
+// Plays a sound
 void AudioFacade::play(const char* filename){
-    // Get the audio path
+    // Get path with the filename
     const char* path = _audioDictionary->getAudio(filename);
+
+    // Play sound with the path
     _audioPlayer->playAudio(path);
 }

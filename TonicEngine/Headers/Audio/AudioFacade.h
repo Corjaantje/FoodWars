@@ -11,7 +11,6 @@ public:
     ~AudioFacade();
     void play(const char* filename);
 private:
-
     AudioDictionary *_audioDictionary = nullptr;
     AudioPlayer *_audioPlayer = nullptr;
     void init();

@@ -24,7 +24,7 @@ void WindowManager::setTitle(const std::string &title){
     updateWindowSettings();
 };
 
-void WindowManager::setResolution(const int width, const int height){
+void WindowManager::setResolution(int width, int height){
     _windowHeight = height;
     _windowWidth = width;
     updateWindowSettings();
@@ -40,13 +40,14 @@ void WindowManager::disablefullscreen(){
     updateWindowSettings();
 };
 
-//TODO Change this to update it, not replace if possible!
+//TODO Change this to update the window, not replace it if possible!
 void WindowManager::updateWindowSettings() {
     delete _window;
     _window = new Window(_title, _windowWidth, _windowHeight);
     _window->setFullscreen(_fullscreen);
 }
 
+//(re)Draw all the shapes, sprites etc. that are added to the WindowManager
 void WindowManager::render() {
     _renderer = _window->getRenderer();
     renderRectangles();
@@ -68,6 +69,8 @@ void WindowManager::renderRectangles() {
     SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 0);
 }
 
+//TODO This causes a massive memory leak at this point due to loading the Bitmap Image. We are aware of
+//TODO the issue and will be fixed in a few days.
 void WindowManager::renderSprites() {
     for(int i=0; i< _spriteList.size(); i++){
         ShapeSprite &shapeSprite = _spriteList[i];

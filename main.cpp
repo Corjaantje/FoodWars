@@ -2,6 +2,7 @@
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
 #include "TonicEngine/Headers/Input/InputObservable.h"
 #include "TonicEngine/Headers/Audio/AudioFacade.h"
+#include <SDL2/SDL_mixer.h>
 
 int main(int argc, char** argv)
 {
@@ -23,17 +24,25 @@ int main(int argc, char** argv)
 //    visualFacade->addSprite(sprite);
     visualFacade->openWindow();
 
-    // Create AudioFacade
-    AudioFacade audioFacade;
+    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+        std::cout << "error: " << Mix_GetError() << std::endl;
 
-    // Play background music
-    audioFacade.play("background");
+    Mix_Chunk *bgm = Mix_LoadWAV("../FoodWars/Assets/Audio/wildwest.wav");
+    Mix_Chunk *soundEffect = Mix_LoadWAV("../FoodWars/Assets/Audio/oof.wav");
+    Mix_FadeInChannel(1, soundEffect, 10, 1000);
+    Mix_PlayChannel(2, bgm, 2);
 
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();
         visualFacade->pollEvents();
         //inputObservable->pollEvents();
     }
+    /*WindowManager windowManager;
+    windowManager.openWindow();
+    nanogui::ref<Window> windowRef = nanogui::Screen(windowManager._window->getWindow(), Eigen::Vector2i(10, 10), "caption", true, false);
+    SDL_Window* window = windowManager._window->getWindow();
+    auto& button = window.add<nanogui::Button>("Plain button")
+            .withCallback([] { std::cout << "pushed!" << std::endl; });*/
 
     return 0;
 }

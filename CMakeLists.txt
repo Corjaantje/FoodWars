@@ -92,7 +92,9 @@ set(SOURCE_FILES_STORAGE
         TonicEngine/Sources/Storage/MyDocument.cpp
         TonicEngine/Headers/Storage/MyDocument.h
         TonicEngine/Sources/Storage/tinyxml2.cpp
-        TonicEngine/Headers/Storage/tinyxml2.h)
+        TonicEngine/Headers/Storage/tinyxml2.h
+        TonicEngine/Facades/Storage/StorageFacade.cpp
+        TonicEngine/Headers/Storage/StorageFacade.h)
 
 set(SOURCE_FILES_AUDIO
         TonicEngine/Headers/Audio/AudioPlayer.h

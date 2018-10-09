@@ -2,8 +2,9 @@ cmake_minimum_required(VERSION 3.12)
 project(Project_SWA)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_MODULE_PATH $(PROJECT_SOURCE_DIR)/CMake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 find_package(SDL2 REQUIRED)
+find_package(SDL2_mixer REQUIRED)
 
 set (LIB_DIR "${PROJECT_SOURCE_DIR}/TonicEngine/Libraries")
 set (DEPENDENCIES "")
@@ -60,8 +61,6 @@ endmacro()
 AddLib("https://github.com/lb321/CPMBox2D" Box2D '' "v2.3.1-nocpm")
 AddLib("https://github.com/lsalzman/enet" enet)
 AddLib("https://github.com/leethomason/tinyxml2" tinyxml2)
-#AddLib("https://github.com/dalerank/nanogui-sdl.git" NanoGUI-SDL)
-AddLib("https://github.com/wheybags/SDL_mixer-cmake" SDL_mixer)
 
 set(SOURCE_FILES_VISUAL
 	    TonicEngine/Sources/Visual/Window.cpp
@@ -130,4 +129,4 @@ set(SOURCE_FILES main.cpp)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 
-target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2_mixer -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)
+target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -mwindows -static-libgcc -static-libstdc++)

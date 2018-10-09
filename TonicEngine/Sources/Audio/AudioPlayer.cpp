@@ -52,13 +52,13 @@ void AudioPlayer::playMusic(const char *path, int amountOfLoops) {
     audio = nullptr;
 }
 
-void AudioPlayer::playEffect(int channelNumber, const char *path, int amountOfLoops) {
+void AudioPlayer::playEffect(const char *path) {
 
     // Load sound effect
     Mix_Chunk *audio = Mix_LoadWAV(path);
 
     // Play the sound effect
-    if(Mix_PlayChannel(channelNumber, audio, amountOfLoops) == -1)
+    if(Mix_PlayChannel(-1, audio, 0) == -1)
     {
         // Show error if assigned channel isn't available
         std::cerr << "Audio channel not available.\n";

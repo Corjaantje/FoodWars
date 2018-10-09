@@ -37,12 +37,12 @@ void AudioFacade::playMusic(const char* filename, int amountOfLoops){
 }
 
 // Plays a sound effect
-void AudioFacade::playEffect(int channelNumber, const char* filename, int amountOfLoops){
+void AudioFacade::playEffect(const char* filename){
     // Get path with the filename
     const char* path = getAudio(filename);
 
     // Play sound with the path
-    _audioPlayer->playEffect(channelNumber, path, amountOfLoops);
+    _audioPlayer->playEffect(path);
 }
 
 // Adds a sound to the audioList

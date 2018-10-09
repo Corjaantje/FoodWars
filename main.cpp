@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     for(int i = 0; i < 30; i++)
     {
         // Use channel -1 (auto assign channel) for sound effects
-        audioFacade.playEffect(-1, "oof", 0);
+        audioFacade.playEffect("oof");
 
         // Delay isn't needed when playEffect calls are made on other occasions, this is just a demo
         SDL_Delay(100);

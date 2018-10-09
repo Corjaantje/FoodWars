@@ -11,7 +11,7 @@ public:
     void setEffectVolume(int volume);
     void setMusicVolume(int volume);
     void playMusic(const char *path, int amountOfLoops);
-    void playEffect(int channelNumber, const char *path, int amountOfLoops);
+    void playEffect(const char *path);
 private:
     bool init();
 };

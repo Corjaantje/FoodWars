@@ -13,7 +13,7 @@ public:
     void setEffectVolume(int volume);
     void setMusicVolume(int volume);
     void playMusic(const char* filename, int amountOfLoops);
-    void playEffect(int channelNumber, const char* filename, int amountOfLoops);
+    void playEffect(const char* filename);
     void addAudio(const char* key,const char* path);
 private:
     std::map<std::string, std::string> *_audioMap = nullptr;

@@ -24,22 +24,50 @@ int main(int argc, char** argv)
 //    visualFacade->addSprite(sprite);
     visualFacade->openWindow();
 
-    // Create AudioFacade
+
+
+
+    // Create audioFacade
     AudioFacade audioFacade;
 
-    // Add Audio to _audioMap in the audiofacade
+    // Set volumes
+    audioFacade.setMusicVolume(5);
+    audioFacade.setEffectVolume(10);
+
+    // Add Audio to _audioMap in the audioFacade
     audioFacade.addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
     audioFacade.addAudio("background", "../FoodWars/Assets/Audio/wildwest.wav");
 
     // Play background music
-    audioFacade.play("background");
-    audioFacade.play("oof");
+    audioFacade.playMusic("background", -1);
+
+    // Play oofs
+    for(int i = 0; i < 30; i++)
+    {
+        // Use channel -1 (auto assign channel) for sound effects
+        audioFacade.playEffect(-1, "oof", 0);
+
+        // Delay isn't needed when playEffect calls are made on other occasions, this is just a demo
+        SDL_Delay(100);
+    }
+
+    // Change background music
+    audioFacade.playMusic("oof", -1);
+
+
+
 
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();
         visualFacade->pollEvents();
         //inputObservable->pollEvents();
     }
+    /*WindowManager windowManager;
+    windowManager.openWindow();
+    nanogui::ref<Window> windowRef = nanogui::Screen(windowManager._window->getWindow(), Eigen::Vector2i(10, 10), "caption", true, false);
+    SDL_Window* window = windowManager._window->getWindow();
+    auto& button = window.add<nanogui::Button>("Plain button")
+            .withCallback([] { std::cout << "pushed!" << std::endl; });*/
 
 
 

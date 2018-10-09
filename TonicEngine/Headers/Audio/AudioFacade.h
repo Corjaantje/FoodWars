@@ -10,10 +10,12 @@ class AudioFacade {
 public:
     AudioFacade();
     ~AudioFacade();
-    void play(const char* filename);
+    void setEffectVolume(int volume);
+    void setMusicVolume(int volume);
+    void playMusic(const char* filename, int amountOfLoops);
+    void playEffect(int channelNumber, const char* filename, int amountOfLoops);
     void addAudio(const char* key,const char* path);
 private:
-    //AudioDictionary *_audioDictionary = nullptr;
     std::map<std::string, std::string> *_audioMap = nullptr;
     AudioPlayer *_audioPlayer = nullptr;
     void init();

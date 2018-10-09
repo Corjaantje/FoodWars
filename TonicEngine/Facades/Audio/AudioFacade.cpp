@@ -12,17 +12,37 @@ AudioFacade::~AudioFacade() {
 void AudioFacade::init(){
     // Create a new map
     _audioMap = new std::map<std::string,std::string>();
-    //_audioDictionary = new AudioDictionary();
+
+    // Create a new AudioPlayer
     _audioPlayer = new AudioPlayer();
 }
 
-// Plays a sound
-void AudioFacade::play(const char* filename){
+// Sets the music volume
+void AudioFacade::setMusicVolume(int volume) {
+    _audioPlayer->setMusicVolume(volume);
+}
+
+// Sets the sound effect volume
+void AudioFacade::setEffectVolume(int volume) {
+    _audioPlayer->setEffectVolume(volume);
+}
+
+// Plays Music
+void AudioFacade::playMusic(const char* filename, int amountOfLoops){
     // Get path with the filename
     const char* path = getAudio(filename);
 
     // Play sound with the path
-    _audioPlayer->playAudio(path);
+    _audioPlayer->playMusic(path, amountOfLoops);
+}
+
+// Plays a sound effect
+void AudioFacade::playEffect(int channelNumber, const char* filename, int amountOfLoops){
+    // Get path with the filename
+    const char* path = getAudio(filename);
+
+    // Play sound with the path
+    _audioPlayer->playEffect(channelNumber, path, amountOfLoops);
 }
 
 // Adds a sound to the audioList

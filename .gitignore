@@ -1,3 +1,5 @@
 .idea
 cmake-build-debug
-TonicEngine/Libaries/
+
+\.DS_Store
+TonicEngine/Libraries/

@@ -111,8 +111,20 @@ set(SOURCE_FILES_COMMUNICATION
         TonicEngine/Facades/Communication/CommunicationFacade.cpp
         TonicEngine/Headers/Communication/IConnection.h)
 
+set(SOURCE_FILES_COLLISION
+        TonicEngine/Headers/Collision/Vector2D.h
+        TonicEngine/Sources/Collision/Vector2D.cpp
+        TonicEngine/Headers/Collision/Shape.h
+        TonicEngine/Sources/Collision/Shape.cpp
+        TonicEngine/Headers/Collision/Rectangle.h
+        TonicEngine/Sources/Collision/Rectangle.cpp
+        TonicEngine/Headers/Collision/Circle.h
+        TonicEngine/Sources/Collision/Circle.cpp
+        TonicEngine/Facades/Collision/CollisionFacade.cpp
+        TonicEngine/Headers/Collision/CollisionFacade.h)
+
 set(SOURCE_FILES main.cpp)
 
-add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO})
+add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 
 target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)

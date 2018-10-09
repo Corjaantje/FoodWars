@@ -3,6 +3,7 @@
 #include "TonicEngine/Headers/Input/InputObservable.h"
 #include "TonicEngine/Headers/Audio/AudioFacade.h"
 
+
 int main(int argc, char** argv)
 {
     VisualFacade* visualFacade = new VisualFacade();
@@ -26,14 +27,21 @@ int main(int argc, char** argv)
     // Create AudioFacade
     AudioFacade audioFacade;
 
+    // Add Audio to _audioMap in the audiofacade
+    audioFacade.addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
+    audioFacade.addAudio("background", "../FoodWars/Assets/Audio/wildwest.wav");
+
     // Play background music
     audioFacade.play("background");
+    audioFacade.play("oof");
 
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();
         visualFacade->pollEvents();
         //inputObservable->pollEvents();
     }
+
+
 
     return 0;
 }

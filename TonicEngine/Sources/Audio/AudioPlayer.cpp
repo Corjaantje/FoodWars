@@ -1,6 +1,8 @@
 #include <iostream>
 #include "../../Headers/Audio/AudioPlayer.h"
 
+
+
 AudioPlayer::AudioPlayer() {
     AudioPlayer::init();
 }
@@ -19,7 +21,7 @@ bool AudioPlayer::init() {
 }
 
 void AudioPlayer::playAudio(const char *path) {
-    // Load audio file
+   // Load audio file
     SDL_LoadWAV(path, &wavSpec, &wavBuffer, &wavLength);
 
     // Get default audio device

@@ -4,8 +4,15 @@
 
 #include "../../Headers/Storage/StorageFacade.h"
 
-StorageFacade::StorageFacade() {
+// TODO: Check if either filepath has no corresponding file to read?
+// Requires the correct filepaths on initialization
+StorageFacade::StorageFacade(std::string system, std::string user) {
+    XMLDocument doc;
+    doc.LoadFile(system.c_str());
+    _systemFile = _reader.ReadXMLFile(doc);
 
+    doc.LoadFile(user.c_str());
+    _userFile = _reader.ReadXMLFile(doc);
 }
 
 StorageFacade::~StorageFacade() {
@@ -64,4 +71,12 @@ void StorageFacade::saveUserData() {
 
 void StorageFacade::saveCustomWeapons() {
 
+}
+
+MyDocument StorageFacade::getSystemXML() const{
+    return *_systemFile;
+}
+
+MyDocument StorageFacade::getUserXML() const{
+    return *_userFile;
 }

@@ -38,7 +38,7 @@ macro(AddLib repo name)
                     OUTPUT_QUIET ERROR_QUIET)
         else()
             execute_process(
-                    COMMAND "${GIT_EXECUTABLE}" clone ${repo} ${LIB_DIR_NAME}
+                    COMMAND "${GIT_EXECUTABLE}" clone --recursive ${repo} ${LIB_DIR_NAME}
                     RESULT_VARIABLE error_code
                     OUTPUT_QUIET ERROR_QUIET)
         endif()
@@ -48,6 +48,7 @@ macro(AddLib repo name)
     endif()
     include_directories(${LIB_DIR_NAME}${subdir})
     include_directories(${LIB_DIR_NAME}${subdir}/include)
+    include_directories(${LIB_DIR_NAME}${subdir}/include/nanogui)
     add_subdirectory(${LIB_DIR_NAME}${subdir})
     #link_libraries(${LIB_DIR_NAME}${subdir})
     set (DEPENDENCIES ${DEPENDENCIES} ${name})
@@ -59,6 +60,8 @@ endmacro()
 AddLib("https://github.com/lb321/CPMBox2D" Box2D '' "v2.3.1-nocpm")
 AddLib("https://github.com/lsalzman/enet" enet)
 AddLib("https://github.com/leethomason/tinyxml2" tinyxml2)
+#AddLib("https://github.com/dalerank/nanogui-sdl.git" NanoGUI-SDL)
+AddLib("https://github.com/wheybags/SDL_mixer-cmake" SDL_mixer)
 
 set(SOURCE_FILES_VISUAL
 	    TonicEngine/Sources/Visual/Window.cpp
@@ -127,4 +130,4 @@ set(SOURCE_FILES main.cpp)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 
-target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)
+target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2_mixer -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)

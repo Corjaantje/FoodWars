@@ -1,6 +1,7 @@
 #include "TonicEngine/Headers/Visual/Window.h"
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
 #include "TonicEngine/Headers/Input/InputObservable.h"
+#include "TonicEngine/Headers/Audio/AudioFacade.h"
 
 int main(int argc, char** argv)
 {
@@ -21,6 +22,13 @@ int main(int argc, char** argv)
 //    ShapeSprite sprite(150, 150, 200, 0, "../grass.bmp");
 //    visualFacade->addSprite(sprite);
     visualFacade->openWindow();
+
+    // Create AudioFacade
+    AudioFacade audioFacade;
+
+    // Play background music
+    audioFacade.play("background");
+
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();
         visualFacade->pollEvents();

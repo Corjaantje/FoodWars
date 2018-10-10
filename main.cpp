@@ -41,18 +41,8 @@ int main(int argc, char** argv)
     // Play background music
     audioFacade.playMusic("background", -1);
 
-    // Play oofs
-    for(int i = 0; i < 30; i++)
-    {
-        // Use channel -1 (auto assign channel) for sound effects
-        audioFacade.playEffect("oof");
-
-        // Delay isn't needed when playEffect calls are made on other occasions, this is just a demo
-        SDL_Delay(100);
-    }
-
-    // Change background music
-    audioFacade.playMusic("oof", -1);
+    // Play a sound effect
+    audioFacade.playEffect("oof");
 
 
 

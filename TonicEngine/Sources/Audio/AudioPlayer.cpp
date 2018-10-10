@@ -8,6 +8,7 @@ AudioPlayer::AudioPlayer() {
 }
 
 AudioPlayer::~AudioPlayer() {
+
     Mix_Quit();
 }
 
@@ -62,10 +63,6 @@ void AudioPlayer::playMusic(const char *path, int amountOfLoops) {
 
     // Play music
     Mix_PlayMusic(audio, amountOfLoops);
-
-    // Cleanup
-    path = nullptr;
-    audio = nullptr;
 }
 
 void AudioPlayer::playEffect(const char *path) {
@@ -79,9 +76,5 @@ void AudioPlayer::playEffect(const char *path) {
         // Show error if assigned channel isn't available
         std::cerr << "Audio channel not available.\n";
     }
-
-    // Cleanup
-    path = nullptr;
-    audio = nullptr;
 }
 

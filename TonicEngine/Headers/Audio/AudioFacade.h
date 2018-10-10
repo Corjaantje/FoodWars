@@ -10,6 +10,8 @@ class AudioFacade {
 public:
     AudioFacade();
     ~AudioFacade();
+    int getEffectVolume();
+    int getMusicVolume();
     void setEffectVolume(int volume);
     void setMusicVolume(int volume);
     void playMusic(const char* filename, int amountOfLoops);

@@ -8,11 +8,15 @@ class AudioPlayer {
 public:
     AudioPlayer();
     ~AudioPlayer();
+    int getEffectVolume();
+    int getMusicVolume();
     void setEffectVolume(int volume);
     void setMusicVolume(int volume);
     void playMusic(const char *path, int amountOfLoops);
     void playEffect(const char *path);
 private:
+    int _effectVolume;
+    int _musicVolume;
     bool init();
 };
 

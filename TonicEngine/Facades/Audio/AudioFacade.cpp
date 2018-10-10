@@ -17,6 +17,16 @@ void AudioFacade::init(){
     _audioPlayer = new AudioPlayer();
 }
 
+// Returns the sound effect volume
+int AudioFacade::getEffectVolume(){
+    return _audioPlayer->getEffectVolume();
+}
+
+// Returns the music volume
+int AudioFacade::getMusicVolume(){
+    return _audioPlayer->getMusicVolume();
+}
+
 // Sets the music volume
 void AudioFacade::setMusicVolume(int volume) {
     _audioPlayer->setMusicVolume(volume);

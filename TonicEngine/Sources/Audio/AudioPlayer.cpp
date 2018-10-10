@@ -26,16 +26,32 @@ bool AudioPlayer::init() {
     Mix_AllocateChannels(16);
 }
 
+// Returns the sound effect volume
+int AudioPlayer::getEffectVolume(){
+    return _effectVolume;
+}
+
+// Returns the music volume
+int AudioPlayer::getMusicVolume(){
+    return _musicVolume;
+}
+
 // Sets the music volume
 void AudioPlayer::setMusicVolume(int volume) {
-    if(volume > 0 && volume < 128)
+    if(volume > -1 && volume < 129)
+    {
+        _musicVolume = volume;
         Mix_VolumeMusic(volume);
+    }
 }
 
 // Sets the sound effect volume
 void AudioPlayer::setEffectVolume(int volume) {
-    if(volume > 0 && volume < 128)
-    Mix_Volume(-1, volume);
+    if(volume > -1 && volume < 129)
+    {
+        _effectVolume = volume;
+        Mix_Volume(-1, volume);
+    }
 }
 
 // Plays Music

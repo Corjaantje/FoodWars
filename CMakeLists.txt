@@ -2,8 +2,9 @@ cmake_minimum_required(VERSION 3.12)
 project(Project_SWA)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_MODULE_PATH $(PROJECT_SOURCE_DIR)/CMake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 find_package(SDL2 REQUIRED)
+find_package(SDL2_mixer REQUIRED)
 
 set (LIB_DIR "${PROJECT_SOURCE_DIR}/TonicEngine/Libraries")
 set (DEPENDENCIES "")
@@ -38,7 +39,7 @@ macro(AddLib repo name)
                     OUTPUT_QUIET ERROR_QUIET)
         else()
             execute_process(
-                    COMMAND "${GIT_EXECUTABLE}" clone ${repo} ${LIB_DIR_NAME}
+                    COMMAND "${GIT_EXECUTABLE}" clone --recursive ${repo} ${LIB_DIR_NAME}
                     RESULT_VARIABLE error_code
                     OUTPUT_QUIET ERROR_QUIET)
         endif()
@@ -48,6 +49,7 @@ macro(AddLib repo name)
     endif()
     include_directories(${LIB_DIR_NAME}${subdir})
     include_directories(${LIB_DIR_NAME}${subdir}/include)
+    include_directories(${LIB_DIR_NAME}${subdir}/include/nanogui)
     add_subdirectory(${LIB_DIR_NAME}${subdir})
     #link_libraries(${LIB_DIR_NAME}${subdir})
     set (DEPENDENCIES ${DEPENDENCIES} ${name})
@@ -95,8 +97,6 @@ set(SOURCE_FILES_STORAGE
         TonicEngine/Headers/Storage/StorageFacade.h)
 
 set(SOURCE_FILES_AUDIO
-        TonicEngine/Headers/Audio/AudioDictionary.h
-        TonicEngine/Sources/Audio/AudioDictionary.cpp
         TonicEngine/Headers/Audio/AudioPlayer.h
         TonicEngine/Sources/Audio/AudioPlayer.cpp
         TonicEngine/Facades/Audio/AudioFacade.cpp
@@ -129,4 +129,4 @@ set(SOURCE_FILES main.cpp)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 
-target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)
+target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -mwindows -static-libgcc -static-libstdc++)

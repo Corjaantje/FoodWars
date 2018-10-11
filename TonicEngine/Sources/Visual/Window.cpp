@@ -61,7 +61,8 @@ bool Window::createWindow() {
 }
 
 bool Window::closeWindow() {
-    SDL_DestroyWindow(_window);
+    if(!_closed)
+        SDL_DestroyWindow(_window);
     _closed = true;
 }
 

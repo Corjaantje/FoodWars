@@ -61,6 +61,7 @@ endmacro()
 AddLib("https://github.com/lb321/CPMBox2D" Box2D '' "v2.3.1-nocpm")
 AddLib("https://github.com/lsalzman/enet" enet)
 AddLib("https://github.com/leethomason/tinyxml2" tinyxml2)
+#AddLib("https://github.com/dalerank/nanogui-sdl" NanoGUI-SDL)
 
 set(SOURCE_FILES_VISUAL
 	    TonicEngine/Sources/Visual/Window.cpp
@@ -125,7 +126,7 @@ set(SOURCE_FILES_COLLISION
         TonicEngine/Facades/Collision/CollisionFacade.cpp
         TonicEngine/Headers/Collision/CollisionFacade.h)
 
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES main.cpp FoodWars/Headers/IScreen.h FoodWars/Headers/ScreenState.h FoodWars/Headers/MainMenuScreen.h FoodWars/Sources/ScreenState.cpp FoodWars/Headers/ScreenPtr.h FoodWars/Sources/ScreenPtr.cpp TonicEngine/Facades/IFacade.h FoodWars/Sources/MainMenuScreen.cpp FoodWars/Headers/OtherMenuScreen.h FoodWars/Sources/OtherMenuScreen.cpp)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 

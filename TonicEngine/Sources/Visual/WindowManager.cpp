@@ -49,6 +49,7 @@ void WindowManager::updateWindowSettings() {
 
 //(re)Draw all the shapes, sprites etc. that are added to the WindowManager
 void WindowManager::render() {
+    SDL_RenderClear(_renderer);
     _renderer = _window->getRenderer();
     renderRectangles();
     renderSprites();

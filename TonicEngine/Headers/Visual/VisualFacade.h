@@ -6,8 +6,9 @@
 
 #include "Window.h"
 #include "WindowManager.h"
+#include "../../Facades/IFacade.h"
 
-class VisualFacade {
+class VisualFacade : public IFacade {
 public:
     VisualFacade();
     ~VisualFacade();

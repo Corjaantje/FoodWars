@@ -19,4 +19,3 @@ std::unique_ptr<IConnection> CommunicationFacade::createServer(std::string ip, i
 Packet CommunicationFacade::createPacket(std::string content) {
     return Packet(content);
 }
-

@@ -1,3 +1,4 @@
+#include <iostream>
 #include "../../Headers/Visual/VisualFacade.h"
 #include "../../Headers/Visual/Window.h"
 
@@ -6,6 +7,7 @@ VisualFacade::VisualFacade() {
 }
 
 VisualFacade::~VisualFacade() {
+    std::cout << "Delete window manager" << std::endl;
     delete _windowManager;
 }
 
@@ -55,4 +57,8 @@ bool VisualFacade::isWindowClosed() {
 
 bool VisualFacade::addSprite(ShapeSprite sprite) {
     _windowManager->_spriteList.push_back(sprite);
+}
+
+bool VisualFacade::removeRectangle() {
+    _windowManager->_rectangleList.clear();
 }

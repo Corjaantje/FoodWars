@@ -12,7 +12,7 @@ class EntityManager {
 private:
     int _lowestUnassignedEntityId;
     list<int> _entities;
-    map<std::string, vector<Component>> _componentsByClass;
+    map<std::string, map<int, Component>> _componentsByClass;
 public:
     EntityManager();
     ~EntityManager();
@@ -20,6 +20,7 @@ public:
     void addComponentToEntity(int entity, Component component);
     template <typename Component> void removeComponentFromEntity(Component component, int entityId);
     template <typename Component> Component getComponent(int entityId);
+    template <typename Component> map<int, Component> getAllEntities(Component component);
     void removeEntity(int entityId);
 };
 

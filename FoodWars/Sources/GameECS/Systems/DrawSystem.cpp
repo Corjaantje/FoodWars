@@ -9,5 +9,4 @@ DrawSystem::~DrawSystem() {
 
 }
 void DrawSystem::update(double dt) {
-
 }

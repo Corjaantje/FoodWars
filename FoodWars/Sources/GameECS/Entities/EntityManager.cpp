@@ -4,8 +4,7 @@ EntityManager::EntityManager() {
     _lowestUnassignedEntityId = -1;
 }
 
-EntityManager::~EntityManager() {
-}
+EntityManager::~EntityManager() = default;
 
 int EntityManager::createEntity(Component components[], int size) {
     _entities.push_back(_lowestUnassignedEntityId++);
@@ -17,7 +16,7 @@ int EntityManager::createEntity(Component components[], int size) {
 void EntityManager::addComponentToEntity(int entity, Component component) {
     std::string componentType = typeid(component).name();
     if(!_componentsByClass.count(componentType)){
-        _componentsByClass[componentType] = vector<Component>();
+        _componentsByClass[componentType] = map<int, Component>();
     }
     _componentsByClass[componentType][entity] = component;
 }
@@ -34,11 +33,21 @@ template <typename Component> Component EntityManager::getComponent(int entityId
         return nullptr;
 }
 
+template <typename Component> map<int, Component> EntityManager::getAllEntities(Component component) {
+    std::string className = typeid(component).name();
+    if(_componentsByClass.count(className) > 0){
+        return _componentsByClass[className];
+    }
+    else{
+        return map<int, Component>();
+    }
+}
+
 void EntityManager::removeEntity(int entityId) {
     _entities.remove(entityId);
-    for(std::map<std::string, vector<Component>>::iterator iter = _componentsByClass.begin(); iter != _componentsByClass.end(); ++iter)
-    {
-        std::string k =  iter->first;
-        _componentsByClass[k].erase(iter->second.begin() + entityId);
+    for (auto &_componentsByClas : _componentsByClass) {
+        std::string k = _componentsByClas.first;
+        map<int, Component> _temp = _componentsByClass[k];
+        _temp.erase(entityId);
     }
 }

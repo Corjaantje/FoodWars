@@ -4,16 +4,14 @@
 
 #include "IBaseSystem.h"
 
-class DrawSystem: public IBaseSystem {
-    DrawSystem() : IBaseSystem(_entityManager){
-
-    };
-
+class DrawSystem : public IBaseSystem {
+private:
+    EntityManager* _entityManager;
+public:
+    DrawSystem(EntityManager* entityManager);
     ~DrawSystem();
 
-    virtual void Update(double dt) override {
-
-    }
+    void update(double dt) override;
 };
 
 

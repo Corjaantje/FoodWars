@@ -5,13 +5,9 @@
 
 class IBaseSystem {
 public:
-    IBaseSystem(EntityManager* entityManager): _entityManager(entityManager){}
-    ~IBaseSystem();
-
-    virtual void Update(double dt);
-
-public:
-    EntityManager* _entityManager;
+    IBaseSystem() = default;
+    virtual ~IBaseSystem(){};
+    virtual void update(double dt) = 0;
 };
 
 

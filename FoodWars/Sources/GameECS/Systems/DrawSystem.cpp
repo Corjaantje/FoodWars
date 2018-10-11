@@ -1,6 +1,13 @@
 #include "../../../Headers/GameECS/Systems/DrawSystem.h"
+#include "../../../Headers/GameECS/Systems/IBaseSystem.h"
 
-void DrawSystem::Update(double dt) {
-    IBaseSystem::Update(dt);
+DrawSystem::DrawSystem(EntityManager *entityManager){
+    _entityManager = entityManager;
+}
+
+DrawSystem::~DrawSystem() {
+
+}
+void DrawSystem::update(double dt) {
 
 }

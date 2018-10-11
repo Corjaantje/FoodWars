@@ -6,6 +6,8 @@
 #include <list>
 #include <vector>
 #include "../Components/Component.h"
+#include <typeinfo>
+
 using namespace std;
 
 class EntityManager {
@@ -18,9 +20,18 @@ public:
     ~EntityManager();
     int createEntity(Component components[], int size);
     void addComponentToEntity(int entity, Component component);
-    template <typename Component> void removeComponentFromEntity(Component component, int entityId);
-    template <typename Component> Component getComponent(int entityId);
-    template <typename Component> map<int, Component> getAllEntities(Component component);
+    template <typename Comp> void removeComponentFromEntity(Component component, int entityId);
+    template <typename Comp> Comp getComponent(int entityId);
+    template <typename Comp> map<int, Comp> getAllEntities() {
+        std::string className = typeid(Comp).name();
+        if(_componentsByClass.count(className) > 0){
+            return dynamic_cast<map<int, Comp>>(_componentsByClass[className]);
+        }
+        else{
+            return map<int, Comp>();
+        }
+    }
+
     void removeEntity(int entityId);
 };
 

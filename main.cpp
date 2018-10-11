@@ -2,6 +2,8 @@
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
 #include "TonicEngine/Headers/Input/InputObservable.h"
 #include "TonicEngine/Headers/Audio/AudioFacade.h"
+#include "FoodWars/Headers/GameECS/Entities/EntityManager.h"
+#include "FoodWars/Headers/GameECS/Systems/DrawSystem.h"
 
 
 int main(int argc, char** argv)
@@ -24,52 +26,16 @@ int main(int argc, char** argv)
 //    visualFacade->addSprite(sprite);
     visualFacade->openWindow();
 
+    EntityManager _entityManager;
+    DrawSystem _drawSystem(&_entityManager);
 
-
-
-    // Create audioFacade
-    AudioFacade audioFacade;
-
-    // Set volumes
-    audioFacade.setMusicVolume(5);
-    audioFacade.setEffectVolume(10);
-    
-    // Add Audio to _audioMap in the audioFacade
-    audioFacade.addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
-    audioFacade.addAudio("background", "../FoodWars/Assets/Audio/wildwest.wav");
-
-    // Play background music
-    audioFacade.playMusic("background", -1);
-
-    // Play oofs
-    for(int i = 0; i < 30; i++)
-    {
-        // Use channel -1 (auto assign channel) for sound effects
-        audioFacade.playEffect("oof");
-
-        // Delay isn't needed when playEffect calls are made on other occasions, this is just a demo
-        SDL_Delay(100);
-    }
-
-    // Change background music
-    audioFacade.playMusic("oof", -1);
-
-
-
+    _drawSystem.update(5);
 
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();
         visualFacade->pollEvents();
         //inputObservable->pollEvents();
     }
-    /*WindowManager windowManager;
-    windowManager.openWindow();
-    nanogui::ref<Window> windowRef = nanogui::Screen(windowManager._window->getWindow(), Eigen::Vector2i(10, 10), "caption", true, false);
-    SDL_Window* window = windowManager._window->getWindow();
-    auto& button = window.add<nanogui::Button>("Plain button")
-            .withCallback([] { std::cout << "pushed!" << std::endl; });*/
-
-
 
     return 0;
 }

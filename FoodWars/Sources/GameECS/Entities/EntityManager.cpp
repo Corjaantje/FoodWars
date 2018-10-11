@@ -21,26 +21,16 @@ void EntityManager::addComponentToEntity(int entity, Component component) {
     _componentsByClass[componentType][entity] = component;
 }
 
-template <typename Component> void EntityManager::removeComponentFromEntity(Component component, int entityId) {
+template <typename Comp> void EntityManager::removeComponentFromEntity(Component component, int entityId) {
     _componentsByClass.erase(typeid(component).name());
 }
 
-template <typename Component> Component EntityManager::getComponent(int entityId) {
-    string name = typeid(Component).name();
+template <typename Comp> Comp EntityManager::getComponent(int entityId) {
+    string name = typeid(Comp).name();
     if (_componentsByClass.count(name) > 0)
-        return (Component)_componentsByClass[name][entityId];
+        return (Comp)_componentsByClass[name][entityId];
     else
         return nullptr;
-}
-
-template <typename Component> map<int, Component> EntityManager::getAllEntities(Component component) {
-    std::string className = typeid(component).name();
-    if(_componentsByClass.count(className) > 0){
-        return _componentsByClass[className];
-    }
-    else{
-        return map<int, Component>();
-    }
 }
 
 void EntityManager::removeEntity(int entityId) {

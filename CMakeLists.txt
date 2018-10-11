@@ -131,7 +131,10 @@ set(SOURCE_FILES main.cpp
         FoodWars/Headers/GameECS/Entities/EntityManager.h
         FoodWars/Sources/GameECS/Systems/DrawSystem.cpp
         FoodWars/Headers/GameECS/Systems/DrawSystem.h
-        FoodWars/Sources/GameECS/Components/Component.cpp FoodWars/Headers/GameECS/Components/Component.h FoodWars/Sources/GameECS/Entities/EntityWithComponent.cpp FoodWars/Headers/GameECS/Entities/EntityWithComponent.h)
+        FoodWars/Sources/GameECS/Components/Component.cpp
+        FoodWars/Headers/GameECS/Components/Component.h
+        FoodWars/Sources/GameECS/Components/DrawableComponent.cpp
+        FoodWars/Headers/GameECS/Components/DrawableComponent.h)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 

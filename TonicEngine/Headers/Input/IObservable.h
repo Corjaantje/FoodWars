@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "IObserver.h"
+#include <SDL2/SDL_events.h>
 #include "../Events/IEvent.h"
 
 class IObservable {
@@ -15,7 +16,7 @@ public:
 
     }
     virtual void registerObserver(IObserver& iObserver) = 0;
-    virtual void notify(IEvent keyEvent) = 0;
+    virtual void notify(SDL_Event event) = 0;
 };
 
 #endif //PROJECT_SWA_IOBSERVABLE_H

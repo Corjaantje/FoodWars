@@ -19,8 +19,8 @@ int main(int argc, char** argv)
     visualFacade->openWindow();
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();
-        visualFacade->pollEvents();
-        //inputObservable->pollEvents();
+        //visualFacade->pollEvents();
+        inputObservable->pollEvents();
     }
 
 //    // Sound

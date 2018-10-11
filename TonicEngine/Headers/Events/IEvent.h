@@ -5,12 +5,14 @@
 #ifndef PROJECT_SWA_IEVENT_H
 #define PROJECT_SWA_IEVENT_H
 
+#include "../Input/IObserver.h"
+
 class IEvent {
 public:
     IEvent() {
 
     }
-    virtual void registerObserver();
+    virtual void registerObserver(IObserver& iObserver);
     virtual void notify();
 };
 

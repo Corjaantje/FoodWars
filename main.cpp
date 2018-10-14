@@ -30,33 +30,39 @@ int main(int argc, char** argv)
     EntityManager _entityManager;
     int entity = _entityManager.createEntity(nullptr, 0);
     std::cout << "Number of entities with drawable component: " << _entityManager.getAllEntitiesWithComponent<DrawableComponent>().size() << std::endl;
-    DrawableComponent d = DrawableComponent();
+    DrawableComponent d;
     d.xPos = 10;
     d.yPos = 11;
     _entityManager.addComponentToEntity(entity, &d);
     std::cout << "Number of entities with drawable component: " << _entityManager.getAllEntitiesWithComponent<DrawableComponent>().size() << std::endl;
 
-    EntityWithComponent<DrawableComponent> drawableComponent = _entityManager.getComponentFromEntity<DrawableComponent>(entity);
-    drawableComponent.getComponent()->draw();
-    drawableComponent.getComponent()->xPos = 100;
+    std::shared_ptr<DrawableComponent> dc = _entityManager.getComponentFromEntity<DrawableComponent>(entity);
+    dc->draw();
+    dc->xPos = 120;
 
-    for(auto iterator: _entityManager.getAllEntitiesWithComponent<DrawableComponent>()){
-        iterator.getComponent()->draw();
+    //onderstaande code met test variabele werkt niet;
+    DrawableComponent test = *_entityManager.getComponentFromEntity<DrawableComponent>(entity);
+    test.xPos = 200;
+
+    for(auto const& iterator: _entityManager.getAllEntitiesWithComponent<DrawableComponent>()){
+        iterator.second->draw();
     }
 
-    /*
-    // this will break the program and does not work!
-    DrawableComponent comp = *_entityManager.getComponentFromEntity<DrawableComponent>(entity).getComponent();
-    comp.xPos = 120;
+    _entityManager.removeComponentFromEntity<DrawableComponent>(entity);
+    std::cout << "Number of entities with drawable component: " << _entityManager.getAllEntitiesWithComponent<DrawableComponent>().size() << std::endl;
 
-    for(auto iterator: _entityManager.getAllEntitiesWithComponent<DrawableComponent>()){
-        iterator.getComponent()->draw();
-    }*/
+    _entityManager.addComponentToEntity(entity, new DrawableComponent(50,50));
+    int entity2 = _entityManager.createEntity();
+    _entityManager.addComponentToEntity(entity2, new DrawableComponent(99, 99));
+    for(auto const& iterator: _entityManager.getAllEntitiesWithComponent<DrawableComponent>()){
+        std::cout << iterator.first << ": ";
+        iterator.second->draw();
+    }
 
-    /*for (auto it = map.begin(); it != map.end(); it++ ){
-        DrawableComponent* c = static_cast<DrawableComponent*>(it->second);
-        c->draw();
-    }*/
+    _entityManager.removeEntity(entity);
+    _entityManager.removeEntity(entity2);
+    _entityManager.removeEntity(entity2);
+    std::cout << "Number of entities with drawable component: " << _entityManager.getAllEntitiesWithComponent<DrawableComponent>().size() << std::endl;
 
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();

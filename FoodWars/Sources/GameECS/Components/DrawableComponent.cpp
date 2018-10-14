@@ -5,6 +5,10 @@ DrawableComponent::DrawableComponent() {
 
 }
 
+DrawableComponent::DrawableComponent(int x, int y):xPos(x), yPos(y){
+
+}
+
 DrawableComponent::~DrawableComponent() {
 
 }

@@ -13,6 +13,7 @@
 #include <map>
 #include "../../TonicEngine/Facades/IFacade.h"
 #include "../../TonicEngine/Headers/Visual/VisualFacade.h"
+#include "../../TonicEngine/Headers/Audio/AudioFacade.h"
 
 class ScreenState {
 private:

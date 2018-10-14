@@ -1,7 +1,3 @@
-//
-// Created by Lucas on 11/10/2018.
-//
-
 #include "../Headers/MainMenuScreen.h"
 #include "../Headers/OtherMenuScreen.h"
 
@@ -16,9 +12,15 @@ void MainMenuScreen::update(double deltaTime) const {
 }
 
 MainMenuScreen::MainMenuScreen(ScreenState *context) : IScreen(context) {
+    audioFacade = context->getFacade<AudioFacade>();
     visualFacade = context->getFacade<VisualFacade>();
+
     if(visualFacade != nullptr) {
         visualFacade->addRectangle(ShapeRectangle{100,100,50,50, Colour {0, 0, 255, 100}});
+    }
+    if(audioFacade != nullptr){
+        audioFacade->playMusic("wildwest", -1);
+        audioFacade->playEffect("oof");
     }
 }
 

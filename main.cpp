@@ -1,5 +1,6 @@
 #include <memory>
 #include <chrono>
+#include <afxres.h>
 
 #include "TonicEngine/Headers/Visual/Window.h"
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
@@ -19,9 +20,17 @@ int main(int argc, char** argv)
     visualFacade->disablefullscreen();
     visualFacade->openWindow();
 
+    AudioFacade* audioFacade = new AudioFacade();
+    audioFacade->setMusicVolume(5);
+    audioFacade->setEffectVolume(10);
+
+    audioFacade->addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
+    audioFacade->addAudio("wildwest", "../FoodWars/Assets/Audio/wildwest.wav");
+
     ScreenState screenState;
     screenState.addFacade(visualFacade);
     screenState.addFacade(new CommunicationFacade());
+    screenState.addFacade(audioFacade);
     MainMenuScreen mainMenuScreen { &screenState };
     screenState.setState(&mainMenuScreen);
 

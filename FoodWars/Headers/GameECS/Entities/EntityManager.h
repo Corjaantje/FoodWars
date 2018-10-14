@@ -19,7 +19,14 @@ public:
     EntityManager();
     ~EntityManager();
     int createEntity(Component components[], int size);
-    void addComponentToEntity(int entity, Component component);
+    template <typename Comp> void addComponentToEntity(int entity, Comp component)
+    {
+        std::string componentType = typeid(Comp).name();
+        if(!_componentsByClass.count(componentType)){
+            _componentsByClass[componentType] = map<int, Comp>();
+        }
+        _componentsByClass[componentType][entity] = component;
+    }
     template <typename Comp> void removeComponentFromEntity(Component component, int entityId);
     template <typename Comp> Comp getComponent(int entityId);
     template <typename Comp> map<int, Comp> getAllEntities() {

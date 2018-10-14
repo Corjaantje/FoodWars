@@ -13,14 +13,6 @@ int EntityManager::createEntity(Component components[], int size) {
     }
 }
 
-void EntityManager::addComponentToEntity(int entity, Component component) {
-    std::string componentType = typeid(component).name();
-    if(!_componentsByClass.count(componentType)){
-        _componentsByClass[componentType] = map<int, Component>();
-    }
-    _componentsByClass[componentType][entity] = component;
-}
-
 template <typename Comp> void EntityManager::removeComponentFromEntity(Component component, int entityId) {
     _componentsByClass.erase(typeid(component).name());
 }

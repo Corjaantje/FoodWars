@@ -33,17 +33,30 @@ int main(int argc, char** argv)
     DrawableComponent d = DrawableComponent();
     d.xPos = 10;
     d.yPos = 11;
-    _entityManager.addComponentToEntity(entity, d);
+    _entityManager.addComponentToEntity(entity, &d);
     std::cout << "Number of entities with drawable component: " << _entityManager.getAllEntitiesWithComponent<DrawableComponent>().size() << std::endl;
-    std::map<int, Component*> map = _entityManager.getAllEntitiesWithComponent<DrawableComponent>();
-    DrawableComponent* drawableComponent = _entityManager.getComponentFromEntity<DrawableComponent>(entity);
-    drawableComponent->draw();
-    drawableComponent->xPos = 100;
 
-    for (auto it = map.begin(); it != map.end(); it++ ){
+    EntityWithComponent<DrawableComponent> drawableComponent = _entityManager.getComponentFromEntity<DrawableComponent>(entity);
+    drawableComponent.getComponent()->draw();
+    drawableComponent.getComponent()->xPos = 100;
+
+    for(auto iterator: _entityManager.getAllEntitiesWithComponent<DrawableComponent>()){
+        iterator.getComponent()->draw();
+    }
+
+    /*
+    // this will break the program and does not work!
+    DrawableComponent comp = *_entityManager.getComponentFromEntity<DrawableComponent>(entity).getComponent();
+    comp.xPos = 120;
+
+    for(auto iterator: _entityManager.getAllEntitiesWithComponent<DrawableComponent>()){
+        iterator.getComponent()->draw();
+    }*/
+
+    /*for (auto it = map.begin(); it != map.end(); it++ ){
         DrawableComponent* c = static_cast<DrawableComponent*>(it->second);
         c->draw();
-    }
+    }*/
 
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();

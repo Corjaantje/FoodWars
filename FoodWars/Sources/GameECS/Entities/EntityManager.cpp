@@ -17,19 +17,11 @@ template <typename Comp> void EntityManager::removeComponentFromEntity(Component
     _componentsByClass.erase(typeid(component).name());
 }
 
-template <typename Comp> Comp EntityManager::getComponent(int entityId) {
-    string name = typeid(Comp).name();
-    if (_componentsByClass.count(name) > 0)
-        return (Comp)_componentsByClass[name][entityId];
-    else
-        return nullptr;
-}
-
 void EntityManager::removeEntity(int entityId) {
     _entities.remove(entityId);
     for (auto &_componentsByClas : _componentsByClass) {
         std::string k = _componentsByClas.first;
-        map<int, Component> _temp = _componentsByClass[k];
+        std::map<int, Component*> _temp = _componentsByClass[k];
         _temp.erase(entityId);
     }
 }

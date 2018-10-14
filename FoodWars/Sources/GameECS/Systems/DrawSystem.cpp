@@ -11,12 +11,12 @@ DrawSystem::~DrawSystem() {
 
 }
 void DrawSystem::update(double dt) {
-    DrawableComponent drawableComponent;
+   /* DrawableComponent drawableComponent;
     DrawableComponent _componentList[1] = {drawableComponent};
     _entityManager->createEntity(_componentList, 1);
     _entityManager->createEntity(_componentList, 1);
     _entityManager->createEntity(_componentList, 1);
 
-    _entityManager->getAllEntities<DrawableComponent>();
+    _entityManager->getAllEntitiesWithComponent<DrawableComponent>();*/
     //cout << map.size();
 }

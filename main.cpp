@@ -4,6 +4,7 @@
 #include "TonicEngine/Headers/Audio/AudioFacade.h"
 #include "FoodWars/Headers/GameECS/Entities/EntityManager.h"
 #include "FoodWars/Headers/GameECS/Systems/DrawSystem.h"
+#include "FoodWars/Headers/GameECS/Components/DrawableComponent.h"
 
 
 int main(int argc, char** argv)
@@ -27,9 +28,22 @@ int main(int argc, char** argv)
     visualFacade->openWindow();
 
     EntityManager _entityManager;
-    DrawSystem _drawSystem(&_entityManager);
+    int entity = _entityManager.createEntity(nullptr, 0);
+    std::cout << "Number of entities with drawable component: " << _entityManager.getAllEntitiesWithComponent<DrawableComponent>().size() << std::endl;
+    DrawableComponent d = DrawableComponent();
+    d.xPos = 10;
+    d.yPos = 11;
+    _entityManager.addComponentToEntity(entity, d);
+    std::cout << "Number of entities with drawable component: " << _entityManager.getAllEntitiesWithComponent<DrawableComponent>().size() << std::endl;
+    std::map<int, Component*> map = _entityManager.getAllEntitiesWithComponent<DrawableComponent>();
+    DrawableComponent* drawableComponent = _entityManager.getComponentFromEntity<DrawableComponent>(entity);
+    drawableComponent->draw();
+    drawableComponent->xPos = 100;
 
-    _drawSystem.update(5);
+    for (auto it = map.begin(); it != map.end(); it++ ){
+        DrawableComponent* c = static_cast<DrawableComponent*>(it->second);
+        c->draw();
+    }
 
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();

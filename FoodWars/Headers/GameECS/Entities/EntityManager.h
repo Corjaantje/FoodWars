@@ -7,14 +7,13 @@
 #include <vector>
 #include "../Components/Component.h"
 #include <typeinfo>
-
-using namespace std;
+#include <iostream>
 
 class EntityManager {
 private:
     int _lowestUnassignedEntityId;
-    list<int> _entities;
-    map<std::string, map<int, Component>> _componentsByClass;
+    std::list<int> _entities;
+    std::map<std::string, std::map<int, Component*>> _componentsByClass;
 public:
     EntityManager();
     ~EntityManager();
@@ -23,19 +22,27 @@ public:
     {
         std::string componentType = typeid(Comp).name();
         if(!_componentsByClass.count(componentType)){
-            _componentsByClass[componentType] = map<int, Comp>();
+            _componentsByClass[componentType] = std::map<int, Component*>();
         }
-        _componentsByClass[componentType][entity] = component;
+        _componentsByClass[componentType][entity] = &component;
     }
     template <typename Comp> void removeComponentFromEntity(Component component, int entityId);
-    template <typename Comp> Comp getComponent(int entityId);
-    template <typename Comp> map<int, Comp> getAllEntities() {
+    template <typename Comp> Comp* getComponentFromEntity(int entityId) {
+        std::string name = typeid(Comp).name();
+        if (_componentsByClass.count(name) > 0)
+            return static_cast<Comp*>(_componentsByClass[name][entityId]);
+        else
+            return nullptr;
+    }
+
+    template <typename Comp> std::map<int, Component*> getAllEntitiesWithComponent() {
         std::string className = typeid(Comp).name();
         if(_componentsByClass.count(className) > 0){
-            return dynamic_cast<map<int, Comp>>(_componentsByClass[className]);
+            return static_cast<std::map<int, Component*>>(_componentsByClass[className]);
+            //return map<int, Comp*>();
         }
         else{
-            return map<int, Comp>();
+            return std::map<int, Component*>();
         }
     }
 

@@ -8,6 +8,7 @@ class DrawableComponent: public Component {
 public:
     DrawableComponent();
     ~DrawableComponent();
+    void draw();
     int xPos;
     int yPos;
 

@@ -10,8 +10,11 @@
 class TurnComponent: public Component {
 public:
     TurnComponent();
-    TurnComponent(int energy, bool myTurn);
-    ~TurnComponent();
+    TurnComponent(int energy);
+    TurnComponent(int energy, bool myTurn); // May be useless?
+    ~TurnComponent() override;
+
+    void switchTurn(bool change);
 
 private:
     int _energy;

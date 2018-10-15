@@ -136,7 +136,9 @@ set(SOURCE_FILES main.cpp
         FoodWars/Sources/GameECS/Components/DrawableComponent.cpp
         FoodWars/Headers/GameECS/Components/DrawableComponent.h
         FoodWars/Sources/GameECS/Systems/TurnSystem.cpp
-        FoodWars/Headers/GameECS/Systems/TurnSystem.h FoodWars/Sources/GameECS/Components/TurnComponent.cpp FoodWars/Headers/GameECS/Components/TurnComponent.h)
+        FoodWars/Headers/GameECS/Systems/TurnSystem.h
+        FoodWars/Sources/GameECS/Components/TurnComponent.cpp
+        FoodWars/Headers/GameECS/Components/TurnComponent.h)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 

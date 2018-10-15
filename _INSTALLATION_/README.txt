@@ -13,6 +13,7 @@ Guide to install this Project
 10.It will detect the nessecary CMake files, and then hit Apply.
 
 11.Select the 4 folders in the SDL2 folder and copy them over to C:\MinGW to merge their contents.
-12.Reload the CMake file in CLion, and then build the project.
-13.If everything went right, it should built succesfully, and you'll be able to run the project!
-If not, don't bother Corne! ;)
+12.Select the 3 folders in the SDL2_mixer folder (depending on if your OS is 32bit or 64bit) and copy them over to C:\MinGW to merge their contents.
+13.Reload the CMake file in CLion, and then build the project.
+14.If everything went right, it should built succesfully, and you'll be able to run the project!
+If not, don't bother Corne & Maarten! ;)

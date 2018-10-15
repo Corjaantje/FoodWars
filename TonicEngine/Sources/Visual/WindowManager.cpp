@@ -1,5 +1,6 @@
 #include "../../Headers/Visual/WindowManager.h"
 #include "../../Headers/Visual/Window.h"
+#include "../../Headers/Visual/TextureManager.h"
 #include <SDL2/SDL.h>
 
 WindowManager::WindowManager() {
@@ -21,43 +22,36 @@ void WindowManager::closeWindow(){
 
 void WindowManager::setTitle(const std::string &title){
     _title = title;
-    updateWindowSettings();
+    _window->setTitle(title);
 };
 
 void WindowManager::setResolution(int width, int height){
-    _windowHeight = height;
-    _windowWidth = width;
-    updateWindowSettings();
+    _window->setResolution(width, height);
+
 };
 
 void WindowManager::enableFullscreen(){
     _fullscreen = true;
-    updateWindowSettings();
+    _window->setFullscreen(true);
 };
 
 void WindowManager::disablefullscreen(){
     _fullscreen = false;
-    updateWindowSettings();
+    _window->setFullscreen(false);
 };
 
-//TODO Change this to update the window, not replace it if possible!
-void WindowManager::updateWindowSettings() {
-    delete _window;
-    _window = new Window(_title, _windowWidth, _windowHeight);
-    _window->setFullscreen(_fullscreen);
-}
-
 //(re)Draw all the shapes, sprites etc. that are added to the WindowManager
-void WindowManager::render() {
+void WindowManager::render(Renderlist renderlist) {
+    SDL_RenderClear(_renderer);
     _renderer = _window->getRenderer();
-    renderRectangles();
-    renderSprites();
+    renderRectangles(renderlist.rectangleList);
+    renderSprites(renderlist.spriteList);
     SDL_RenderPresent(_renderer);
 }
 
-void WindowManager::renderRectangles() {
-    for(int i=0; i< _rectangleList.size(); i++){
-        ShapeRectangle &rectangleShape = _rectangleList[i];
+void WindowManager::renderRectangles(std::vector<ShapeRectangle> rectangleList) {
+    for(int i=0; i< rectangleList.size(); i++){
+        ShapeRectangle &rectangleShape = rectangleList[i];
         SDL_Rect rect;
         rect.x = rectangleShape.xPos;
         rect.y = rectangleShape.yPos;
@@ -71,16 +65,15 @@ void WindowManager::renderRectangles() {
 
 //TODO This causes a massive memory leak at this point due to loading the Bitmap Image. We are aware of
 //TODO the issue and will be fixed in a few days.
-void WindowManager::renderSprites() {
-    for(int i=0; i< _spriteList.size(); i++){
-        ShapeSprite &shapeSprite = _spriteList[i];
+void WindowManager::renderSprites(std::vector<ShapeSprite> rectangleSprite) {
+    for(int i=0; i< rectangleSprite.size(); i++){
+        ShapeSprite &shapeSprite = rectangleSprite[i];
         SDL_Rect rect;
         rect.x = shapeSprite.xPos;
         rect.y = shapeSprite.yPos;
         rect.h = shapeSprite.height;
         rect.w = shapeSprite.width;
-        SDL_Surface * image = SDL_LoadBMP(shapeSprite.imageURL.c_str());
-        SDL_Texture * texture = SDL_CreateTextureFromSurface(_renderer, image);
+        SDL_Texture* texture = _textureManager.GetSDLTextureFromBMP(_renderer, shapeSprite.imageURL);
         SDL_RenderCopy(_renderer, texture, NULL, &rect);
     }
 }

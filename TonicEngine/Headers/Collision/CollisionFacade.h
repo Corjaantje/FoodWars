@@ -3,8 +3,9 @@
 #include "Shape.h"
 #include "Rectangle.h"
 #include "Circle.h"
+#include "../../Facades/IFacade.h"
 
-class CollisionFacade {
+class CollisionFacade : public IFacade {
 public:
     static bool detectCollision(Shape* shapeA, Shape* shapeB, Vector2D movement);
 private:

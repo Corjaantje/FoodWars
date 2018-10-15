@@ -2,7 +2,7 @@
 // Created by pietb on 11-Oct-18.
 //
 
-#include "TurnSystem.h"
+#include "../../../Headers/GameECS/Systems/TurnSystem.h"
 
 TurnSystem::TurnSystem() {
 
@@ -25,6 +25,13 @@ void TurnSystem::onUpdate(double deltaTime) {
     if (_startTime)
     {
         _remainingTime -= deltaTime;
+//        _remainingTime = (_remainingTime > 0) ? _remainingTime - deltaTime : 30;
+        if (_remainingTime <= 0)
+        {
+            _remainingTime = (float)_timePerTurn;
+            // TODO
+            // End turn of whomever's currently in charge
+        }
     }
 }
 

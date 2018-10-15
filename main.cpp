@@ -36,9 +36,9 @@ int main(int argc, char** argv)
     _entityManager.addComponentToEntity(entity, &d);
     std::cout << "Number of entities with drawable component: " << _entityManager.getAllEntitiesWithComponent<DrawableComponent>().size() << std::endl;
 
-    std::shared_ptr<DrawableComponent> dc = _entityManager.getComponentFromEntity<DrawableComponent>(entity);
-    dc->draw();
-    dc->xPos = 120;
+//    std::shared_ptr<DrawableComponent> dc = _entityManager.getComponentFromEntity<DrawableComponent>(entity);
+//    dc->draw();
+//    dc->xPos = 120;
 
     //onderstaande code met test variabele werkt niet;
     DrawableComponent test = *_entityManager.getComponentFromEntity<DrawableComponent>(entity);

@@ -31,7 +31,6 @@ public:
     std::vector<ShapeSprite> _spriteList;
 
 private:
-    void updateWindowSettings();
     void renderRectangles();
     void renderSprites();
 

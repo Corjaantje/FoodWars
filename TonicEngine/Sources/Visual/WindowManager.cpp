@@ -21,31 +21,23 @@ void WindowManager::closeWindow(){
 
 void WindowManager::setTitle(const std::string &title){
     _title = title;
-    updateWindowSettings();
+    _window->setTitle(title);
 };
 
 void WindowManager::setResolution(int width, int height){
-    _windowHeight = height;
-    _windowWidth = width;
-    updateWindowSettings();
+    _window->setResolution(width, height);
+
 };
 
 void WindowManager::enableFullscreen(){
     _fullscreen = true;
-    updateWindowSettings();
+    _window->setFullscreen(true);
 };
 
 void WindowManager::disablefullscreen(){
     _fullscreen = false;
-    updateWindowSettings();
+    _window->setFullscreen(false);
 };
-
-//TODO Change this to update the window, not replace it if possible!
-void WindowManager::updateWindowSettings() {
-    delete _window;
-    _window = new Window(_title, _windowWidth, _windowHeight);
-    _window->setFullscreen(_fullscreen);
-}
 
 //(re)Draw all the shapes, sprites etc. that are added to the WindowManager
 void WindowManager::render() {

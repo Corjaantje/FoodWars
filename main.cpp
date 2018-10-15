@@ -4,7 +4,9 @@
 #include <afxres.h>
 #include "TonicEngine/Headers/Visual/Window.h"
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
-#include "TonicEngine/Headers/Input/InputObservable.h"
+#include "TonicEngine/Headers/Input/InputFacade.h"
+#include "TonicEngine/Headers/Input/PrintKeyInputObserver.h"
+#include "TonicEngine/Headers/Input/PrintMouseInputObserver.h"
 #include "TonicEngine/Headers/Audio/AudioFacade.h"
 #include "FoodWars/Headers/GameECS/Entities/EntityManager.h"
 #include "FoodWars/Headers/GameECS/Systems/DrawSystem.h"
@@ -18,6 +20,11 @@
 int main(int argc, char** argv)
 {
     VisualFacade* visualFacade = new VisualFacade();
+
+    InputFacade inputFacade;
+    inputFacade.getKeyEventObservable()->registerObserver(new PrintKeyInputObserver);
+    inputFacade.getMouseEventObservable()->registerObserver(new PrintMouseInputObserver);
+
     visualFacade->setTitle("Food Wars");
     visualFacade->setResolution(640, 480);
     visualFacade->disablefullscreen();
@@ -40,6 +47,7 @@ int main(int argc, char** argv)
     //Run the application only for MaxMSProgramIsRunning milliseconds.
     while((clock() - startProgramTime / CLOCKS_PER_SEC * 1000 < maxMsProgramIsRunning) && !visualFacade->isWindowClosed()) {
         visualFacade->pollEvents();
+        //inputFacade.pollEvents();
         double frameDelta = double (clock() - timeLast) / CLOCKS_PER_SEC * 1000.0;
         double deltaTime = 1/frameDelta;
         if(frameDelta > amountOfUpdatesAllowedPerSecond){
@@ -51,6 +59,6 @@ int main(int argc, char** argv)
             screenStateManager->setActiveScreen<OtherMenuScreen>();
         }
     }
-
     return 0;
 }
+

@@ -5,12 +5,12 @@
 #include "../../../Headers/GameECS/Systems/TurnSystem.h"
 
 TurnSystem::TurnSystem() {
-    _turnComponents = new std::vector<std::shared_ptr<TurnComponent>>{};
+//    _turnComponents = new std::map<int, std::shared_ptr<TurnComponent>>{};
     setTurnTime(30);
 }
 
 TurnSystem::TurnSystem(EntityManager* entityManager): _entityManager(entityManager){
-    _turnComponents = new std::vector<std::shared_ptr<TurnComponent>>{};
+//    _turnComponents = new std::map<int, std::shared_ptr<TurnComponent>>{};
     setTurnTime(30);
 }
 
@@ -27,7 +27,8 @@ TurnSystem::~TurnSystem() {
 //    return 0;
 //}
 
-void TurnSystem::setRelevantEntities(std::vector<std::shared_ptr<TurnComponent>>* turns) {
+//void TurnSystem::setRelevantEntities(std::vector<std::shared_ptr<TurnComponent>>* turns) {
+void TurnSystem::setRelevantEntities(std::map<int, std::shared_ptr<TurnComponent>>* turns) {
 //    _turnComponents->clear();
 //    if (!_turnComponents->empty())
 //    {
@@ -35,7 +36,13 @@ void TurnSystem::setRelevantEntities(std::vector<std::shared_ptr<TurnComponent>>
 //    }
 //    _turnComponents = turns;
 //    _turnComponents.assign(turns);
-    _turnComponents = turns;
+    _turnComponents = *turns;
+    _currentTurn = turns->begin()->first;
+
+    for (auto const& x : *turns)
+    {
+        _turnOrder.push_back(x.first);
+    }
 }
 
 void TurnSystem::setTurnTime(int turnTime) {
@@ -56,10 +63,16 @@ void TurnSystem::update(double deltaTime) {
 }
 
 void TurnSystem::endTurn() {
-    _turnComponents[_currentTurn][0]->switchTurn(false);
-//    _currentTurn++;
-    _currentTurn = (_currentTurn < _turnComponents->size()) ? +1 : 0;
-    _turnComponents[_currentTurn][0]->switchTurn(true);
+//    _turnComponents[_currentTurn]->switchTurn(false);
+////    _currentTurn++;
+//    _currentTurn = (_currentTurn < _turnComponents.size()) ? +1 : 0;
+//    _turnComponents[_currentTurn]->switchTurn(true);
+    // Change it to use a map, currently still thinking of a vector.
+    // How to get size of "participants"?
+    // Current participant? Next?
+    _turnComponents[_turnOrder[_currentTurn]]->switchTurn(false);
+    _currentTurn = (_currentTurn < _turnOrder.size()) ? +1 : 0;
+    _turnComponents[_turnOrder[_currentTurn]]->switchTurn(true);
 }
 
 

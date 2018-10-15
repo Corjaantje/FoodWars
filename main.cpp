@@ -80,11 +80,13 @@ int main(int argc, char** argv)
     TurnSystem _turnSys = {TurnSystem(&_entityManager)};
 
 //    _turnSys.setRelevantEntities(
-    std::vector<std::shared_ptr<TurnComponent>> _tempVec;
-    for (auto const& iterator: _entityManager.getAllEntitiesWithComponent<TurnComponent>())
-    {
-        _tempVec.push_back(iterator.second);
-    }
+    std::map<int, std::shared_ptr<TurnComponent>> _tempVec = _entityManager.getAllEntitiesWithComponent<TurnComponent>();
+
+//        for (auto const& iterator: _entityManager.getAllEntitiesWithComponent<TurnComponent>())
+//    {
+//        _tempVec.push_back(iterator);
+//    }
+//    _turnSys.setRelevantEntities(&_tempVec);
     _turnSys.setRelevantEntities(&_tempVec);
     _turnSys.setTurnTime(0.2);
 

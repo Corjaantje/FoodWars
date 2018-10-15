@@ -14,20 +14,19 @@
 
 class InputObservable: public IObservable {
 private:
-    std::vector<IObserver> _observerList;
-    std::map<SDL_Event, IEvent> *_eventMap;
-    std::map<IEvent, std::vector<IObserver>> *_observerMap = nullptr;
-    KeyEvent *_keyEvent;
+    std::vector<IObserver*> _observerList;
+    std::map<SDL_Event*, IEvent*> _eventMap;
+    //std::map<IEvent, std::vector<IObserver>> *_observerMap = nullptr;
+    KeyEvent *_keyEvent = nullptr;
 
     void init();
     void notify(SDL_Event event) override;
-    IEvent getEvent(SDL_Event eventName);
+    IEvent* getEvent(SDL_Event* eventName);
 public:
     InputObservable();
     ~InputObservable();
 
     void registerObserver(IObserver& iObserver) override;
-
     void pollEvents();
 };
 

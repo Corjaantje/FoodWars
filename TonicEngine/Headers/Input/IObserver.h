@@ -6,7 +6,7 @@
 #define PROJECT_SWA_IOBSERVER_H
 
 #include <iostream>
-//#include "../Events/IEvent.h"
+#include "../Events/IEvent.h"
 
 class IObserver{
 public:

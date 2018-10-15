@@ -19,13 +19,13 @@ KeyEvent::KEYS KeyEvent::getKey() const {
     return _pressedKey;
 }
 
-void KeyEvent::registerObserver(IObserver& iObserver) {
-    _observerList.push_back(iObserver);
-}
+/*void KeyEvent::registerObserver(IObserver& iObserver) {
+    _observerList.push_back(&iObserver);
+}*/
 
 void KeyEvent::notify() {
     if (!_observerList.empty()) {
         for (int i = 0; i < _observerList.size(); i++)
-            _observerList[i].update();
+            _observerList[i]->update();
     }
 }

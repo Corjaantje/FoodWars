@@ -14,13 +14,13 @@
 
 class KeyEvent: public IEvent {
 private:
-    std::vector<IObserver> _observerList;
+    std::vector<IObserver*> _observerList;
     enum KEYS {KEY_W, KEY_A, KEY_S, KEY_D};
     KEYS _pressedKey;
 public:
     void setKey(SDL_Event event);
     KEYS getKey() const;
-    void registerObserver(IObserver& iObserver) override;
+    //void registerObserver(IObserver& iObserver) override;
     void notify() override;
 };
 

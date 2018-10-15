@@ -6,9 +6,9 @@
 #define PROJECT_SWA_IOBSERVABLE_H
 
 #include <iostream>
-#include "IObserver.h"
 #include <SDL2/SDL_events.h>
 #include "../Events/IEvent.h"
+#include "IObserver.h"
 
 class IObservable {
 public:

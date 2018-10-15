@@ -6,6 +6,7 @@
 #include "ShapeRectangle.h"
 #include "ShapeSprite.h"
 #include "Renderlist.h"
+#include "TextureManager.h"
 #include <vector>
 
 class WindowManager {
@@ -32,6 +33,7 @@ private:
     void renderSprites(std::vector<ShapeSprite> rectangleSprite);
 
 private:
+    TextureManager _textureManager;
     Window *_window = nullptr;
     SDL_Renderer *_renderer = nullptr;
     std::string _title = "Default Title";

@@ -1,5 +1,6 @@
 #include "../../Headers/Visual/WindowManager.h"
 #include "../../Headers/Visual/Window.h"
+#include "../../Headers/Visual/TextureManager.h"
 #include <SDL2/SDL.h>
 
 WindowManager::WindowManager() {
@@ -72,8 +73,7 @@ void WindowManager::renderSprites(std::vector<ShapeSprite> rectangleSprite) {
         rect.y = shapeSprite.yPos;
         rect.h = shapeSprite.height;
         rect.w = shapeSprite.width;
-        SDL_Surface * image = SDL_LoadBMP(shapeSprite.imageURL.c_str());
-        SDL_Texture * texture = SDL_CreateTextureFromSurface(_renderer, image);
+        SDL_Texture* texture = _textureManager.GetSDLTextureFromBMP(_renderer, shapeSprite.imageURL);
         SDL_RenderCopy(_renderer, texture, NULL, &rect);
     }
 }

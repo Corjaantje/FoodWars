@@ -74,19 +74,13 @@ int main(int argc, char** argv)
     _entityManager.addComponentToEntity(entityTurn1, new TurnComponent(20));
     int entityTurn2 = _entityManager.createEntity();
     _entityManager.addComponentToEntity(entityTurn2, new TurnComponent(20));
-//    int entityTurn3 = _entityManager.createEntity();
-//    _entityManager.addComponentToEntity(entityTurn3, new TurnComponent(20));
+    int entityTurn3 = _entityManager.createEntity();
+    _entityManager.addComponentToEntity(entityTurn3, new TurnComponent(20));
 
     TurnSystem _turnSys = {TurnSystem(&_entityManager)};
 
-//    _turnSys.setRelevantEntities(
     std::map<int, std::shared_ptr<TurnComponent>> _tempVec = _entityManager.getAllEntitiesWithComponent<TurnComponent>();
 
-//        for (auto const& iterator: _entityManager.getAllEntitiesWithComponent<TurnComponent>())
-//    {
-//        _tempVec.push_back(iterator);
-//    }
-//    _turnSys.setRelevantEntities(&_tempVec);
     _turnSys.setRelevantEntities(&_tempVec);
     _turnSys.setTurnTime(0.2);
 

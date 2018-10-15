@@ -37,7 +37,8 @@ void TurnSystem::setRelevantEntities(std::map<int, std::shared_ptr<TurnComponent
 //    _turnComponents = turns;
 //    _turnComponents.assign(turns);
     _turnComponents = *turns;
-    _currentTurn = turns->begin()->first;
+//    _currentTurn = turns->begin()->first;
+    _currentTurn = 0;
 
     for (auto const& x : *turns)
     {

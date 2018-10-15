@@ -6,7 +6,6 @@
 #include "../Headers/OtherMenuScreen.h"
 
 void MainMenuScreen::update(double deltaTime) const {
-    visualFacade->pollEvents();
     visualFacade->render();
     std::cout << deltaTime << std::endl;
     if(deltaTime > 100) {

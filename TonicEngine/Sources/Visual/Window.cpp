@@ -58,6 +58,7 @@ bool Window::createWindow() {
         else{
             _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
         }
+
 }
 
 bool Window::closeWindow() {

@@ -13,6 +13,7 @@
 class OtherMenuScreen : public IScreen {
 private:
     std::unique_ptr<VisualFacade> visualFacade;
+    Renderlist _renderList;
 public:
     OtherMenuScreen(ScreenState *context);
     ~OtherMenuScreen();

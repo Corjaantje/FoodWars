@@ -39,13 +39,9 @@ void VisualFacade::disablefullscreen(){
     _windowManager->disablefullscreen();
 };
 
-void VisualFacade::render() {
-    _windowManager->render();
+void VisualFacade::render(Renderlist renderlist) {
+    _windowManager->render(renderlist);
 }
-
-bool VisualFacade::addRectangle(ShapeRectangle rectangle){
-    _windowManager->_rectangleList.push_back(rectangle);
-};
 
 void VisualFacade::pollEvents() {
     _windowManager->pollEvents();
@@ -53,12 +49,4 @@ void VisualFacade::pollEvents() {
 
 bool VisualFacade::isWindowClosed() {
     return _windowManager->isWindowClosed();
-}
-
-bool VisualFacade::addSprite(ShapeSprite sprite) {
-    _windowManager->_spriteList.push_back(sprite);
-}
-
-bool VisualFacade::removeRectangle() {
-    _windowManager->_rectangleList.clear();
 }

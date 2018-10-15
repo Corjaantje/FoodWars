@@ -15,6 +15,7 @@
 #include "TonicEngine/Headers/Communication/CommunicationFacade.h"
 #include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
 #include "FoodWars/Headers/StateMachine/OtherMenuScreen.h"
+#include "FoodWars/Headers/StateMachine/GameScreen.h"
 
 
 int main(int argc, char** argv)
@@ -34,7 +35,8 @@ int main(int argc, char** argv)
     screenStateManager->addFacade(visualFacade);
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new OtherMenuScreen(screenStateManager));
-    screenStateManager->setActiveScreen<MainMenuScreen>();
+    screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager));
+    screenStateManager->setActiveScreen<GameScreen>();
 
     //Config
     clock_t startProgramTime = clock();

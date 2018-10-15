@@ -159,7 +159,7 @@ set(SOURCE_FILES main.cpp
 		TonicEngine/Facades/IFacade.h
         FoodWars/Sources/StateMachine/MainMenuScreen.cpp
         FoodWars/Headers/StateMachine/OtherMenuScreen.h
-        FoodWars/Sources/StateMachine/OtherMenuScreen.cpp TonicEngine/Sources/Visual/Renderlist.cpp TonicEngine/Headers/Visual/Renderlist.h TonicEngine/Sources/Visual/TextureManager.cpp TonicEngine/Headers/Visual/TextureManager.h)
+        FoodWars/Sources/StateMachine/OtherMenuScreen.cpp TonicEngine/Sources/Visual/Renderlist.cpp TonicEngine/Headers/Visual/Renderlist.h TonicEngine/Sources/Visual/TextureManager.cpp TonicEngine/Headers/Visual/TextureManager.h FoodWars/Sources/StateMachine/GameScreen.cpp FoodWars/Headers/StateMachine/GameScreen.h)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_EVENTS} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 

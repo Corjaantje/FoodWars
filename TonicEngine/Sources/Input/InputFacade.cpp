@@ -13,6 +13,7 @@ InputFacade::~InputFacade() {
 void InputFacade::init() {
     _keyEventObservable = std::make_shared<KeyEventObservable>();
     _mouseEventObservable = std::make_shared<MouseEventObservable>();
+    _windowEventObservable = std::make_shared<WindowEventObservable>();
     _keycodeMap[SDLK_w] = KEY::KEY_W;
     _keycodeMap[SDLK_a] = KEY::KEY_A;
     _keycodeMap[SDLK_s] = KEY::KEY_S;
@@ -35,6 +36,17 @@ void InputFacade::pollEvents() {
                 _mouseEventObservable.get()->notify(mouseEvent);
                 break;
             }
+            case SDL_QUIT: { // When the window is closed
+                std::shared_ptr<WindowEvent> windowEvent = std::make_shared<WindowEvent>();
+                _windowEventObservable.get()->closeWindow();
+                break;
+            }
+            case SDL_WINDOWEVENT_RESIZED:
+                break;
+            case SDL_WINDOW_MAXIMIZED:
+                break;
+            case SDL_WINDOW_MINIMIZED:
+                break;_
             default:
                 break;
         }
@@ -47,5 +59,9 @@ std::shared_ptr<KeyEventObservable> InputFacade::getKeyEventObservable() {
 
 std::shared_ptr<MouseEventObservable> InputFacade::getMouseEventObservable() {
     return _mouseEventObservable;
+}
+
+bool InputFacade::isWindowClosed() {
+    return _windowEventObservable->isClosed();
 }
 

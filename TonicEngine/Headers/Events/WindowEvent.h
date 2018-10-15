@@ -7,9 +7,19 @@
 
 #include "IEvent.h"
 
+enum class WindowEventType {
+    Quit,
+    Minimize,
+    Maximize,
+    Resize
+};
+
 class WindowEvent: public IEvent {
+private:
+    WindowEventType _eventType;
 public:
-    enum{minimize, maximize, close};
+    WindowEvent();
+    WindowEventType GetWindowEventType();
 };
 
 #endif //PROJECT_SWA_WINDOWEVENT_H

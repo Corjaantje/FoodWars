@@ -6,6 +6,8 @@
 #define PROJECT_SWA_IFACADE_H
 
 class IFacade {
+public:
+    virtual ~IFacade(){}
 };
 
 #endif //PROJECT_SWA_IFACADE_H

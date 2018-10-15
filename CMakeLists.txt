@@ -137,11 +137,9 @@ set(SOURCE_FILES main.cpp
         FoodWars/Sources/GameECS/Components/DrawableComponent.cpp
         FoodWars/Headers/GameECS/Components/DrawableComponent.h
         FoodWars/Headers/StateMachine/IScreen.h
-        FoodWars/Headers/StateMachine/ScreenState.h
+        FoodWars/Headers/StateMachine/ScreenStateManager.h
         FoodWars/Headers/StateMachine/MainMenuScreen.h
-        FoodWars/Sources/StateMachine/ScreenState.cpp
-        FoodWars/Headers/StateMachine/ScreenPtr.h
-        FoodWars/Sources/StateMachine/ScreenPtr.cpp
+        FoodWars/Sources/StateMachine/ScreenStateManager.cpp
 		TonicEngine/Facades/IFacade.h
         FoodWars/Sources/StateMachine/MainMenuScreen.cpp
         FoodWars/Headers/StateMachine/OtherMenuScreen.h

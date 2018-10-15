@@ -1,17 +1,18 @@
-//
-// Created by Lucas on 11/10/2018.
-//
+#include <utility>
+
 #ifndef PROJECT_SWA_ISCREEN_H
 #define PROJECT_SWA_ISCREEN_H
 
-class ScreenState;
+#include "memory"
+
+class ScreenStateManager;
 
 class IScreen {
 protected:
-    ScreenState* _context;
+    std::shared_ptr<ScreenStateManager> _context;
 public:
 
-    IScreen(ScreenState* context) : _context(context) {
+    IScreen(std::shared_ptr<ScreenStateManager> context) : _context(std::move(context)) {
 
     }
 

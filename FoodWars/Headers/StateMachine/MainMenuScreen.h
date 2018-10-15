@@ -6,14 +6,14 @@
 #define PROJECT_SWA_MAINMENUSCREEN_H
 
 #include "IScreen.h"
-#include "ScreenState.h"
+#include "ScreenStateManager.h"
 
 class MainMenuScreen : public IScreen {
 private:
-    std::unique_ptr<VisualFacade> visualFacade;
+    std::shared_ptr<VisualFacade> visualFacade;
     Renderlist _renderList;
 public:
-    MainMenuScreen(ScreenState *context);
+    MainMenuScreen(std::shared_ptr<ScreenStateManager> context);
     ~MainMenuScreen();
     void update(double deltaTime) const override;
 };

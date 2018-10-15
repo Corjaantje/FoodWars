@@ -2,17 +2,21 @@
 #define PROJECT_SWA_AUDIOPLAYER_H
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 class AudioPlayer {
 public:
     AudioPlayer();
     ~AudioPlayer();
-    void playAudio(const char* path);
+    int getEffectVolume();
+    int getMusicVolume();
+    void setEffectVolume(int volume);
+    void setMusicVolume(int volume);
+    void playMusic(const char *path, int amountOfLoops);
+    void playEffect(const char *path);
 private:
-    SDL_AudioSpec wavSpec;
-    Uint32 wavLength;
-    Uint8 *wavBuffer;
-    SDL_AudioDeviceID deviceId;
+    int _effectVolume;
+    int _musicVolume;
     bool init();
 };
 

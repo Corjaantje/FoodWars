@@ -1,8 +1,15 @@
+#include <ctime>
+#include <afxres.h>
 #include "TonicEngine/Headers/Visual/Window.h"
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
 #include "TonicEngine/Headers/Input/InputFacade.h"
 #include "TonicEngine/Headers/Input/PrintKeyInputObserver.h"
 #include "TonicEngine/Headers/Input/PrintMouseInputObserver.h"
+#include "TonicEngine/Headers/Audio/AudioFacade.h"
+#include "FoodWars/Headers/GameECS/Entities/EntityManager.h"
+#include "FoodWars/Headers/GameECS/Systems/DrawSystem.h"
+#include "FoodWars/Headers/GameECS/Components/DrawableComponent.h"
+
 
 int main(int argc, char** argv)
 {
@@ -13,44 +20,29 @@ int main(int argc, char** argv)
     inputFacade.getMouseEventObservable()->registerObserver(new PrintMouseInputObserver);
 
     visualFacade->setTitle("Food Wars");
-    //visualFacade->setResolution(1366, 768);
     visualFacade->setResolution(640, 480);
     visualFacade->disablefullscreen();
-    ShapeRectangle rectangle(150, 150, 0, 0, Colour(0, 255, 0, 255));
-    ShapeRectangle rectangle2(75, 75, 150, 150, Colour(0, 0, 255, 255));
-    visualFacade->addRectangle(rectangle);
-    visualFacade->addRectangle(rectangle2);
-    ShapeSprite sprite(150, 150, 200, 0, "../grass.bmp");
-    visualFacade->addSprite(sprite);
     visualFacade->openWindow();
 
-    while(!visualFacade->isWindowClosed()){
-        visualFacade->render();
-        //visualFacade->pollEvents();
-        inputFacade.pollEvents();
+    //Config
+    clock_t startProgramTime = clock();
+    int maxMsProgramIsRunning = 10000; //Stop the program after 10 seconds
+    double frameRateCap = 60;
+    double amountOfUpdatesAllowedPerSecond = 1000.0 / frameRateCap; //= 16.666
+    //End of config
+
+    clock_t timeLast = clock();
+    //Run the application only for MaxMSProgramIsRunning milliseconds.
+    while((clock() - startProgramTime / CLOCKS_PER_SEC * 1000 < maxMsProgramIsRunning) && !visualFacade->isWindowClosed()) {
+        visualFacade->pollEvents();
+        double frameDelta = double(clock() - timeLast) / CLOCKS_PER_SEC * 1000.0;
+        double deltaTime = 1 / frameDelta;
+        if (frameDelta > amountOfUpdatesAllowedPerSecond) {
+            visualFacade->render();
+            timeLast = clock();
+        }
+        //inputFacade.pollEvents();
     }
-
-//    // Sound
-//    SDL_Init(SDL_INIT_AUDIO);
-//    AudioFacade effect{};
-//    AudioFacade background{};
-//
-//    // Locatie is vanaf de exe file
-//    // background
-//    background.load("../FoodWars/Assets/Audio/wildwest.wav");
-//    background.play();
-//
-//    SDL_Delay(5600);
-//    // oof
-//    effect.load("../FoodWars/Assets/Audio/oof.wav");
-//    effect.play();
-//    SDL_Delay(500);
-//    effect.play();
-//    SDL_Delay(500);
-//    effect.play();
-//    SDL_Delay(500);
-//    effect.play();
-//    SDL_Delay(10000);
-
     return 0;
 }
+

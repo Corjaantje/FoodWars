@@ -2,8 +2,9 @@ cmake_minimum_required(VERSION 3.12)
 project(Project_SWA)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_MODULE_PATH $(PROJECT_SOURCE_DIR)/CMake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 find_package(SDL2 REQUIRED)
+find_package(SDL2_mixer REQUIRED)
 
 set (LIB_DIR "${PROJECT_SOURCE_DIR}/TonicEngine/Libraries")
 set (DEPENDENCIES "")
@@ -38,7 +39,7 @@ macro(AddLib repo name)
                     OUTPUT_QUIET ERROR_QUIET)
         else()
             execute_process(
-                    COMMAND "${GIT_EXECUTABLE}" clone ${repo} ${LIB_DIR_NAME}
+                    COMMAND "${GIT_EXECUTABLE}" clone --recursive ${repo} ${LIB_DIR_NAME}
                     RESULT_VARIABLE error_code
                     OUTPUT_QUIET ERROR_QUIET)
         endif()
@@ -48,6 +49,7 @@ macro(AddLib repo name)
     endif()
     include_directories(${LIB_DIR_NAME}${subdir})
     include_directories(${LIB_DIR_NAME}${subdir}/include)
+    include_directories(${LIB_DIR_NAME}${subdir}/include/nanogui)
     add_subdirectory(${LIB_DIR_NAME}${subdir})
     #link_libraries(${LIB_DIR_NAME}${subdir})
     set (DEPENDENCIES ${DEPENDENCIES} ${name})
@@ -74,11 +76,27 @@ set(SOURCE_FILES_VISUAL
         TonicEngine/Sources/Visual/ShapeSprite.cpp
         TonicEngine/Headers/Visual/ShapeSprite.h)
 
+set(SOURCE_FILES_EVENTS
+        TonicEngine/Sources/Events/KeyEvent.cpp
+        TonicEngine/Headers/Events/KeyEvent.h
+        TonicEngine/Sources/Events/MouseEvent.cpp
+        TonicEngine/Headers/Events/MouseEvent.h
+        TonicEngine/Headers/Events/IEvent.h
+        TonicEngine/Headers/Events/WindowEvent.h)
+
 set(SOURCE_FILES_INPUT
         TonicEngine/Sources/Input/InputFacade.cpp
         TonicEngine/Headers/Input/InputFacade.h
         TonicEngine/Headers/Input/IObservable.h
-        TonicEngine/Headers/Input/IObserver.h)
+        TonicEngine/Headers/Input/IObserver.h
+        TonicEngine/Sources/Input/PrintKeyInputObserver.cpp
+        TonicEngine/Headers/Input/PrintKeyInputObserver.h
+        TonicEngine/Sources/Input/PrintMouseInputObserver.cpp
+        TonicEngine/Headers/Input/PrintMouseInputObserver.h
+        TonicEngine/Sources/Input/KeyEventObservable.cpp
+        TonicEngine/Headers/Input/KeyEventObservable.h
+        TonicEngine/Sources/Input/MouseEventObservable.cpp
+        TonicEngine/Headers/Input/MouseEventObservable.h)
 
 set(SOURCE_FILES_STORAGE
         TonicEngine/Sources/Storage/XMLReader.cpp
@@ -90,11 +108,11 @@ set(SOURCE_FILES_STORAGE
         TonicEngine/Sources/Storage/MyDocument.cpp
         TonicEngine/Headers/Storage/MyDocument.h
         TonicEngine/Sources/Storage/tinyxml2.cpp
-        TonicEngine/Headers/Storage/tinyxml2.h)
+        TonicEngine/Headers/Storage/tinyxml2.h
+        TonicEngine/Facades/Storage/StorageFacade.cpp
+        TonicEngine/Headers/Storage/StorageFacade.h)
 
 set(SOURCE_FILES_AUDIO
-        TonicEngine/Headers/Audio/AudioDictionary.h
-        TonicEngine/Sources/Audio/AudioDictionary.cpp
         TonicEngine/Headers/Audio/AudioPlayer.h
         TonicEngine/Sources/Audio/AudioPlayer.cpp
         TonicEngine/Facades/Audio/AudioFacade.cpp
@@ -111,8 +129,29 @@ set(SOURCE_FILES_COMMUNICATION
         TonicEngine/Facades/Communication/CommunicationFacade.cpp
         TonicEngine/Headers/Communication/IConnection.h)
 
-set(SOURCE_FILES main.cpp TonicEngine/Headers/Events/IEvent.h TonicEngine/Sources/Events/KeyEvent.cpp TonicEngine/Headers/Events/KeyEvent.h TonicEngine/Headers/Events/WindowEvent.h TonicEngine/Sources/Input/KeyEventObservable.cpp TonicEngine/Headers/Input/KeyEventObservable.h TonicEngine/Sources/Input/PrintKeyInputObserver.cpp TonicEngine/Headers/Input/PrintKeyInputObserver.h TonicEngine/Sources/Events/MouseEvent.cpp TonicEngine/Headers/Events/MouseEvent.h TonicEngine/Sources/Input/MouseEventObservable.cpp TonicEngine/Headers/Input/MouseEventObservable.h TonicEngine/Sources/Input/PrintMouseInputObserver.cpp TonicEngine/Headers/Input/PrintMouseInputObserver.h)
+set(SOURCE_FILES_COLLISION
+        TonicEngine/Headers/Collision/Vector2D.h
+        TonicEngine/Sources/Collision/Vector2D.cpp
+        TonicEngine/Headers/Collision/Shape.h
+        TonicEngine/Sources/Collision/Shape.cpp
+        TonicEngine/Headers/Collision/Rectangle.h
+        TonicEngine/Sources/Collision/Rectangle.cpp
+        TonicEngine/Headers/Collision/Circle.h
+        TonicEngine/Sources/Collision/Circle.cpp
+        TonicEngine/Facades/Collision/CollisionFacade.cpp
+        TonicEngine/Headers/Collision/CollisionFacade.h)
 
-add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO})
+set(SOURCE_FILES main.cpp
+        FoodWars/Headers/GameECS/Systems/IBaseSystem.h
+        FoodWars/Sources/GameECS/Entities/EntityManager.cpp
+        FoodWars/Headers/GameECS/Entities/EntityManager.h
+        FoodWars/Sources/GameECS/Systems/DrawSystem.cpp
+        FoodWars/Headers/GameECS/Systems/DrawSystem.h
+        FoodWars/Sources/GameECS/Components/Component.cpp
+        FoodWars/Headers/GameECS/Components/Component.h
+        FoodWars/Sources/GameECS/Components/DrawableComponent.cpp
+        FoodWars/Headers/GameECS/Components/DrawableComponent.h)
 
-target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2main -lSDL2 -mwindows -static-libgcc -static-libstdc++)
+add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_EVENTS} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
+
+target_link_libraries(Project_SWA ${DEPENDENCIES}  -lmingw32 -lSDL2_mixer  -lSDL2main -lSDL2  -mwindows -static-libgcc -static-libstdc++)

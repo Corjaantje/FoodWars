@@ -10,9 +10,7 @@
 
 class IConnection {
 public:
-    IConnection(){
-
-    }
+    IConnection() = default;
     virtual ~IConnection() = 0;
     virtual bool connect(std::string ip, int port) = 0;
     virtual bool close() = 0;

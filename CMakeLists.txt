@@ -125,7 +125,20 @@ set(SOURCE_FILES_COLLISION
         TonicEngine/Facades/Collision/CollisionFacade.cpp
         TonicEngine/Headers/Collision/CollisionFacade.h)
 
-set(SOURCE_FILES main.cpp FoodWars/Systems/TurnSystem.cpp FoodWars/Systems/TurnSystem.h)
+        FoodWars/Headers/GameECS/Components/DrawableComponent.h
+        )
+set(SOURCE_FILES main.cpp
+        FoodWars/Headers/GameECS/Systems/IBaseSystem.h
+        FoodWars/Sources/GameECS/Entities/EntityManager.cpp
+        FoodWars/Headers/GameECS/Entities/EntityManager.h
+        FoodWars/Sources/GameECS/Systems/DrawSystem.cpp
+        FoodWars/Headers/GameECS/Systems/DrawSystem.h
+        FoodWars/Sources/GameECS/Components/Component.cpp
+        FoodWars/Headers/GameECS/Components/Component.h
+        FoodWars/Sources/GameECS/Components/DrawableComponent.cpp
+        FoodWars/Headers/GameECS/Components/DrawableComponent.h
+        FoodWars/Systems/TurnSystem.cpp
+        FoodWars/Systems/TurnSystem.h)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 

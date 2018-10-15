@@ -33,6 +33,7 @@ int main(int argc, char** argv)
 
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
     screenStateManager->addFacade(visualFacade);
+    screenStateManager->addFacade(new InputFacade);
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new OtherMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager));

@@ -11,11 +11,12 @@
 #include "../Events/MouseEvent.h"
 #include "KeyEventObservable.h"
 #include "MouseEventObservable.h"
+#include "../../Facades/IFacade.h"
 
 #ifndef PROJECT_SWA_INPUTOBSERVABLE_H
 #define PROJECT_SWA_INPUTOBSERVABLE_H
 
-class InputFacade {
+class InputFacade : public IFacade {
 private:
     std::shared_ptr<KeyEventObservable> _keyEventObservable;
     std::shared_ptr<MouseEventObservable> _mouseEventObservable;

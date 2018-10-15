@@ -2,6 +2,7 @@
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
 #include "TonicEngine/Headers/Input/InputFacade.h"
 #include "TonicEngine/Headers/Input/PrintKeyInputObserver.h"
+#include "TonicEngine/Headers/Input/PrintMouseInputObserver.h"
 
 int main(int argc, char** argv)
 {
@@ -9,6 +10,7 @@ int main(int argc, char** argv)
 
     InputFacade inputFacade;
     inputFacade.getKeyEventObservable()->registerObserver(new PrintKeyInputObserver);
+    inputFacade.getMouseEventObservable()->registerObserver(new PrintMouseInputObserver);
 
     visualFacade->setTitle("Food Wars");
     //visualFacade->setResolution(1366, 768);

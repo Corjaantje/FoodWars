@@ -6,7 +6,7 @@
 #include "../../Headers/StateMachine/OtherMenuScreen.h"
 
 void MainMenuScreen::update(double deltaTime) const {
-    visualFacade->render();
+    visualFacade->render(_renderList);
     std::cout << deltaTime << std::endl;
     if(deltaTime > 100) {
         std::cout << "Change state " << std::endl;
@@ -16,9 +16,10 @@ void MainMenuScreen::update(double deltaTime) const {
 
 MainMenuScreen::MainMenuScreen(ScreenState *context) : IScreen(context) {
     visualFacade = context->getFacade<VisualFacade>();
-    if(visualFacade != nullptr) {
-        visualFacade->addRectangle(ShapeRectangle{100,100,50,50, Colour {0, 0, 255, 100}});
+    for(int i=0; i < 1080; i++) {
+        _renderList.rectangleList.emplace_back(i, 1, i, i, Colour{(i+125)%255, (i)%125, (i-100)%255, 100});
     }
+
 }
 
 MainMenuScreen::~MainMenuScreen() {

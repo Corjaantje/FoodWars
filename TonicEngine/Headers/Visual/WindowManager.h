@@ -5,6 +5,7 @@
 #include "Window.h"
 #include "ShapeRectangle.h"
 #include "ShapeSprite.h"
+#include "Renderlist.h"
 #include <vector>
 
 class WindowManager {
@@ -12,7 +13,7 @@ public:
     WindowManager();
     ~WindowManager();
 
-    void render();
+    void render(Renderlist renderlist);
 
     void setTitle(const std::string &title);
     void setResolution(int width, int height);
@@ -26,13 +27,9 @@ public:
     void pollEvents();
     bool isWindowClosed();
 
-public:
-    std::vector<ShapeRectangle> _rectangleList;
-    std::vector<ShapeSprite> _spriteList;
-
 private:
-    void renderRectangles();
-    void renderSprites();
+    void renderRectangles(std::vector<ShapeRectangle> rectangleList);
+    void renderSprites(std::vector<ShapeSprite> rectangleSprite);
 
 private:
     Window *_window = nullptr;

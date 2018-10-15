@@ -11,6 +11,7 @@
 class MainMenuScreen : public IScreen {
 private:
     std::unique_ptr<VisualFacade> visualFacade;
+    Renderlist _renderList;
 public:
     MainMenuScreen(ScreenState *context);
     ~MainMenuScreen();

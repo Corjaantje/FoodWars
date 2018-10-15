@@ -40,17 +40,17 @@ void WindowManager::disablefullscreen(){
 };
 
 //(re)Draw all the shapes, sprites etc. that are added to the WindowManager
-void WindowManager::render() {
+void WindowManager::render(Renderlist renderlist) {
     SDL_RenderClear(_renderer);
     _renderer = _window->getRenderer();
-    renderRectangles();
-    renderSprites();
+    renderRectangles(renderlist.rectangleList);
+    renderSprites(renderlist.spriteList);
     SDL_RenderPresent(_renderer);
 }
 
-void WindowManager::renderRectangles() {
-    for(int i=0; i< _rectangleList.size(); i++){
-        ShapeRectangle &rectangleShape = _rectangleList[i];
+void WindowManager::renderRectangles(std::vector<ShapeRectangle> rectangleList) {
+    for(int i=0; i< rectangleList.size(); i++){
+        ShapeRectangle &rectangleShape = rectangleList[i];
         SDL_Rect rect;
         rect.x = rectangleShape.xPos;
         rect.y = rectangleShape.yPos;
@@ -64,9 +64,9 @@ void WindowManager::renderRectangles() {
 
 //TODO This causes a massive memory leak at this point due to loading the Bitmap Image. We are aware of
 //TODO the issue and will be fixed in a few days.
-void WindowManager::renderSprites() {
-    for(int i=0; i< _spriteList.size(); i++){
-        ShapeSprite &shapeSprite = _spriteList[i];
+void WindowManager::renderSprites(std::vector<ShapeSprite> rectangleSprite) {
+    for(int i=0; i< rectangleSprite.size(); i++){
+        ShapeSprite &shapeSprite = rectangleSprite[i];
         SDL_Rect rect;
         rect.x = shapeSprite.xPos;
         rect.y = shapeSprite.yPos;

@@ -5,17 +5,20 @@
 #ifndef PROJECT_SWA_IOBSERVER_H
 #define PROJECT_SWA_IOBSERVER_H
 
+#include "memory"
 #include <iostream>
 #include "../Events/IEvent.h"
 
+template <typename T>
 class IObserver{
 public:
     IObserver() {
 
     }
-    virtual ~IObserver() = 0;
-    virtual void update() = 0;
-    //virtual void update(IEvent event) = 0; // update for observers that contains the pressed key
+    ~IObserver() {
+
+    }
+    virtual void update(std::shared_ptr<T> event) = 0;
 };
 
 #endif //PROJECT_SWA_IOBSERVER_H

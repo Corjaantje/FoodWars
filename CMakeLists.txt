@@ -75,8 +75,8 @@ set(SOURCE_FILES_VISUAL
         TonicEngine/Headers/Visual/ShapeSprite.h)
 
 set(SOURCE_FILES_INPUT
-        TonicEngine/Sources/Input/InputObservable.cpp
-        TonicEngine/Headers/Input/InputObservable.h
+        TonicEngine/Sources/Input/InputFacade.cpp
+        TonicEngine/Headers/Input/InputFacade.h
         TonicEngine/Headers/Input/IObservable.h
         TonicEngine/Headers/Input/IObserver.h)
 
@@ -111,7 +111,7 @@ set(SOURCE_FILES_COMMUNICATION
         TonicEngine/Facades/Communication/CommunicationFacade.cpp
         TonicEngine/Headers/Communication/IConnection.h)
 
-set(SOURCE_FILES main.cpp TonicEngine/Headers/Events/IEvent.h TonicEngine/Sources/Events/KeyEvent.cpp TonicEngine/Headers/Events/KeyEvent.h TonicEngine/Headers/Events/WindowEvent.h)
+set(SOURCE_FILES main.cpp TonicEngine/Headers/Events/IEvent.h TonicEngine/Sources/Events/KeyEvent.cpp TonicEngine/Headers/Events/KeyEvent.h TonicEngine/Headers/Events/WindowEvent.h TonicEngine/Sources/Input/KeyEventObservable.cpp TonicEngine/Headers/Input/KeyEventObservable.h TonicEngine/Sources/Input/PrintKeyInputObserver.cpp TonicEngine/Headers/Input/PrintKeyInputObserver.h)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO})
 

@@ -11,17 +11,26 @@
 #include "IEvent.h"
 #include "../Input/IObserver.h"
 
+enum class KEY {
+    KEY_W,
+    KEY_A,
+    KEY_S,
+    KEY_D
+};
+
+enum class KeyEventType {
+    Down,
+    Up
+};
 
 class KeyEvent: public IEvent {
 private:
-    std::vector<IObserver*> _observerList;
-    enum KEYS {KEY_W, KEY_A, KEY_S, KEY_D};
-    KEYS _pressedKey;
+    KEY _pressedKey;
+    KeyEventType _eventType;
 public:
-    void setKey(SDL_Event event);
-    KEYS getKey() const;
-    //void registerObserver(IObserver& iObserver) override;
-    void notify() override;
+    KeyEvent(KEY pressedKey, KeyEventType eventType);
+    KEY getKey() const;
+    KeyEventType getKeyEventType();
 };
 
 #endif //PROJECT_SWA_KEYEVENT_H

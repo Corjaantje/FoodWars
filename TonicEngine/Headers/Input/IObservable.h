@@ -5,18 +5,35 @@
 #ifndef PROJECT_SWA_IOBSERVABLE_H
 #define PROJECT_SWA_IOBSERVABLE_H
 
+#include "memory"
 #include <iostream>
 #include <SDL2/SDL_events.h>
 #include "../Events/IEvent.h"
 #include "IObserver.h"
+#include "../Events/KeyEvent.h"
 
+template <typename T>
 class IObservable {
+private:
+    std::vector<std::shared_ptr<IObserver<T>>> _observers;
 public:
     IObservable() {
 
     }
-    virtual void registerObserver(IObserver& iObserver) = 0;
-    virtual void notify(SDL_Event event) = 0;
+
+    virtual ~IObservable(){
+
+    }
+
+    void registerObserver(IObserver<T>* iObserver) {
+        _observers.push_back(std::shared_ptr<IObserver<T>>(iObserver));
+    };
+
+    void notify(std::shared_ptr<T> event) {
+        for(auto& observer: _observers){
+            observer->update(event);
+        }
+    }
 };
 
 #endif //PROJECT_SWA_IOBSERVABLE_H

@@ -1,11 +1,15 @@
 #include "TonicEngine/Headers/Visual/Window.h"
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
-#include "TonicEngine/Headers/Input/InputObservable.h"
+#include "TonicEngine/Headers/Input/InputFacade.h"
+#include "TonicEngine/Headers/Input/PrintKeyInputObserver.h"
 
 int main(int argc, char** argv)
 {
     VisualFacade* visualFacade = new VisualFacade();
-    InputObservable* inputObservable = new InputObservable();
+
+    InputFacade inputFacade;
+    inputFacade.getKeyEventObservable()->registerObserver(new PrintKeyInputObserver);
+
     visualFacade->setTitle("Food Wars");
     //visualFacade->setResolution(1366, 768);
     visualFacade->setResolution(640, 480);
@@ -17,10 +21,11 @@ int main(int argc, char** argv)
     ShapeSprite sprite(150, 150, 200, 0, "../grass.bmp");
     visualFacade->addSprite(sprite);
     visualFacade->openWindow();
+
     while(!visualFacade->isWindowClosed()){
         visualFacade->render();
         //visualFacade->pollEvents();
-        inputObservable->pollEvents();
+        inputFacade.pollEvents();
     }
 
 //    // Sound

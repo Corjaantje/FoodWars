@@ -11,7 +11,7 @@ public:
 
     }
     //virtual void registerObserver(IObserver& iObserver);
-    virtual void notify() = 0;
+    //virtual void notify() = 0;
 };
 
 #endif //PROJECT_SWA_IEVENT_H

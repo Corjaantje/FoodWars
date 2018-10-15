@@ -2,8 +2,8 @@
 // Created by Lucas on 11/10/2018.
 //
 
-#include "../Headers/MainMenuScreen.h"
-#include "../Headers/OtherMenuScreen.h"
+#include "../../Headers/StateMachine/MainMenuScreen.h"
+#include "../../Headers/StateMachine/OtherMenuScreen.h"
 
 void MainMenuScreen::update(double deltaTime) const {
     visualFacade->render();

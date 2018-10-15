@@ -11,8 +11,8 @@
 #include "ScreenPtr.h"
 #include <typeinfo>
 #include <map>
-#include "../../TonicEngine/Facades/IFacade.h"
-#include "../../TonicEngine/Headers/Visual/VisualFacade.h"
+#include "../../../TonicEngine/Facades/IFacade.h"
+#include "../../../TonicEngine/Headers/Visual/VisualFacade.h"
 
 class ScreenState {
 private:

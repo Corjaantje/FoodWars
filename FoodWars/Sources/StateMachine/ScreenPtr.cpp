@@ -2,7 +2,7 @@
 // Created by Lucas on 11/10/2018.
 //
 
-#include "../Headers/ScreenPtr.h"
+#include "../../Headers/StateMachine/ScreenPtr.h"
 
 ScreenPtr::ScreenPtr(const IScreen *screen) {
     _screen = screen;

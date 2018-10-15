@@ -4,7 +4,7 @@
 // Created by Lucas on 11/10/2018.
 //
 
-#include "../Headers/ScreenState.h"
+#include "../../Headers/StateMachine/ScreenState.h"
 
 ScreenState::ScreenState() : _currentState(nullptr) {
 

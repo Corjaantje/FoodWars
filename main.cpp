@@ -7,10 +7,10 @@
 #include "FoodWars/Headers/GameECS/Entities/EntityManager.h"
 #include "FoodWars/Headers/GameECS/Systems/DrawSystem.h"
 #include "FoodWars/Headers/GameECS/Components/DrawableComponent.h"
-#include "FoodWars/Headers/ScreenState.h"
+#include "FoodWars/Headers/StateMachine/ScreenState.h"
 #include "TonicEngine/Headers/Communication/CommunicationFacade.h"
-#include "FoodWars/Headers/MainMenuScreen.h"
-#include "FoodWars/Headers/OtherMenuScreen.h"
+#include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
+#include "FoodWars/Headers/StateMachine/OtherMenuScreen.h"
 
 
 int main(int argc, char** argv)

@@ -16,9 +16,7 @@ void MainMenuScreen::update(double deltaTime) const {
 
 MainMenuScreen::MainMenuScreen(ScreenState *context) : IScreen(context) {
     visualFacade = context->getFacade<VisualFacade>();
-    for(int i=0; i < 1080; i++) {
-        _renderList.rectangleList.emplace_back(i, 1, i, i, Colour{(i+125)%255, (i)%125, (i-100)%255, 100});
-    }
+    _renderList.spriteList.emplace_back(200, 200, 50, 50, "../grass.bmp");
 
 }
 

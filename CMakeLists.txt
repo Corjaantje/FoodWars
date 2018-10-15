@@ -125,8 +125,6 @@ set(SOURCE_FILES_COLLISION
         TonicEngine/Facades/Collision/CollisionFacade.cpp
         TonicEngine/Headers/Collision/CollisionFacade.h)
 
-        FoodWars/Headers/GameECS/Components/DrawableComponent.h
-        )
 set(SOURCE_FILES main.cpp
         FoodWars/Headers/GameECS/Systems/IBaseSystem.h
         FoodWars/Sources/GameECS/Entities/EntityManager.cpp

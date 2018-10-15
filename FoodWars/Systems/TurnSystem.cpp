@@ -20,3 +20,15 @@ int TurnSystem::timePassed() {
     _timePerTurn--;
     return 0;
 }
+
+void TurnSystem::onUpdate(double deltaTime) {
+    if (_startTime)
+    {
+        _remainingTime -= deltaTime;
+    }
+}
+
+void TurnSystem::startTime() {
+    _startTime = true;
+    _remainingTime = (float)_timePerTurn;
+}

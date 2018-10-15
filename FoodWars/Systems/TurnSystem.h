@@ -39,6 +39,9 @@ class TurnSystem {
 private:
     int _timePerTurn = 30;
 
+    double _remainingTime;
+
+    bool _startTime;
 
     int _timePassed;
 
@@ -50,13 +53,27 @@ private:
     // So for every 60 updates a second passes
 
 public:
+    void setRelevantEntities();//Turn[] ent);
+
     void onUpdate();
+    void onUpdate(double deltaTime);
+    void startTime();
     void endTurn();
     void onTurnEnd();
 
     // Uncertain if needed
     void switchCharacter(int charID);
 
+    /*
+        entities, get turn components
+	        (2 entities terug, integer & component)
+
+        Teams nog even negeren
+        Steeds maar 1 heeft "myturn = true"
+        Als beurt voorbij is, die op false en volgende true
+
+        void/bool/something EndTurn() of EndTurn(Entity end)
+     */
 };
 
 

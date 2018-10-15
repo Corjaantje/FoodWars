@@ -31,9 +31,7 @@ void InputFacade::pollEvents() {
                 break;
             }
             case SDL_MOUSEBUTTONDOWN: { // When a click is registered
-                int x, y;
-                SDL_GetMouseState(&x, &y);
-                std::shared_ptr<MouseEvent> mouseEvent = std::shared_ptr<MouseEvent>(new MouseEvent(x, y));
+                std::shared_ptr<MouseEvent> mouseEvent = std::shared_ptr<MouseEvent>(new MouseEvent(event.motion.x, event.motion.y));
                 _mouseEventObservable.get()->notify(mouseEvent);
                 break;
             }

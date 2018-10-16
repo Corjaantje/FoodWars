@@ -68,8 +68,18 @@ bool Window::closeWindow() {
 
 bool Window::setFullscreen(bool state) {
     _fullscreen = state;
+    SDL_SetWindowFullscreen(_window, state);
 }
 
 SDL_Renderer* Window::getRenderer() {
     return _renderer;
 }
+
+void Window::setTitle(const std::string &title){
+    _title = title;
+    SDL_SetWindowTitle(_window, &title[0]);
+};
+
+void Window::setResolution(int width, int height){
+    SDL_SetWindowSize(_window, width, height);
+};

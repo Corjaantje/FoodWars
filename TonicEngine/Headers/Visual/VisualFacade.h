@@ -13,7 +13,7 @@ public:
     VisualFacade();
     ~VisualFacade();
 
-    void render();
+    void render(Renderlist renderlist);
 
     void setTitle(const std::string &title);
     void setResolution(int width, int height);

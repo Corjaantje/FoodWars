@@ -7,14 +7,15 @@
 
 #include "memory"
 #include "IScreen.h"
-#include "ScreenState.h"
-#include "../../TonicEngine/Headers/Visual/VisualFacade.h"
+#include "ScreenStateManager.h"
+#include "../../../TonicEngine/Headers/Visual/VisualFacade.h"
 
 class OtherMenuScreen : public IScreen {
 private:
-    std::unique_ptr<VisualFacade> visualFacade;
+    std::shared_ptr<VisualFacade> visualFacade;
+    Renderlist _renderList;
 public:
-    OtherMenuScreen(ScreenState *context);
+    OtherMenuScreen(std::shared_ptr<ScreenStateManager> context);
     ~OtherMenuScreen();
     void update(double deltaTime) const override;
 };

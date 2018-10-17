@@ -23,8 +23,16 @@ int main(int argc, char** argv)
     visualFacade->disablefullscreen();
     visualFacade->openWindow();
 
+    AudioFacade* audioFacade = new AudioFacade();
+    audioFacade->setMusicVolume(5);
+    audioFacade->setEffectVolume(10);
+
+    audioFacade->addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
+    audioFacade->addAudio("wildwest", "../FoodWars/Assets/Audio/wildwest.wav");
+
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
     screenStateManager->addFacade(visualFacade);
+    screenStateManager->addFacade(audioFacade);
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new OtherMenuScreen(screenStateManager));
     screenStateManager->setActiveScreen<MainMenuScreen>();

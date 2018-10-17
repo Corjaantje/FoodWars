@@ -13,6 +13,7 @@
 class OtherMenuScreen : public IScreen {
 private:
     std::shared_ptr<VisualFacade> visualFacade;
+    std::shared_ptr<AudioFacade> audioFacade;
     Renderlist _renderList;
 public:
     OtherMenuScreen(std::shared_ptr<ScreenStateManager> context);

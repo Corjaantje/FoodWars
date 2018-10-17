@@ -7,12 +7,15 @@
 
 void MainMenuScreen::update(double deltaTime) const {
     visualFacade->render(_renderList);
+
 }
 
 MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
     visualFacade = context->getFacade<VisualFacade>();
     _renderList.spriteList.emplace_back(200, 200, 50, 50, "../grass.bmp");
 
+    audioFacade = context->getFacade<AudioFacade>();
+    audioFacade->playMusic("wildwest", -1);
 }
 
 MainMenuScreen::~MainMenuScreen() {

@@ -13,6 +13,8 @@ public:
 
     bool createWindow();
     bool closeWindow();
+    void setTitle(const std::string &title);
+    void setResolution(int width, int height);
     bool setFullscreen(bool state);
     void pollEvents();
     inline bool isClosed() const { return _closed; };

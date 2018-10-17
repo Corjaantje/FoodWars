@@ -61,6 +61,7 @@ endmacro()
 AddLib("https://github.com/lb321/CPMBox2D" Box2D '' "v2.3.1-nocpm")
 AddLib("https://github.com/lsalzman/enet" enet)
 AddLib("https://github.com/leethomason/tinyxml2" tinyxml2)
+#AddLib("https://github.com/dalerank/nanogui-sdl" NanoGUI-SDL)
 
 set(SOURCE_FILES_VISUAL
 	    TonicEngine/Sources/Visual/Window.cpp
@@ -76,11 +77,27 @@ set(SOURCE_FILES_VISUAL
         TonicEngine/Sources/Visual/ShapeSprite.cpp
         TonicEngine/Headers/Visual/ShapeSprite.h)
 
+set(SOURCE_FILES_EVENTS
+        TonicEngine/Sources/Events/KeyEvent.cpp
+        TonicEngine/Headers/Events/KeyEvent.h
+        TonicEngine/Sources/Events/MouseEvent.cpp
+        TonicEngine/Headers/Events/MouseEvent.h
+        TonicEngine/Headers/Events/IEvent.h
+        TonicEngine/Headers/Events/WindowEvent.h)
+
 set(SOURCE_FILES_INPUT
-        TonicEngine/Sources/Input/InputObservable.cpp
-        TonicEngine/Headers/Input/InputObservable.h
+        TonicEngine/Sources/Input/InputFacade.cpp
+        TonicEngine/Headers/Input/InputFacade.h
         TonicEngine/Headers/Input/IObservable.h
-        TonicEngine/Headers/Input/IObserver.h)
+        TonicEngine/Headers/Input/IObserver.h
+        TonicEngine/Sources/Input/PrintKeyInputObserver.cpp
+        TonicEngine/Headers/Input/PrintKeyInputObserver.h
+        TonicEngine/Sources/Input/PrintMouseInputObserver.cpp
+        TonicEngine/Headers/Input/PrintMouseInputObserver.h
+        TonicEngine/Sources/Input/KeyEventObservable.cpp
+        TonicEngine/Headers/Input/KeyEventObservable.h
+        TonicEngine/Sources/Input/MouseEventObservable.cpp
+        TonicEngine/Headers/Input/MouseEventObservable.h)
 
 set(SOURCE_FILES_STORAGE
         TonicEngine/Sources/Storage/XMLReader.cpp
@@ -135,11 +152,19 @@ set(SOURCE_FILES main.cpp
         FoodWars/Headers/GameECS/Components/Component.h
         FoodWars/Sources/GameECS/Components/DrawableComponent.cpp
         FoodWars/Headers/GameECS/Components/DrawableComponent.h
+        FoodWars/Headers/StateMachine/IScreen.h
+        FoodWars/Headers/StateMachine/ScreenStateManager.h
+        FoodWars/Headers/StateMachine/MainMenuScreen.h
+        FoodWars/Sources/StateMachine/ScreenStateManager.cpp
+		TonicEngine/Facades/IFacade.h
+        FoodWars/Sources/StateMachine/MainMenuScreen.cpp
+        FoodWars/Headers/StateMachine/OtherMenuScreen.h
+        FoodWars/Sources/StateMachine/OtherMenuScreen.cpp TonicEngine/Sources/Visual/Renderlist.cpp TonicEngine/Headers/Visual/Renderlist.h TonicEngine/Sources/Visual/TextureManager.cpp TonicEngine/Headers/Visual/TextureManager.h
         FoodWars/Sources/GameECS/Systems/TurnSystem.cpp
         FoodWars/Headers/GameECS/Systems/TurnSystem.h
         FoodWars/Sources/GameECS/Components/TurnComponent.cpp
         FoodWars/Headers/GameECS/Components/TurnComponent.h)
 
-add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
+add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_EVENTS} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 
 target_link_libraries(Project_SWA ${DEPENDENCIES}  -lmingw32 -lSDL2_mixer  -lSDL2main -lSDL2  -mwindows -static-libgcc -static-libstdc++)

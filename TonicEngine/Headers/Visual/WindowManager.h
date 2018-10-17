@@ -5,6 +5,8 @@
 #include "Window.h"
 #include "ShapeRectangle.h"
 #include "ShapeSprite.h"
+#include "Renderlist.h"
+#include "TextureManager.h"
 #include <vector>
 
 class WindowManager {
@@ -12,7 +14,7 @@ public:
     WindowManager();
     ~WindowManager();
 
-    void render();
+    void render(Renderlist renderlist);
 
     void setTitle(const std::string &title);
     void setResolution(int width, int height);
@@ -26,16 +28,12 @@ public:
     void pollEvents();
     bool isWindowClosed();
 
-public:
-    std::vector<ShapeRectangle> _rectangleList;
-    std::vector<ShapeSprite> _spriteList;
+private:
+    void renderRectangles(std::vector<ShapeRectangle> rectangleList);
+    void renderSprites(std::vector<ShapeSprite> rectangleSprite);
 
 private:
-    void updateWindowSettings();
-    void renderRectangles();
-    void renderSprites();
-
-private:
+    TextureManager _textureManager;
     Window *_window = nullptr;
     SDL_Renderer *_renderer = nullptr;
     std::string _title = "Default Title";

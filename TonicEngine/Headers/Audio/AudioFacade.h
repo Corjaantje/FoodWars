@@ -3,10 +3,11 @@
 
 #include <SDL2/SDL.h>
 #include "AudioPlayer.h"
+#include "../../Facades/IFacade.h"
 #include <string>
 #include <map>
 
-class AudioFacade {
+class AudioFacade : public IFacade {
 public:
     AudioFacade();
     ~AudioFacade();

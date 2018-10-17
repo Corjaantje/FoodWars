@@ -9,8 +9,9 @@
 #include "Client.h"
 #include "Server.h"
 #include "Packet.h"
+#include "../../Facades/IFacade.h"
 
-class CommunicationFacade {
+class CommunicationFacade : public IFacade {
 public:
     CommunicationFacade();
     ~CommunicationFacade();

@@ -9,8 +9,9 @@
 
 #include "XMLReader.h"
 #include "XMLWriter.h"
+#include "../../Facades/IFacade.h"
 
-class StorageFacade {
+class StorageFacade : public IFacade {
 private:
     std::unique_ptr<MyDocument> _systemFile;
     std::unique_ptr<MyDocument> _userFile;

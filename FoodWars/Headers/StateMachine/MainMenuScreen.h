@@ -15,7 +15,7 @@ private:
 public:
     MainMenuScreen(std::shared_ptr<ScreenStateManager> context);
     ~MainMenuScreen();
-    void update(double deltaTime) const override;
+    void update(double deltaTime) override;
 };
 
 #endif //PROJECT_SWA_MAINMENUSCREEN_H

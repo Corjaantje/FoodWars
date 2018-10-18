@@ -2,8 +2,8 @@
 #define PROJECT_SWA_RENDERLIST_H
 
 #include <vector>
-#include "ShapeRectangle.h"
-#include "ShapeSprite.h"
+#include "Shapes/ShapeRectangle.h"
+#include "Shapes/ShapeSprite.h"
 
 class Renderlist {
 public:

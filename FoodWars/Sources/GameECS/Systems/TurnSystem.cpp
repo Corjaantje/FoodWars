@@ -10,6 +10,7 @@
 
 TurnSystem::TurnSystem(std::shared_ptr<EntityManager> entityManager){
     _entityManager = entityManager;
+    getRelevantEntities();
     setTurnTime(_defaultTimePerTurn);
 }
 

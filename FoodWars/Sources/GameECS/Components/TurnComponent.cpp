@@ -36,6 +36,10 @@ double TurnComponent::getRemainingTime() const {
     return _remainingTime;
 }
 
+bool TurnComponent::getMyTurn() const {
+    return _myTurn;
+}
+
 
 
 

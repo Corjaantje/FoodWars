@@ -31,7 +31,6 @@ public:
     std::shared_ptr<KeyEventObservable> getKeyEventObservable();
     std::shared_ptr<MouseEventObservable> getMouseEventObservable();
     std::shared_ptr<WindowEventObservable> getWindowEventObservable();
-    bool isWindowClosed();
     void pollEvents();
 };
 

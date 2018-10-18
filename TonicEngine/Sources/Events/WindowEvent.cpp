@@ -1,6 +1,6 @@
 #include "../../Headers/Events/WindowEvent.h"
 
-WindowEvent::WindowEvent(int width, int height) : _width(width), _height(height) {
+WindowEvent::WindowEvent(int width, int height, WindowEventType windowEventType) : _width(width), _height(height), _eventType(windowEventType) {
 }
 
 int WindowEvent::getWidth() const {

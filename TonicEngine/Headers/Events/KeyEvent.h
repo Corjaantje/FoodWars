@@ -15,7 +15,9 @@ enum class KEY {
     KEY_W,
     KEY_A,
     KEY_S,
-    KEY_D
+    KEY_D,
+    KEY_ESCAPE,
+    KEY_OTHER
 };
 
 enum class KeyEventType {

@@ -6,11 +6,10 @@
 #define PROJECT_SWA_WINDOWEVENT_H
 
 #include "IEvent.h"
+#include <string>
 
 enum class WindowEventType {
     Quit,
-    Minimize,
-    Maximize,
     Resize
 };
 
@@ -20,9 +19,10 @@ private:
     int _width;
     int _height;
 public:
-    WindowEvent(int width, int height);
+    WindowEvent(int width, int height, WindowEventType windowEventType);
     int getWidth() const;
     int getHeight() const;
+    bool quitRequest() const;
     WindowEventType GetWindowEventType();
 };
 

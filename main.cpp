@@ -16,6 +16,7 @@
 #include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
 #include "FoodWars/Headers/StateMachine/OtherMenuScreen.h"
 #include "TonicEngine/Headers/Input/PrintWindowObserver.h"
+#include "TonicEngine/Headers/Input/WindowClosedObserver.h"
 
 
 int main(int argc, char** argv)
@@ -26,6 +27,8 @@ int main(int argc, char** argv)
     inputFacade.getKeyEventObservable()->registerObserver(new PrintKeyInputObserver);
     inputFacade.getMouseEventObservable()->registerObserver(new PrintMouseInputObserver);
     inputFacade.getWindowEventObservable()->registerObserver(new PrintWindowObserver);
+    WindowClosedObserver *windowClosedObserver = new WindowClosedObserver();
+    inputFacade.getWindowEventObservable()->registerObserver(windowClosedObserver);
 
     visualFacade->setTitle("Food Wars");
     visualFacade->setResolution(640, 480);
@@ -47,7 +50,7 @@ int main(int argc, char** argv)
 
     clock_t timeLast = clock();
     //Run the application only for MaxMSProgramIsRunning milliseconds.
-    while((clock() - startProgramTime / CLOCKS_PER_SEC * 1000 < maxMsProgramIsRunning) && !inputFacade.isWindowClosed()) {
+    while((clock() - startProgramTime / CLOCKS_PER_SEC * 1000 < maxMsProgramIsRunning) && !windowClosedObserver->isWindowClosed()) {
         inputFacade.pollEvents();
         double frameDelta = double (clock() - timeLast) / CLOCKS_PER_SEC * 1000.0;
         double deltaTime = 1/frameDelta;

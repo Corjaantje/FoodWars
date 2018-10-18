@@ -5,7 +5,3 @@ WindowEventObservable::WindowEventObservable() {
 
 WindowEventObservable::~WindowEventObservable() {
 }
-
-void WindowEventObservable::closeWindow() {
- _closed = true;
-}

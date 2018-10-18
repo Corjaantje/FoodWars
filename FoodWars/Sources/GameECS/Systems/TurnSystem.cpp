@@ -53,7 +53,7 @@ void TurnSystem::setTurnTime(int turnTime) {
 // If remainingTime <= 0, end turn.
 void TurnSystem::update(double deltaTime) {
         _turnComponents[_turnOrder[_currentTurn]]->lowerRemainingTime(deltaTime);
-        if (_turnComponents[_turnOrder[_currentTurn]]->getRemainingTime() <= 0 || _turnComponents[_turnOrder[_currentTurn]]->getmyEnergy() <= 0)
+        if (_turnComponents[_turnOrder[_currentTurn]]->getRemainingTime() <= 0)
         {
             endTurn();
         }
@@ -67,11 +67,9 @@ void TurnSystem::endTurn() {
 
     _turnComponents[_turnOrder[_currentTurn]]->switchTurn(true);
     _turnComponents[_turnOrder[_currentTurn]]->setRemainingTime((float)_timePerTurn);
-    _turnComponents[_turnOrder[_currentTurn]]->resetEnergyToMax();
+
 
 }
-
-
 
 
 

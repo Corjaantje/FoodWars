@@ -15,6 +15,9 @@
 #include "TonicEngine/Headers/Communication/CommunicationFacade.h"
 #include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
 #include "FoodWars/Headers/StateMachine/OtherMenuScreen.h"
+#include "FoodWars/Headers/StateMachine/GameScreen.h"
+#include "TonicEngine/Headers/Input/PrintWindowObserver.h"
+#include "TonicEngine/Headers/Input/WindowClosedObserver.h"
 
 #include "FoodWars/Headers/GameECS/Components/TurnComponent.h"
 #include "FoodWars/Headers/GameECS/Systems/TurnSystem.h"
@@ -28,6 +31,9 @@ int main(int argc, char** argv)
     InputFacade inputFacade;
     inputFacade.getKeyEventObservable()->registerObserver(new PrintKeyInputObserver);
     inputFacade.getMouseEventObservable()->registerObserver(new PrintMouseInputObserver);
+    inputFacade.getWindowEventObservable()->registerObserver(new PrintWindowObserver);
+    WindowClosedObserver *windowClosedObserver = new WindowClosedObserver();
+    inputFacade.getWindowEventObservable()->registerObserver(windowClosedObserver);
 
     visualFacade->setTitle("Food Wars");
     visualFacade->setResolution(640, 480);
@@ -36,9 +42,11 @@ int main(int argc, char** argv)
 
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
     screenStateManager->addFacade(visualFacade);
+    screenStateManager->addFacade(new InputFacade);
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new OtherMenuScreen(screenStateManager));
-    screenStateManager->setActiveScreen<MainMenuScreen>();
+    screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager));
+    screenStateManager->setActiveScreen<GameScreen>();
 
     //Config
     clock_t startProgramTime = clock();
@@ -49,9 +57,8 @@ int main(int argc, char** argv)
 
     clock_t timeLast = clock();
     //Run the application only for MaxMSProgramIsRunning milliseconds.
-    while((clock() - startProgramTime / CLOCKS_PER_SEC * 1000 < maxMsProgramIsRunning) && !visualFacade->isWindowClosed()) {
-        visualFacade->pollEvents();
-        //inputFacade.pollEvents();
+    while((clock() - startProgramTime / CLOCKS_PER_SEC * 1000 < maxMsProgramIsRunning) && !windowClosedObserver->isWindowClosed()) {
+        inputFacade.pollEvents();
         double frameDelta = double (clock() - timeLast) / CLOCKS_PER_SEC * 1000.0;
         double deltaTime = 1/frameDelta;
         if(frameDelta > amountOfUpdatesAllowedPerSecond){
@@ -59,9 +66,9 @@ int main(int argc, char** argv)
             timeLast = clock();
         }
 
-        if(clock() - startProgramTime / CLOCKS_PER_SEC * 1000 > 5000){
+        /*if(clock() - startProgramTime / CLOCKS_PER_SEC * 1000 > 5000){
             screenStateManager->setActiveScreen<OtherMenuScreen>();
-        }
+        }*/
     }
     return 0;
 }

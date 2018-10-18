@@ -17,14 +17,11 @@ public:
     void switchTurn(bool change);
     void setRemainingTime(double t);
     void lowerRemainingTime(double t);
-    void resetEnergyToMax();
     double getRemainingTime() const;
     bool getMyTurn() const;
-    int getmyEnergy() const;
 
 private:
-    int _maxEnergy;
-    int _currentEnergy;
+    int _energy;
     double _remainingTime;
     bool _myTurn = false;
 };

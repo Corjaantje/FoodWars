@@ -2,12 +2,14 @@
 #define PROJECT_SWA_SHAPERECTANGLE_H
 
 
-#include "Colour.h"
+#include "../Colour.h"
+#include "IShape.h"
 
-class ShapeRectangle {
+class ShapeRectangle : public IShape {
 public:
     ShapeRectangle(int width, int height, int xPos, int yPos, Colour colour);
-    ~ShapeRectangle();
+    ~ShapeRectangle() override;
+    void addToRender(Renderlist* renderlist) override;
 public:
     int width;
     int height;

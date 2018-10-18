@@ -70,12 +70,12 @@ set(SOURCE_FILES_VISUAL
         TonicEngine/Headers/Visual/VisualFacade.h
         TonicEngine/Sources/Visual/WindowManager.cpp
         TonicEngine/Headers/Visual/WindowManager.h
-        TonicEngine/Sources/Visual/ShapeRectangle.cpp
-        TonicEngine/Headers/Visual/ShapeRectangle.h
+        TonicEngine/Sources/Visual/Shapes/ShapeRectangle.cpp
+        TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h
         TonicEngine/Sources/Visual/Colour.cpp
         TonicEngine/Headers/Visual/Colour.h
-        TonicEngine/Sources/Visual/ShapeSprite.cpp
-        TonicEngine/Headers/Visual/ShapeSprite.h)
+        TonicEngine/Sources/Visual/Shapes/ShapeSprite.cpp
+        TonicEngine/Headers/Visual/Shapes/ShapeSprite.h)
 
 set(SOURCE_FILES_EVENTS
         TonicEngine/Sources/Events/KeyEvent.cpp
@@ -159,11 +159,29 @@ set(SOURCE_FILES main.cpp
 		TonicEngine/Facades/IFacade.h
         FoodWars/Sources/StateMachine/MainMenuScreen.cpp
         FoodWars/Headers/StateMachine/OtherMenuScreen.h
-        FoodWars/Sources/StateMachine/OtherMenuScreen.cpp TonicEngine/Sources/Visual/Renderlist.cpp TonicEngine/Headers/Visual/Renderlist.h TonicEngine/Sources/Visual/TextureManager.cpp TonicEngine/Headers/Visual/TextureManager.h
+
         FoodWars/Sources/GameECS/Systems/TurnSystem.cpp
         FoodWars/Headers/GameECS/Systems/TurnSystem.h
         FoodWars/Sources/GameECS/Components/TurnComponent.cpp
-        FoodWars/Headers/GameECS/Components/TurnComponent.h)
+        FoodWars/Headers/GameECS/Components/TurnComponent.h
+
+        FoodWars/Sources/StateMachine/OtherMenuScreen.cpp
+        TonicEngine/Sources/Visual/Renderlist.cpp
+        TonicEngine/Headers/Visual/Renderlist.h
+        TonicEngine/Sources/Visual/TextureManager.cpp
+        TonicEngine/Headers/Visual/TextureManager.h
+        FoodWars/Sources/StateMachine/GameScreen.cpp
+        FoodWars/Headers/StateMachine/GameScreen.h
+        FoodWars/Headers/GameECS/Systems/InputSystem.h
+        FoodWars/Sources/GameECS/Systems/InputSystem.cpp
+        TonicEngine/Headers/Visual/Shapes/IShape.h
+        TonicEngine/Sources/Events/WindowEvent.cpp
+        TonicEngine/Sources/Input/WindowEventObservable.cpp
+        TonicEngine/Headers/Input/WindowEventObservable.h
+        TonicEngine/Sources/Input/PrintWindowObserver.cpp
+        TonicEngine/Headers/Input/PrintWindowObserver.h
+        TonicEngine/Sources/Input/WindowClosedObserver.cpp
+        TonicEngine/Headers/Input/WindowClosedObserver.h)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_EVENTS} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 

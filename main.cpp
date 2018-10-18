@@ -15,6 +15,7 @@
 #include "TonicEngine/Headers/Communication/CommunicationFacade.h"
 #include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
 #include "FoodWars/Headers/StateMachine/OtherMenuScreen.h"
+#include "TonicEngine/Headers/Input/PrintWindowObserver.h"
 
 
 int main(int argc, char** argv)
@@ -24,6 +25,7 @@ int main(int argc, char** argv)
     InputFacade inputFacade;
     inputFacade.getKeyEventObservable()->registerObserver(new PrintKeyInputObserver);
     inputFacade.getMouseEventObservable()->registerObserver(new PrintMouseInputObserver);
+    inputFacade.getWindowEventObservable()->registerObserver(new PrintWindowObserver);
 
     visualFacade->setTitle("Food Wars");
     visualFacade->setResolution(640, 480);

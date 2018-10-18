@@ -37,16 +37,20 @@ void InputFacade::pollEvents() {
                 break;
             }
             case SDL_QUIT: { // When the window is closed
-                std::shared_ptr<WindowEvent> windowEvent = std::make_shared<WindowEvent>();
+                //std::shared_ptr<WindowEvent> windowEvent = std::make_shared<WindowEvent>();
                 _windowEventObservable.get()->closeWindow();
                 break;
             }
-            case SDL_WINDOWEVENT_RESIZED:
-                break;
-            case SDL_WINDOW_MAXIMIZED:
-                break;
-            case SDL_WINDOW_MINIMIZED:
-                break;_
+            case SDL_WINDOWEVENT:
+                switch (event.window.event) {
+                    case SDL_WINDOWEVENT_RESIZED: {
+                        std::shared_ptr<WindowEvent> windowEvent = std::make_shared<WindowEvent>(event.window.data1, event.window.data2);
+                        _windowEventObservable.get()->notify(windowEvent);
+                        break;
+                    }
+                    default:
+                        break;
+                }
             default:
                 break;
         }
@@ -59,6 +63,10 @@ std::shared_ptr<KeyEventObservable> InputFacade::getKeyEventObservable() {
 
 std::shared_ptr<MouseEventObservable> InputFacade::getMouseEventObservable() {
     return _mouseEventObservable;
+}
+
+std::shared_ptr<WindowEventObservable> InputFacade::getWindowEventObservable() {
+    return _windowEventObservable;
 }
 
 bool InputFacade::isWindowClosed() {

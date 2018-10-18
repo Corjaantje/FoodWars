@@ -17,8 +17,12 @@ enum class WindowEventType {
 class WindowEvent: public IEvent {
 private:
     WindowEventType _eventType;
+    int _width;
+    int _height;
 public:
-    WindowEvent();
+    WindowEvent(int width, int height);
+    int getWidth() const;
+    int getHeight() const;
     WindowEventType GetWindowEventType();
 };
 

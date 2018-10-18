@@ -3,8 +3,8 @@
 
 #include <string>
 #include "Window.h"
-#include "ShapeRectangle.h"
-#include "ShapeSprite.h"
+#include "Shapes/ShapeRectangle.h"
+#include "Shapes/ShapeSprite.h"
 #include "Renderlist.h"
 #include "TextureManager.h"
 #include <vector>

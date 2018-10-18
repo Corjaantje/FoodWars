@@ -17,5 +17,5 @@ GameScreen::~GameScreen() {
 
 void GameScreen::update(double deltaTime) const {
     _drawSystem.update(deltaTime);
-    _inputFacade->pollEvents();
+    //_inputFacade->pollEvents();
 }

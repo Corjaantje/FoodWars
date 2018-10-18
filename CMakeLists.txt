@@ -70,12 +70,12 @@ set(SOURCE_FILES_VISUAL
         TonicEngine/Headers/Visual/VisualFacade.h
         TonicEngine/Sources/Visual/WindowManager.cpp
         TonicEngine/Headers/Visual/WindowManager.h
-        TonicEngine/Sources/Visual/ShapeRectangle.cpp
-        TonicEngine/Headers/Visual/ShapeRectangle.h
+        TonicEngine/Sources/Visual/Shapes/ShapeRectangle.cpp
+        TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h
         TonicEngine/Sources/Visual/Colour.cpp
         TonicEngine/Headers/Visual/Colour.h
-        TonicEngine/Sources/Visual/ShapeSprite.cpp
-        TonicEngine/Headers/Visual/ShapeSprite.h)
+        TonicEngine/Sources/Visual/Shapes/ShapeSprite.cpp
+        TonicEngine/Headers/Visual/Shapes/ShapeSprite.h)
 
 set(SOURCE_FILES_EVENTS
         TonicEngine/Sources/Events/KeyEvent.cpp
@@ -167,7 +167,7 @@ set(SOURCE_FILES main.cpp
         FoodWars/Sources/StateMachine/GameScreen.cpp
         FoodWars/Headers/StateMachine/GameScreen.h
         FoodWars/Headers/GameECS/Systems/InputSystem.h
-        FoodWars/Sources/GameECS/Systems/InputSystem.cpp)
+        FoodWars/Sources/GameECS/Systems/InputSystem.cpp TonicEngine/Headers/Visual/Shapes/IShape.h)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_EVENTS} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 

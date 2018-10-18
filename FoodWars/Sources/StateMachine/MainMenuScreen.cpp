@@ -4,7 +4,6 @@
 
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
-
 void MainMenuScreen::update(double deltaTime) {
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");

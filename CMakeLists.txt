@@ -77,11 +77,27 @@ set(SOURCE_FILES_VISUAL
         TonicEngine/Sources/Visual/ShapeSprite.cpp
         TonicEngine/Headers/Visual/ShapeSprite.h)
 
+set(SOURCE_FILES_EVENTS
+        TonicEngine/Sources/Events/KeyEvent.cpp
+        TonicEngine/Headers/Events/KeyEvent.h
+        TonicEngine/Sources/Events/MouseEvent.cpp
+        TonicEngine/Headers/Events/MouseEvent.h
+        TonicEngine/Headers/Events/IEvent.h
+        TonicEngine/Headers/Events/WindowEvent.h)
+
 set(SOURCE_FILES_INPUT
-        TonicEngine/Sources/Input/InputObservable.cpp
-        TonicEngine/Headers/Input/InputObservable.h
+        TonicEngine/Sources/Input/InputFacade.cpp
+        TonicEngine/Headers/Input/InputFacade.h
         TonicEngine/Headers/Input/IObservable.h
-        TonicEngine/Headers/Input/IObserver.h)
+        TonicEngine/Headers/Input/IObserver.h
+        TonicEngine/Sources/Input/PrintKeyInputObserver.cpp
+        TonicEngine/Headers/Input/PrintKeyInputObserver.h
+        TonicEngine/Sources/Input/PrintMouseInputObserver.cpp
+        TonicEngine/Headers/Input/PrintMouseInputObserver.h
+        TonicEngine/Sources/Input/KeyEventObservable.cpp
+        TonicEngine/Headers/Input/KeyEventObservable.h
+        TonicEngine/Sources/Input/MouseEventObservable.cpp
+        TonicEngine/Headers/Input/MouseEventObservable.h)
 
 set(SOURCE_FILES_STORAGE
         TonicEngine/Sources/Storage/XMLReader.cpp
@@ -145,6 +161,6 @@ set(SOURCE_FILES main.cpp
         FoodWars/Headers/StateMachine/OtherMenuScreen.h
         FoodWars/Sources/StateMachine/OtherMenuScreen.cpp TonicEngine/Sources/Visual/Renderlist.cpp TonicEngine/Headers/Visual/Renderlist.h TonicEngine/Sources/Visual/TextureManager.cpp TonicEngine/Headers/Visual/TextureManager.h)
 
-add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
+add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_EVENTS} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 
 target_link_libraries(Project_SWA ${DEPENDENCIES}  -lmingw32 -lSDL2_mixer  -lSDL2main -lSDL2  -mwindows -static-libgcc -static-libstdc++)

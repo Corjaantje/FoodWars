@@ -43,10 +43,10 @@ void TurnSystem::setRelevantEntities(std::map<int, std::shared_ptr<TurnComponent
 
 void TurnSystem::setTurnTime(int turnTime) {
     _timePerTurn = turnTime;
-    if (!_turnOrder.empty())
-    {
-        _turnComponents[_turnOrder[_currentTurn]]->setRemainingTime(turnTime);
-    }
+//    if (!_turnOrder.empty())
+//    {
+//        _turnComponents[_turnOrder[_currentTurn]]->setRemainingTime(turnTime);
+//    }
 }
 
 // Lower remaining time of 'active' TurnComponent
@@ -63,7 +63,7 @@ void TurnSystem::update(double deltaTime) {
 void TurnSystem::endTurn() {
     _turnComponents[_turnOrder[_currentTurn]]->switchTurn(false);
 
-    _currentTurn = (_currentTurn < _turnOrder.size()) ? +1 : 0;
+    _currentTurn = (_currentTurn < _turnOrder.size()-1) ? +1 : 0;
 
     _turnComponents[_turnOrder[_currentTurn]]->switchTurn(true);
     _turnComponents[_turnOrder[_currentTurn]]->setRemainingTime((float)_timePerTurn);

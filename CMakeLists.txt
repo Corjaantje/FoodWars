@@ -166,8 +166,24 @@ set(SOURCE_FILES main.cpp
         TonicEngine/Headers/Visual/TextureManager.h
         FoodWars/Sources/StateMachine/GameScreen.cpp
         FoodWars/Headers/StateMachine/GameScreen.h
-        FoodWars/Headers/GameECS/Systems/InputSystem.h
-        FoodWars/Sources/GameECS/Systems/InputSystem.cpp TonicEngine/Headers/Visual/Shapes/IShape.h)
+        FoodWars/Sources/GameECS/Components/PositionComponent.cpp
+        FoodWars/Headers/GameECS/Components/PositionComponent.h
+        FoodWars/Sources/GameECS/Components/MoveComponent.cpp
+        FoodWars/Headers/GameECS/Components/MoveComponent.h
+        FoodWars/Headers/GameECS/Components/GravityComponent.h
+        FoodWars/Sources/GameECS/Components/GravityComponent.cpp
+        FoodWars/Headers/GameECS/Systems/MoveSystem.h
+        FoodWars/Sources/GameECS/Systems/MoveSystem.cpp
+        FoodWars/Headers/GameECS/Components/TurnComponent.h
+        FoodWars/Sources/GameECS/Components/TurnComponent.cpp
+        TonicEngine/Headers/Visual/Shapes/IShape.h
+        FoodWars/Headers/GameECS/Systems/MoveSystem.h
+        FoodWars/Sources/GameECS/Systems/TurnSystem.cpp
+        FoodWars/Headers/GameECS/Systems/Turnsystem.h
+        FoodWars/Headers/GameECS/Systems/TurnSystem.h
+        FoodWars/Headers/GameECS/Components/Collider/ICollideableComponent.h
+        FoodWars/Headers/GameECS/Components/Collider/BoxCollider.h
+        FoodWars/Sources/GameECS/Components/Collider/BoxCollider.cpp FoodWars/Sources/GameECS/Systems/GravitySystem.cpp FoodWars/Headers/GameECS/Systems/GravitySystem.h)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_EVENTS} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 

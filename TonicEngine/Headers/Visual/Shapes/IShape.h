@@ -3,7 +3,11 @@
 class Renderlist;
 class IShape{
 public:
-    IShape() = default;
+    int xPos;
+    int yPos;
+    IShape(int x, int y): xPos(x), yPos(y) {
+
+    }
     virtual ~IShape(){};
     virtual void addToRender(Renderlist* renderlist){};
 };

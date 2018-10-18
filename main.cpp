@@ -41,7 +41,7 @@ int main(int argc, char** argv)
 
     //Config
     clock_t startProgramTime = clock();
-    int maxMsProgramIsRunning = 10000; //Stop the program after 10 seconds
+    int maxMsProgramIsRunning = 3000000; //Stop the program after 10 seconds
     double frameRateCap = 61;
     double amountOfUpdatesAllowedPerSecond = 1000.0 / frameRateCap; //= 16.666
     //End of config
@@ -49,8 +49,6 @@ int main(int argc, char** argv)
     clock_t timeLast = clock();
     //Run the application only for MaxMSProgramIsRunning milliseconds.
     while((clock() - startProgramTime / CLOCKS_PER_SEC * 1000 < maxMsProgramIsRunning) && !visualFacade->isWindowClosed()) {
-        visualFacade->pollEvents();
-        //inputFacade.pollEvents();
         double frameDelta = double (clock() - timeLast) / CLOCKS_PER_SEC * 1000.0;
         double deltaTime = 1/frameDelta;
         if(frameDelta > amountOfUpdatesAllowedPerSecond){

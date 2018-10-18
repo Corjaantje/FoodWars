@@ -15,13 +15,13 @@ private:
     int _timePerTurn;
     int _defaultTimePerTurn = 30;
 
-    EntityManager* _entityManager;
+    std::shared_ptr<EntityManager> _entityManager;
     std::map<int, std::shared_ptr<TurnComponent>> _turnComponents;
     int _currentTurn = 0;
     std::vector<int> _turnOrder;
 
 public:
-    TurnSystem(EntityManager* entityManager);
+    TurnSystem(std::shared_ptr<EntityManager> entityManager);
     ~TurnSystem() override;
 
     void getRelevantEntities();

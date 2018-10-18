@@ -8,7 +8,8 @@
 //    setTurnTime(_defaultTimePerTurn);
 //}
 
-TurnSystem::TurnSystem(EntityManager* entityManager): _entityManager(entityManager){
+TurnSystem::TurnSystem(std::shared_ptr<EntityManager> entityManager){
+    _entityManager = entityManager;
     setTurnTime(_defaultTimePerTurn);
 }
 
@@ -27,6 +28,7 @@ void TurnSystem::getRelevantEntities() {
     setTurnTime(_defaultTimePerTurn);
 }
 
+// May be relevant for loading a game in progress.
 void TurnSystem::setRelevantEntities(std::map<int, std::shared_ptr<TurnComponent>>* turns) {
     _turnComponents = *turns;
     _currentTurn = 0;

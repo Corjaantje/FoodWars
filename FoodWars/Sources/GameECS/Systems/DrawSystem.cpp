@@ -7,12 +7,7 @@ DrawSystem::DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared
     _entityManager = entityManager;
     _visualFacade = visualFacade;
     std::cout << "Entity manager: " << entityManager << std::endl;
-    for(int i=0; i< 50; i++) {
-        int id = _entityManager->createEntity();
-        DrawableComponent *comp = new DrawableComponent();
-        _entityManager->addComponentToEntity(id, comp);
-        comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({i*5, i, i, i, Colour{i*5, 0, 255, 100}}));
-    }
+    DrawSystem::generateTerrain();
 }
 
 DrawSystem::~DrawSystem() {
@@ -27,4 +22,18 @@ void DrawSystem::update(double dt) {
         drawComps[i]->shape->addToRender(&_renderList);
     }
     _visualFacade->render(_renderList);
+}
+
+void DrawSystem::generateTerrain() {
+    for(int y=288; y < 480; y+=32){
+        for(int x=0; x < 640; x+=32) {
+            int randomNum = rand() % 19 + (-9);
+            int randomNum2 = rand() % 19 + (-9);
+            int randomNum3 = rand() % 19 + (-9);
+            int id = _entityManager->createEntity();
+            DrawableComponent *comp = new DrawableComponent();
+            _entityManager->addComponentToEntity(id, comp);
+            comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({32, 32, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
+        }
+    }
 }

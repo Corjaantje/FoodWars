@@ -19,7 +19,7 @@ private:
 public:
     explicit GameScreen(std::shared_ptr<ScreenStateManager> context);
     ~GameScreen();
-    void update(double deltaTime) const override;
+    void update(double deltaTime) override;
 };
 
 

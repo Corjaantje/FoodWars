@@ -15,7 +15,7 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
 GameScreen::~GameScreen() {
 }
 
-void GameScreen::update(double deltaTime) const {
+void GameScreen::update(double deltaTime) {
     _drawSystem.update(deltaTime);
     //_inputFacade->pollEvents();
 }

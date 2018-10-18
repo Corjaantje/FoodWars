@@ -24,4 +24,18 @@ void TurnComponent::switchTurn(bool change) {
     _myTurn = change;
 }
 
+void TurnComponent::setRemainingTime(double t) {
+    _remainingTime = t;
+}
+
+void TurnComponent::lowerRemainingTime(double t) {
+    _remainingTime -= t;
+}
+
+double TurnComponent::getRemainingTime() const {
+    return _remainingTime;
+}
+
+
+
 

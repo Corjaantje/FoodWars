@@ -15,9 +15,13 @@ public:
     ~TurnComponent() override;
 
     void switchTurn(bool change);
+    void setRemainingTime(double t);
+    void lowerRemainingTime(double t);
+    double getRemainingTime() const;
 
 private:
     int _energy;
+    double _remainingTime;
     bool _myTurn = false;
 };
 

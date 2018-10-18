@@ -1,6 +1,7 @@
 //
 // Created by Lucas on 11/10/2018.
 //
+#pragma once
 
 #ifndef PROJECT_SWA_MAINMENUSCREEN_H
 #define PROJECT_SWA_MAINMENUSCREEN_H
@@ -9,7 +10,7 @@
 #include "ScreenStateManager.h"
 #include "../../../TonicEngine/Headers/Events/MouseEvent.h"
 #include "../../../TonicEngine/Headers/Input/IObserver.h"
-#include "OtherMenuScreen.h"
+#include "GameScreen.h"
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"
 
 

@@ -51,7 +51,7 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new OtherMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager));
-    screenStateManager->setActiveScreen<GameScreen>();
+    screenStateManager->setActiveScreen<MainMenuScreen>();
 
     //Config
     clock_t startProgramTime = clock();
@@ -63,17 +63,12 @@ int main(int argc, char** argv)
     clock_t timeLast = clock();
     //Run the application only for MaxMSProgramIsRunning milliseconds.
     while((clock() - startProgramTime / CLOCKS_PER_SEC * 1000 < maxMsProgramIsRunning) && !windowClosedObserver->isWindowClosed()) {
-        inputFacade.pollEvents();
         double frameDelta = double (clock() - timeLast) / CLOCKS_PER_SEC * 1000.0;
         double deltaTime = 1/frameDelta;
         if(frameDelta > amountOfUpdatesAllowedPerSecond){
             screenStateManager->getCurrentState()->update(deltaTime);
             timeLast = clock();
         }
-
-        /*if(clock() - startProgramTime / CLOCKS_PER_SEC * 1000 > 5000){
-            screenStateManager->setActiveScreen<OtherMenuScreen>();
-        }*/
     }
     return 0;
 }

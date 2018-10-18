@@ -13,7 +13,6 @@ OtherMenuScreen::OtherMenuScreen(std::shared_ptr<ScreenStateManager> context) : 
     visualFacade = context->getFacade<VisualFacade>();
     _renderList.spriteList.emplace_back(640, 200, 0, 280, "../grass.bmp");
     audioFacade = context->getFacade<AudioFacade>();
-
 }
 
 OtherMenuScreen::~OtherMenuScreen() {

@@ -7,7 +7,7 @@ class IBaseSystem {
 public:
     IBaseSystem() = default;
     virtual ~IBaseSystem(){};
-    virtual void update(double dt) = 0;
+    virtual void update(double dt) const = 0;
 };
 
 

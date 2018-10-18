@@ -10,6 +10,6 @@ private:
 public:
     InputSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade);
     ~InputSystem() override;
-    void update(double dt) override;
+    void update(double dt) const override;
     void update(std::shared_ptr<KeyEvent> event) override;
 };

@@ -58,9 +58,9 @@ int main(int argc, char** argv)
             timeLast = clock();
         }
 
-        if(clock() - startProgramTime / CLOCKS_PER_SEC * 1000 > 5000){
+        /*if(clock() - startProgramTime / CLOCKS_PER_SEC * 1000 > 5000){
             screenStateManager->setActiveScreen<OtherMenuScreen>();
-        }
+        }*/
     }
     return 0;
 }

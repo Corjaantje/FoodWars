@@ -14,7 +14,7 @@ public:
     DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade);
     ~DrawSystem();
 
-    void update(double dt) override;
+    void update(double dt) const override;
 };
 
 

@@ -10,16 +10,16 @@
 
 class GameScreen : public IScreen {
 private:
+    std::shared_ptr<EntityManager> _entityManager;
     std::shared_ptr<VisualFacade> _visualFacade;
     std::shared_ptr<InputFacade> _inputFacade;
-    std::shared_ptr<EntityManager> _entityManager;
     DrawSystem _drawSystem;
     std::shared_ptr<InputSystem> _inputSystem;
     Renderlist _renderList;
 public:
     explicit GameScreen(std::shared_ptr<ScreenStateManager> context);
     ~GameScreen();
-    void update(double deltaTime);
+    void update(double deltaTime) const override;
 };
 
 

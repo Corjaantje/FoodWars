@@ -7,7 +7,7 @@ InputSystem::InputSystem(std::shared_ptr<EntityManager> entityManager, std::shar
     _inputFacade(std::move(inputFacade)) {
 }
 
-void InputSystem::update(double dt) {
+void InputSystem::update(double dt) const {
 
 }
 

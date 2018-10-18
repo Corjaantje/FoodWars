@@ -4,7 +4,7 @@
 
 #include "../../Headers/StateMachine/OtherMenuScreen.h"
 
-void OtherMenuScreen::update(double deltaTime) const {
+void OtherMenuScreen::update(double deltaTime) {
     visualFacade->render(_renderList);
     audioFacade->playMusic("wildwest");
 }

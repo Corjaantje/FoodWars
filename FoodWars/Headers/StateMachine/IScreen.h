@@ -19,7 +19,7 @@ public:
     ~IScreen() {
 
     }
-    virtual void update(double deltaTime) const {
+    virtual void update(double deltaTime) {
 
     }
 };

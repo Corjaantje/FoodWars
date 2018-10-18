@@ -17,7 +17,7 @@ private:
 public:
     OtherMenuScreen(std::shared_ptr<ScreenStateManager> context);
     ~OtherMenuScreen();
-    void update(double deltaTime) const override;
+    void update(double deltaTime) override;
 };
 
 #endif //PROJECT_SWA_OTHERMENUSCREEN_H

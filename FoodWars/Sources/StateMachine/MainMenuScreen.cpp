@@ -5,7 +5,7 @@
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 #include "../../Headers/StateMachine/OtherMenuScreen.h"
 
-void MainMenuScreen::update(double deltaTime) const {
+void MainMenuScreen::update(double deltaTime) {
     visualFacade->render(_renderList);
 }
 

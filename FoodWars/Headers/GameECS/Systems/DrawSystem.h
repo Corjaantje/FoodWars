@@ -3,14 +3,17 @@
 
 
 #include "IBaseSystem.h"
+#include "../../../../TonicEngine/Headers/Visual/VisualFacade.h"
 
 class DrawSystem : public IBaseSystem {
 private:
-    EntityManager* _entityManager;
+    std::shared_ptr<EntityManager> _entityManager;
+    std::shared_ptr<VisualFacade> _visualFacade;
+    Renderlist _renderList;
 public:
-    DrawSystem(EntityManager* entityManager);
+    DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade);
     ~DrawSystem();
-
+    void generateTerrain();
     void update(double dt) override;
 };
 

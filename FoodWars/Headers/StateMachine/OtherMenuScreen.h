@@ -5,10 +5,10 @@
 #ifndef PROJECT_SWA_OTHERMENUSCREEN_H
 #define PROJECT_SWA_OTHERMENUSCREEN_H
 
-#include "memory"
+//TODO: is memory needed?
+//#include "memory"
 #include "IScreen.h"
 #include "ScreenStateManager.h"
-#include "../../../TonicEngine/Headers/Visual/VisualFacade.h"
 
 class OtherMenuScreen : public IScreen {
 private:

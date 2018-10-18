@@ -6,13 +6,12 @@
 
 void OtherMenuScreen::update(double deltaTime) const {
     visualFacade->render(_renderList);
-    audioFacade->playEffect("oof");
+    audioFacade->playMusic("wildwest");
 }
 
 OtherMenuScreen::OtherMenuScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
     visualFacade = context->getFacade<VisualFacade>();
-    _renderList.rectangleList.emplace_back(ShapeRectangle{200, 200, 200, 200, Colour { 255, 255, 0, 100}});
-
+    _renderList.spriteList.emplace_back(640, 200, 0, 280, "../grass.bmp");
     audioFacade = context->getFacade<AudioFacade>();
 
 }

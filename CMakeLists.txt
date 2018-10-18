@@ -61,7 +61,7 @@ endmacro()
 AddLib("https://github.com/lb321/CPMBox2D" Box2D '' "v2.3.1-nocpm")
 AddLib("https://github.com/lsalzman/enet" enet)
 AddLib("https://github.com/leethomason/tinyxml2" tinyxml2)
-#AddLib("https://github.com/dalerank/nanogui-sdl" NanoGUI-SDL)
+
 
 set(SOURCE_FILES_VISUAL
 	    TonicEngine/Sources/Visual/Window.cpp

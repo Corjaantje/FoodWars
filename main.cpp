@@ -29,6 +29,7 @@ int main(int argc, char** argv)
 
     audioFacade->addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
     audioFacade->addAudio("wildwest", "../FoodWars/Assets/Audio/wildwest.wav");
+    audioFacade->addAudio("menu", "../FoodWars/Assets/Audio/menu.wav");
 
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
     screenStateManager->addFacade(visualFacade);
@@ -36,6 +37,7 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new OtherMenuScreen(screenStateManager));
     screenStateManager->setActiveScreen<MainMenuScreen>();
+
 
     //Config
     clock_t startProgramTime = clock();

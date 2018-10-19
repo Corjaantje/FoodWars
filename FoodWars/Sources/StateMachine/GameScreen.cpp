@@ -8,11 +8,10 @@
 GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context),
         _entityManager(std::make_shared<EntityManager>()),
         _visualFacade(context->getFacade<VisualFacade>()),
-        _drawSystem(_entityManager, _visualFacade),
-        _moveSystem(_entityManager, _inputFacade),
-        _turnSystem(_entityManager),
-        _gravitySystem(_entityManager),
         _inputFacade(std::make_shared<InputFacade>()) {
+    _systems.push_back(std::make_shared<DrawSystem>(_entityManager, _visualFacade));
+    _systems.push_back(std::make_shared<MoveSystem>(_entityManager, _inputFacade));
+    _systems.push_back(std::make_shared<GravitySystem>(_entityManager));
     int player = _entityManager->createEntity();
 
     DrawableComponent* drawableComponent = new DrawableComponent;
@@ -33,11 +32,10 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     _entityManager->addComponentToEntity(player, new BoxCollider(32, 32));
     _entityManager->addComponentToEntity(player, new GravityComponent());
 
-    _turnSystem.getRelevantEntities();
-    _turnSystem.setTurnTime(30);
-
-    //Initialize the Entity Manager
-    //Initialize the DrawSystem.
+    std::shared_ptr<TurnSystem> turnSystem = std::make_shared<TurnSystem>(_entityManager);
+    _systems.push_back(turnSystem);
+    turnSystem->getRelevantEntities();
+    turnSystem->setTurnTime(20);
 }
 
 GameScreen::~GameScreen() {
@@ -45,8 +43,7 @@ GameScreen::~GameScreen() {
 
 void GameScreen::update(double deltaTime) {
     _inputFacade->pollEvents();
-    _turnSystem.update(deltaTime);
-    _moveSystem.update(deltaTime);
-    _drawSystem.update(deltaTime);
-    _gravitySystem.update(deltaTime);
+    for(auto const &iterator : _systems){
+        iterator->update(deltaTime);
+    }
 }

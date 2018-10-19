@@ -16,11 +16,7 @@ private:
     std::shared_ptr<EntityManager> _entityManager;
     std::shared_ptr<VisualFacade> _visualFacade;
     std::shared_ptr<InputFacade> _inputFacade;
-    std::vector<IBaseSystem> systems;
-    DrawSystem _drawSystem;
-    MoveSystem _moveSystem;
-    TurnSystem _turnSystem;
-    GravitySystem _gravitySystem;
+    std::vector<std::shared_ptr<IBaseSystem>> _systems;
     Renderlist _renderList;
 public:
     explicit GameScreen(std::shared_ptr<ScreenStateManager> context);

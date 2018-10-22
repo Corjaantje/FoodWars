@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "../../Headers/StateMachine/GameScreen.h"
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../../Headers/GameECS/Components/DrawableComponent.h"
@@ -6,9 +8,10 @@
 #include "../../Headers/GameECS/Components/GravityComponent.h"
 
 GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context),
+    _audioFacade(context->getFacade<AudioFacade>()),
         _entityManager(std::make_shared<EntityManager>()),
-        _visualFacade(context->getFacade<VisualFacade>()),
-        _inputFacade(std::make_shared<InputFacade>()) {
+        _visualFacade(context->getFacade<VisualFacade>()){
+    _inputFacade->getKeyEventObservable()->registerObserver(this);
     _systems.push_back(std::make_shared<DrawSystem>(_entityManager, _visualFacade));
     _systems.push_back(std::make_shared<MoveSystem>(_entityManager, _inputFacade));
     _systems.push_back(std::make_shared<GravitySystem>(_entityManager));
@@ -38,10 +41,18 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     turnSystem->setTurnTime(20);
 }
 
+void GameScreen::update(std::shared_ptr<KeyEvent> event){
+    if(event->getKey() == KEY::KEY_ESCAPE)
+    {
+        _context->setActiveScreen<MainMenuScreen>();
+    }
+}
+
 GameScreen::~GameScreen() {
 }
 
 void GameScreen::update(double deltaTime) {
+    _audioFacade->playMusic("wildwest");
     _inputFacade->pollEvents();
     for(auto const &iterator : _systems){
         iterator->update(deltaTime);

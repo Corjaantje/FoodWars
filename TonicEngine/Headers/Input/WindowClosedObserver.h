@@ -11,7 +11,7 @@ public:
     WindowClosedObserver();
     ~WindowClosedObserver();
     void update(std::shared_ptr<WindowEvent> event);
-    bool isWindowClosed();
+    bool isWindowClosed() const;
 };
 
 #endif //PROJECT_SWA_WINDOWCLOSEDOBSERVER_H

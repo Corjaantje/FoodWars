@@ -38,12 +38,17 @@ void AudioFacade::setEffectVolume(int volume) {
 }
 
 // Plays Music
-void AudioFacade::playMusic(const char* filename, int amountOfLoops){
-    // Get path with the filename
-    const char* path = getAudio(filename);
+void AudioFacade::playMusic(const char* filename) {
 
-    // Play sound with the path
-    _audioPlayer->playMusic(path, amountOfLoops);
+    if (filename != _backgroundMusic)
+    {
+        // Get path with the filename
+        const char *path = getAudio(filename);
+
+        // Play sound with the path
+        _audioPlayer->playMusic(path, -1);
+        _backgroundMusic = filename;
+    }
 }
 
 // Plays a sound effect

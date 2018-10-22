@@ -15,12 +15,13 @@ public:
     int getMusicVolume();
     void setEffectVolume(int volume);
     void setMusicVolume(int volume);
-    void playMusic(const char* filename, int amountOfLoops);
+    void playMusic(const char* filename);
     void playEffect(const char* filename);
     void addAudio(const char* key,const char* path);
 private:
     std::map<std::string, std::string> *_audioMap = nullptr;
-    AudioPlayer *_audioPlayer = nullptr;
+    AudioPlayer* _audioPlayer = nullptr;
+    const char* _backgroundMusic = nullptr;
     void init();
     const char* getAudio(const char* audioName);
 };

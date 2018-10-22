@@ -28,25 +28,27 @@ int main(int argc, char** argv)
 {
     VisualFacade* visualFacade = new VisualFacade();
 
-    InputFacade inputFacade;
-    inputFacade.getKeyEventObservable()->registerObserver(new PrintKeyInputObserver);
-    inputFacade.getMouseEventObservable()->registerObserver(new PrintMouseInputObserver);
-    inputFacade.getWindowEventObservable()->registerObserver(new PrintWindowObserver);
-    WindowClosedObserver *windowClosedObserver = new WindowClosedObserver();
-    inputFacade.getWindowEventObservable()->registerObserver(windowClosedObserver);
-
     visualFacade->setTitle("Food Wars");
     visualFacade->setResolution(640, 480);
     visualFacade->disablefullscreen();
     visualFacade->openWindow();
 
+    AudioFacade* audioFacade = new AudioFacade();
+    audioFacade->setMusicVolume(5);
+    audioFacade->setEffectVolume(10);
+
+    audioFacade->addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
+    audioFacade->addAudio("wildwest", "../FoodWars/Assets/Audio/wildwest.wav");
+    audioFacade->addAudio("menu", "../FoodWars/Assets/Audio/menu.wav");
+
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
     screenStateManager->addFacade(visualFacade);
     screenStateManager->addFacade(new InputFacade);
+    screenStateManager->addFacade(audioFacade);
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new OtherMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager));
-    screenStateManager->setActiveScreen<GameScreen>();
+    screenStateManager->setActiveScreen<MainMenuScreen>();
 
     //Config
     clock_t startProgramTime = clock();
@@ -57,17 +59,13 @@ int main(int argc, char** argv)
 
     clock_t timeLast = clock();
     //Run the application only for MaxMSProgramIsRunning milliseconds.
-    while((clock() - startProgramTime / CLOCKS_PER_SEC * 1000 < maxMsProgramIsRunning) && !visualFacade->isWindowClosed()) {
+    while(!screenStateManager->getCurrentState()->isWindowClosed()) {
         double frameDelta = double (clock() - timeLast) / CLOCKS_PER_SEC * 1000.0;
         double deltaTime = 1/frameDelta;
         if(frameDelta > amountOfUpdatesAllowedPerSecond){
             screenStateManager->getCurrentState()->update(deltaTime);
             timeLast = clock();
         }
-
-        /*if(clock() - startProgramTime / CLOCKS_PER_SEC * 1000 > 5000){
-            screenStateManager->setActiveScreen<OtherMenuScreen>();
-        }*/
     }
     return 0;
 }

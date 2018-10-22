@@ -4,6 +4,7 @@
 #include <vector>
 #include "Shapes/ShapeRectangle.h"
 #include "Shapes/ShapeSprite.h"
+#include "Shapes/ShapeText.h"
 
 class Renderlist {
 public:
@@ -12,6 +13,7 @@ public:
 public:
     std::vector<ShapeRectangle> rectangleList;
     std::vector<ShapeSprite> spriteList;
+    std::vector<ShapeText> textList;
 };
 
 

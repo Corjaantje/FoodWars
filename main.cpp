@@ -19,6 +19,10 @@
 #include "TonicEngine/Headers/Input/PrintWindowObserver.h"
 #include "TonicEngine/Headers/Input/WindowClosedObserver.h"
 
+#include "FoodWars/Headers/GameECS/Components/TurnComponent.h"
+#include "FoodWars/Headers/GameECS/Systems/TurnSystem.h"
+#include <ctime>
+
 
 int main(int argc, char** argv)
 {

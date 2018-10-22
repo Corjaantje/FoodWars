@@ -3,16 +3,16 @@
 
 
 #include <string>
+#include "IShape.h"
 
-class ShapeSprite {
+class ShapeSprite : public IShape {
 public:
     ShapeSprite(int width, int height, int xPos, int yPos, std::string imageURL);
-    ~ShapeSprite();
+    ~ShapeSprite() override;
+    void addToRender(Renderlist* renderlist) override;
 public:
     int width;
     int height;
-    int xPos;
-    int yPos;
     std::string imageURL;
 };
 

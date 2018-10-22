@@ -55,6 +55,7 @@ int main(int argc, char** argv)
     int maxMsProgramIsRunning = 3000000; //Stop the program after 10 seconds
     double frameRateCap = 61;
     double amountOfUpdatesAllowedPerSecond = 1000.0 / frameRateCap; //= 16.666
+
     //End of config
 
     clock_t timeLast = clock();

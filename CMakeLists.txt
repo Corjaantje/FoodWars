@@ -195,8 +195,6 @@ set(SOURCE_FILES main.cpp
         TonicEngine/Headers/Visual/Shapes/IShape.h
         FoodWars/Sources/StateMachine/OtherMenuScreen.cpp
         TonicEngine/Sources/Visual/Renderlist.cpp TonicEngine/Headers/Visual/Renderlist.h TonicEngine/Sources/Visual/TextureManager.cpp TonicEngine/Headers/Visual/TextureManager.h TonicEngine/Sources/Events/WindowEvent.cpp TonicEngine/Sources/Input/WindowEventObservable.cpp TonicEngine/Headers/Input/WindowEventObservable.h TonicEngine/Sources/Input/PrintWindowObserver.cpp TonicEngine/Headers/Input/PrintWindowObserver.h TonicEngine/Sources/Input/WindowClosedObserver.cpp TonicEngine/Headers/Input/WindowClosedObserver.h
-        FoodWars/Headers/GameECS/Systems/InputSystem.h
-        FoodWars/Sources/GameECS/Systems/InputSystem.cpp
         TonicEngine/Headers/Visual/Shapes/IShape.h
         TonicEngine/Sources/Events/WindowEvent.cpp
         TonicEngine/Sources/Input/WindowEventObservable.cpp

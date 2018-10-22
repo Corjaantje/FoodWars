@@ -59,7 +59,7 @@ int main(int argc, char** argv)
 
     clock_t timeLast = clock();
     //Run the application only for MaxMSProgramIsRunning milliseconds.
-    while((clock() - startProgramTime / CLOCKS_PER_SEC * 1000 < maxMsProgramIsRunning) && !screenStateManager->getCurrentState()->isWindowClosed()) {
+    while(!screenStateManager->getCurrentState()->isWindowClosed()) {
         double frameDelta = double (clock() - timeLast) / CLOCKS_PER_SEC * 1000.0;
         double deltaTime = 1/frameDelta;
         if(frameDelta > amountOfUpdatesAllowedPerSecond){

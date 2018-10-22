@@ -183,10 +183,12 @@ set(SOURCE_FILES main.cpp
         FoodWars/Headers/GameECS/Systems/TurnSystem.h
         FoodWars/Headers/GameECS/Components/Collider/ICollideableComponent.h
         FoodWars/Headers/GameECS/Components/Collider/BoxCollider.h
-        FoodWars/Sources/GameECS/Components/Collider/BoxCollider.cpp FoodWars/Sources/GameECS/Systems/GravitySystem.cpp FoodWars/Headers/GameECS/Systems/GravitySystem.h)
-        FoodWars/Headers/GameECS/Systems/InputSystem.h
-        FoodWars/Sources/GameECS/Systems/InputSystem.cpp TonicEngine/Headers/Visual/Shapes/IShape.h
-        FoodWars/Sources/StateMachine/OtherMenuScreen.cpp TonicEngine/Sources/Visual/Renderlist.cpp TonicEngine/Headers/Visual/Renderlist.h TonicEngine/Sources/Visual/TextureManager.cpp TonicEngine/Headers/Visual/TextureManager.h TonicEngine/Sources/Events/WindowEvent.cpp TonicEngine/Sources/Input/WindowEventObservable.cpp TonicEngine/Headers/Input/WindowEventObservable.h TonicEngine/Sources/Input/PrintWindowObserver.cpp TonicEngine/Headers/Input/PrintWindowObserver.h TonicEngine/Sources/Input/WindowClosedObserver.cpp TonicEngine/Headers/Input/WindowClosedObserver.h)
+        FoodWars/Sources/GameECS/Components/Collider/BoxCollider.cpp
+        FoodWars/Sources/GameECS/Systems/GravitySystem.cpp
+        FoodWars/Headers/GameECS/Systems/GravitySystem.h
+        TonicEngine/Headers/Visual/Shapes/IShape.h
+        FoodWars/Sources/StateMachine/OtherMenuScreen.cpp
+        TonicEngine/Sources/Visual/Renderlist.cpp TonicEngine/Headers/Visual/Renderlist.h TonicEngine/Sources/Visual/TextureManager.cpp TonicEngine/Headers/Visual/TextureManager.h TonicEngine/Sources/Events/WindowEvent.cpp TonicEngine/Sources/Input/WindowEventObservable.cpp TonicEngine/Headers/Input/WindowEventObservable.h TonicEngine/Sources/Input/PrintWindowObserver.cpp TonicEngine/Headers/Input/PrintWindowObserver.h TonicEngine/Sources/Input/WindowClosedObserver.cpp TonicEngine/Headers/Input/WindowClosedObserver.h)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_EVENTS} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 

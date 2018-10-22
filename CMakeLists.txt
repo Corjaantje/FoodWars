@@ -205,7 +205,7 @@ set(SOURCE_FILES main.cpp
         TonicEngine/Sources/Input/PrintWindowObserver.cpp
         TonicEngine/Headers/Input/PrintWindowObserver.h
         TonicEngine/Sources/Input/WindowClosedObserver.cpp
-        TonicEngine/Headers/Input/WindowClosedObserver.h)
+        TonicEngine/Headers/Input/WindowClosedObserver.h TonicEngine/Facades/GeneralFacade.h TonicEngine/Sources/GeneralFacade.cpp)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_EVENTS} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 

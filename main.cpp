@@ -18,6 +18,7 @@
 #include "FoodWars/Headers/StateMachine/GameScreen.h"
 #include "TonicEngine/Headers/Input/PrintWindowObserver.h"
 #include "TonicEngine/Headers/Input/WindowClosedObserver.h"
+#include "TonicEngine/Facades/GeneralFacade.h"
 
 #include "FoodWars/Headers/GameECS/Components/TurnComponent.h"
 #include "FoodWars/Headers/GameECS/Systems/TurnSystem.h"
@@ -37,6 +38,8 @@ int main(int argc, char** argv)
     AudioFacade* audioFacade = new AudioFacade();
     audioFacade->setMusicVolume(5);
     audioFacade->setEffectVolume(10);
+
+    GeneralFacade* generalFacade = new GeneralFacade();
 
     audioFacade->addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
     audioFacade->addAudio("wildwest", "../FoodWars/Assets/Audio/wildwest.wav");
@@ -67,8 +70,9 @@ int main(int argc, char** argv)
             screenStateManager->getCurrentState()->update(deltaTime.count());
             timeLast = std::chrono::steady_clock::now().time_since_epoch();
         ///}
-        SDL_Delay(amountOfUpdatesAllowedPerSecond * 1000 - deltaTime.count());
+        generalFacade->sleep(amountOfUpdatesAllowedPerSecond * 1000 - deltaTime.count());
     }
+    delete generalFacade;
     return 0;
 }
 

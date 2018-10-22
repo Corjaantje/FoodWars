@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include "../../../Headers/GameECS/Systems/DrawSystem.h"
 #include "../../../Headers/GameECS/Systems/IBaseSystem.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
@@ -19,6 +20,9 @@ void DrawSystem::update(double dt) {
     std::map<int, std::shared_ptr<DrawableComponent>> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
     _renderList.rectangleList.clear();
     _renderList.spriteList.clear();
+    _renderList.textList.clear();
+    std::string str = std::to_string(1/dt);
+    _renderList.textList.emplace_back(ShapeText(250, 102, str, 80, 125, 45, Colour(0, 0, 0, 0)));
     for(int i=0; i < drawComps.size(); i++){
         drawComps[i]->shape->addToRender(&_renderList);
     }

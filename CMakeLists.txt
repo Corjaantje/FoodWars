@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
+find_package(SDL2_ttf REQUIRED)
 
 set (LIB_DIR "${PROJECT_SOURCE_DIR}/TonicEngine/Libraries")
 set (DEPENDENCIES "")
@@ -75,7 +76,9 @@ set(SOURCE_FILES_VISUAL
         TonicEngine/Sources/Visual/Colour.cpp
         TonicEngine/Headers/Visual/Colour.h
         TonicEngine/Sources/Visual/Shapes/ShapeSprite.cpp
-        TonicEngine/Headers/Visual/Shapes/ShapeSprite.h)
+        TonicEngine/Headers/Visual/Shapes/ShapeSprite.h
+        TonicEngine/Sources/Visual/Shapes/ShapeText.cpp
+        TonicEngine/Headers/Visual/Shapes/ShapeText.h TonicEngine/Sources/Visual/FontManager.cpp TonicEngine/Headers/Visual/FontManager.h)
 
 set(SOURCE_FILES_EVENTS
         TonicEngine/Sources/Events/KeyEvent.cpp
@@ -206,4 +209,4 @@ set(SOURCE_FILES main.cpp
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_EVENTS} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 
-target_link_libraries(Project_SWA ${DEPENDENCIES}  -lmingw32 -lSDL2_mixer  -lSDL2main -lSDL2  -mwindows -static-libgcc -static-libstdc++)
+target_link_libraries(Project_SWA ${DEPENDENCIES}  -lmingw32 -lSDL2_mixer  -lSDL2main -lSDL2 -lSDL2_ttf   -mwindows -static-libgcc -static-libstdc++)

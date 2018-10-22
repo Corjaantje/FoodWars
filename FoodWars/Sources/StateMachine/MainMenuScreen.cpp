@@ -12,6 +12,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
 
     _renderList.rectangleList.emplace_back(ShapeRectangle{640, 480, 0, 0, Colour { 0, 0, 0, 100}});
     _renderList.rectangleList.emplace_back(ShapeRectangle{440, 40, 100, 100, Colour { 200, 200, 200, 100}});
+    _renderList.textList.emplace_back(ShapeText(250, 102, "Start0", 80, 125, 45, Colour(0, 0, 0, 0)));
     //TODO: Startgame text - requires visual facade update
 }
 

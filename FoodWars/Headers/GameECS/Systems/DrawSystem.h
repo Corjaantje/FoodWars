@@ -14,6 +14,7 @@ public:
     DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade);
     ~DrawSystem();
     void generateTerrain();
+    void drawComponent(int x, int y);
     void update(double dt) override;
 };
 

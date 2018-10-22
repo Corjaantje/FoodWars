@@ -26,16 +26,46 @@ void DrawSystem::update(double dt) {
 }
 
 void DrawSystem::generateTerrain() {
-    for(int y=288; y < 480; y+=32){
-        for(int x=0; x < 640; x+=32) {
-            int randomNum = rand() % 19 + (-9);
-            int randomNum2 = rand() % 19 + (-9);
-            int randomNum3 = rand() % 19 + (-9);
-            int id = _entityManager->createEntity();
-            DrawableComponent *comp = new DrawableComponent();
-            _entityManager->addComponentToEntity(id, comp);
-            _entityManager->addComponentToEntity(id, new BoxCollider(32, 32));
-            comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({32, 32, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
+    for(int y=112; y < 480; y+=16) {
+        for (int x=0; x < 640; x+=16) {
+            if (y >= 160 && x >= 528 && x <= 592) {
+                drawComponent(x, y);
+            } else if ((y >= 176 && x >= 496)) {
+                drawComponent(x, y);
+            } else if (y >= 176 && x > 560) {
+                drawComponent(x,y);
+            } else if (y >= 192 && x >= 464) {
+                drawComponent(x,y);
+            } else if (y >= 208 && x >= 432) {
+                drawComponent(x,y);
+            } else if (y >= 224 && x >= 400) {
+                drawComponent(x,y);
+            } else if (y >= 240 && x >= 368) {
+                drawComponent(x,y);
+            } else if (y >= 256 && x >= 336) {
+                drawComponent(x,y);
+            } else if (y >= 192 && x >= 0 && x <= 64 ) {
+                drawComponent(x,y);
+            } else if (y >= 208 && x >= 0 && x <= 96 ) {
+                drawComponent(x,y);
+            } else if (y >= 224 && x >= 0 && x <= 112 ) {
+                drawComponent(x,y);
+            } else if (y >= 256 && x >= 0 && x <= 128 ) {
+                drawComponent(x,y);
+            } else if (y >= 288 ) {
+                drawComponent(x,y);
+            }
         }
     }
+}
+
+void DrawSystem::drawComponent(int x, int y) {
+    int randomNum = rand() % 19 + (-9);
+    int randomNum2 = rand() % 19 + (-9);
+    int randomNum3 = rand() % 19 + (-9);
+    int id = _entityManager->createEntity();
+    DrawableComponent *comp = new DrawableComponent();
+    _entityManager->addComponentToEntity(id, comp);
+    _entityManager->addComponentToEntity(id, new BoxCollider{16,16});
+    comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({16, 16, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
 }

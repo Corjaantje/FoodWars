@@ -18,9 +18,9 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     int player = _entityManager->createEntity();
 
     DrawableComponent* drawableComponent = new DrawableComponent;
-    drawableComponent->shape = std::make_unique<ShapeSprite>(ShapeSprite({16, 16, 32, 0, "../FoodWars/Assets/Sprites/player1.bmp"}));
+    drawableComponent->shape = std::make_unique<ShapeSprite>(ShapeSprite({32, 48, 32, 0, "../FoodWars/Assets/Sprites/player1.bmp"}));
     _entityManager->addComponentToEntity(player, drawableComponent);
-    _entityManager->addComponentToEntity(player, new BoxCollider(16, 16));
+    _entityManager->addComponentToEntity(player, new BoxCollider(32, 48));
     TurnComponent* turnComponent = new TurnComponent;
     turnComponent->switchTurn(true);
     _entityManager->addComponentToEntity(player, turnComponent);
@@ -28,11 +28,11 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
 
 
     DrawableComponent* drawableComponent2 = new DrawableComponent;
-    drawableComponent2->shape = std::make_unique<ShapeSprite>(ShapeSprite(16, 16, 576, 0, "../FoodWars/Assets/Sprites/player2.bmp"));
+    drawableComponent2->shape = std::make_unique<ShapeSprite>(ShapeSprite(32, 48, 576, 0, "../FoodWars/Assets/Sprites/player2.bmp"));
     player = _entityManager->createEntity();
     _entityManager->addComponentToEntity(player, drawableComponent2);
     _entityManager->addComponentToEntity(player, new TurnComponent);
-    _entityManager->addComponentToEntity(player, new BoxCollider(16, 16));
+    _entityManager->addComponentToEntity(player, new BoxCollider(32, 48));
     _entityManager->addComponentToEntity(player, new GravityComponent());
 
     std::shared_ptr<TurnSystem> turnSystem = std::make_shared<TurnSystem>(_entityManager);

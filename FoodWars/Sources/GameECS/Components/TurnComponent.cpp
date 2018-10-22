@@ -4,10 +4,13 @@
 
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 
+// Pure default initialization
 TurnComponent::TurnComponent() {
-
+    //TODO: discuss a default values.
+    _energy = 100;
 }
 
+// Alternative amount of energy
 TurnComponent::TurnComponent(int energy): _energy(energy) {
 
 }

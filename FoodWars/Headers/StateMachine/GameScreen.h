@@ -6,15 +6,17 @@
 #include "../../../TonicEngine/Headers/Visual/Renderlist.h"
 #include "ScreenStateManager.h"
 #include "../GameECS/Systems/DrawSystem.h"
-#include "../GameECS/Systems/InputSystem.h"
+#include "../../../TonicEngine/Headers/Input/InputFacade.h"
+#include "../GameECS/Systems/MoveSystem.h"
+#include "../GameECS/Systems/TurnSystem.h"
+#include "../GameECS/Systems/GravitySystem.h"
 
 class GameScreen : public IScreen {
 private:
     std::shared_ptr<EntityManager> _entityManager;
     std::shared_ptr<VisualFacade> _visualFacade;
     std::shared_ptr<InputFacade> _inputFacade;
-    DrawSystem _drawSystem;
-    std::shared_ptr<InputSystem> _inputSystem;
+    std::vector<std::shared_ptr<IBaseSystem>> _systems;
     Renderlist _renderList;
 public:
     explicit GameScreen(std::shared_ptr<ScreenStateManager> context);

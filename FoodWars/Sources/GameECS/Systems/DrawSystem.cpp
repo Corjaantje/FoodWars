@@ -2,6 +2,7 @@
 #include "../../../Headers/GameECS/Systems/DrawSystem.h"
 #include "../../../Headers/GameECS/Systems/IBaseSystem.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
+#include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 
 DrawSystem::DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade){
     _entityManager = entityManager;
@@ -33,6 +34,7 @@ void DrawSystem::generateTerrain() {
             int id = _entityManager->createEntity();
             DrawableComponent *comp = new DrawableComponent();
             _entityManager->addComponentToEntity(id, comp);
+            _entityManager->addComponentToEntity(id, new BoxCollider(32, 32));
             comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({32, 32, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
         }
     }

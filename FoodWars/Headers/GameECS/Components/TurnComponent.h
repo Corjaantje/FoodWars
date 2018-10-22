@@ -18,7 +18,7 @@ public:
     void setRemainingTime(double t);
     void lowerRemainingTime(double t);
     double getRemainingTime() const;
-    bool getMyTurn() const;
+    bool isMyTurn() const;
 
 private:
     int _energy;

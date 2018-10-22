@@ -13,8 +13,6 @@ public:
 public:
     int width;
     int height;
-    int xPos;
-    int yPos;
     Colour colour;
 };
 

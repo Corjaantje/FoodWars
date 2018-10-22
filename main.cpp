@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 
     //Config
     clock_t startProgramTime = clock();
-    int maxMsProgramIsRunning = 10000; //Stop the program after 10 seconds
+    int maxMsProgramIsRunning = 3000000; //Stop the program after 10 seconds
     double frameRateCap = 61;
     double amountOfUpdatesAllowedPerSecond = 1000.0 / frameRateCap; //= 16.666
     //End of config

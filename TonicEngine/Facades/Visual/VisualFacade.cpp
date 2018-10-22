@@ -7,7 +7,6 @@ VisualFacade::VisualFacade() {
 }
 
 VisualFacade::~VisualFacade() {
-    std::cout << "Delete window manager" << std::endl;
     delete _windowManager;
 }
 

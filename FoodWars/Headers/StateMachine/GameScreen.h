@@ -15,7 +15,6 @@ private:
     std::shared_ptr<EntityManager> _entityManager;
     std::shared_ptr<VisualFacade> _visualFacade;
     std::shared_ptr<AudioFacade> _audioFacade;
-    std::shared_ptr<InputFacade> _inputFacade;
     DrawSystem _drawSystem;
     std::shared_ptr<InputSystem> _inputSystem;
     Renderlist _renderList;

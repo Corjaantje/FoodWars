@@ -1,13 +1,16 @@
+#include <utility>
+
 #include "../../Headers/StateMachine/GameScreen.h"
 
 GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context),
-        _entityManager(std::make_shared<EntityManager>()),
-        _visualFacade(context->getFacade<VisualFacade>()),
-        _audioFacade(context->getFacade<AudioFacade>()),
-        _drawSystem(_entityManager, _visualFacade),
-        _inputFacade(context->getFacade<InputFacade>()),
-        _inputSystem(std::make_shared<InputSystem>(_entityManager, _inputFacade)) {
-        _inputFacade->getKeyEventObservable()->registerObserver(this);
+    _entityManager(std::make_shared<EntityManager>()),
+    _visualFacade(context->getFacade<VisualFacade>()),
+    _audioFacade(context->getFacade<AudioFacade>()),
+    _drawSystem(_entityManager, _visualFacade),
+
+    _inputSystem(std::make_shared<InputSystem>(_entityManager, _inputFacade)) {
+    _inputFacade->getKeyEventObservable()->registerObserver(this);
+
     //Initialize the Entity Manager
     //Initialize the DrawSystem.
 }

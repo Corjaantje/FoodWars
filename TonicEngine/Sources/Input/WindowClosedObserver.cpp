@@ -2,7 +2,7 @@
 
 WindowClosedObserver::~WindowClosedObserver() = default;
 
-bool WindowClosedObserver::isWindowClosed() {
+bool WindowClosedObserver::isWindowClosed() const {
     return _isClosed;
 }
 

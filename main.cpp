@@ -24,13 +24,6 @@ int main(int argc, char** argv)
 {
     VisualFacade* visualFacade = new VisualFacade();
 
-    InputFacade inputFacade;
-    inputFacade.getKeyEventObservable()->registerObserver(new PrintKeyInputObserver);
-    inputFacade.getMouseEventObservable()->registerObserver(new PrintMouseInputObserver);
-    inputFacade.getWindowEventObservable()->registerObserver(new PrintWindowObserver);
-    WindowClosedObserver *windowClosedObserver = new WindowClosedObserver();
-    inputFacade.getWindowEventObservable()->registerObserver(windowClosedObserver);
-
     visualFacade->setTitle("Food Wars");
     visualFacade->setResolution(640, 480);
     visualFacade->disablefullscreen();
@@ -62,7 +55,7 @@ int main(int argc, char** argv)
 
     clock_t timeLast = clock();
     //Run the application only for MaxMSProgramIsRunning milliseconds.
-    while((clock() - startProgramTime / CLOCKS_PER_SEC * 1000 < maxMsProgramIsRunning) && !windowClosedObserver->isWindowClosed()) {
+    while((clock() - startProgramTime / CLOCKS_PER_SEC * 1000 < maxMsProgramIsRunning) && !screenStateManager->getCurrentState()->isWindowClosed()) {
         double frameDelta = double (clock() - timeLast) / CLOCKS_PER_SEC * 1000.0;
         double deltaTime = 1/frameDelta;
         if(frameDelta > amountOfUpdatesAllowedPerSecond){

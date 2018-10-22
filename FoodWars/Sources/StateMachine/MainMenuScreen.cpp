@@ -7,7 +7,7 @@
 void MainMenuScreen::update(double deltaTime) {
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");
-    _inputFacade.pollEvents();
+    _inputFacade->pollEvents();
 }
 
 void MainMenuScreen::update(std::shared_ptr<MouseEvent> event){
@@ -21,7 +21,7 @@ void MainMenuScreen::update(std::shared_ptr<MouseEvent> event){
 MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
     visualFacade = context->getFacade<VisualFacade>();
     audioFacade = context->getFacade<AudioFacade>();
-    _inputFacade.getMouseEventObservable()->registerObserver(this);
+    _inputFacade->getMouseEventObservable()->registerObserver(this);
 
     _renderList.rectangleList.emplace_back(ShapeRectangle{640, 480, 0, 0, Colour { 0, 0, 0, 100}});
     _renderList.rectangleList.emplace_back(ShapeRectangle{440, 40, 100, 100, Colour { 200, 200, 200, 100}});

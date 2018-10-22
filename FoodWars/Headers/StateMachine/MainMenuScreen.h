@@ -18,7 +18,6 @@ class MainMenuScreen : public IScreen, public IObserver<MouseEvent> {
 private:
     std::shared_ptr<VisualFacade> visualFacade;
     std::shared_ptr<AudioFacade> audioFacade;
-    InputFacade _inputFacade;
     Renderlist _renderList;
 public:
     MainMenuScreen(std::shared_ptr<ScreenStateManager> context);

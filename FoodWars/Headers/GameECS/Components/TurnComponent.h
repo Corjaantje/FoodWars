@@ -14,11 +14,11 @@ public:
     TurnComponent(int energy, bool myTurn); // May be useless?
     ~TurnComponent() override;
 
-    bool isMyTurn();
     void switchTurn(bool change);
     void setRemainingTime(double t);
     void lowerRemainingTime(double t);
     double getRemainingTime() const;
+    bool isMyTurn() const;
 
 private:
     int _energy;

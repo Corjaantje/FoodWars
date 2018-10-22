@@ -2,6 +2,7 @@
 #include "../../Headers/Visual/Window.h"
 #include "../../Headers/Visual/TextureManager.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 WindowManager::WindowManager() {
     _window = new Window(_title, _windowWidth, _windowHeight);
@@ -46,6 +47,7 @@ void WindowManager::render(Renderlist renderlist) {
     _renderer = _window->getRenderer();
     renderRectangles(renderlist.rectangleList);
     renderSprites(renderlist.spriteList);
+    renderText(renderlist.textList);
     SDL_RenderPresent(_renderer);
 }
 
@@ -63,8 +65,6 @@ void WindowManager::renderRectangles(std::vector<ShapeRectangle> rectangleList) 
     SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 0);
 }
 
-//TODO This causes a massive memory leak at this point due to loading the Bitmap Image. We are aware of
-//TODO the issue and will be fixed in a few days.
 void WindowManager::renderSprites(std::vector<ShapeSprite> rectangleSprite) {
     for(int i=0; i< rectangleSprite.size(); i++){
         ShapeSprite &shapeSprite = rectangleSprite[i];
@@ -75,6 +75,19 @@ void WindowManager::renderSprites(std::vector<ShapeSprite> rectangleSprite) {
         rect.w = shapeSprite.width;
         SDL_Texture* texture = _textureManager.GetSDLTextureFromBMP(_renderer, shapeSprite.imageURL);
         SDL_RenderCopy(_renderer, texture, NULL, &rect);
+    }
+}
+
+void WindowManager::renderText(std::vector<ShapeText> textList) {
+    for(int i=0; i< textList.size(); i++){
+        ShapeText &shapeText = textList[i];
+        SDL_Texture* Message = _fontManager.GetSDLTextureFromText(_renderer, shapeText);
+        SDL_Rect Message_rect; //create a rect
+        Message_rect.x = shapeText.xPos;  //controls the rect's x coordinate
+        Message_rect.y = shapeText.yPos; // controls the rect's y coordinte
+        Message_rect.w = shapeText.width; // controls the width of the rect
+        Message_rect.h = shapeText.height; // controls the height of the rect
+        SDL_RenderCopy(_renderer, Message, NULL, &Message_rect);
     }
 }
 

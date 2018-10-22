@@ -21,8 +21,8 @@ void DrawSystem::update(double dt) {
     _renderList.rectangleList.clear();
     _renderList.spriteList.clear();
     _renderList.textList.clear();
-    std::string str = std::to_string(1/dt);
-    _renderList.textList.emplace_back(ShapeText(250, 102, str, 80, 125, 45, Colour(0, 0, 0, 0)));
+    std::string str = std::to_string(1/dt).substr(0, 2) + " FPS";
+    _renderList.textList.emplace_back(ShapeText(0, 0, str, 80, 75, 50, Colour(0, 0, 0, 0)));
     for(int i=0; i < drawComps.size(); i++){
         drawComps[i]->shape->addToRender(&_renderList);
     }

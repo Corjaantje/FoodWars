@@ -59,9 +59,12 @@ int main(int argc, char** argv)
 
     clock_t timeLast = clock();
     //Run the application only for MaxMSProgramIsRunning milliseconds.
+
+    double timeModifier = 1;
+    // Modifier for changing the gameplay speed
     while(!screenStateManager->getCurrentState()->isWindowClosed()) {
         double frameDelta = double (clock() - timeLast) / CLOCKS_PER_SEC * 1000.0;
-        double deltaTime = 1/frameDelta;
+        double deltaTime = 1/(frameDelta / timeModifier);
         if(frameDelta > amountOfUpdatesAllowedPerSecond){
             screenStateManager->getCurrentState()->update(deltaTime);
             timeLast = clock();

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <SDL2/SDL_ttf.h>
 #include "../../Headers/Visual/Window.h"
 
 Window::Window(const std::string &title, int width, int height) : _title(title), _width(width), _height(height)
@@ -17,6 +18,9 @@ Window::~Window()
 bool Window::init(){
     if(SDL_Init(SDL_INIT_VIDEO) != 0){
         std::cerr << "Failed to initialize SDL.\n";
+        return 0;
+    }
+    if(TTF_Init() != 0){
         return 0;
     }
     return true;

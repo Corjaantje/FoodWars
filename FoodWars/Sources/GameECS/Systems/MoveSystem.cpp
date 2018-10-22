@@ -38,8 +38,15 @@ void MoveSystem::update(double dt) {
                                   newX + collider->width > otherDrawable->shape->xPos &&
                                   newY < otherDrawable->shape->yPos + otherCollider->height &&
                                   newY + collider->height > otherDrawable->shape->yPos;
-                    if(willCollide)
+                    if(willCollide) {
+                        if (moveComponent->positionComponent.X > 0) {
+                            drawableComponent->shape->xPos = otherDrawable->shape->xPos - collider->width;
+                        }
+                        if (moveComponent->positionComponent.Y > 0 && (drawableComponent->shape->yPos - collider->height) != newY) {
+                            drawableComponent->shape->yPos = otherDrawable->shape->yPos - collider->height;
+                        }
                         break;
+                    }
                 }
             }
         }

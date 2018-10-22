@@ -39,11 +39,15 @@ void AudioFacade::setEffectVolume(int volume) {
 
 // Plays Music
 void AudioFacade::playMusic(const char* filename) {
-
     if (filename != _backgroundMusic)
     {
         // Get path with the filename
         const char *path = getAudio(filename);
+
+        Mix_Music *music;
+        music=Mix_LoadMUS(path);
+        if(!music)
+            _audioPlayer->stopMusic();
 
         // Play sound with the path
         _audioPlayer->playMusic(path, -1);

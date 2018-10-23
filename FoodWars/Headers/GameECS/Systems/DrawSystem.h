@@ -10,6 +10,9 @@ private:
     std::shared_ptr<EntityManager> _entityManager;
     std::shared_ptr<VisualFacade> _visualFacade;
     Renderlist _renderList;
+    int _updateCallCount;
+    double _deltaTimeTotal;
+    std::string _fpsString;
 public:
     DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade);
     ~DrawSystem();

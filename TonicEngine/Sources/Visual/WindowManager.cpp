@@ -73,7 +73,7 @@ void WindowManager::renderSprites(std::vector<ShapeSprite> rectangleSprite) {
         rect.y = shapeSprite.yPos;
         rect.h = shapeSprite.height;
         rect.w = shapeSprite.width;
-        SDL_Texture* texture = _textureManager.GetSDLTextureFromBMP(_renderer, shapeSprite.imageURL);
+        SDL_Texture* texture = _textureManager.GetSDLTextureFromPNG(_renderer, shapeSprite.imageURL);
         SDL_RenderCopy(_renderer, texture, NULL, &rect);
     }
 }

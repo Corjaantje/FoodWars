@@ -3,6 +3,7 @@
 
 
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_image.h>
 #include <string>
 #include <map>
 
@@ -12,6 +13,8 @@ public:
     ~TextureManager() = default;
 public:
     SDL_Texture* GetSDLTextureFromBMP(SDL_Renderer* renderer, std::string URL);
+    SDL_Texture* GetSDLTextureFromPNG(SDL_Renderer* renderer, std::string URL);
+
 private:
     std::map<std::string, SDL_Texture*> _textureMap;
 };

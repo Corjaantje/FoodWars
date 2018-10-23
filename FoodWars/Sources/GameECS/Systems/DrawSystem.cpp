@@ -34,37 +34,37 @@ void DrawSystem::generateTerrain() {
     for(int y=112; y < 480; y+=16) {
         for (int x=0; x < 640; x+=16) {
             if (y >= 160 && x >= 528 && x <= 592) {
-                drawComponent(x, y);
+                generateTerrainDrawables(x, y);
             } else if ((y >= 176 && x >= 496)) {
-                drawComponent(x, y);
+                generateTerrainDrawables(x, y);
             } else if (y >= 176 && x > 560) {
-                drawComponent(x,y);
+                generateTerrainDrawables(x, y);
             } else if (y >= 192 && x >= 464) {
-                drawComponent(x,y);
+                generateTerrainDrawables(x, y);
             } else if (y >= 208 && x >= 432) {
-                drawComponent(x,y);
+                generateTerrainDrawables(x, y);
             } else if (y >= 224 && x >= 400) {
-                drawComponent(x,y);
+                generateTerrainDrawables(x, y);
             } else if (y >= 240 && x >= 368) {
-                drawComponent(x,y);
+                generateTerrainDrawables(x, y);
             } else if (y >= 256 && x >= 336) {
-                drawComponent(x,y);
+                generateTerrainDrawables(x, y);
             } else if (y >= 192 && x >= 0 && x <= 64 ) {
-                drawComponent(x,y);
+                generateTerrainDrawables(x, y);
             } else if (y >= 208 && x >= 0 && x <= 96 ) {
-                drawComponent(x,y);
+                generateTerrainDrawables(x, y);
             } else if (y >= 224 && x >= 0 && x <= 112 ) {
-                drawComponent(x,y);
+                generateTerrainDrawables(x, y);
             } else if (y >= 256 && x >= 0 && x <= 128 ) {
-                drawComponent(x,y);
+                generateTerrainDrawables(x, y);
             } else if (y >= 288 ) {
-                drawComponent(x,y);
+                generateTerrainDrawables(x, y);
             }
         }
     }
 }
 
-void DrawSystem::drawComponent(int x, int y) {
+void DrawSystem::generateTerrainDrawables(int x, int y) {
     int randomNum = rand() % 19 + (-9);
     int randomNum2 = rand() % 19 + (-9);
     int randomNum3 = rand() % 19 + (-9);

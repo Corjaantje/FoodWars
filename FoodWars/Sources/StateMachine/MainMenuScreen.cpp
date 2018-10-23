@@ -10,10 +10,9 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _inputFacade->getMouseEventObservable()->registerObserver(this);
     _inputFacade->getKeyEventObservable()->registerObserver(this);
 
-    _renderList.rectangleList.emplace_back(ShapeRectangle{640, 480, 0, 0, Colour { 0, 0, 0, 100}});
+    _renderList.spriteList.emplace_back(ShapeSprite{640, 480, 0, 0, "../FoodWars/Assets/wallpaper.png"});
     _renderList.rectangleList.emplace_back(ShapeRectangle{440, 40, 100, 100, Colour { 200, 200, 200, 100}});
-    _renderList.textList.emplace_back(ShapeText(250, 102, "Start0", 80, 125, 45, Colour(0, 0, 0, 0)));
-    //TODO: Startgame text - requires visual facade update
+    _renderList.textList.emplace_back(ShapeText(200, 200, "Start Game", 180, 250, 45, Colour(0, 0, 0, 0)));
 }
 
 MainMenuScreen::~MainMenuScreen() {
@@ -28,7 +27,7 @@ void MainMenuScreen::update(double deltaTime) {
 
 void MainMenuScreen::update(std::shared_ptr<MouseEvent> event){
     if((event->getXPosition() >= 100 && event->getXPosition() <= 540)
-       && (event->getYPosition() >= 100 && event->getYPosition() <= 140))
+       && (event->getYPosition() >= 200 && event->getYPosition() <= 240))
     {
         _context->setActiveScreen<GameScreen>();
     }

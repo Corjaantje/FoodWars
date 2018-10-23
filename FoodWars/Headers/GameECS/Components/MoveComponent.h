@@ -9,9 +9,11 @@
 class MoveComponent : public Component {
 public:
     PositionComponent positionComponent;
-    double velocity;
+    double xVelocity;
+    double yVelocity;
     MoveComponent();
     MoveComponent(PositionComponent positionComponent, double velocity);
+    MoveComponent& operator+=(const MoveComponent& other);
     ~MoveComponent() override;
 };
 

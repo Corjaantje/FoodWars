@@ -21,8 +21,8 @@ void MoveSystem::update(double dt) {
         std::shared_ptr<DrawableComponent> drawableComponent = _entityManager->getComponentFromEntity<DrawableComponent>(entity);
         std::shared_ptr<BoxCollider> collider = _entityManager->getComponentFromEntity<BoxCollider>(entity);
 
-        double newX = drawableComponent->shape->xPos + moveComponent->positionComponent.X * dt * moveComponent->velocity;
-        double newY = drawableComponent->shape->yPos + moveComponent->positionComponent.Y * dt * moveComponent->velocity;
+        double newX = drawableComponent->shape->xPos + moveComponent->positionComponent.X * dt * moveComponent->xVelocity;
+        double newY = drawableComponent->shape->yPos + moveComponent->positionComponent.Y * dt * moveComponent->yVelocity;
         bool willCollide = false;
 
         if(collider) { // entity can collide so check for possible collision
@@ -39,12 +39,12 @@ void MoveSystem::update(double dt) {
                                   newY < otherDrawable->shape->yPos + otherCollider->height &&
                                   newY + collider->height > otherDrawable->shape->yPos;
                     if(willCollide) {
-                        if (moveComponent->positionComponent.X > 0) {
+                       /* if (moveComponent->positionComponent.X > 0) {
                             drawableComponent->shape->xPos = otherDrawable->shape->xPos - collider->width;
                         }
                         if (moveComponent->positionComponent.Y > 0 && (drawableComponent->shape->yPos - collider->height) != newY) {
                             drawableComponent->shape->yPos = otherDrawable->shape->yPos - collider->height;
-                        }
+                        }*/
                         break;
                     }
                 }
@@ -56,8 +56,8 @@ void MoveSystem::update(double dt) {
             drawableComponent->shape->yPos = newY;
         }
 
-        moveComponent->velocity-=1;
-        if(moveComponent->velocity < 0)
+        moveComponent->positionComponent--;
+        if(moveComponent->xVelocity < 0 && moveComponent->yVelocity < 0)
             _entityManager->removeComponentFromEntity<MoveComponent>(entity);
     }
 }
@@ -85,8 +85,9 @@ void MoveSystem::update(std::shared_ptr<KeyEvent> event) {
         if(turnComponent->isMyTurn()){
             std::shared_ptr<MoveComponent> entityMoveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
             if(entityMoveComponent) {
-                entityMoveComponent->velocity = 10;
-                entityMoveComponent->positionComponent = moveComponent.positionComponent;
+                entityMoveComponent->xVelocity = 10;
+                entityMoveComponent->yVelocity = 10;
+                entityMoveComponent->positionComponent += moveComponent.positionComponent;
             } else
                 _entityManager->addComponentToEntity(iterator.first, new MoveComponent(moveComponent.positionComponent, 10));
         }

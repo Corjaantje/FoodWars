@@ -209,4 +209,4 @@ set(SOURCE_FILES main.cpp
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCE_FILES_VISUAL} ${SOURCE_FILES_EVENTS} ${SOURCE_FILES_INPUT} ${SOURCE_FILES_STORAGE} ${SOURCE_FILES_COMMUNICATION} ${SOURCE_FILES_AUDIO} ${SOURCE_FILES_COLLISION})
 
-target_link_libraries(Project_SWA ${DEPENDENCIES}  -lmingw32 -lSDL2_mixer  -lSDL2main -lSDL2 -lSDL2_ttf   -mwindows -static-libgcc -static-libstdc++)
+target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2_mixer -lSDL2_image -lSDL2main -lSDL2 -lSDL2_ttf  -mwindows -static-libgcc -static-libstdc++)

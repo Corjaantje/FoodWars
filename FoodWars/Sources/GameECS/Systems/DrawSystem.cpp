@@ -4,6 +4,7 @@
 #include "../../../Headers/GameECS/Systems/IBaseSystem.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
+#include "../../../Headers/GameECS/Components/TurnComponent.h"
 
 DrawSystem::DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade){
     _entityManager = entityManager;
@@ -25,6 +26,13 @@ void DrawSystem::update(double dt) {
     _renderList.textList.emplace_back(ShapeText(0, 0, str, 80, 75, 50, Colour(0, 0, 0, 0)));
     for(int i=0; i < drawComps.size(); i++){
         drawComps[i]->shape->addToRender(&_renderList);
+    }
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if(iterator.second->isMyTurn()){
+            ShapeText timerText {500, 0, std::to_string(iterator.second->getRemainingTime()).substr(0, 4) + " sec.", 100, 75, 50, Colour{0, 0, 0, 0}};
+            timerText.addToRender(&_renderList);
+            break;
+        }
     }
     _visualFacade->render(_renderList);
 }

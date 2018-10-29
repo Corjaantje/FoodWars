@@ -18,8 +18,8 @@ void GravitySystem::update(double dt) {
                 _entityManager->addComponentToEntity(iterator.first, new MoveComponent(PositionComponent(0, 1),
                                                                                        iterator.second->gravityApplied));
             } else {
-                moveComponent->positionComponent.Y = 1;
-                moveComponent->yVelocity = iterator.second->gravityApplied;
+                moveComponent->positionComponent += PositionComponent{0, 1};
+                moveComponent->yVelocity += iterator.second->gravityApplied;
             }
         }
     }

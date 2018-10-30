@@ -1,4 +1,6 @@
 #include <iostream>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include "../../Headers/Visual/Window.h"
 
 Window::Window(const std::string &title, int width, int height) : _title(title), _width(width), _height(height)
@@ -17,6 +19,12 @@ Window::~Window()
 bool Window::init(){
     if(SDL_Init(SDL_INIT_VIDEO) != 0){
         std::cerr << "Failed to initialize SDL.\n";
+        return 0;
+    }
+    if(TTF_Init() != 0){
+        return 0;
+    }
+    if(IMG_Init(IMG_INIT_PNG) != 0){
         return 0;
     }
     return true;
@@ -61,14 +69,25 @@ bool Window::createWindow() {
 }
 
 bool Window::closeWindow() {
-    SDL_DestroyWindow(_window);
+    if(!_closed)
+        SDL_DestroyWindow(_window);
     _closed = true;
 }
 
 bool Window::setFullscreen(bool state) {
     _fullscreen = state;
+    SDL_SetWindowFullscreen(_window, state);
 }
 
 SDL_Renderer* Window::getRenderer() {
     return _renderer;
 }
+
+void Window::setTitle(const std::string &title){
+    _title = title;
+    SDL_SetWindowTitle(_window, &title[0]);
+};
+
+void Window::setResolution(int width, int height){
+    SDL_SetWindowSize(_window, width, height);
+};

@@ -1,75 +1,81 @@
+#include <memory>
+
+#include <ctime>
+#include <afxres.h>
 #include "TonicEngine/Headers/Visual/Window.h"
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
-#include "TonicEngine/Headers/Input/InputObservable.h"
+#include "TonicEngine/Headers/Input/InputFacade.h"
+#include "TonicEngine/Headers/Input/PrintKeyInputObserver.h"
+#include "TonicEngine/Headers/Input/PrintMouseInputObserver.h"
 #include "TonicEngine/Headers/Audio/AudioFacade.h"
+#include "FoodWars/Headers/GameECS/Entities/EntityManager.h"
+#include "FoodWars/Headers/GameECS/Systems/DrawSystem.h"
+#include "FoodWars/Headers/GameECS/Components/DrawableComponent.h"
+#include "FoodWars/Headers/StateMachine/ScreenStateManager.h"
+#include "TonicEngine/Headers/Communication/CommunicationFacade.h"
+#include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
+#include "FoodWars/Headers/StateMachine/OtherMenuScreen.h"
+#include "FoodWars/Headers/StateMachine/GameScreen.h"
+#include "TonicEngine/Headers/Input/PrintWindowObserver.h"
+#include "TonicEngine/Headers/Input/WindowClosedObserver.h"
+#include "TonicEngine/Facades/GeneralFacade.h"
+
+#include "FoodWars/Headers/GameECS/Components/TurnComponent.h"
+#include "FoodWars/Headers/GameECS/Systems/TurnSystem.h"
+#include <ctime>
+#include <chrono>
 
 
 int main(int argc, char** argv)
 {
     VisualFacade* visualFacade = new VisualFacade();
-    InputObservable* inputObservable = new InputObservable();
+
     visualFacade->setTitle("Food Wars");
-    //visualFacade->setResolution(1366, 768);
     visualFacade->setResolution(640, 480);
     visualFacade->disablefullscreen();
-    ShapeRectangle rectangle(200, 200, 0, 0, Colour(0, 255, 0, 255));
-    ShapeRectangle rectangle2(100, 100, 150, 150, Colour(0, 0, 255, 255));
-    ShapeRectangle rectangle3(50, 50, 225, 225, Colour(255, 0, 0, 255));
-
-    visualFacade->addRectangle(rectangle);
-    visualFacade->addRectangle(rectangle2);
-    visualFacade->addRectangle(rectangle3);
-
-//    ShapeSprite sprite(150, 150, 200, 0, "../grass.bmp");
-//    visualFacade->addSprite(sprite);
     visualFacade->openWindow();
 
+    AudioFacade* audioFacade = new AudioFacade();
+    audioFacade->setMusicVolume(5);
+    audioFacade->setEffectVolume(10);
 
+    GeneralFacade* generalFacade = new GeneralFacade();
 
+    audioFacade->addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
+    audioFacade->addAudio("wildwest", "../FoodWars/Assets/Audio/wildwest.wav");
+    audioFacade->addAudio("menu", "../FoodWars/Assets/Audio/menu.wav");
 
-    // Create audioFacade
-    AudioFacade audioFacade;
+    std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
+    screenStateManager->addFacade(visualFacade);
+    screenStateManager->addFacade(new InputFacade);
+    screenStateManager->addFacade(audioFacade);
+    screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new OtherMenuScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager));
+    screenStateManager->setActiveScreen<MainMenuScreen>();
 
-    // Set volumes
-    audioFacade.setMusicVolume(5);
-    audioFacade.setEffectVolume(10);
-    
-    // Add Audio to _audioMap in the audioFacade
-    audioFacade.addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
-    audioFacade.addAudio("background", "../FoodWars/Assets/Audio/wildwest.wav");
+    //Config
+    double frameRateCap = 61;
+    double amountOfUpdatesAllowedPerSecond = 1.0 / frameRateCap; //= 16.666
+    //End of config
 
-    // Play background music
-    audioFacade.playMusic("background", -1);
+    double timeModifier = 1.0;
+    // Modifier for changing the gameplay speed
 
-    // Play oofs
-    for(int i = 0; i < 30; i++)
-    {
-        // Use channel -1 (auto assign channel) for sound effects
-        audioFacade.playEffect("oof");
+    double totalTime = 0;
+    std::chrono::duration<double> timeLast = std::chrono::steady_clock::now().time_since_epoch();
 
-        // Delay isn't needed when playEffect calls are made on other occasions, this is just a demo
-        SDL_Delay(100);
+    while(!screenStateManager->getCurrentState()->isWindowClosed()) {
+        std::chrono::duration<double> deltaTime = (std::chrono::steady_clock::now().time_since_epoch() - timeLast) * timeModifier;
+
+        //if(deltaTime.count() > amountOfUpdatesAllowedPerSecond) {
+            totalTime += deltaTime.count();
+            screenStateManager->getCurrentState()->update(deltaTime.count());
+            timeLast = std::chrono::steady_clock::now().time_since_epoch();
+        ///}
+        generalFacade->sleep(amountOfUpdatesAllowedPerSecond * 1000 - deltaTime.count());
     }
-
-    // Change background music
-    audioFacade.playMusic("oof", -1);
-
-
-
-
-    while(!visualFacade->isWindowClosed()){
-        visualFacade->render();
-        visualFacade->pollEvents();
-        //inputObservable->pollEvents();
-    }
-    /*WindowManager windowManager;
-    windowManager.openWindow();
-    nanogui::ref<Window> windowRef = nanogui::Screen(windowManager._window->getWindow(), Eigen::Vector2i(10, 10), "caption", true, false);
-    SDL_Window* window = windowManager._window->getWindow();
-    auto& button = window.add<nanogui::Button>("Plain button")
-            .withCallback([] { std::cout << "pushed!" << std::endl; });*/
-
-
-
+    delete generalFacade;
     return 0;
 }
+

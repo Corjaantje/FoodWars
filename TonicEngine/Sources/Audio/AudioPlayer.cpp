@@ -65,6 +65,11 @@ void AudioPlayer::playMusic(const char *path, int amountOfLoops) {
     Mix_PlayMusic(audio, amountOfLoops);
 }
 
+void AudioPlayer::stopMusic(){
+    Mix_PauseMusic();
+}
+
+
 void AudioPlayer::playEffect(const char *path) {
 
     // Load sound effect

@@ -10,7 +10,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _inputFacade->getMouseEventObservable()->registerObserver(this);
     _inputFacade->getKeyEventObservable()->registerObserver(this);
 
-    _renderList.spriteList.emplace_back(ShapeSprite{640, 480, 0, 0, "../FoodWars/Assets/wallpaper.png"});
+    _renderList.spriteList.emplace_back(ShapeSprite{640, 480, 0, 0, "wallpaper.png"});
     _renderList.rectangleList.emplace_back(ShapeRectangle{440, 40, 100, 100, Colour { 200, 200, 200, 100}});
     _renderList.textList.emplace_back(ShapeText(200, 200, "Start Game", 180, 250, 45, Colour(0, 0, 0, 0)));
 }

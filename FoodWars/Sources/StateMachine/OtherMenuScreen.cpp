@@ -1,7 +1,3 @@
-//
-// Created by Lucas on 11/10/2018.
-//
-
 #include "../../Headers/StateMachine/OtherMenuScreen.h"
 
 void OtherMenuScreen::update(double deltaTime) {

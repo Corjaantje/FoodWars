@@ -29,7 +29,7 @@ public:
         _observers.push_back(std::shared_ptr<IObserver<T>>(iObserver));
     };
 
-    void notify(std::shared_ptr<T> event) {
+    void notify(std::shared_ptr<T> event) const {
         for(auto& observer: _observers){
             observer->update(event);
         }

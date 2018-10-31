@@ -11,9 +11,12 @@
 
 class KeyEventObservable : public IObservable<KeyEvent> {
 private:
+    std::map<SDL_Keycode, KEY> _keycodeMap;
+    std::map<KEY, bool> _pressedKeys;
 public:
     KeyEventObservable();
     ~KeyEventObservable() override;
+    void update() const;
 
 };
 

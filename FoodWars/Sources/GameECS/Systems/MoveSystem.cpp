@@ -15,6 +15,7 @@ MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared
 
 void MoveSystem::update(double dt) {
     std::map<int, std::shared_ptr<BoxCollider>> collideAbleEntities = _entityManager->getAllEntitiesWithComponent<BoxCollider>();
+    std::cout << "Update movement" << std::endl;
     for (auto const &iterator: _entityManager->getAllEntitiesWithComponent<MoveComponent>()) {
         int entity = iterator.first;
         std::shared_ptr<MoveComponent> moveComponent = iterator.second;
@@ -63,18 +64,23 @@ void MoveSystem::update(double dt) {
 }
 
 void MoveSystem::update(std::shared_ptr<KeyEvent> event) {
+    std::cout << "Key event: ";
     MoveComponent moveComponent;
     switch (event->getKey()) {
         case KEY::KEY_W:
+            std::cout << "W" << std::endl;
             moveComponent.positionComponent = PositionComponent{0, -100};
             break;
         case KEY::KEY_A:
+            std::cout << "A" << std::endl;
             moveComponent.positionComponent = PositionComponent{-10, 0};
             break;
         case KEY::KEY_D:
+            std::cout << "D" << std::endl;
             moveComponent.positionComponent = PositionComponent{10, 0};
             break;
         case KEY::KEY_S:
+            std::cout << "S" << std::endl;
             moveComponent.positionComponent = PositionComponent{0, 10};
             break;
         default:

@@ -25,7 +25,8 @@ void InputFacade::init() {
 void InputFacade::pollEvents() {
     SDL_Event event;
 
-    if(SDL_PollEvent(&event)) {
+
+    while(SDL_PollEvent(&event)) {
         switch(event.type) {
             case SDL_KEYDOWN: { // When a key is pressed
                 std::shared_ptr<KeyEvent> keyEvent = std::make_shared<KeyEvent>(_keycodeMap[event.key.keysym.sym], KeyEventType::Down);

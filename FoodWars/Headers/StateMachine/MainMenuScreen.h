@@ -15,17 +15,16 @@
 #include "../../../TonicEngine/Headers/Visual/Shapes/Button.h"
 
 
-class MainMenuScreen : public IScreen, public IObserver<MouseEvent>, public IObserver<KeyEvent> {
+class MainMenuScreen : public IScreen, public IObserver<KeyEvent> {
 private:
     std::shared_ptr<VisualFacade> visualFacade;
     std::shared_ptr<AudioFacade> audioFacade;
     Renderlist _renderList;
-    Button* _startButton;
+    std::vector<Button*> _buttons;
 public:
     MainMenuScreen(std::shared_ptr<ScreenStateManager> context);
     ~MainMenuScreen();
     void update(double deltaTime) override;
-    void update(std::shared_ptr<MouseEvent> event) override;
     void update(std::shared_ptr<KeyEvent> event) override;
 };
 

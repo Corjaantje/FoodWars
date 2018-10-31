@@ -15,10 +15,22 @@ private:
     std::string _text;
     ShapeText shapeText;
 public:
-    void update(std::shared_ptr<MouseEvent> event);
-    void addToRender(Renderlist* renderlist) override;
+    explicit Button(MouseEventObservable& mouseEventObservable);
     Button(MouseEventObservable& mouseEventObservable, const std::string& text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos);
-    Button(MouseEventObservable& mouseEventObservable, const std::string& text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, Colour colour);
+    Button(MouseEventObservable& mouseEventObservable, const std::string& text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, Colour buttonColour);
+    Button(MouseEventObservable& mouseEventObservable, const std::string& text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, Colour buttonColour, Colour textColour);
+    Button(MouseEventObservable& mouseEventObservable, const std::string& text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, int xOffSet, int yOffSet, Colour buttonColour, Colour textColour);
+
+    void setXOffSet(int xOffSet);
+    void setYOffSet(int yOffSet);
+    void setText(const std::string& text);
+    void setTextColor(const Colour& colour);
+    void setButtonPosition(int x, int y);
+    void setButtonColor(const Colour& colour);
+    void setOnClickFunction(const std::function<void()>& onClick);
+
+    void update(std::shared_ptr<MouseEvent> event) override;
+    void addToRender(Renderlist* renderlist) override;
 };
 
 #endif //PROJECT_SWA_BUTTON_H

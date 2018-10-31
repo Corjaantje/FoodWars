@@ -15,19 +15,48 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _renderList.rectangleList.emplace_back(ShapeRectangle{440, 40, 100, 100, Colour { 200, 200, 200, 100}});
     //_renderList.textList.emplace_back(ShapeText(200, 200, "Start Game", 180, 250, 45, Colour(0, 0, 0, 0)));
 
-    Button* startButton = new Button {*_inputFacade->getMouseEventObservable(),"Start Game", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 60, 200, 200};
-    startButton->addToRender(&_renderList);
-    _buttons.push_back(startButton);
-/*
- *  // this button is for testing purposes only, remove when merging to develop or master
-    Button* tempButton  = new Button {*_inputFacade->getMouseEventObservable(), "Second button", [context = _context]() { context->setActiveScreen<OtherMenuScreen>();}, 250, 75, 200, 300};
-    tempButton->setXOffSet(50);
-    tempButton->setYOffSet(20);
-    tempButton->setText("hoi");
-    tempButton->setButtonColor(Colour{0, 0, 255, 100});
-    tempButton->setButtonPosition(200, 100);
-    tempButton->addToRender(&_renderList);
-    _buttons.push_back(tempButton);*/
+    // Level Selection
+    Button* levelSelectionButton = new Button {*_inputFacade->getMouseEventObservable(),"Select Level", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 200};
+    levelSelectionButton->addToRender(&_renderList);
+    _buttons.push_back(levelSelectionButton);
+
+    // Level Editor
+    Button* levelEditorButton = new Button {*_inputFacade->getMouseEventObservable(),"Level Editor", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 250};
+    levelEditorButton->addToRender(&_renderList);
+    _buttons.push_back(levelEditorButton);
+
+    // Upgrades
+    Button* upgradesButton = new Button {*_inputFacade->getMouseEventObservable(),"Upgrades", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 300};
+    upgradesButton->addToRender(&_renderList);
+    _buttons.push_back(upgradesButton);
+
+    // Settings
+    Button* settingsButton = new Button {*_inputFacade->getMouseEventObservable(), [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 50, 50, 530, 0, "settings.png"};
+    settingsButton->addToRender(&_renderList);
+    _buttons.push_back(settingsButton);
+
+    // Help
+    Button* helpButton = new Button {*_inputFacade->getMouseEventObservable(),"Help", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 100, 30, 0, 390};
+    helpButton->addToRender(&_renderList);
+    _buttons.push_back(helpButton);
+
+    // Credits
+    Button* creditsButton = new Button {*_inputFacade->getMouseEventObservable(),"Credits", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 100, 30, 0, 430};
+    creditsButton->addToRender(&_renderList);
+    _buttons.push_back(creditsButton);
+
+    // Quit
+    Button* quitButton = new Button {*_inputFacade->getMouseEventObservable(), [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 50, 50, 590, 0, "exit.png"};
+    quitButton->addToRender(&_renderList);
+    _buttons.push_back(quitButton);
+
+    // High Scores
+    Button* highScoresButton = new Button {*_inputFacade->getMouseEventObservable(), [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 50, 50, 0, 0, "trophy.png"};
+    highScoresButton->addToRender(&_renderList);
+    _buttons.push_back(highScoresButton);
+
+
+
 }
 
 MainMenuScreen::~MainMenuScreen() {

@@ -4,22 +4,25 @@
 #include <string>
 #include <functional>
 #include "ShapeRectangle.h"
+#include "ShapeSprite.h"
 #include "ShapeText.h"
 #include "../../Input/IObserver.h"
 #include "../../Events/MouseEvent.h"
 #include "../../Input/MouseEventObservable.h"
 
-class Button : public ShapeRectangle, IObserver<MouseEvent> {
+class Button : public ShapeRectangle, IObserver<MouseEvent>{
 private:
     std::function<void()> _onClickFunction;
     std::string _text;
     ShapeText shapeText;
+    ShapeSprite shapeSprite;
 public:
     explicit Button(MouseEventObservable& mouseEventObservable);
     Button(MouseEventObservable& mouseEventObservable, const std::string& text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos);
     Button(MouseEventObservable& mouseEventObservable, const std::string& text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, Colour buttonColour);
     Button(MouseEventObservable& mouseEventObservable, const std::string& text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, Colour buttonColour, Colour textColour);
     Button(MouseEventObservable& mouseEventObservable, const std::string& text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, int xOffSet, int yOffSet, Colour buttonColour, Colour textColour);
+    Button(MouseEventObservable& mouseEventObservable, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, const std::string& imageURL);
 
     void setXOffSet(int xOffSet);
     void setYOffSet(int yOffSet);

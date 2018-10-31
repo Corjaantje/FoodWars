@@ -3,41 +3,40 @@
 #include "../../../Headers/Visual/Shapes/Button.h"
 #include "../../../Headers/Visual/Renderlist.h"
 
-Button::Button(MouseEventObservable &mouseEventObservable) : ShapeRectangle(0,0,0,0, Colour{0,0,0,0}), shapeText(0,0,"",0,0,0,Colour{0,0,0,0}) {
+Button::Button(MouseEventObservable &mouseEventObservable) : ShapeRectangle(0,0,0,0, Colour{0,0,0,0}), shapeText(0,0,"",0,0,0,Colour{0,0,0,0}), shapeSprite(0, 0, 0, 0, "") {
     mouseEventObservable.registerObserver(this);
 }
 
 Button::Button(MouseEventObservable& mouseEventObservable, const std::string &text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos) :
-        Button(mouseEventObservable, text, onClick, width, height, xPos, yPos, Colour{255,255,255,100}, Colour{0, 0, 0, 0})
-/*Button(mouseEventObservable, text, onClick, width, height, xPos, yPos, Colour{255,255,255,100})*/ {
+        Button(mouseEventObservable, text, onClick, width, height, xPos, yPos, Colour{255,255,255,100}, Colour{0, 0, 0, 0}){
 }
 
 Button::Button(MouseEventObservable& mouseEventObservable, const std::string &text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos,
-               Colour colour) : Button(mouseEventObservable, text, onClick, width, height, xPos, yPos, colour, Colour{0, 0, 0, 0})
-               /*ShapeRectangle(width, height, xPos, yPos, colour), _text(text), _onClickFunction(onClick),
-               shapeText(xPos + 10, yPos + 10, _text, 180, width - 20, height - 20, Colour{0, 0, 0, 0})*/{
+               Colour colour) : Button(mouseEventObservable, text, onClick, width, height, xPos, yPos, colour, Colour{0, 0, 0, 0}){
 }
 
 Button::Button(MouseEventObservable &mouseEventObservable, const std::string &text,
                const std::function<void()> &onClick, int width, int height, int xPos, int yPos, Colour buttonColour,
-               Colour textColour) : Button(mouseEventObservable, text, onClick, width, height, xPos, yPos, width/10, height/10, buttonColour, textColour)
-/*ShapeRectangle(width, height, xPos, yPos, buttonColour), _text(text), _onClickFunction(onClick),
-shapeText(xPos + 10, yPos + 10, _text, 180, width - 20, height - 20, Colour{0, 0, 0, 0})*/ {
-
+               Colour textColour) : Button(mouseEventObservable, text, onClick, width, height, xPos, yPos, width/10, height/10, buttonColour, textColour){
 }
 
 Button::Button(MouseEventObservable &mouseEventObservable, const std::string &text,
         const std::function<void()> &onClick, int width, int height, int xPos, int yPos, int xOffSet,
         int yOffSet, Colour buttonColour, Colour textColour) :
         ShapeRectangle(width, height, xPos, yPos, buttonColour), _text(text), _onClickFunction(onClick),
-        shapeText(xPos + xOffSet, yPos + yOffSet, _text, 180, width - (2 * xOffSet), height - (2 * yOffSet), textColour){
+        shapeText(xPos + xOffSet, yPos + yOffSet, _text, 180, width - (2 * xOffSet), height - (2 * yOffSet), textColour), shapeSprite(0, 0, 0, 0, ""){
     mouseEventObservable.registerObserver(this);
+}
 
+Button::Button(MouseEventObservable &mouseEventObservable, const std::function<void()> &onClick, int width, int height, int xPos, int yPos, const std::string &imageURL) :
+        ShapeRectangle(width, height, xPos, yPos, Colour{0,0,0,0}), shapeText(0,0,"",0,0,0,Colour{0,0,0,0}), shapeSprite(width, height, xPos, yPos, imageURL), _onClickFunction(onClick){
+    mouseEventObservable.registerObserver(this);
 }
 
 void Button::addToRender(Renderlist *renderlist) {
     ShapeRectangle::addToRender(renderlist);
     shapeText.addToRender(renderlist);
+    shapeSprite.addToRender(renderlist);
 }
 
 void Button::update(std::shared_ptr<MouseEvent> event) {
@@ -71,9 +70,6 @@ void Button::setButtonPosition(int x, int y) {
     this->yPos = y;
     setXOffSet(xOffSet);
     setYOffSet(yOffSet);
-    std::cout << "New xPos: " << xPos << std::endl;
-    std::cout << "New yPos: " << yPos << std::endl;
-
 }
 
 void Button::setButtonColor(const Colour &colour) {
@@ -83,4 +79,3 @@ void Button::setButtonColor(const Colour &colour) {
 void Button::setOnClickFunction(const std::function<void()> &onClick) {
     this->_onClickFunction = onClick;
 }
-

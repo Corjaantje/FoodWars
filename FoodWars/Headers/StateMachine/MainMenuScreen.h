@@ -14,6 +14,8 @@
 #include "../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
 
 class MainMenuScreen : public IScreen, public IObserver<KeyEvent> {
+private:
+    void quitGame();
 public:
     explicit MainMenuScreen(std::shared_ptr<ScreenStateManager> context);
     ~MainMenuScreen();

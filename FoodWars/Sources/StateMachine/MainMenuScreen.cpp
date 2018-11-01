@@ -40,7 +40,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _buttons.push_back(creditsButton);
 
     // Quit
-    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 50, 50, 590, 0, Colour{0,0,0,0}};
+    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [c = this]() { c->quitGame(); }, 50, 50, 590, 0, Colour{0,0,0,0}};
     quitButton->addToRender(&_renderList);
     _buttons.push_back(quitButton);
 
@@ -67,4 +67,8 @@ void MainMenuScreen::update(std::shared_ptr<KeyEvent> event){
     {
         _isClosed = true;
     }
+}
+
+void MainMenuScreen::quitGame(){
+    _isClosed = true;
 }

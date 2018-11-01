@@ -22,6 +22,7 @@
 
 #include "FoodWars/Headers/GameECS/Components/TurnComponent.h"
 #include "FoodWars/Headers/GameECS/Systems/TurnSystem.h"
+#include "FoodWars/Headers/StateMachine/LevelEditorScreen.h"
 #include <ctime>
 #include <chrono>
 
@@ -52,6 +53,7 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new OtherMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new LevelEditorScreen(screenStateManager));
     screenStateManager->setActiveScreen<MainMenuScreen>();
 
     //Config

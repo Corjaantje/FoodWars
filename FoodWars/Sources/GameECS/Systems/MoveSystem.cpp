@@ -5,67 +5,99 @@
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
+#include "../../../Headers/GameECS/Events/CollisionEventHandlerLamda.h"
+#include <cmath>
 
-MoveSystem::~MoveSystem() = default;
 
-MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade) {
+MoveSystem::~MoveSystem() {
+    delete trapWalkOnCollision;
+}
+
+MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade, IObservable<CollisionEvent>& collisionEventObservable) {
     _entityManager = std::move(entityManager);
-    inputFacade->getKeyEventObservable()->registerObserver(this);
+    _keyEventObservable = inputFacade->getKeyEventObservable();
+    //inputFacade->getKeyEventObservable()->registerKeyPressedMapObserver(this);
+    inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
+    /*trapWalkOnCollision  = new CollisionEventHandlerLamda {
+        collisionEventObservable,
+        [entityManager = _entityManager](const CollisionEvent& collisionEvent) {
+            return (collisionEvent.getEntityDirection() == Direction::Left || collisionEvent.getEntityDirection() == Direction::Right); //&&
+        } ,
+        [entityManager = _entityManager](const CollisionEvent& collisionEvent) {
+            std::shared_ptr<MoveComponent> moveComponent = entityManager->getComponentFromEntity<MoveComponent>(collisionEvent.getEntity());
+            std::shared_ptr<BoxCollider> boxCollider = entityManager->getComponentFromEntity<BoxCollider>(collisionEvent.getEntity());
+            std::shared_ptr<PositionComponent> positionComponent = entityManager->getComponentFromEntity<PositionComponent>(collisionEvent.getEntity());
+            std::shared_ptr<PositionComponent> otherPositionComponent = entityManager->getComponentFromEntity<PositionComponent>(collisionEvent.getOtherEntity());
+            if(std::abs(positionComponent->Y - otherPositionComponent->Y - boxCollider->height) <= boxCollider->height/2) {
+                moveComponent->yVelocity = 0;
+                positionComponent->Y = otherPositionComponent->Y - boxCollider->height;
+            }
+        }
+    };*/
 }
 
 void MoveSystem::update(double dt) {
-    std::map<int, std::shared_ptr<BoxCollider>> collideAbleEntities = _entityManager->getAllEntitiesWithComponent<BoxCollider>();
-    std::cout << "Update movement" << std::endl;
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        std::shared_ptr<MoveComponent> moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
+        if (iterator.second->isMyTurn()) {
+            if (_pressedKey == KEY::KEY_A) {
+                moveComponent->xVelocity = -100;
+            } else if (_pressedKey == KEY::KEY_D) {
+                moveComponent->xVelocity = 100;
+            } else
+                moveComponent->xVelocity = 0;
+        } else {
+            moveComponent->xVelocity = 0;
+        }
+    }
+
     for (auto const &iterator: _entityManager->getAllEntitiesWithComponent<MoveComponent>()) {
         int entity = iterator.first;
         std::shared_ptr<MoveComponent> moveComponent = iterator.second;
-        std::shared_ptr<DrawableComponent> drawableComponent = _entityManager->getComponentFromEntity<DrawableComponent>(entity);
-        std::shared_ptr<BoxCollider> collider = _entityManager->getComponentFromEntity<BoxCollider>(entity);
-
-        double newX = drawableComponent->shape->xPos + moveComponent->positionComponent.X * dt * moveComponent->xVelocity;
-        double newY = drawableComponent->shape->yPos + moveComponent->positionComponent.Y * dt * moveComponent->yVelocity;
-        bool willCollide = false;
-
-        if(collider) { // entity can collide so check for possible collision
-            for (auto const &collideAbleIterator : collideAbleEntities) {
-                int otherEntity = collideAbleIterator.first;
-                if (otherEntity == entity)
-                    continue;
-                std::shared_ptr<BoxCollider> otherCollider = collideAbleIterator.second;
-                std::shared_ptr<DrawableComponent> otherDrawable = _entityManager->getComponentFromEntity<DrawableComponent>(
-                        otherEntity);
-                if (otherDrawable) {
-                    willCollide = newX < otherDrawable->shape->xPos + otherCollider->width &&
-                                  newX + collider->width > otherDrawable->shape->xPos &&
-                                  newY < otherDrawable->shape->yPos + otherCollider->height &&
-                                  newY + collider->height > otherDrawable->shape->yPos;
-                    if(willCollide) {
-                       /* if (moveComponent->positionComponent.X > 0) {
-                            drawableComponent->shape->xPos = otherDrawable->shape->xPos - collider->width;
-                        }
-                        if (moveComponent->positionComponent.Y > 0 && (drawableComponent->shape->yPos - collider->height) != newY) {
-                            drawableComponent->shape->yPos = otherDrawable->shape->yPos - collider->height;
-                        }*/
-                        break;
-                    }
-                }
-            }
+        std::shared_ptr<PositionComponent> positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
+        if(positionComponent) {
+            positionComponent->X += std::round(dt * moveComponent->xVelocity);
+            positionComponent->Y += std::round(dt * moveComponent->yVelocity);
         }
-
-        if(!willCollide){
-            drawableComponent->shape->xPos = newX;
-            drawableComponent->shape->yPos = newY;
-        }
-
+/*
         moveComponent->positionComponent--;
         if(moveComponent->xVelocity < 0 && moveComponent->yVelocity < 0)
-            _entityManager->removeComponentFromEntity<MoveComponent>(entity);
+            _entityManager->removeComponentFromEntity<MoveComponent>(entity);*/
     }
 }
 
 void MoveSystem::update(std::shared_ptr<KeyEvent> event) {
+    if(event->getKeyEventType() == KeyEventType::Up && event->getKey() == _pressedKey) {
+        std::cout << "Key unpressed" << std::endl;
+        _pressedKey = KEY::KEY_OTHER;
+    } else if(event->getKeyEventType() == KeyEventType::Down && (event->getKey() == KEY::KEY_A || event->getKey() == KEY::KEY_D)) {
+        std::cout << "Key pressed" << std::endl;
+        _pressedKey = event->getKey();
+    }
+}
+
+/*void MoveSystem::update(std::shared_ptr<std::map<KEY, bool>> event) {
+    std::cout << "pressed keys changed" << std::endl;
+    _pressedKeys = *event.get();
+}*/
+/*
+
+void MoveSystem::update(std::shared_ptr<KeyEvent> event) {
     std::cout << "Key event: ";
     MoveComponent moveComponent;
+
+    if(event->getKeyEventType() == KeyEventType::Up) {
+        _pressedKeys.erase(_pressedKeys.begin(), _pressedKeys.end(), )
+    }
+
+    switch(event->getKeyEventType()) {
+        case KeyEventType::Up:
+            std::cout << "Up: ";
+            break;
+        case KeyEventType::Down:
+            std::cout << "Down: ";
+            break;
+    }
     switch (event->getKey()) {
         case KEY::KEY_W:
             std::cout << "W" << std::endl;
@@ -86,6 +118,7 @@ void MoveSystem::update(std::shared_ptr<KeyEvent> event) {
         default:
             break;
     }
+
     for(auto const& iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()){
         std::shared_ptr<TurnComponent> turnComponent = iterator.second;
         if(turnComponent->isMyTurn()){
@@ -99,3 +132,4 @@ void MoveSystem::update(std::shared_ptr<KeyEvent> event) {
         }
     }
 }
+*/

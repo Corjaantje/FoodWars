@@ -23,7 +23,7 @@ private:
     std::shared_ptr<KeyEventObservable> _keyEventObservable;
     std::shared_ptr<MouseEventObservable> _mouseEventObservable;
     std::shared_ptr<WindowEventObservable> _windowEventObservable;
-    std::map<SDL_Keycode, KEY> _keycodeMap;
+    int eventFilter(const SDL_Event* event);
     void init();
 public:
     InputFacade();

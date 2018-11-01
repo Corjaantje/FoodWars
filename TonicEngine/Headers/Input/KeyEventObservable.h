@@ -9,14 +9,16 @@
 #include "../Events/KeyEvent.h"
 #include "IObservable.h"
 
-class KeyEventObservable : public IObservable<KeyEvent> {
+class KeyEventObservable : public IObservable<KeyEvent>, public IObservable<std::map<KEY, bool>> {
 private:
     std::map<SDL_Keycode, KEY> _keycodeMap;
     std::map<KEY, bool> _pressedKeys;
 public:
     KeyEventObservable();
     ~KeyEventObservable() override;
-    void update() const;
+    void registerKeyEventObserver(IObserver<KeyEvent>* observer);
+    void registerKeyPressedMapObserver(IObserver<std::map<KEY, bool>>* observer);
+    void update();
 
 };
 

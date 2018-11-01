@@ -49,3 +49,11 @@ void VisualFacade::pollEvents() {
 bool VisualFacade::isWindowClosed() {
     return _windowManager->isWindowClosed();
 }
+
+int VisualFacade::getWindowWidth() const {
+    return _windowManager->getWindowWidth();
+}
+
+int VisualFacade::getWindowHeight() const {
+    return _windowManager->getWindowHeight();
+}

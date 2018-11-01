@@ -19,6 +19,8 @@ public:
 
     void setTitle(const std::string &title);
     void setResolution(int width, int height);
+    int getWindowWidth() const;
+    int getWindowHeight() const;
 
     void openWindow();
     void closeWindow();

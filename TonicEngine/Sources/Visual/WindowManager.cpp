@@ -28,7 +28,8 @@ void WindowManager::setTitle(const std::string &title){
 
 void WindowManager::setResolution(int width, int height){
     _window->setResolution(width, height);
-
+    _windowWidth = width;
+    _windowHeight = height;
 };
 
 void WindowManager::enableFullscreen(){
@@ -97,4 +98,12 @@ void WindowManager::pollEvents() {
 
 bool WindowManager::isWindowClosed() {
     return _window->isClosed();
+}
+
+int WindowManager::getWindowWidth() const {
+    return _windowWidth;
+}
+
+int WindowManager::getWindowHeight() const {
+    return _windowHeight;
 }

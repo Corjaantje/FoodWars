@@ -16,6 +16,7 @@
 #include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
 #include "FoodWars/Headers/StateMachine/OtherMenuScreen.h"
 #include "FoodWars/Headers/StateMachine/GameScreen.h"
+#include "FoodWars/Headers/StateMachine/CreditScreen.h"
 #include "TonicEngine/Headers/Input/PrintWindowObserver.h"
 #include "TonicEngine/Headers/Input/WindowClosedObserver.h"
 #include "TonicEngine/Facades/GeneralFacade.h"
@@ -52,7 +53,8 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new OtherMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager));
-    screenStateManager->setActiveScreen<MainMenuScreen>();
+    screenStateManager->addOrSetScreenState(new CreditScreen(screenStateManager));
+    screenStateManager->setActiveScreen<CreditScreen>();
 
     //Config
     double frameRateCap = 61;

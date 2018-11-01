@@ -68,7 +68,7 @@ file(GLOB_RECURSE SOURCES2 "Foodwars/*.h")
 file(GLOB_RECURSE SOURCES3 "TonicEngine/Sources/*.cpp")
 file(GLOB_RECURSE SOURCES4 "TonicEngine/Facades/*.cpp")
 file(GLOB_RECURSE SOURCES5 "TonicEngine/Headers/*.h")
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES main.cpp FoodWars/Headers/StateMachine/CreditScreen.h FoodWars/Sources/StateMachine/CreditScreen.cpp)
 
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCES1} ${SOURCES2} ${SOURCES3} ${SOURCES4} ${SOURCES5})
 

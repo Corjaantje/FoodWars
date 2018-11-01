@@ -1,7 +1,7 @@
-#include "../../Headers/StateMachine/LevelEditorScreen.h"
+#include "../../Headers/StateMachine/LevelSelectionScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
-LevelEditorScreen::LevelEditorScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
+LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
     visualFacade = context->getFacade<VisualFacade>();
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->registerObserver(this);
@@ -14,19 +14,19 @@ LevelEditorScreen::LevelEditorScreen(std::shared_ptr<ScreenStateManager> context
     _buttons.push_back(quitButton);
 }
 
-LevelEditorScreen::~LevelEditorScreen() {
+LevelSelectionScreen::~LevelSelectionScreen() {
     for(IShape* button: _buttons) {
         delete button;
     }
 }
 
-void LevelEditorScreen::update(double deltaTime) {
+void LevelSelectionScreen::update(double deltaTime) {
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
 }
 
-void LevelEditorScreen::update(std::shared_ptr<KeyEvent> event){
+void LevelSelectionScreen::update(std::shared_ptr<KeyEvent> event){
     if(event->getKey() == KEY::KEY_ESCAPE)
     {
         _isClosed = true;

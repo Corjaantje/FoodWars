@@ -4,7 +4,6 @@
 #include "IScreen.h"
 #include "ScreenStateManager.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
-#include "../../Headers/StateMachine/MainMenuScreen.h"
 
 class LevelEditorScreen : public IScreen, public IObserver<KeyEvent> {
 public:

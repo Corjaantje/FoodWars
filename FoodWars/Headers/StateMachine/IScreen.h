@@ -1,8 +1,7 @@
-#include <utility>
-
 #ifndef PROJECT_SWA_ISCREEN_H
 #define PROJECT_SWA_ISCREEN_H
 
+#include <utility>
 #include "memory"
 #include "../../../TonicEngine/Headers/Input/WindowClosedObserver.h"
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"

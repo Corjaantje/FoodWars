@@ -1,12 +1,12 @@
-#pragma once
-
 #ifndef PROJECT_SWA_MAINMENUSCREEN_H
 #define PROJECT_SWA_MAINMENUSCREEN_H
 
 #include "IScreen.h"
 #include "ScreenStateManager.h"
 #include "GameScreen.h"
-#include "../../Headers/StateMachine/OtherMenuScreen.h"
+#include "LevelEditorScreen.h"
+#include "LevelSelectionScreen.h"
+#include "SettingsScreen.h"
 #include "../../../TonicEngine/Headers/Events/MouseEvent.h"
 #include "../../../TonicEngine/Headers/Input/IObserver.h"
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"

@@ -1,4 +1,3 @@
-#pragma once
 #ifndef PROJECT_SWA_GAMESCREEN_H
 #define PROJECT_SWA_GAMESCREEN_H
 
@@ -11,7 +10,6 @@
 #include "../GameECS/Systems/MoveSystem.h"
 #include "../GameECS/Systems/TurnSystem.h"
 #include "../GameECS/Systems/GravitySystem.h"
-#include "MainMenuScreen.h"
 
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:

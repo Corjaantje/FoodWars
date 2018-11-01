@@ -1,5 +1,6 @@
 #include "../../Headers/StateMachine/MainMenuScreen.h"
-#include "../../Headers/StateMachine/LevelEditorScreen.h"
+#include "../../Headers/StateMachine/UpgradesScreen.h"
+
 
 MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
     visualFacade = context->getFacade<VisualFacade>();
@@ -9,22 +10,22 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _renderList.spriteList.emplace_back(ShapeSprite{640, 480, 0, 0, "wallpaper.png"});
 
     // Level Selection
-    TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Select Level", [c = _context]() {  c->setActiveScreen<LevelEditorScreen>(); }, 250, 30, 200, 200};
+    TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Select Level", [c = _context]() {  c->setActiveScreen<LevelSelectionScreen>(); }, 250, 30, 200, 200};
     levelSelectionButton->addToRender(&_renderList);
     _buttons.push_back(levelSelectionButton);
 
     // Level Editor
-    TextButton* levelEditorButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Level Editor", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 250};
+    TextButton* levelEditorButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Level Editor", [c = _context]() {  c->setActiveScreen<LevelEditorScreen>(); }, 250, 30, 200, 250};
     levelEditorButton->addToRender(&_renderList);
     _buttons.push_back(levelEditorButton);
 
     // Upgrades
-    TextButton* upgradesButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Upgrades", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 300};
+    TextButton* upgradesButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Upgrades", [c = _context]() {  c->setActiveScreen<UpgradesScreen>(); }, 250, 30, 200, 300};
     upgradesButton->addToRender(&_renderList);
     _buttons.push_back(upgradesButton);
 
     // Settings
-    SpriteButton* settingsButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "settings.png", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 50, 50, 530, 0, Colour{0,0,0,0}};
+    SpriteButton* settingsButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "settings.png", [c = _context]() {  c->setActiveScreen<SettingsScreen>(); }, 50, 50, 530, 0, Colour{0,0,0,0}};
     settingsButton->addToRender(&_renderList);
     _buttons.push_back(settingsButton);
 

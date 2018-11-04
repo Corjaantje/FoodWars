@@ -22,6 +22,7 @@
 
 #include "FoodWars/Headers/GameECS/Components/TurnComponent.h"
 #include "FoodWars/Headers/GameECS/Systems/TurnSystem.h"
+#include "FoodWars/Headers/StateMachine/HighscoreScreen.h"
 #include <ctime>
 #include <chrono>
 
@@ -52,7 +53,8 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new OtherMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager));
-    screenStateManager->setActiveScreen<MainMenuScreen>();
+    screenStateManager->addOrSetScreenState(new HighscoreScreen(screenStateManager));
+    screenStateManager->setActiveScreen<HighscoreScreen>();
 
     //Config
     double frameRateCap = 61;

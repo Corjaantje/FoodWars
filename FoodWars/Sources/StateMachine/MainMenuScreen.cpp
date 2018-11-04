@@ -65,7 +65,7 @@ void MainMenuScreen::update(double deltaTime) {
 void MainMenuScreen::update(std::shared_ptr<KeyEvent> event){
     if(event->getKey() == KEY::KEY_ESCAPE)
     {
-        _isClosed = true;
+        _context->setActiveScreen<MainMenuScreen>();
     }
 }
 

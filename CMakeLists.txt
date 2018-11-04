@@ -68,8 +68,7 @@ file(GLOB_RECURSE SOURCES2 "Foodwars/*.h")
 file(GLOB_RECURSE SOURCES3 "TonicEngine/Sources/*.cpp")
 file(GLOB_RECURSE SOURCES4 "TonicEngine/Facades/*.cpp")
 file(GLOB_RECURSE SOURCES5 "TonicEngine/Headers/*.h")
-set(SOURCE_FILES main.cpp TonicEngine/Sources/Visual/Shapes/SpriteButton.cpp TonicEngine/Headers/Visual/Shapes/SpriteButton.h FoodWars/Sources/StateMachine/LevelEditorScreen.cpp FoodWars/Headers/StateMachine/LevelEditorScreen.h FoodWars/Sources/StateMachine/LevelSelectionScreen.cpp FoodWars/Headers/StateMachine/LevelSelectionScreen.h FoodWars/Sources/StateMachine/SettingsScreen.cpp FoodWars/Headers/StateMachine/SettingsScreen.h FoodWars/Sources/StateMachine/UpgradesScreen.cpp FoodWars/Headers/StateMachine/UpgradesScreen.h)
-
+set(SOURCE_FILES main.cpp)
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCES1} ${SOURCES2} ${SOURCES3} ${SOURCES4} ${SOURCES5})
 
 target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2_mixer -lSDL2_image -lSDL2main -lSDL2 -lSDL2_ttf  -mwindows -static-libgcc -static-libstdc++)

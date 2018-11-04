@@ -29,6 +29,6 @@ void LevelEditorScreen::update(double deltaTime) {
 void LevelEditorScreen::update(std::shared_ptr<KeyEvent> event){
     if(event->getKey() == KEY::KEY_ESCAPE)
     {
-        _isClosed = true;
+        _context->setActiveScreen<MainMenuScreen>();
     }
 }

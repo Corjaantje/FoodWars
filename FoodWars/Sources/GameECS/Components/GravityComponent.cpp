@@ -1,5 +1,5 @@
 #include "../../../Headers/GameECS/Components/GravityComponent.h"
 
 GravityComponent::GravityComponent() {
-    gravityApplied = 10;
+    gravityApplied = 15;
 }

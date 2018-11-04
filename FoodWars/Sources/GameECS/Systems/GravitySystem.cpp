@@ -17,11 +17,10 @@ void GravitySystem::update(double dt) {
     for(auto const &iterator: _entityManager->getAllEntitiesWithComponent<GravityComponent>()) {
         std::shared_ptr<MoveComponent> moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
         if(!moveComponent) {
-            _entityManager->addComponentToEntity(iterator.first, new MoveComponent(PositionComponent(0, 1),
-                                                                                   iterator.second->gravityApplied));
+            _entityManager->addComponentToEntity(iterator.first, new MoveComponent(iterator.second->gravityApplied));
         } else {
            // moveComponent->positionComponent += PositionComponent{0, 1};
-            moveComponent->yVelocity += iterator.second->gravityApplied;
+            moveComponent->yVelocity += iterator.second->gravityApplied * 50 * dt;
         }
     }
 }

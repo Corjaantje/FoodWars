@@ -8,14 +8,12 @@
 #include "../../../Headers/GameECS/Events/CollisionEventHandlerLamda.h"
 #include <cmath>
 
-
 MoveSystem::~MoveSystem() {
     delete trapWalkOnCollision;
 }
 
 MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade, IObservable<CollisionEvent>& collisionEventObservable) {
     _entityManager = std::move(entityManager);
-    _keyEventObservable = inputFacade->getKeyEventObservable();
     inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
     trapWalkOnCollision  = new CollisionEventHandlerLamda {
         collisionEventObservable,

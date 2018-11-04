@@ -8,6 +8,7 @@
 #include "../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../Headers/GameECS/Components/MoveComponent.h"
 #include "../../Headers/GameECS/Systems/CollisionSystem.h"
+#include "../../Headers/GameECS/Systems/JumpSystem.h"
 
 GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context),
     _audioFacade(context->getFacade<AudioFacade>()),
@@ -16,6 +17,7 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
     std::shared_ptr<CollisionSystem> collisionSystem = std::make_shared<CollisionSystem>(_entityManager);
     _systems.push_back(std::make_shared<DrawSystem>(_entityManager, _visualFacade));
+    _systems.push_back(std::make_shared<JumpSystem>(_entityManager, _inputFacade, *collisionSystem.get()));
     _systems.push_back(std::make_shared<MoveSystem>(_entityManager, _inputFacade, *collisionSystem.get()));
     _systems.push_back(collisionSystem);
     _systems.push_back(std::make_shared<GravitySystem>(_entityManager, *collisionSystem.get()));

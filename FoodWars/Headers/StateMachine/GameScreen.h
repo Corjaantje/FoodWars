@@ -2,11 +2,8 @@
 #define PROJECT_SWA_GAMESCREEN_H
 
 #include "IScreen.h"
-#include "../../../TonicEngine/Headers/Visual/VisualFacade.h"
-#include "../../../TonicEngine/Headers/Visual/Renderlist.h"
 #include "ScreenStateManager.h"
 #include "../GameECS/Systems/DrawSystem.h"
-#include "../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../GameECS/Systems/MoveSystem.h"
 #include "../GameECS/Systems/TurnSystem.h"
 #include "../GameECS/Systems/GravitySystem.h"
@@ -17,7 +14,6 @@ private:
     std::shared_ptr<VisualFacade> _visualFacade;
     std::vector<std::shared_ptr<IBaseSystem>> _systems;
     std::shared_ptr<AudioFacade> _audioFacade;
-    Renderlist _renderList;
 public:
     explicit GameScreen(std::shared_ptr<ScreenStateManager> context);
     ~GameScreen();

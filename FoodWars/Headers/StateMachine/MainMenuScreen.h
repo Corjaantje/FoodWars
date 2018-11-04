@@ -9,7 +9,6 @@
 #include "SettingsScreen.h"
 #include "../../../TonicEngine/Headers/Events/MouseEvent.h"
 #include "../../../TonicEngine/Headers/Input/IObserver.h"
-#include "../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
 

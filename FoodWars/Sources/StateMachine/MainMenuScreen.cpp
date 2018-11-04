@@ -40,7 +40,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _buttons.push_back(creditsButton);
 
     // Quit
-    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [c = this]() { c->quitGame(); }, 50, 50, 590, 0, Colour{0,0,0,0}};
+    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [this]() { this->quitGame(); }, 50, 50, 590, 0, Colour{0,0,0,0}};
     quitButton->addToRender(&_renderList);
     _buttons.push_back(quitButton);
 

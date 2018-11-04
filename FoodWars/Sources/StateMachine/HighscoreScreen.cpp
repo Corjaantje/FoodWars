@@ -6,6 +6,13 @@ HighscoreScreen::HighscoreScreen(std::shared_ptr<ScreenStateManager> context) : 
     _inputFacade->getKeyEventObservable()->registerObserver(this);
 
     _renderList.spriteList.emplace_back(ShapeSprite{640, 480, 0, 0, "wallpaper.png"});
+
+    _renderList.textList.emplace_back(ShapeText(150, 200, "Level 1: ", 24, 150, 30, Colour(0, 0, 0, 0)));
+    _renderList.textList.emplace_back(ShapeText(150, 250, "Level 2: ", 24, 150, 30, Colour(0, 0, 0, 0)));
+    _renderList.textList.emplace_back(ShapeText(150, 300, "Level 3: ", 24, 150, 30, Colour(0, 0, 0, 0)));
+    _renderList.textList.emplace_back(ShapeText(350, 200, "500 punten", 24, 120, 30, Colour(0, 0, 0, 0)));
+    _renderList.textList.emplace_back(ShapeText(350, 250, "200 punten", 24, 120, 30, Colour(0, 0, 0, 0)));
+    _renderList.textList.emplace_back(ShapeText(350, 300, "0 punten", 24, 120, 30, Colour(0, 0, 0, 0)));
 }
 
 HighscoreScreen::~HighscoreScreen() {

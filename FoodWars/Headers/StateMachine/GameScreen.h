@@ -12,6 +12,7 @@
 #include "../GameECS/Systems/TurnSystem.h"
 #include "../GameECS/Systems/GravitySystem.h"
 #include "MainMenuScreen.h"
+#include "../../../TonicEngine/Headers/Visual/Shapes/Button.h"
 
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
@@ -19,7 +20,6 @@ private:
     std::shared_ptr<VisualFacade> _visualFacade;
     std::vector<std::shared_ptr<IBaseSystem>> _systems;
     std::shared_ptr<AudioFacade> _audioFacade;
-    Renderlist _renderList;
 public:
     explicit GameScreen(std::shared_ptr<ScreenStateManager> context);
     ~GameScreen();

@@ -12,6 +12,11 @@ LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> c
     SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 50, 50, 0, 0, Colour{0,0,0,0}};
     quitButton->addToRender(&_renderList);
     _buttons.push_back(quitButton);
+
+    // Level 1
+    TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Level 1", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 200};
+    levelSelectionButton->addToRender(&_renderList);
+    _buttons.push_back(levelSelectionButton);
 }
 
 LevelSelectionScreen::~LevelSelectionScreen() {

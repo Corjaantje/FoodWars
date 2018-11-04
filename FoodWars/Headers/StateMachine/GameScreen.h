@@ -2,7 +2,6 @@
 #define PROJECT_SWA_GAMESCREEN_H
 
 #include "IScreen.h"
-#include "ScreenStateManager.h"
 #include "../GameECS/Systems/DrawSystem.h"
 #include "../GameECS/Systems/MoveSystem.h"
 #include "../GameECS/Systems/TurnSystem.h"

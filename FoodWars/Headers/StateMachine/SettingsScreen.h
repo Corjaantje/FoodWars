@@ -2,7 +2,6 @@
 #define PROJECT_SWA_SETTINGSSCREEN_H
 
 #include "IScreen.h"
-#include "ScreenStateManager.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
 
 class SettingsScreen : public IScreen, public IObserver<KeyEvent> {

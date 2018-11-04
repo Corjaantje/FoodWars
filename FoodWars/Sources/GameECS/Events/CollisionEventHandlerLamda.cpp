@@ -6,7 +6,6 @@ CollisionEventHandlerLamda::CollisionEventHandlerLamda(IObservable<CollisionEven
                                                                CollisionEventHandler(collisionEventObservable),
                                                                _canHandleCollisionEventFunction(canHandleCollisionEventFunction),
                                                                _handleCollisionEventFunction(handleCollisionEventFunction) {
-
 }
 
 bool CollisionEventHandlerLamda::canHandle(const CollisionEvent &collisionEvent) {

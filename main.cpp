@@ -55,7 +55,7 @@ int main(int argc, char** argv)
     screenStateManager->setActiveScreen<MainMenuScreen>();
 
     //Config
-    double frameRateCap = 61;
+    double frameRateCap = 61.0;
     double amountOfUpdatesAllowedPerSecond = 1.0 / frameRateCap; //= 16.666
     //End of config
 
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
             screenStateManager->getCurrentState()->update(deltaTime.count());
             timeLast = std::chrono::steady_clock::now().time_since_epoch();
         }
-        //generalFacade->sleep(amountOfUpdatesAllowedPerSecond * 1000 - deltaTime.count());
+        generalFacade->sleep(amountOfUpdatesAllowedPerSecond * 1000.0 - deltaTime.count());
     }
     delete generalFacade;
     return 0;

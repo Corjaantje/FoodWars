@@ -8,21 +8,15 @@ int CollisionEvent::getOtherEntity() const {
     return otherEntity;
 }
 
-CollisionEvent::CollisionEvent(int entity, Direction entityDirection, int otherEntity, Direction otherEntityDirection) {
+CollisionEvent::CollisionEvent(int entity, int otherEntity, double collisionAngle) {
     this->entity = entity;
-    this->entityDirection = entityDirection;
     this->otherEntity = otherEntity;
-    this->otherEntityDirection = otherEntityDirection;
+    this->collisionAngle = collisionAngle;
 }
 
-Direction CollisionEvent::getOtherEntityDirection() const {
-    return otherEntityDirection;
+double CollisionEvent::getCollisionAngle() const {
+    return collisionAngle;
 }
-
-Direction CollisionEvent::getEntityDirection() const {
-    return entityDirection;
-}
-
 
 
 

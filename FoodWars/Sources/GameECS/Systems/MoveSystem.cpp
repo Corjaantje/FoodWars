@@ -16,24 +16,24 @@ MoveSystem::~MoveSystem() {
 MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade, IObservable<CollisionEvent>& collisionEventObservable) {
     _entityManager = std::move(entityManager);
     _keyEventObservable = inputFacade->getKeyEventObservable();
-    //inputFacade->getKeyEventObservable()->registerKeyPressedMapObserver(this);
     inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
-    /*trapWalkOnCollision  = new CollisionEventHandlerLamda {
+    trapWalkOnCollision  = new CollisionEventHandlerLamda {
         collisionEventObservable,
         [entityManager = _entityManager](const CollisionEvent& collisionEvent) {
-            return (collisionEvent.getEntityDirection() == Direction::Left || collisionEvent.getEntityDirection() == Direction::Right); //&&
+            double angle = collisionEvent.getCollisionAngle();
+            return (angle >= 45 && angle <= 135) || (angle >= 225 && angle <= 315);
         } ,
         [entityManager = _entityManager](const CollisionEvent& collisionEvent) {
             std::shared_ptr<MoveComponent> moveComponent = entityManager->getComponentFromEntity<MoveComponent>(collisionEvent.getEntity());
             std::shared_ptr<BoxCollider> boxCollider = entityManager->getComponentFromEntity<BoxCollider>(collisionEvent.getEntity());
             std::shared_ptr<PositionComponent> positionComponent = entityManager->getComponentFromEntity<PositionComponent>(collisionEvent.getEntity());
             std::shared_ptr<PositionComponent> otherPositionComponent = entityManager->getComponentFromEntity<PositionComponent>(collisionEvent.getOtherEntity());
-            if(std::abs(positionComponent->Y - otherPositionComponent->Y - boxCollider->height) <= boxCollider->height/2) {
-                moveComponent->yVelocity = 0;
+            if(std::abs(positionComponent->Y + boxCollider->height/2) < otherPositionComponent->Y) {
+                //moveComponent->yVelocity = 0;
                 positionComponent->Y = otherPositionComponent->Y - boxCollider->height;
             }
         }
-    };*/
+    };
 }
 
 void MoveSystem::update(double dt) {
@@ -59,77 +59,13 @@ void MoveSystem::update(double dt) {
             positionComponent->X += std::round(dt * moveComponent->xVelocity);
             positionComponent->Y += std::round(dt * moveComponent->yVelocity);
         }
-/*
-        moveComponent->positionComponent--;
-        if(moveComponent->xVelocity < 0 && moveComponent->yVelocity < 0)
-            _entityManager->removeComponentFromEntity<MoveComponent>(entity);*/
     }
 }
 
 void MoveSystem::update(std::shared_ptr<KeyEvent> event) {
     if(event->getKeyEventType() == KeyEventType::Up && event->getKey() == _pressedKey) {
-        std::cout << "Key unpressed" << std::endl;
         _pressedKey = KEY::KEY_OTHER;
     } else if(event->getKeyEventType() == KeyEventType::Down && (event->getKey() == KEY::KEY_A || event->getKey() == KEY::KEY_D)) {
-        std::cout << "Key pressed" << std::endl;
         _pressedKey = event->getKey();
     }
 }
-
-/*void MoveSystem::update(std::shared_ptr<std::map<KEY, bool>> event) {
-    std::cout << "pressed keys changed" << std::endl;
-    _pressedKeys = *event.get();
-}*/
-/*
-
-void MoveSystem::update(std::shared_ptr<KeyEvent> event) {
-    std::cout << "Key event: ";
-    MoveComponent moveComponent;
-
-    if(event->getKeyEventType() == KeyEventType::Up) {
-        _pressedKeys.erase(_pressedKeys.begin(), _pressedKeys.end(), )
-    }
-
-    switch(event->getKeyEventType()) {
-        case KeyEventType::Up:
-            std::cout << "Up: ";
-            break;
-        case KeyEventType::Down:
-            std::cout << "Down: ";
-            break;
-    }
-    switch (event->getKey()) {
-        case KEY::KEY_W:
-            std::cout << "W" << std::endl;
-            moveComponent.positionComponent = PositionComponent{0, -100};
-            break;
-        case KEY::KEY_A:
-            std::cout << "A" << std::endl;
-            moveComponent.positionComponent = PositionComponent{-10, 0};
-            break;
-        case KEY::KEY_D:
-            std::cout << "D" << std::endl;
-            moveComponent.positionComponent = PositionComponent{10, 0};
-            break;
-        case KEY::KEY_S:
-            std::cout << "S" << std::endl;
-            moveComponent.positionComponent = PositionComponent{0, 10};
-            break;
-        default:
-            break;
-    }
-
-    for(auto const& iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()){
-        std::shared_ptr<TurnComponent> turnComponent = iterator.second;
-        if(turnComponent->isMyTurn()){
-            std::shared_ptr<MoveComponent> entityMoveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
-            if(entityMoveComponent) {
-                entityMoveComponent->xVelocity = 10;
-                entityMoveComponent->yVelocity = 10;
-                entityMoveComponent->positionComponent += moveComponent.positionComponent;
-            } else
-                _entityManager->addComponentToEntity(iterator.first, new MoveComponent(moveComponent.positionComponent, 10));
-        }
-    }
-}
-*/

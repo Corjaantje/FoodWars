@@ -9,10 +9,10 @@ public:
     DamageableComponent();
     DamageableComponent(int health);
     ~DamageableComponent() override;
-    int GetHealth();
+    const int GetHealth();
     void LowerHealth(int value);
     void IncreaseHealth(int value);
-    bool IsAlive();
+    const bool IsAlive();
 private:
     int health; // 0 - 100
 };

@@ -8,11 +8,11 @@ DamageableComponent::DamageableComponent() {
     health = 100;
 }
 
-bool DamageableComponent::IsAlive() {
+const bool DamageableComponent::IsAlive() {
     return health <= 0;
 }
 
-int DamageableComponent::GetHealth() {
+const int DamageableComponent::GetHealth() {
     return health;
 }
 

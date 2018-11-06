@@ -1,18 +1,11 @@
-#pragma once
 #ifndef PROJECT_SWA_GAMESCREEN_H
 #define PROJECT_SWA_GAMESCREEN_H
 
 #include "IScreen.h"
-#include "../../../TonicEngine/Headers/Visual/VisualFacade.h"
-#include "../../../TonicEngine/Headers/Visual/Renderlist.h"
-#include "ScreenStateManager.h"
 #include "../GameECS/Systems/DrawSystem.h"
-#include "../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../GameECS/Systems/MoveSystem.h"
 #include "../GameECS/Systems/TurnSystem.h"
 #include "../GameECS/Systems/GravitySystem.h"
-#include "MainMenuScreen.h"
-#include "../../../TonicEngine/Headers/Visual/Shapes/Button.h"
 
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:

@@ -11,6 +11,7 @@
 #include "../Events/IEvent.h"
 #include "IObserver.h"
 #include "../Events/KeyEvent.h"
+#include <algorithm>
 
 template <typename T>
 class IObservable {

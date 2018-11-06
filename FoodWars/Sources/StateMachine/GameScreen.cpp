@@ -1,5 +1,4 @@
 #include <utility>
-
 #include "../../Headers/StateMachine/GameScreen.h"
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../../Headers/GameECS/Components/DrawableComponent.h"
@@ -8,6 +7,10 @@
 #include "../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../Headers/GameECS/Systems/DamageableSystem.h"
+#include "../../Headers/StateMachine/MainMenuScreen.h"
+#include "../../Headers/StateMachine/DrawTransitionScreen.h"
+#include "../../Headers/StateMachine/WinTransitionScreen.h"
+#include "../../Headers/StateMachine/LoseTransitionScreen.h"
 
 GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context),
     _audioFacade(context->getFacade<AudioFacade>()),
@@ -66,20 +69,25 @@ void GameScreen::update(double deltaTime) {
     std::map<int, std::shared_ptr<TurnComponent>> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
     if(_entitiesWithTurnComponent.size() == 1)
     {
-        MainMenuScreen screen(_context);
         //set score
         if (_entitiesWithTurnComponent.count(teamOne[0]) > 0) {
-            //You won
+            // Win
+            //set score
+            _context->setActiveScreen<WinTransitionScreen>();
+            ((std::dynamic_pointer_cast<WinTransitionScreen>(_context->getCurrentState())->setScore(100)));
+
         }
         else {
-            //You lost
+            // Loss
+            //set score
+            _context->setActiveScreen<LoseTransitionScreen>();
+            ((std::dynamic_pointer_cast<LoseTransitionScreen>(_context->getCurrentState())->setScore(-100)));
         }
-        _context->setActiveScreen<MainMenuScreen>();
     } else if(_entitiesWithTurnComponent.empty()) {
-        MainMenuScreen screen(_context);
+        // Draw
         //set score
-        //it's a draw!
-        _context->setActiveScreen<MainMenuScreen>();
+        _context->setActiveScreen<DrawTransitionScreen>();
+        ((std::dynamic_pointer_cast<DrawTransitionScreen>(_context->getCurrentState())->setScore(0)));
     }
     _audioFacade->playMusic("wildwest");
     _inputFacade->pollEvents();

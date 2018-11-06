@@ -41,8 +41,12 @@ SDL_Texture* AssetManager::GetSDLTextureFromBMP(SDL_Renderer* renderer, std::str
 
 SDL_Texture* AssetManager::GetSDLTextureFromText(SDL_Renderer *renderer, ShapeText text) {
     if(_textureMapText.count(text.toString()) == 0){
-        SDL_Color Colour = {static_cast<Uint8>(text.colour.red), static_cast<Uint8>(text.colour.green),
-                            static_cast<Uint8>(text.colour.blue)};
+        SDL_Color Colour;
+        Colour.r = (uint8_t) text.colour.red;
+        Colour.g = (uint8_t) text.colour.green;
+        Colour.b = (uint8_t) text.colour.blue;
+        Colour.a = (uint8_t) text.colour.alpha;
+
         SDL_Surface* surfaceMessage = TTF_RenderText_Solid(_dictionaryFonts["PopularCafeNF.ttf"], text.text.c_str(), Colour);
         SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
         _textureMapText[text.toString()] = Message;
@@ -81,7 +85,6 @@ void AssetManager::FindAssets(std::string dir_name) {
                     this->LoadFonts(entry->d_name,path);
               }
           }
-
       }
   };
   closedir(dir);

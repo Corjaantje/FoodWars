@@ -14,7 +14,6 @@
 #include "FoodWars/Headers/StateMachine/ScreenStateManager.h"
 #include "TonicEngine/Headers/Communication/CommunicationFacade.h"
 #include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
-#include "FoodWars/Headers/StateMachine/OtherMenuScreen.h"
 #include "FoodWars/Headers/StateMachine/GameScreen.h"
 #include "TonicEngine/Headers/Input/PrintWindowObserver.h"
 #include "TonicEngine/Headers/Input/WindowClosedObserver.h"
@@ -22,6 +21,13 @@
 
 #include "FoodWars/Headers/GameECS/Components/TurnComponent.h"
 #include "FoodWars/Headers/GameECS/Systems/TurnSystem.h"
+#include "FoodWars/Headers/StateMachine/LevelEditorScreen.h"
+#include "FoodWars/Headers/StateMachine/SettingsScreen.h"
+#include "FoodWars/Headers/StateMachine/UpgradesScreen.h"
+#include "FoodWars/Headers/StateMachine/LevelTransitionScreen.h"
+#include "FoodWars/Headers/StateMachine/LoseTransitionScreen.h"
+#include "FoodWars/Headers/StateMachine/WinTransitionScreen.h"
+#include "FoodWars/Headers/StateMachine/DrawTransitionScreen.h"
 #include <ctime>
 #include <chrono>
 
@@ -31,7 +37,7 @@ int main(int argc, char** argv)
     VisualFacade* visualFacade = new VisualFacade();
 
     visualFacade->setTitle("Food Wars");
-    visualFacade->setResolution(640, 480);
+    visualFacade->setResolution(1600, 900);
     visualFacade->disablefullscreen();
     visualFacade->openWindow();
 
@@ -41,17 +47,24 @@ int main(int argc, char** argv)
 
     GeneralFacade* generalFacade = new GeneralFacade();
 
-    audioFacade->addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
-    audioFacade->addAudio("wildwest", "../FoodWars/Assets/Audio/wildwest.wav");
-    audioFacade->addAudio("menu", "../FoodWars/Assets/Audio/menu.wav");
+    audioFacade->addAudio("oof", "./Assets/Audio/oof.wav");
+    audioFacade->addAudio("wildwest", "./Assets/Audio/wildwest.wav");
+    audioFacade->addAudio("menu", "./Assets/Audio/menu.wav");
 
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
     screenStateManager->addFacade(visualFacade);
     screenStateManager->addFacade(new InputFacade);
     screenStateManager->addFacade(audioFacade);
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new OtherMenuScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new UpgradesScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new LevelEditorScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new LoseTransitionScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new WinTransitionScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new DrawTransitionScreen(screenStateManager));
+
     screenStateManager->setActiveScreen<MainMenuScreen>();
 
     //Config

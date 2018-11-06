@@ -59,7 +59,7 @@ macro(AddLib repo name)
     unset(subdir)
 endmacro()
 
-AddLib("https://github.com/lb321/CPMBox2D" Box2D '' "v2.3.1-nocpm")
+#AddLib("https://github.com/lb321/CPMBox2D" Box2D '' "v2.3.1-nocpm")
 AddLib("https://github.com/lsalzman/enet" enet)
 AddLib("https://github.com/leethomason/tinyxml2" tinyxml2)
 

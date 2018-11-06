@@ -7,10 +7,15 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->registerObserver(this);
 
+    // wallpaper
     _renderList.spriteList.emplace_back(ShapeSprite{640, 480, 0, 0, "wallpaper.png"});
 
+    // advertisement
+
+    _renderList.spriteList.emplace_back(ShapeSprite{250, 125, 125, 355, "advertisement.png"});
+
     // Level Selection
-    TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Select Level", [c = _context]() {  c->setActiveScreen<LevelSelectionScreen>(); }, 250, 30, 200, 200};
+    TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Select Level", [c = _context]() {  c->setActiveScreen<LevelSelectionScreen>();}, 250, 30, 200, 200};
     levelSelectionButton->addToRender(&_renderList);
     _buttons.push_back(levelSelectionButton);
 
@@ -20,12 +25,12 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _buttons.push_back(levelEditorButton);
 
     // Upgrades
-    TextButton* upgradesButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Upgrades", [c = _context]() {  c->setActiveScreen<UpgradesScreen>(); }, 250, 30, 200, 300};
+    TextButton* upgradesButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Upgrades", [c = _context]() {  c->setActiveScreen<UpgradesScreen>(); ((std::dynamic_pointer_cast<UpgradesScreen>( c->getCurrentState())->setPreviousScreen(std::string(typeid(MainMenuScreen).name())))); }, 250, 30, 200, 300};
     upgradesButton->addToRender(&_renderList);
     _buttons.push_back(upgradesButton);
 
     // Settings
-    SpriteButton* settingsButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "settings.png", [c = _context]() {  c->setActiveScreen<SettingsScreen>(); }, 50, 50, 530, 0, Colour{0,0,0,0}};
+    SpriteButton* settingsButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "settings.png", [c = _context]() {  c->setActiveScreen<SettingsScreen>();}, 50, 50, 530, 0, Colour{0,0,0,0}};
     settingsButton->addToRender(&_renderList);
     _buttons.push_back(settingsButton);
 

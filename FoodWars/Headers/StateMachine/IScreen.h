@@ -41,4 +41,5 @@ public:
         return _isClosed;
     }
 };
+
 #endif //PROJECT_SWA_ISCREEN_H

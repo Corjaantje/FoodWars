@@ -10,6 +10,8 @@ public:
     }
     virtual ~IShape(){};
     virtual void addToRender(Renderlist* renderlist){};
+    virtual int getWidth() const = 0;
+    virtual int getHeight() const = 0;
 };
 
 #endif //PROJECT_SWA_ISHAPE_H

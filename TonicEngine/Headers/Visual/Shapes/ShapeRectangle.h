@@ -14,6 +14,9 @@ public:
     int width;
     int height;
     Colour colour;
+
+    int getWidth() const override  { return width; }
+    int getHeight() const override { return height; }
 };
 
 

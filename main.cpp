@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     VisualFacade* visualFacade = new VisualFacade();
 
     visualFacade->setTitle("Food Wars");
-    visualFacade->setResolution(1600, 900);
+    visualFacade->setResolution(800, 450);
     visualFacade->disablefullscreen();
     visualFacade->openWindow();
 

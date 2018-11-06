@@ -7,11 +7,11 @@
 #include "Shapes/ShapeSprite.h"
 #include "Renderlist.h"
 #include "AssetManager.h"
+#include "../General/WindowResolutionCalculator.h"
 #include <vector>
-
 class WindowManager {
 public:
-    WindowManager();
+    WindowManager(WindowResolutionCalculator* windowResCalc);
     ~WindowManager();
 
     void render(Renderlist renderlist);
@@ -37,9 +37,10 @@ private:
     AssetManager* _assetManager = nullptr;
     Window *_window = nullptr;
     SDL_Renderer *_renderer = nullptr;
+    WindowResolutionCalculator *_windowResCalc = nullptr;
     std::string _title = "Default Title";
-    int _windowHeight = 480;
-    int _windowWidth = 640;
+    int _windowHeight = DEFAULT_HEIGHT;
+    int _windowWidth = DEFAULT_WIDTH;
     bool _fullscreen = false;
 };
 

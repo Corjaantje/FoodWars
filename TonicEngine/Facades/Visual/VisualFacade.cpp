@@ -8,10 +8,12 @@ VisualFacade::VisualFacade() {
 
 VisualFacade::~VisualFacade() {
     delete _windowManager;
+    delete _windowResCalc;
 }
 
 bool VisualFacade::init(){
-    _windowManager = new WindowManager();
+    _windowResCalc = new WindowResolutionCalculator();
+    _windowManager = new WindowManager(_windowResCalc);
 }
 
 void VisualFacade::openWindow() {
@@ -28,6 +30,7 @@ void VisualFacade::setTitle(const std::string &title){
 
 void VisualFacade::setResolution(int width, int height){
     _windowManager->setResolution(width, height);
+    _windowResCalc->setResolution(width, height);
 };
 
 void VisualFacade::enableFullscreen(){
@@ -48,4 +51,8 @@ void VisualFacade::pollEvents() {
 
 bool VisualFacade::isWindowClosed() {
     return _windowManager->isWindowClosed();
+}
+
+WindowResolutionCalculator* VisualFacade::getWindowResCalc() {
+    return _windowResCalc;
 }

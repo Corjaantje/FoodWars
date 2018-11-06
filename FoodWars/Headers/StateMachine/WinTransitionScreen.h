@@ -10,5 +10,4 @@ public:
     std::string getScreenName() const override;
 };
 
-
 #endif //PROJECT_SWA_WINTRANSITIONSCREEN_H

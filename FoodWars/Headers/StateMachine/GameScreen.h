@@ -13,6 +13,10 @@ private:
     std::shared_ptr<VisualFacade> _visualFacade;
     std::vector<std::shared_ptr<IBaseSystem>> _systems;
     std::shared_ptr<AudioFacade> _audioFacade;
+
+    std::array<int, 4> teamOne;
+    std::array<int, 4> teamTwo;
+
 public:
     explicit GameScreen(std::shared_ptr<ScreenStateManager> context);
     ~GameScreen();

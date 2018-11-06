@@ -30,7 +30,8 @@
 
 int main(int argc, char** argv)
 {
-    VisualFacade* visualFacade = new VisualFacade();
+    std::shared_ptr<WindowResolutionCalculator> windowResolutionCalculator =  std::make_shared<WindowResolutionCalculator>();
+    VisualFacade* visualFacade = new VisualFacade(windowResolutionCalculator);
 
     visualFacade->setTitle("Food Wars");
     visualFacade->setResolution(800, 450);

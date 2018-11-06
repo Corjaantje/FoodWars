@@ -2,17 +2,16 @@
 #include "../../Headers/Visual/VisualFacade.h"
 #include "../../Headers/Visual/Window.h"
 
-VisualFacade::VisualFacade() {
+VisualFacade::VisualFacade(std::shared_ptr<WindowResolutionCalculator> windowResolutionCalculator) {
+    _windowResCalc = windowResolutionCalculator;
     VisualFacade::init();
 }
 
 VisualFacade::~VisualFacade() {
     delete _windowManager;
-    delete _windowResCalc;
 }
 
 bool VisualFacade::init(){
-    _windowResCalc = new WindowResolutionCalculator();
     _windowManager = new WindowManager(_windowResCalc);
 }
 
@@ -51,8 +50,4 @@ void VisualFacade::pollEvents() {
 
 bool VisualFacade::isWindowClosed() {
     return _windowManager->isWindowClosed();
-}
-
-WindowResolutionCalculator* VisualFacade::getWindowResCalc() {
-    return _windowResCalc;
 }

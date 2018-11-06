@@ -9,9 +9,11 @@
 #include "AssetManager.h"
 #include "../General/WindowResolutionCalculator.h"
 #include <vector>
+#include <memory>
+
 class WindowManager {
 public:
-    WindowManager(WindowResolutionCalculator* windowResCalc);
+    WindowManager(std::shared_ptr<WindowResolutionCalculator> windowResCalc);
     ~WindowManager();
 
     void render(Renderlist renderlist);
@@ -37,7 +39,7 @@ private:
     AssetManager* _assetManager = nullptr;
     Window *_window = nullptr;
     SDL_Renderer *_renderer = nullptr;
-    WindowResolutionCalculator *_windowResCalc = nullptr;
+    std::shared_ptr<WindowResolutionCalculator> _windowResCalc = nullptr;
     std::string _title = "Default Title";
     int _windowHeight = DEFAULT_HEIGHT;
     int _windowWidth = DEFAULT_WIDTH;

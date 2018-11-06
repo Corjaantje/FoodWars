@@ -3,10 +3,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-WindowManager::WindowManager(WindowResolutionCalculator* windowResCalc) {
+WindowManager::WindowManager(std::shared_ptr<WindowResolutionCalculator> windowResCalc) {
     _window = new Window(_title, _windowWidth, _windowHeight);
     _windowResCalc = windowResCalc;
     _assetManager = new AssetManager();
+    _windowResCalc->getConvertedxPos(100);
 }
 
 WindowManager::~WindowManager() {

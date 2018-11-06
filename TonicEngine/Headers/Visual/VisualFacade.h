@@ -7,11 +7,10 @@
 #include "Window.h"
 #include "WindowManager.h"
 #include "../../Facades/IFacade.h"
-#include "../General/WindowResolutionCalculator.h"
 
 class VisualFacade : public IFacade {
 public:
-    VisualFacade();
+    VisualFacade(std::shared_ptr<WindowResolutionCalculator> windowResolutionCalculator);
     ~VisualFacade();
 
     void render(Renderlist renderlist);
@@ -40,15 +39,13 @@ public:
     bool removeCircle();
     bool updateCircle();
 
-    WindowResolutionCalculator* getWindowResCalc();
-
     void pollEvents();
     bool isWindowClosed();
 private:
     bool init();
 public:
     WindowManager *_windowManager = nullptr;
-    WindowResolutionCalculator *_windowResCalc = nullptr;
+    std::shared_ptr<WindowResolutionCalculator> _windowResCalc = nullptr;
 };
 
 

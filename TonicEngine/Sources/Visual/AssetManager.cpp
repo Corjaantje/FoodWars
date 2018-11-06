@@ -81,7 +81,6 @@ void AssetManager::FindAssets(std::string dir_name) {
                     this->LoadFonts(entry->d_name,path);
               }
           }
-
       }
   };
   closedir(dir);

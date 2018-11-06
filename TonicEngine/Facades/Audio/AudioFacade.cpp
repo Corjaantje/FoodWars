@@ -1,3 +1,4 @@
+#include <cstring>
 #include "../../Headers/Audio/AudioFacade.h"
 
 AudioFacade::AudioFacade() {
@@ -39,20 +40,25 @@ void AudioFacade::setEffectVolume(int volume) {
 
 // Plays Music
 void AudioFacade::playMusic(const char* filename) {
-    if (filename != _backgroundMusic)
+    // Check if song is already playing
+    if(_backgroundMusic != nullptr)
     {
-        // Get path with the filename
-        const char *path = getAudio(filename);
-
-        Mix_Music *music;
-        music=Mix_LoadMUS(path);
-        if(!music)
-            _audioPlayer->stopMusic();
-
-        // Play sound with the path
-        _audioPlayer->playMusic(path, -1);
-        _backgroundMusic = filename;
+        if (std::string(filename) == std::string(_backgroundMusic))
+        return;
     }
+
+    // Get path with the filename
+    const char *path = getAudio(filename);
+
+    // Create music
+    Mix_Music *music;
+    music=Mix_LoadMUS(path);
+    if(!music)
+        _audioPlayer->stopMusic();
+
+    // Play sound with the path
+    _audioPlayer->playMusic(path, -1);
+    _backgroundMusic = filename;
 }
 
 // Plays a sound effect

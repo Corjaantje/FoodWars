@@ -24,6 +24,10 @@
 #include "FoodWars/Headers/StateMachine/LevelEditorScreen.h"
 #include "FoodWars/Headers/StateMachine/SettingsScreen.h"
 #include "FoodWars/Headers/StateMachine/UpgradesScreen.h"
+#include "FoodWars/Headers/StateMachine/LevelTransitionScreen.h"
+#include "FoodWars/Headers/StateMachine/LoseTransitionScreen.h"
+#include "FoodWars/Headers/StateMachine/WinTransitionScreen.h"
+#include "FoodWars/Headers/StateMachine/DrawTransitionScreen.h"
 #include <ctime>
 #include <chrono>
 
@@ -43,9 +47,9 @@ int main(int argc, char** argv)
 
     GeneralFacade* generalFacade = new GeneralFacade();
 
-    audioFacade->addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
-    audioFacade->addAudio("wildwest", "../FoodWars/Assets/Audio/wildwest.wav");
-    audioFacade->addAudio("menu", "../FoodWars/Assets/Audio/menu.wav");
+    audioFacade->addAudio("oof", "./Assets/Audio/oof.wav");
+    audioFacade->addAudio("wildwest", "./Assets/Audio/wildwest.wav");
+    audioFacade->addAudio("menu", "./Assets/Audio/menu.wav");
 
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
     screenStateManager->addFacade(visualFacade);
@@ -57,6 +61,9 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new LevelEditorScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new LoseTransitionScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new WinTransitionScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new DrawTransitionScreen(screenStateManager));
 
     screenStateManager->setActiveScreen<MainMenuScreen>();
 

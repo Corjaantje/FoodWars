@@ -40,7 +40,7 @@ void TextButton::addToRender(Renderlist *renderlist) {
 
 void TextButton::update(std::shared_ptr<MouseEvent> event) {
     if((event->getXPosition() >= xPos && event->getXPosition() <= xPos + width)
-       && (event->getYPosition() >= yPos && event->getYPosition() <= yPos + height))
+       && (event->getYPosition() >= yPos && event->getYPosition() <= yPos + height) && event->getMouseEventType() == MouseEventType::Down)
         _onClickFunction();
 }
 

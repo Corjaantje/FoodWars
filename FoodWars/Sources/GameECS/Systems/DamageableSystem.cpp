@@ -8,4 +8,11 @@ DamageableSystem::~DamageableSystem() = default;
 
 void DamageableSystem::update(double deltaTime) {
     _damageableComponents = _entityManager->getAllEntitiesWithComponent<DamageableComponent>();
+    for(auto x : _damageableComponents)
+    {
+        if(!x.second->IsAlive())
+        {
+            _entityManager->removeEntity(x.first);
+        }
+    }
 }

@@ -9,7 +9,7 @@ DamageableComponent::DamageableComponent() {
 }
 
 const bool DamageableComponent::IsAlive() {
-    return health <= 0;
+    return health >= 0;
 }
 
 const int DamageableComponent::GetHealth() {

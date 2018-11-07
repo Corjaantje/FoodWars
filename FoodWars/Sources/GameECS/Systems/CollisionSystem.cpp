@@ -1,5 +1,4 @@
 #include <utility>
-
 #include "../../../Headers/GameECS/Systems/CollisionSystem.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Components/MoveComponent.h"
@@ -37,10 +36,10 @@ void CollisionSystem::update(double dt) {
                         double angle = (std::atan2(otherCenterX - centerX, otherCenterY - centerY)) * 360 / (2 * M_PI);
                         if(angle < 0) angle += 360;
                         notify(std::make_shared<CollisionEvent>(CollisionEvent{entity, otherEntity, angle}));
-                        if(angle > 315 || angle <= 45) positionComponent->Y = otherPosition->Y - collider->height; // moving entity on top of other
-                        if(angle >= 45 && angle <= 135) positionComponent->X = otherPosition->X - collider->width - 1; // moving entity left of other
-                        if(angle > 135 && angle < 225)  positionComponent->Y = otherPosition->Y + otherCollider->height; // moving entity below other
-                        if(angle >= 225 && angle <= 315) positionComponent->X = otherPosition->X + otherCollider->width; // moving entity right of other
+                        if((angle > 315 || angle <= 45)) positionComponent->Y = otherPosition->Y - collider->height; // moving entity on top of other
+                        if(angle >= 45 && angle <= 135 && moveComponent->xVelocity > 0) positionComponent->X = otherPosition->X - collider->width - 1; // moving entity left of other
+                        if(angle > 135 && angle < 225 && moveComponent->yVelocity < 0)  positionComponent->Y = otherPosition->Y + otherCollider->height; // moving entity below other
+                        if(angle >= 225 && angle <= 315 && moveComponent->xVelocity < 0) positionComponent->X = otherPosition->X + otherCollider->width; // moving entity right of other
                     }
                 }
             }

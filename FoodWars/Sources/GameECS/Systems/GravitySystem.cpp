@@ -19,8 +19,7 @@ void GravitySystem::update(double dt) {
         if(!moveComponent) {
             _entityManager->addComponentToEntity(iterator.first, new MoveComponent(iterator.second->gravityApplied));
         } else {
-           // moveComponent->positionComponent += PositionComponent{0, 1};
-            moveComponent->yVelocity += iterator.second->gravityApplied * 50 * dt;
+            moveComponent->yVelocity += std::pow(iterator.second->gravityApplied, 2.5) * dt;
         }
     }
 }
@@ -34,12 +33,4 @@ void GravitySystem::handleCollisionEvent(const CollisionEvent &collisionEvent) {
     std::shared_ptr<BoxCollider> boxCollider = _entityManager->getComponentFromEntity<BoxCollider>(collisionEvent.getEntity());
     std::shared_ptr<PositionComponent> positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(collisionEvent.getEntity());
     moveComponent->yVelocity = 0;
-    /*double angle = collisionEvent.getCollisionAngle();
-    if( angle > 315 || angle < 45 ) {
-        std::shared_ptr<PositionComponent> otherPositionComponent = _entityManager->getComponentFromEntity<PositionComponent>(collisionEvent.getOtherEntity());
-        positionComponent->Y = otherPositionComponent->Y - boxCollider->height;
-    }*/
-    /*std::shared_ptr<GravityComponent> gravityComponent = _entityManager->getComponentFromEntity<GravityComponent>(collisionEvent.getEntity());
-    if(gravityComponent)
-        _entityManager->removeComponentFromEntity<GravityComponent>(collisionEvent.getEntity());*/
 }

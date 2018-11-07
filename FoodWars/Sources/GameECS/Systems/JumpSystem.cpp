@@ -3,7 +3,6 @@
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/MoveComponent.h"
 
-
 void JumpSystem::update(double dt) {
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<JumpComponent>()) {
         if(!iterator.second) {

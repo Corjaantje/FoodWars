@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "../../Headers/Visual/WindowManager.h"
 #include "../../Headers/Visual/Window.h"
 #include <SDL2/SDL.h>
@@ -5,7 +7,7 @@
 
 WindowManager::WindowManager(std::shared_ptr<WindowResolutionCalculator> windowResCalc) {
     _window = new Window(_title, _windowWidth, _windowHeight);
-    _windowResCalc = windowResCalc;
+    _windowResCalc = std::move(windowResCalc);
     _assetManager = new AssetManager();
 }
 

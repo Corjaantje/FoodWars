@@ -10,6 +10,8 @@
 
 class LevelManager {
 private:
+    void generateTerrainDrawables(int x, int y);
+    void generateTerrain();
 public:
     LevelManager();
     ~LevelManager();

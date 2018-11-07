@@ -3,6 +3,7 @@
 //
 
 #include "../Headers/LevelManager.h"
+#include "../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 
 LevelManager::LevelManager()
 {
@@ -15,6 +16,8 @@ EntityManager LevelManager::startLevel(int level) {
     {
         case 1: {
             _entityManager = EntityManager();
+
+            generateTerrain();
 
             int player = _entityManager.createEntity();
             auto drawablePlayerOne = new DrawableComponent;
@@ -42,4 +45,49 @@ EntityManager LevelManager::startLevel(int level) {
             break;
     }
     return _entityManager;
+}
+
+void LevelManager::generateTerrain() {
+    for(int y=112; y < 480; y+=16) {
+        for (int x=0; x < 640; x+=16) {
+            if (y >= 160 && x >= 528 && x <= 592) {
+                generateTerrainDrawables(x, y);
+            } else if ((y >= 176 && x >= 496)) {
+                generateTerrainDrawables(x, y);
+            } else if (y >= 176 && x > 560) {
+                generateTerrainDrawables(x, y);
+            } else if (y >= 192 && x >= 464) {
+                generateTerrainDrawables(x, y);
+            } else if (y >= 208 && x >= 432) {
+                generateTerrainDrawables(x, y);
+            } else if (y >= 224 && x >= 400) {
+                generateTerrainDrawables(x, y);
+            } else if (y >= 240 && x >= 368) {
+                generateTerrainDrawables(x, y);
+            } else if (y >= 256 && x >= 336) {
+                generateTerrainDrawables(x, y);
+            } else if (y >= 192 && x >= 0 && x <= 64 ) {
+                generateTerrainDrawables(x, y);
+            } else if (y >= 208 && x >= 0 && x <= 96 ) {
+                generateTerrainDrawables(x, y);
+            } else if (y >= 224 && x >= 0 && x <= 112 ) {
+                generateTerrainDrawables(x, y);
+            } else if (y >= 256 && x >= 0 && x <= 128 ) {
+                generateTerrainDrawables(x, y);
+            } else if (y >= 288 ) {
+                generateTerrainDrawables(x, y);
+            }
+        }
+    }
+}
+
+void LevelManager::generateTerrainDrawables(int x, int y) {
+    int randomNum = rand() % 19 + (-9);
+    int randomNum2 = rand() % 19 + (-9);
+    int randomNum3 = rand() % 19 + (-9);
+    int terrain = _entityManager.createEntity();
+    DrawableComponent *comp = new DrawableComponent();
+    _entityManager.addComponentToEntity(terrain, comp);
+    _entityManager.addComponentToEntity(terrain, new BoxCollider{16,16});
+    comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({16, 16, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
 }

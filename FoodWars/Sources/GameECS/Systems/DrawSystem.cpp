@@ -3,7 +3,7 @@
 #include "../../../Headers/GameECS/Systems/DrawSystem.h"
 #include "../../../Headers/GameECS/Systems/IBaseSystem.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
-#include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
+#include "../../../Headers/GameECS/Components/Collider/BoxColliderComponent.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 
 DrawSystem::DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade){
@@ -85,6 +85,6 @@ void DrawSystem::generateTerrainDrawables(int x, int y) {
     int id = _entityManager->createEntity();
     DrawableComponent *comp = new DrawableComponent();
     _entityManager->addComponentToEntity(id, comp);
-    _entityManager->addComponentToEntity(id, new BoxCollider{16,16});
+    _entityManager->addComponentToEntity(id, new BoxColliderComponent{16,16});
     comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({16, 16, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
 }

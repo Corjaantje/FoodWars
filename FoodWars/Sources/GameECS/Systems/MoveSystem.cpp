@@ -4,7 +4,7 @@
 #include "../../../Headers/GameECS/Components/MoveComponent.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
-#include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
+#include "../../../Headers/GameECS/Components/Collider/BoxColliderComponent.h"
 
 MoveSystem::~MoveSystem() = default;
 
@@ -14,12 +14,12 @@ MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared
 }
 
 void MoveSystem::update(double dt) {
-    std::map<int, std::shared_ptr<BoxCollider>> collideAbleEntities = _entityManager->getAllEntitiesWithComponent<BoxCollider>();
+    std::map<int, std::shared_ptr<BoxColliderComponent>> collideAbleEntities = _entityManager->getAllEntitiesWithComponent<BoxColliderComponent>();
     for (auto const &iterator: _entityManager->getAllEntitiesWithComponent<MoveComponent>()) {
         int entity = iterator.first;
         std::shared_ptr<MoveComponent> moveComponent = iterator.second;
         std::shared_ptr<DrawableComponent> drawableComponent = _entityManager->getComponentFromEntity<DrawableComponent>(entity);
-        std::shared_ptr<BoxCollider> collider = _entityManager->getComponentFromEntity<BoxCollider>(entity);
+        std::shared_ptr<BoxColliderComponent> collider = _entityManager->getComponentFromEntity<BoxColliderComponent>(entity);
 
         double newX = drawableComponent->shape->xPos + moveComponent->positionComponent.X * dt * moveComponent->xVelocity;
         double newY = drawableComponent->shape->yPos + moveComponent->positionComponent.Y * dt * moveComponent->yVelocity;
@@ -30,7 +30,7 @@ void MoveSystem::update(double dt) {
                 int otherEntity = collideAbleIterator.first;
                 if (otherEntity == entity)
                     continue;
-                std::shared_ptr<BoxCollider> otherCollider = collideAbleIterator.second;
+                std::shared_ptr<BoxColliderComponent> otherCollider = collideAbleIterator.second;
                 std::shared_ptr<DrawableComponent> otherDrawable = _entityManager->getComponentFromEntity<DrawableComponent>(
                         otherEntity);
                 if (otherDrawable) {

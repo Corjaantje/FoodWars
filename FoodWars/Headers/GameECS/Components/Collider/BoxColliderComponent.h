@@ -3,12 +3,12 @@
 
 #include "ICollideableComponent.h"
 
-class BoxCollider: public ICollideableComponent {
+class BoxColliderComponent: public ICollideableComponent {
 public:
     int width;
     int height;
-    BoxCollider();
-    BoxCollider(int width, int height);
-    ~BoxCollider() override;
+    BoxColliderComponent();
+    BoxColliderComponent(int width, int height);
+    ~BoxColliderComponent() override;
 };
 #endif //PROJECT_SWA_BOXCOLLIDER_H

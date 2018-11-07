@@ -3,7 +3,7 @@
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../Headers/GameECS/Components/TurnComponent.h"
-#include "../../Headers/GameECS/Components/Collider/BoxCollider.h"
+#include "../../Headers/GameECS/Components/Collider/BoxColliderComponent.h"
 #include "../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
@@ -21,7 +21,7 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     DrawableComponent* drawableComponent = new DrawableComponent;
     drawableComponent->shape = std::make_unique<ShapeSprite>(ShapeSprite({32, 48, 32, 0, "PlayerW_R0.png"}));
     _entityManager->addComponentToEntity(player, drawableComponent);
-    _entityManager->addComponentToEntity(player, new BoxCollider(32, 48));
+    _entityManager->addComponentToEntity(player, new BoxColliderComponent(32, 48));
     TurnComponent* turnComponent = new TurnComponent;
     turnComponent->switchTurn(true);
     _entityManager->addComponentToEntity(player, turnComponent);
@@ -33,7 +33,7 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     player = _entityManager->createEntity();
     _entityManager->addComponentToEntity(player, drawableComponent2);
     _entityManager->addComponentToEntity(player, new TurnComponent);
-    _entityManager->addComponentToEntity(player, new BoxCollider(32, 48));
+    _entityManager->addComponentToEntity(player, new BoxColliderComponent(32, 48));
     _entityManager->addComponentToEntity(player, new GravityComponent());
 
     std::shared_ptr<TurnSystem> turnSystem = std::make_shared<TurnSystem>(_entityManager);

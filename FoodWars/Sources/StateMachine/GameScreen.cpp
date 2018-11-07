@@ -12,6 +12,7 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     _entityManager(std::make_shared<EntityManager>()),
     _visualFacade(context->getFacade<VisualFacade>()){
     _inputFacade->getKeyEventObservable()->registerObserver(this);
+    _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
     _systems.push_back(std::make_shared<DrawSystem>(_entityManager, _visualFacade));
     _systems.push_back(std::make_shared<MoveSystem>(_entityManager, _inputFacade));
     _systems.push_back(std::make_shared<GravitySystem>(_entityManager));

@@ -3,9 +3,6 @@
 #include <string>
 #include <SDL2/SDL.h>
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
-
 class Window {
 public:
     Window(const std::string &title, int width, int height);
@@ -24,8 +21,8 @@ private:
 
 private:
     std::string _title;
-    int _width = SCREEN_WIDTH;
-    int _height = SCREEN_HEIGHT;
+    int _width;
+    int _height;
 
     bool _closed = false;
     bool _fullscreen = false;

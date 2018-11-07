@@ -1,16 +1,17 @@
 #include "../../Headers/Visual/WindowManager.h"
 #include "../../Headers/Visual/Window.h"
-#include "../../Headers/Visual/TextureManager.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
 WindowManager::WindowManager() {
     _window = new Window(_title, _windowWidth, _windowHeight);
+    _assetManager = new AssetManager();
 }
 
 WindowManager::~WindowManager() {
     closeWindow();
     delete _window;
+    delete _assetManager;
 }
 
 void WindowManager::openWindow(){
@@ -74,7 +75,7 @@ void WindowManager::renderSprites(std::vector<ShapeSprite> rectangleSprite) {
         rect.y = shapeSprite.yPos;
         rect.h = shapeSprite.height;
         rect.w = shapeSprite.width;
-        SDL_Texture* texture = _textureManager.GetSDLTextureFromPNG(_renderer, shapeSprite.imageURL);
+        SDL_Texture* texture = _assetManager->GetSDLTextureFromPNG(_renderer, shapeSprite.imageURL);
         SDL_RenderCopy(_renderer, texture, NULL, &rect);
     }
 }
@@ -82,7 +83,7 @@ void WindowManager::renderSprites(std::vector<ShapeSprite> rectangleSprite) {
 void WindowManager::renderText(std::vector<ShapeText> textList) {
     for(int i=0; i< textList.size(); i++){
         ShapeText &shapeText = textList[i];
-        SDL_Texture* Message = _fontManager.GetSDLTextureFromText(_renderer, shapeText);
+        SDL_Texture* Message = _assetManager->GetSDLTextureFromText(_renderer, shapeText);
         SDL_Rect Message_rect; //create a rect
         Message_rect.x = shapeText.xPos;  //controls the rect's x coordinate
         Message_rect.y = shapeText.yPos; // controls the rect's y coordinte

@@ -14,7 +14,6 @@
 #include "FoodWars/Headers/StateMachine/ScreenStateManager.h"
 #include "TonicEngine/Headers/Communication/CommunicationFacade.h"
 #include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
-#include "FoodWars/Headers/StateMachine/OtherMenuScreen.h"
 #include "FoodWars/Headers/StateMachine/GameScreen.h"
 #include "TonicEngine/Headers/Input/PrintWindowObserver.h"
 #include "TonicEngine/Headers/Input/WindowClosedObserver.h"
@@ -22,6 +21,9 @@
 
 #include "FoodWars/Headers/GameECS/Components/TurnComponent.h"
 #include "FoodWars/Headers/GameECS/Systems/TurnSystem.h"
+#include "FoodWars/Headers/StateMachine/LevelEditorScreen.h"
+#include "FoodWars/Headers/StateMachine/SettingsScreen.h"
+#include "FoodWars/Headers/StateMachine/UpgradesScreen.h"
 #include <ctime>
 #include <chrono>
 
@@ -31,7 +33,7 @@ int main(int argc, char** argv)
     VisualFacade* visualFacade = new VisualFacade();
 
     visualFacade->setTitle("Food Wars");
-    visualFacade->setResolution(640, 480);
+    visualFacade->setResolution(1600, 900);
     visualFacade->disablefullscreen();
     visualFacade->openWindow();
 
@@ -50,8 +52,12 @@ int main(int argc, char** argv)
     screenStateManager->addFacade(new InputFacade);
     screenStateManager->addFacade(audioFacade);
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new OtherMenuScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new UpgradesScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new LevelEditorScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
+
     screenStateManager->setActiveScreen<MainMenuScreen>();
 
     //Config

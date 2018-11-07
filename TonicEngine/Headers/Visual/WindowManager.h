@@ -6,8 +6,7 @@
 #include "Shapes/ShapeRectangle.h"
 #include "Shapes/ShapeSprite.h"
 #include "Renderlist.h"
-#include "TextureManager.h"
-#include "FontManager.h"
+#include "AssetManager.h"
 #include <vector>
 
 class WindowManager {
@@ -37,8 +36,7 @@ private:
     void renderText(std::vector<ShapeText> textList);
 
 private:
-    TextureManager _textureManager;
-    FontManager _fontManager;
+    AssetManager* _assetManager = nullptr;
     Window *_window = nullptr;
     SDL_Renderer *_renderer = nullptr;
     std::string _title = "Default Title";

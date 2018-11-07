@@ -25,8 +25,26 @@ void InputFacade::pollEvents() {
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
             case SDL_MOUSEBUTTONDOWN: { // When a click is registered
-                std::shared_ptr<MouseEvent> mouseEvent = std::make_shared<MouseEvent>(event.motion.x, event.motion.y);
-                _mouseEventObservable.get()->notify(mouseEvent);
+                // check if left or right is clicked
+                //
+                //
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    std::shared_ptr<MouseEvent> mouseEvent = std::make_shared<MouseEvent>(event.motion.x, event.motion.y, MouseEventType::Down, MouseClickType::Left);
+                    _mouseEventObservable.get()->notify(mouseEvent);
+                } else if (event.button.button == SDL_BUTTON_RIGHT) {
+                    std::shared_ptr<MouseEvent> mouseEvent = std::make_shared<MouseEvent>(event.motion.x, event.motion.y, MouseEventType::Down, MouseClickType::Right);
+                    _mouseEventObservable.get()->notify(mouseEvent);
+                }
+                break;
+            }
+            case SDL_MOUSEBUTTONUP: { // When a click is released
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    std::shared_ptr<MouseEvent> mouseEvent = std::make_shared<MouseEvent>(event.motion.x, event.motion.y, MouseEventType::Up, MouseClickType::Left);
+                    _mouseEventObservable.get()->notify(mouseEvent);
+                } else if (event.button.button == SDL_BUTTON_RIGHT) {
+                    std::shared_ptr<MouseEvent> mouseEvent = std::make_shared<MouseEvent>(event.motion.x, event.motion.y, MouseEventType::Up, MouseClickType::Right);
+                    _mouseEventObservable.get()->notify(mouseEvent);
+                }
                 break;
             }
             case SDL_QUIT: { // When the window is closed

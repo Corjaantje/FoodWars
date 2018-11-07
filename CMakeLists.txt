@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_ttf REQUIRED)
+find_package(SDL2_image REQUIRED)
 
 set (LIB_DIR "${PROJECT_SOURCE_DIR}/TonicEngine/Libraries")
 set (DEPENDENCIES "")
@@ -59,7 +60,7 @@ macro(AddLib repo name)
     unset(subdir)
 endmacro()
 
-AddLib("https://github.com/lb321/CPMBox2D" Box2D '' "v2.3.1-nocpm")
+#AddLib("https://github.com/lb321/CPMBox2D" Box2D '' "v2.3.1-nocpm")
 AddLib("https://github.com/lsalzman/enet" enet)
 AddLib("https://github.com/leethomason/tinyxml2" tinyxml2)
 
@@ -69,7 +70,8 @@ file(GLOB_RECURSE SOURCES3 "TonicEngine/Sources/*.cpp")
 file(GLOB_RECURSE SOURCES4 "TonicEngine/Facades/*.cpp")
 file(GLOB_RECURSE SOURCES5 "TonicEngine/Headers/*.h")
 set(SOURCE_FILES main.cpp)
-
 add_executable(Project_SWA ${SOURCE_FILES} ${SOURCES1} ${SOURCES2} ${SOURCES3} ${SOURCES4} ${SOURCES5})
 
 target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2_mixer -lSDL2_image -lSDL2main -lSDL2 -lSDL2_ttf  -mwindows -static-libgcc -static-libstdc++)
+file(REMOVE_RECURSE ./cmake-build-debug/Assets/)
+file(COPY Assets DESTINATION .)

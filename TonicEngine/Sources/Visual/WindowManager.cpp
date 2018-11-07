@@ -7,7 +7,6 @@ WindowManager::WindowManager(std::shared_ptr<WindowResolutionCalculator> windowR
     _window = new Window(_title, _windowWidth, _windowHeight);
     _windowResCalc = windowResCalc;
     _assetManager = new AssetManager();
-    _windowResCalc->getConvertedxPos(100);
 }
 
 WindowManager::~WindowManager() {
@@ -59,10 +58,10 @@ void WindowManager::renderRectangles(std::vector<ShapeRectangle> rectangleList) 
     for(int i=0; i< rectangleList.size(); i++){
         ShapeRectangle &rectangleShape = rectangleList[i];
         SDL_Rect rect;
-        rect.x = _windowResCalc->getConvertedxPos(rectangleShape.xPos);
-        rect.y = _windowResCalc->getConvertedyPos(rectangleShape.yPos);
-        rect.h = _windowResCalc->getConvertedHeight(rectangleShape.height);
-        rect.w = _windowResCalc->getConvertedWidth(rectangleShape.width);
+        rect.x = _windowResCalc->getConvertedxPosDraw(rectangleShape.xPos);
+        rect.y = _windowResCalc->getConvertedyPosDraw(rectangleShape.yPos);
+        rect.h = _windowResCalc->getConvertedHeightDraw(rectangleShape.height);
+        rect.w = _windowResCalc->getConvertedWidthDraw(rectangleShape.width);
         SDL_SetRenderDrawColor(_renderer, rectangleShape.colour.red, rectangleShape.colour.green, rectangleShape.colour.blue, rectangleShape.colour.alpha);
         SDL_RenderFillRect(_renderer, &rect);
     }
@@ -73,10 +72,10 @@ void WindowManager::renderSprites(std::vector<ShapeSprite> rectangleSprite) {
     for(int i=0; i< rectangleSprite.size(); i++){
         ShapeSprite &shapeSprite = rectangleSprite[i];
         SDL_Rect rect;
-        rect.x = _windowResCalc->getConvertedxPos(shapeSprite.xPos);
-        rect.y = _windowResCalc->getConvertedyPos(shapeSprite.yPos);
-        rect.h = _windowResCalc->getConvertedHeight(shapeSprite.height);
-        rect.w = _windowResCalc->getConvertedWidth(shapeSprite.width);
+        rect.x = _windowResCalc->getConvertedxPosDraw(shapeSprite.xPos);
+        rect.y = _windowResCalc->getConvertedyPosDraw(shapeSprite.yPos);
+        rect.h = _windowResCalc->getConvertedHeightDraw(shapeSprite.height);
+        rect.w = _windowResCalc->getConvertedWidthDraw(shapeSprite.width);
         SDL_Texture* texture = _assetManager->GetSDLTextureFromPNG(_renderer, shapeSprite.imageURL);
         SDL_RenderCopy(_renderer, texture, NULL, &rect);
     }

@@ -49,8 +49,11 @@ int main(int argc, char** argv)
     audioFacade->addAudio("menu", "../FoodWars/Assets/Audio/menu.wav");
 
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
+    InputFacade* inputFacade = new InputFacade();
+    inputFacade->setWindowResolutionCalculator(windowResolutionCalculator);
+    screenStateManager->setWindowResolutionCalculator(windowResolutionCalculator);
     screenStateManager->addFacade(visualFacade);
-    screenStateManager->addFacade(new InputFacade);
+    screenStateManager->addFacade(inputFacade);
     screenStateManager->addFacade(audioFacade);
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new UpgradesScreen(screenStateManager));

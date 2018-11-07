@@ -1,7 +1,9 @@
+#include <utility>
+
 #include "../../Headers/StateMachine/LevelSelectionScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
-LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
+LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager) : IScreen(context) {
     visualFacade = context->getFacade<VisualFacade>();
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->registerObserver(this);
@@ -15,7 +17,10 @@ LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> c
     _buttons.push_back(quitButton);
 
     // Level 1
-    TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Level 1", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 200};
+    TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Level 1", [c = _context, levelManager = std::move(levelManager)]() {
+        c->addOrSetScreenState(new GameScreen{c, levelManager->startLevel(1)});
+        c->setActiveScreen<GameScreen>();
+    }, 250, 30, 200, 200};
     levelSelectionButton->addToRender(&_renderList);
     _buttons.push_back(levelSelectionButton);
 }

@@ -26,11 +26,9 @@ public:
     }
 
     ~IScreen() {
-
+        _inputFacade->getWindowEventObservable()->unregisterObserver(this);
     }
-    virtual void update(double deltaTime) {
-
-    }
+    virtual void update(double deltaTime) = 0;
 
     void update(std::shared_ptr<WindowEvent> event) {
         if (event->GetWindowEventType() == WindowEventType::Quit) {

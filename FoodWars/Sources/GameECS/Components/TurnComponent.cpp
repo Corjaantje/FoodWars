@@ -8,6 +8,7 @@
 TurnComponent::TurnComponent() {
     //TODO: discuss a default values.
     _energy = 100;
+    _remainingTime = 0;
 }
 
 // Alternative amount of energy

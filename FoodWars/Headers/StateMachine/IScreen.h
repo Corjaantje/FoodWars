@@ -36,6 +36,9 @@ public:
         if (event->GetWindowEventType() == WindowEventType::Quit) {
             _isClosed = true;
         }
+        if(event->GetWindowEventType() == WindowEventType::Resize){
+            visualFacade->setResolution(event->getWidth(), event->getHeight());
+        }
     }
     bool isWindowClosed() const {
         return _isClosed;

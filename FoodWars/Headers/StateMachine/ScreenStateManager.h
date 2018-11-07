@@ -16,9 +16,12 @@ private:
     std::shared_ptr<IScreen> _currentState;
     std::map<std::string, std::shared_ptr<IScreen>> _screenStates;
     std::map<std::string, std::shared_ptr<IFacade>> _facades;
+    std::shared_ptr<WindowResolutionCalculator> _windowResCalc;
 public:
     ScreenStateManager();
     std::shared_ptr<IScreen> getCurrentState();
+
+    void setWindowResolutionCalculator(std::shared_ptr<WindowResolutionCalculator> windowResCalc);
 
     template<typename Screen, typename std::enable_if<std::is_base_of<IScreen, Screen>::value>::type* = nullptr>
     void addOrSetScreenState(Screen* screen){
@@ -50,6 +53,10 @@ public:
             return std::dynamic_pointer_cast<Facade>(_facades[facadeName]);
         }
         return nullptr;
+    }
+
+    std::shared_ptr<WindowResolutionCalculator> getWindowResolutionCalculator() const {
+        return _windowResCalc;
     }
 };
 

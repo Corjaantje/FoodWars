@@ -11,6 +11,7 @@
 #include "../GameECS/Systems/MoveSystem.h"
 #include "../GameECS/Systems/TurnSystem.h"
 #include "../GameECS/Systems/GravitySystem.h"
+#include "../GameECS/Systems/StorageSystem.h"
 #include "MainMenuScreen.h"
 
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
@@ -19,6 +20,7 @@ private:
     std::shared_ptr<VisualFacade> _visualFacade;
     std::vector<std::shared_ptr<IBaseSystem>> _systems;
     std::shared_ptr<AudioFacade> _audioFacade;
+    std::shared_ptr<StorageSystem> _storage;
     Renderlist _renderList;
 public:
     explicit GameScreen(std::shared_ptr<ScreenStateManager> context);

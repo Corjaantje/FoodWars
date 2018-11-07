@@ -12,6 +12,7 @@ class WorldParser : public BaseParser<int> {
 private:
     std::shared_ptr<EntityManager> _entityManager;
 public:
+    WorldParser();
     WorldParser(std::shared_ptr<EntityManager> ent);
     ~WorldParser();
 
@@ -19,7 +20,8 @@ public:
     int* ParseFromXML(tinyxml2::XMLElement elem);
     void ParseToXML();
 
-    void ParseDrawableComponents(MyDocument& my_doc, std::map<int, std::shared_ptr<DrawableComponent>> toSave);
+//    void ParseDrawableComponents(MyDocument& my_doc, std::map<int, std::shared_ptr<DrawableComponent>> toSave);
+    MyDocument ParseDrawableComponents(MyDocument& my_doc, std::map<int, std::shared_ptr<DrawableComponent>> toSave);
 };
 
 

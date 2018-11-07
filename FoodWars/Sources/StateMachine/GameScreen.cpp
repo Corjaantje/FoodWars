@@ -39,12 +39,19 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     _systems.push_back(turnSystem);
     turnSystem->getRelevantEntities();
     turnSystem->setTurnTime(20);
+
+    _storage = std::make_shared<StorageSystem>();
+    _storage->assignRelevantEntityManager(_entityManager);
 }
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
     if(event->getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
+    }
+    if (event->getKey() == KEY::KEY_D)
+    {
+        _storage->saveWorld();
     }
 }
 

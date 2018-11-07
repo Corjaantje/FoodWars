@@ -79,8 +79,8 @@ void LevelBuilder::placeBlock(int x, int y) {
         //_entityManager->addComponentToEntity(entity, new DamageableComponent());
     }
     auto* drawComp = new DrawableComponent();
-    drawComp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle(_shapeDimension, _shapeDimension, x, y, Colour(_colorRed, _colorGreen, _colorBlue, 255)));
-    _entityManager->addComponentToEntity(entity, new DrawableComponent());
+    drawComp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle(_shapeDimension, _shapeDimension, x-(_shapeDimension/2), y-(_shapeDimension/2), Colour(_colorRed, _colorGreen, _colorBlue, 255)));
+    _entityManager->addComponentToEntity(entity, drawComp);
 }
 
 void LevelBuilder::undoPlaceBlock() {
@@ -88,4 +88,16 @@ void LevelBuilder::undoPlaceBlock() {
         _entityManager->removeEntity(_momentoList.back()->getState());
         _momentoList.pop_back();
     }
+}
+
+Renderlist LevelBuilder::drawCurrentScene() {
+    std::map<int, std::shared_ptr<DrawableComponent>> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
+    _renderList.rectangleList.clear();
+    _renderList.spriteList.clear();
+    _renderList.textList.clear();
+    int count = drawComps.size();
+    for(int i=0; i < drawComps.size(); i++){
+        drawComps[i]->shape->addToRender(&_renderList);
+    }
+    return _renderList;
 }

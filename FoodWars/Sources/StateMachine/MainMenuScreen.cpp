@@ -15,7 +15,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _buttons.push_back(levelSelectionButton);
 
     // Level Editor
-    TextButton* levelEditorButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Level Editor", [c = _context]() {  c->setActiveScreen<LevelEditorScreen>(); }, 250, 30, 200, 250};
+    TextButton* levelEditorButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Level Editor", [c = _context]() {  c->setActiveScreen<LevelCreationScreen>(); }, 250, 30, 200, 250};
     levelEditorButton->addToRender(&_renderList);
     _buttons.push_back(levelEditorButton);
 

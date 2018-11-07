@@ -1,13 +1,15 @@
 #include "../../Headers/StateMachine/LevelCreationScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
-LevelEditorScreen::LevelEditorScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
+LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
     visualFacade = context->getFacade<VisualFacade>();
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->registerObserver(this);
+    _inputFacade->getMouseEventObservable()->registerObserver(this);
+    _windowResCalc = _context->getWindowResolutionCalculator();
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
 
-    _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
+    //_renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
 
     // MainMenu
     SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 50, 50, 0, 0, Colour{0,0,0,0}};
@@ -15,21 +17,31 @@ LevelEditorScreen::LevelEditorScreen(std::shared_ptr<ScreenStateManager> context
     _buttons.push_back(quitButton);
 }
 
-LevelEditorScreen::~LevelEditorScreen() {
+LevelCreationScreen::~LevelCreationScreen() {
     for(IShape* button: _buttons) {
         delete button;
     }
 }
 
-void LevelEditorScreen::update(double deltaTime) {
+void LevelCreationScreen::update(double deltaTime) {
+    Renderlist renderlist = _levelBuilder.drawCurrentScene();
+    _renderList.mergeShapeRectangles(renderlist.rectangleList);
+    _renderList.mergeShapeSprites(renderlist.spriteList);
+    _renderList.mergeShapeText(renderlist.textList);
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
 }
 
-void LevelEditorScreen::update(std::shared_ptr<KeyEvent> event){
+void LevelCreationScreen::update(std::shared_ptr<KeyEvent> event){
     if(event->getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
+    }
+}
+
+void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
+    if(event->getMouseEventType() == MouseEventType::Down){
+        _levelBuilder.placeBlock(event->getXPosition(), event->getYPosition());
     }
 }

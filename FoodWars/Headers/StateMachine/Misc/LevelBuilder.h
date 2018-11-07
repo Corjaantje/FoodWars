@@ -4,9 +4,10 @@
 
 #include "../../GameECS/Entities/EntityManager.h"
 #include "EntityMomento.h"
+#include "../../../../TonicEngine/Headers/Visual/Renderlist.h"
 
-const int MINIMAL_SHAPE_DIM = 4;
-const int MAXIMAL_SHAPE_DIM = 16;
+const int MINIMAL_SHAPE_DIM = 32;
+const int MAXIMAL_SHAPE_DIM = 32;
 const int COLOR_INCREMENT = 5;
 
 class LevelBuilder {
@@ -16,6 +17,7 @@ public:
 private:
     EntityManager* _entityManager = nullptr;
     std::vector<EntityMomento*> _momentoList;
+    Renderlist _renderList;
     bool _buildCollidable;
     bool _buildDamageable;
 
@@ -24,7 +26,7 @@ private:
     int _colorRed = 0; //Between 0 and 255
     int _colorGreen = 0; //Between 0 and 255
     int _colorBlue = 0; //Between 0 and 255
-private:
+public:
     void resetEntityManager();
 
     void incrementShapeSize();
@@ -40,6 +42,8 @@ private:
 
     void placeBlock(int x, int y);
     void undoPlaceBlock();
+
+    Renderlist drawCurrentScene();
 };
 
 

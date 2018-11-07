@@ -10,13 +10,13 @@ public:
     WindowResolutionCalculator();
     ~WindowResolutionCalculator() = default;
 public:
-    int getConvertedWidthDraw(int width);
-    int getConvertedHeightDraw(int height);
-    int getConvertedxPosDraw(int xPos);
-    int getConvertedyPosDraw(int yPos);
+    int getConvertedWidthDraw(int width) const;
+    int getConvertedHeightDraw(int height) const;
+    int getConvertedxPosDraw(int xPos) const;
+    int getConvertedyPosDraw(int yPos) const;
 
-    int getConvertedxPosClick(int xPos);
-    int getConvertedyPosClick(int yPos);
+    int getConvertedxPosClick(int xPos) const;
+    int getConvertedyPosClick(int yPos) const;
     void setResolution(int width, int height);
 private:
     int _windowWidth;

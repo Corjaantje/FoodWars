@@ -5,7 +5,7 @@
 #include "../../GameECS/Entities/EntityManager.h"
 #include "../../GameECS/Components/DrawableComponent.h"
 #include "../../../../TonicEngine/Headers/Storage/XMLWriter.h"
-#include "../../../../TonicEngine/Headers/Storage/XMLWriter.h"
+#include "../../../../TonicEngine/Headers/Storage/XMLReader.h"
 
 //TODO: shorten headers.
 class WorldParser : public BaseParser<int> {
@@ -22,6 +22,8 @@ public:
 
 //    void ParseDrawableComponents(MyDocument& my_doc, std::map<int, std::shared_ptr<DrawableComponent>> toSave);
     MyDocument ParseDrawableComponents(MyDocument& my_doc, std::map<int, std::shared_ptr<DrawableComponent>> toSave);
+
+
 };
 
 

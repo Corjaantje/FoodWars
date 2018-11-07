@@ -15,6 +15,7 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     _entityManager(std::make_shared<EntityManager>()),
     _visualFacade(context->getFacade<VisualFacade>()){
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
+    _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
     std::shared_ptr<CollisionSystem> collisionSystem = std::make_shared<CollisionSystem>(_entityManager);
     _systems.push_back(std::make_shared<DrawSystem>(_entityManager, _visualFacade));
     _systems.push_back(std::make_shared<JumpSystem>(_entityManager, _inputFacade, *collisionSystem.get()));

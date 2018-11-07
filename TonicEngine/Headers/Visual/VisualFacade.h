@@ -10,7 +10,7 @@
 
 class VisualFacade : public IFacade {
 public:
-    VisualFacade();
+    VisualFacade(std::shared_ptr<WindowResolutionCalculator> windowResolutionCalculator);
     ~VisualFacade();
 
     void render(Renderlist renderlist);
@@ -46,6 +46,7 @@ public:
 private:
     bool init();
     WindowManager *_windowManager = nullptr;
+    std::shared_ptr<WindowResolutionCalculator> _windowResCalc = nullptr;
 };
 
 

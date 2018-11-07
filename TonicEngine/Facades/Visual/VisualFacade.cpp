@@ -2,7 +2,8 @@
 #include "../../Headers/Visual/VisualFacade.h"
 #include "../../Headers/Visual/Window.h"
 
-VisualFacade::VisualFacade() {
+VisualFacade::VisualFacade(std::shared_ptr<WindowResolutionCalculator> windowResolutionCalculator) {
+    _windowResCalc = windowResolutionCalculator;
     VisualFacade::init();
 }
 
@@ -11,7 +12,7 @@ VisualFacade::~VisualFacade() {
 }
 
 bool VisualFacade::init(){
-    _windowManager = new WindowManager();
+    _windowManager = new WindowManager(_windowResCalc);
 }
 
 void VisualFacade::openWindow() {
@@ -28,6 +29,7 @@ void VisualFacade::setTitle(const std::string &title){
 
 void VisualFacade::setResolution(int width, int height){
     _windowManager->setResolution(width, height);
+    _windowResCalc->setResolution(width, height);
 };
 
 void VisualFacade::enableFullscreen(){
@@ -48,12 +50,4 @@ void VisualFacade::pollEvents() {
 
 bool VisualFacade::isWindowClosed() {
     return _windowManager->isWindowClosed();
-}
-
-int VisualFacade::getWindowWidth() const {
-    return _windowManager->getWindowWidth();
-}
-
-int VisualFacade::getWindowHeight() const {
-    return _windowManager->getWindowHeight();
 }

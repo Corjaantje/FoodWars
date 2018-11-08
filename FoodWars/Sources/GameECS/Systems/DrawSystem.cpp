@@ -29,13 +29,12 @@ void DrawSystem::update(double dt) {
         _deltaTimeTotal = 0;
     }
     _renderList.textList.emplace_back(ShapeText(0, 0, _fpsString, 80, 75, 50, Colour(0, 0, 0, 0)));
-    _renderList.rectangleList.emplace_back(ShapeRectangle(640,480,0,0, Colour(173,216,230,0)));
     for(int i=0; i < drawComps.size(); i++){
         drawComps[i]->shape->addToRender(&_renderList);
     }
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         if(iterator.second->isMyTurn()){
-            ShapeText timerText {500, 0, std::to_string(iterator.second->getRemainingTime()).substr(0, 4) + " sec.", 100, 75, 50, Colour{0, 0, 0, 0}};
+            ShapeText timerText {(1600/2)-100, 0, std::to_string(iterator.second->getRemainingTime()).substr(0, 4) + " sec.", 200, 150, 100, Colour{0, 0, 0, 0}};
             timerText.addToRender(&_renderList);
             break;
         }

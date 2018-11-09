@@ -17,6 +17,8 @@ public:
 
     void setTitle(const std::string &title);
     void setResolution(int width, int height);
+    int getWindowWidth() const;
+    int getWindowHeight() const;
 
     void openWindow();
     void closeWindow();
@@ -43,7 +45,6 @@ public:
     bool isWindowClosed();
 private:
     bool init();
-public:
     WindowManager *_windowManager = nullptr;
     std::shared_ptr<WindowResolutionCalculator> _windowResCalc = nullptr;
 };

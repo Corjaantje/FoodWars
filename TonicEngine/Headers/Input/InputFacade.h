@@ -24,6 +24,7 @@ private:
     std::shared_ptr<KeyEventObservable> _keyEventObservable;
     std::shared_ptr<MouseEventObservable> _mouseEventObservable;
     std::shared_ptr<WindowEventObservable> _windowEventObservable;
+    int eventFilter(const SDL_Event* event);
     std::map<SDL_Keycode, KEY> _keycodeMap;
     std::shared_ptr<WindowResolutionCalculator> _windowResCalc;
     void init();

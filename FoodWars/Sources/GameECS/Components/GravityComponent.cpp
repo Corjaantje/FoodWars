@@ -3,3 +3,10 @@
 GravityComponent::GravityComponent() {
     gravityApplied = 100;
 }
+
+std::vector<std::string> GravityComponent::serialize() {
+    std::vector<std::string> data;
+    data.push_back(std::to_string(gravityApplied));
+
+    return data;
+}

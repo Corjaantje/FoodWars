@@ -6,8 +6,9 @@
 #define PROJECT_SWA_TURNCOMPONENT_H
 
 #include "Component.h"
+#include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
 
-class TurnComponent: public Component {
+class TurnComponent: public Component, ISerializable {
 public:
     TurnComponent();
     TurnComponent(int energy);
@@ -19,6 +20,7 @@ public:
     void lowerRemainingTime(double t);
     double getRemainingTime() const;
     bool isMyTurn() const;
+    std::vector<std::string> serialize() override;
 
 private:
     int _energy;

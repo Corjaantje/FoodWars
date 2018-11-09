@@ -5,7 +5,13 @@
 #include "../../../../TonicEngine/Headers/Storage/XMLWriter.h"
 #include "../../Storage/Parsers/WorldParser.h"
 #include "../../../../TonicEngine/Headers/Storage/StorageFacade.h"
-//#include "IBaseSystem.h"
+
+#include "../Components/GravityComponent.h"
+#include "../Components/MoveComponent.h"
+#include "../Components/TurnComponent.h"
+
+#include <algorithm>
+
 
 class StorageSystem{//}; : public IBaseSystem {
 private:
@@ -13,6 +19,12 @@ private:
     XMLWriter _writer;
 //    StorageFacade _storageFacade;
     std::shared_ptr<EntityManager> _entityManager;
+    template <typename Comp> void addComponentTypeOf(std::string compName, std::map<int, MyNode> &components, MyNode &rootNode);
+    void saveDrawables();
+    void saveGravity();
+    void saveMove();
+    void savePosition();
+    void saveturns();
 public:
     StorageSystem();
     ~StorageSystem();

@@ -43,6 +43,15 @@ bool TurnComponent::isMyTurn() const {
     return _myTurn;
 }
 
+std::vector<std::string> TurnComponent::serialize() {
+    std::vector<std::string> data;
+    data.push_back(std::to_string(_energy));
+    data.push_back(std::to_string(_myTurn));
+
+
+    return std::vector<std::string>();
+}
+
 
 
 

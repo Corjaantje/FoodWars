@@ -11,9 +11,7 @@ public:
     Renderlist() = default;
     ~Renderlist() = default;
 
-    void mergeShapeRectangles(std::vector<ShapeRectangle> _rectangleList);
-    void mergeShapeSprites( std::vector<ShapeSprite> _spriteLis);
-    void mergeShapeText(std::vector<ShapeText> _textList);
+    void clearLists();
 public:
     std::vector<ShapeRectangle> rectangleList;
     std::vector<ShapeSprite> spriteList;

@@ -45,12 +45,12 @@ public:
     void placeBlock(int x, int y);
     void undoPlaceBlock();
 
-    Renderlist drawCurrentScene();
+    void drawCurrentScene(Renderlist &renderlist);
 private:
     int roundXCoordToGrid(int x);
     int roundYCoordToGrid(int y);
 
-    void drawMarkedOffArea();
+    void drawMarkedOffArea(Renderlist &renderlist);
 };
 
 

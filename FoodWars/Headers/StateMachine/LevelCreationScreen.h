@@ -17,6 +17,7 @@ public:
 private:
     LevelBuilder _levelBuilder;
     std::shared_ptr<WindowResolutionCalculator> _windowResCalc;
+    Renderlist* _renderlist;
 };
 
 #endif //PROJECT_SWA_LEVELEDITORSCREEN_H

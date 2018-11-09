@@ -29,10 +29,10 @@ LevelCreationScreen::~LevelCreationScreen() {
 }
 
 void LevelCreationScreen::update(double deltaTime) {
-    Renderlist renderlist = _levelBuilder.drawCurrentScene();
-    _renderList.mergeShapeRectangles(renderlist.rectangleList);
-    _renderList.mergeShapeSprites(renderlist.spriteList);
-    _renderList.mergeShapeText(renderlist.textList);
+    _levelBuilder.drawCurrentScene(_renderList);
+    for(int i=0; i < _buttons.size(); i++){
+        _buttons[i]->addToRender(&_renderList);
+    }
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");
     _inputFacade->pollEvents();

@@ -2,6 +2,7 @@
 #include "../../../Headers/GameECS/Components/Collider/BoxColliderComponent.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
+#include "../../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
 
 LevelBuilder::LevelBuilder() {
     _entityManager = new EntityManager();
@@ -69,6 +70,9 @@ void LevelBuilder::decrementColorBlue() {
 void LevelBuilder::placeBlock(int x, int y) {
     int convertedX = roundXCoordToGrid(x);
     int convertedY = roundYCoordToGrid(y);
+    if(convertedY < BUILDING_LIMIT){
+        return;
+    }
     std::string gridCoord = std::to_string(convertedX) + std::to_string(convertedY);
     if(_CoordinateEntityMap.count(gridCoord) == 0){
         int entity = _entityManager->createEntity();
@@ -126,9 +130,10 @@ int LevelBuilder::roundYCoordToGrid(int y) {
 }
 
 void LevelBuilder::drawMarkedOffArea() {
-    int dim = 8;
-    for(int i = 0; i < 1600; i=i+8){
-        ShapeRectangle rect(dim, dim, i, 160, Colour(0, 0, 0, 255));
-        _renderList.rectangleList.emplace_back(rect);
-    }
+    int height = 8;
+    int width = 1600;
+    ShapeRectangle rect(width, height, 0, BUILDING_LIMIT-height, Colour(0, 0, 0, 255));
+    _renderList.rectangleList.emplace_back(rect);
+    ShapeRectangle rect2(width, height, 0, 900-height, Colour(0, 0, 0, 255));
+    _renderList.rectangleList.emplace_back(rect2);
 }

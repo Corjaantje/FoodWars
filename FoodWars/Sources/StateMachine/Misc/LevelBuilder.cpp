@@ -67,20 +67,26 @@ void LevelBuilder::decrementColorBlue() {
 }
 
 void LevelBuilder::placeBlock(int x, int y) {
-    int entity = _entityManager->createEntity();
-    auto momento = new EntityMomento(entity);
-    _momentoList.push_back(momento);
+    int convertedX = roundXCoordToGrid(x);
+    int convertedY = roundYCoordToGrid(y);
+    std::string gridCoord = std::to_string(convertedX) + std::to_string(convertedY);
+    if(_CoordinateEntityMap.count(gridCoord) == 0){
+        int entity = _entityManager->createEntity();
+        auto momento = new EntityMomento(entity);
+        _momentoList.push_back(momento);
 
-    if(_buildCollidable){
-        _entityManager->addComponentToEntity(entity, new BoxColliderComponent(_shapeDimension, _shapeDimension));
+        if(_buildCollidable){
+            _entityManager->addComponentToEntity(entity, new BoxColliderComponent(_shapeDimension, _shapeDimension));
+        }
+        if(_buildDamageable) {
+            //TODO Nog geen damageable component
+            //_entityManager->addComponentToEntity(entity, new DamageableComponent());
+        }
+        auto* drawComp = new DrawableComponent();
+        drawComp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle(_shapeDimension, _shapeDimension, convertedX, convertedY, Colour(_colorRed, _colorGreen, _colorBlue, 255)));
+        _entityManager->addComponentToEntity(entity, drawComp);
+        _CoordinateEntityMap[gridCoord] = entity;
     }
-    if(_buildDamageable) {
-        //TODO Nog geen damageable component
-        //_entityManager->addComponentToEntity(entity, new DamageableComponent());
-    }
-    auto* drawComp = new DrawableComponent();
-    drawComp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle(_shapeDimension, _shapeDimension, x-(_shapeDimension/2), y-(_shapeDimension/2), Colour(_colorRed, _colorGreen, _colorBlue, 255)));
-    _entityManager->addComponentToEntity(entity, drawComp);
 }
 
 void LevelBuilder::undoPlaceBlock() {
@@ -99,5 +105,30 @@ Renderlist LevelBuilder::drawCurrentScene() {
     for(int i=0; i < drawComps.size(); i++){
         drawComps[i]->shape->addToRender(&_renderList);
     }
+    drawMarkedOffArea();
     return _renderList;
+}
+
+int LevelBuilder::roundXCoordToGrid(int x) {
+    int remainder = x % MINIMAL_SHAPE_DIM;
+    if (remainder == 0)
+        return x;
+
+    return x - remainder;
+}
+
+int LevelBuilder::roundYCoordToGrid(int y) {
+    int remainder = y % MINIMAL_SHAPE_DIM;
+    if (remainder == 0)
+        return y;
+
+    return y - remainder;
+}
+
+void LevelBuilder::drawMarkedOffArea() {
+    int dim = 8;
+    for(int i = 0; i < 1600; i=i+8){
+        ShapeRectangle rect(dim, dim, i, 160, Colour(0, 0, 0, 255));
+        _renderList.rectangleList.emplace_back(rect);
+    }
 }

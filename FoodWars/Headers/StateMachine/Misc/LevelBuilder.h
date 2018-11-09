@@ -6,8 +6,8 @@
 #include "EntityMomento.h"
 #include "../../../../TonicEngine/Headers/Visual/Renderlist.h"
 
-const int MINIMAL_SHAPE_DIM = 32;
-const int MAXIMAL_SHAPE_DIM = 32;
+const int MINIMAL_SHAPE_DIM = 64;
+const int MAXIMAL_SHAPE_DIM = 64;
 const int COLOR_INCREMENT = 5;
 
 class LevelBuilder {
@@ -17,6 +17,7 @@ public:
 private:
     EntityManager* _entityManager = nullptr;
     std::vector<EntityMomento*> _momentoList;
+    std::map<std::string, int> _CoordinateEntityMap;
     Renderlist _renderList;
     bool _buildCollidable;
     bool _buildDamageable;
@@ -44,6 +45,11 @@ public:
     void undoPlaceBlock();
 
     Renderlist drawCurrentScene();
+private:
+    int roundXCoordToGrid(int x);
+    int roundYCoordToGrid(int y);
+
+    void drawMarkedOffArea();
 };
 
 

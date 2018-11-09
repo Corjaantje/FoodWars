@@ -1,5 +1,5 @@
 #include "../../../Headers/StateMachine/Misc/LevelBuilder.h"
-#include "../../../Headers/GameECS/Components/Collider/BoxColliderComponent.h"
+#include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
@@ -87,7 +87,7 @@ void LevelBuilder::placeBlock(int x, int y) {
         _momentoList.push_back(momento);
 
         if(_buildCollidable){
-            _entityManager->addComponentToEntity(entity, new BoxColliderComponent(_shapeDimension, _shapeDimension));
+            _entityManager->addComponentToEntity(entity, new BoxCollider(_shapeDimension, _shapeDimension));
         }
         if(_buildDamageable) {
             //TODO Nog geen damageable component

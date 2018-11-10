@@ -5,6 +5,6 @@ GeneralFacade::GeneralFacade() = default;
 
 GeneralFacade::~GeneralFacade() = default;
 
-void GeneralFacade::sleep(int millis) const {
+void GeneralFacade::sleep(double millis) const {
     SDL_Delay(static_cast<Uint32>(millis));
 }

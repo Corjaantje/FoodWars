@@ -7,20 +7,20 @@ CreditScreen::CreditScreen(std::shared_ptr<ScreenStateManager> context) : IScree
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
 
-    _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "creditscreen.png"});
+    _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper3.png"});
 
     // Backbutton
-    SpriteButton* backButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "arrow_back.png", [c = _context]() {  c->setActiveScreen<SettingsScreen>(); }, 50, 50, 10, 10, Colour{0,0,0,0}};
+    SpriteButton* backButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "backbutton.png", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 100, 100, 9, 9, Colour{0,0,0,0}};
     backButton->addToRender(&_renderList);
     _buttons.push_back(backButton);
 
-    _renderList.textList.emplace_back(ShapeText(720, 150, "Cast", 0, 200, 40, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(660, 250, "Lucas Bos", 0, 300, 35, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(660, 350, "Piet Burgmans", 0, 300, 35, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(660, 450, "Corne Hoskam", 0, 300, 35, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(660, 550, "Bryan van Lierop", 0, 300, 35, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(660, 650, "Maarten van Alebeek", 0, 300, 35, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(660, 750, "Shaun van Beurden", 0, 300, 35, Colour(0, 0, 0, 0)));
+    _renderList.textList.emplace_back(ShapeText(610, 130, "Credits", 0, 400, 70, Colour(255,120,112,0)));
+    _renderList.textList.emplace_back(ShapeText(660, 320, "Lucas Bos", 0, 300, 45, Colour(255,255,255,0)));
+    _renderList.textList.emplace_back(ShapeText(640, 406, "Piet Burgmans", 0, 340, 45, Colour(255,255,255,0)));
+    _renderList.textList.emplace_back(ShapeText(645, 492, "Corne Hoskam", 0, 330, 45, Colour(255,255,255,0)));
+    _renderList.textList.emplace_back(ShapeText(625, 578, "Bryan van Lierop", 0, 370, 45, Colour(255,255,255,0)));
+    _renderList.textList.emplace_back(ShapeText(610, 664, "Maarten van Alebeek", 0, 400, 45, Colour(255,255,255,0)));
+    _renderList.textList.emplace_back(ShapeText(620, 750, "Shaun van Beurden", 0, 380, 45, Colour(255,255,255,0)));
 }
 
 CreditScreen::~CreditScreen() {

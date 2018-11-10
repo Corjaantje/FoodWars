@@ -1,18 +1,26 @@
 #include "../../Headers/StateMachine/HighscoreScreen.h"
+#include "../../Headers/StateMachine/MainMenuScreen.h"
 
 HighscoreScreen::HighscoreScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
     visualFacade = context->getFacade<VisualFacade>();
     audioFacade = context->getFacade<AudioFacade>();
-    _inputFacade->getKeyEventObservable()->registerObserver(this);
+    _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
+    _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
 
-    _renderList.spriteList.emplace_back(ShapeSprite{640, 480, 0, 0, "wallpaper.png"});
+    _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper3.png"});
 
-    _renderList.textList.emplace_back(ShapeText(150, 200, "Level 1: ", 24, 150, 30, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(150, 250, "Level 2: ", 24, 150, 30, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(150, 300, "Level 3: ", 24, 150, 30, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(350, 200, "500 punten", 24, 120, 30, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(350, 250, "200 punten", 24, 120, 30, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(350, 300, "0 punten", 24, 120, 30, Colour(0, 0, 0, 0)));
+    // Backbutton
+    SpriteButton* backButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "backbutton.png", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 100, 100, 9, 9, Colour{0,0,0,0}};
+    backButton->addToRender(&_renderList);
+    _buttons.push_back(backButton);
+
+    _renderList.textList.emplace_back(ShapeText(610, 130, "Highscore", 0, 400, 70, Colour(255, 120, 112, 0)));
+    _renderList.textList.emplace_back(ShapeText(560, 350, "Level 1: ", 0, 200, 85, Colour(255, 255, 255, 0)));
+    _renderList.textList.emplace_back(ShapeText(560, 510, "Level 2: ", 0, 200, 85, Colour(255, 255, 255, 0)));
+    _renderList.textList.emplace_back(ShapeText(560, 670, "Level 3: ", 0, 200, 85, Colour(255, 255, 255, 0)));
+    _renderList.textList.emplace_back(ShapeText(800, 350, "500 punten", 0, 250, 85, Colour(255, 255, 255, 0)));
+    _renderList.textList.emplace_back(ShapeText(800, 510, "200 punten", 0, 250, 85, Colour(255, 255, 255, 0)));
+    _renderList.textList.emplace_back(ShapeText(800, 670, "0 punten", 0, 250, 85, Colour(255, 255, 255, 0)));
 }
 
 HighscoreScreen::~HighscoreScreen() {
@@ -28,8 +36,8 @@ void HighscoreScreen::update(double deltaTime) {
 }
 
 void HighscoreScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
+    if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down)
     {
-        _isClosed = true;
+        _context->setActiveScreen<MainMenuScreen>();
     }
 }

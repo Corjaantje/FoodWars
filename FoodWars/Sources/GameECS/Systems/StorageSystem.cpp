@@ -38,24 +38,25 @@ void StorageSystem::addComponentTypeOf(std::string compName, map<int, MyNode> &f
     }
 }
 
-void StorageSystem::addDrawables(MyNode& myNode, std::map<int, std::shared_ptr<DrawableComponent>> toSave, vector<MyNode*>& existingIDNodes, std::map<int, int> &nodeLocations) {
-    MyNode rootNode { myNode };
+void StorageSystem::addDrawables(MyDocument& myDoc, std::map<int, std::shared_ptr<DrawableComponent>> toSave, vector<MyNode*>& existingIDNodes, std::map<int, int> &nodeLocations) {
+    MyNode rootNode { myDoc.GetRoot() };
+//    myNode.Get
     for (auto const& drawComp : toSave) {
         MyNode IDNode { "id", nullptr };
         if (nodeLocations.count(drawComp.first))
         {
-            IDNode.SetParent(*existingIDNodes[nodeLocations[drawComp.first]]);
+            IDNode = *existingIDNodes[nodeLocations[drawComp.first]];
         } else {
             IDNode.SetParent(rootNode);
+            IDNode.SetValue(std::to_string(drawComp.first));
         }
-        IDNode.SetValue(std::to_string(drawComp.first));
 //        IDNode { std::to_string(drawComp.first), &rootNode };
 
         MyNode groupingNode { "drawablecomponent", &IDNode };
 
         std::vector<std::string> filling = drawComp.second->serialize();
 
-        MyNode drawNode{filling[0], &myNode};
+        MyNode drawNode{filling[0], &groupingNode};
 
         // Gathering values of the position
         MyNode positionNode{filling[3], &drawNode};
@@ -88,29 +89,150 @@ void StorageSystem::addDrawables(MyNode& myNode, std::map<int, std::shared_ptr<D
         drawNode.AddChild(positionNode);
         groupingNode.AddChild(drawNode);
         IDNode.AddChild(groupingNode);
+
+        myDoc.AddToRoot(IDNode);
+        rootNode.AddChild(IDNode);
+
+        if (!nodeLocations.count(drawComp.first)) {
+            existingIDNodes.push_back(&IDNode);
+            nodeLocations.insert(std::make_pair(drawComp.first, existingIDNodes.size() - 1));
+        }
+    }
+//    myDoc.AddToRoot()
+//    myNode.AddChild(rootNode);
+
+}
+
+void StorageSystem::addGravity(MyDocument& myDoc, std::map<int, std::shared_ptr<GravityComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations) {
+    MyNode rootNode { myDoc.GetRoot() };
+    for (auto const& gravComp : toSave) {
+        MyNode IDNode { "id", nullptr };
+        if (nodeLocations.count(gravComp.first))
+        {
+            IDNode = *existingIDNodes[nodeLocations[gravComp.first]];
+        } else {
+            IDNode.SetParent(rootNode);
+            IDNode.SetValue(std::to_string(gravComp.first));
+        }
+
+        MyNode groupingNode { "gravitycomponent", &IDNode };
+
+        std::vector<std::string> filling = gravComp.second->serialize();
+
+        MyNode gravNode{ "gravityapplied", &groupingNode};
+        gravNode.SetValue(filling[0]);
+
+
+        groupingNode.AddChild(gravNode);
+        IDNode.AddChild(groupingNode);
+
+        myDoc.AddToRoot(IDNode);
+        rootNode.AddChild(IDNode);
+
+        if (!nodeLocations.count(gravComp.first)) {
+            existingIDNodes.push_back(&IDNode);
+            nodeLocations.insert(std::make_pair(gravComp.first, existingIDNodes.size() - 1));
+        }
+    }
+}
+
+void StorageSystem::addMove(MyDocument& myDoc, std::map<int, std::shared_ptr<MoveComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations) {
+    MyNode rootNode { myDoc.GetRoot() };
+    for (auto const& moveComp : toSave) {
+        MyNode IDNode { "id", nullptr };
+        if (nodeLocations.count(moveComp.first))
+        {
+            IDNode = *existingIDNodes[nodeLocations[moveComp.first]];
+        } else {
+            IDNode.SetParent(rootNode);
+            IDNode.SetValue(std::to_string(moveComp.first));
+        }
+
+        MyNode groupingNode { "movecomponent", &IDNode };
+
+        std::vector<std::string> filling = moveComp.second->serialize();
+
+        MyNode moveNode{filling[0], &groupingNode};
+
+
+//        groupingNode.AddChild(gravNode);
+        IDNode.AddChild(groupingNode);
+
+        myDoc.AddToRoot(IDNode);
         rootNode.AddChild(IDNode);
 
         existingIDNodes.push_back(&IDNode);
-        nodeLocations.insert(std::make_pair(drawComp.first, existingIDNodes.size()-1));
+        nodeLocations.insert(std::make_pair(moveComp.first, existingIDNodes.size()-1));
     }
-    myNode.AddChild(rootNode);
-
 }
 
-void StorageSystem::addGravity(MyNode& my_doc, std::shared_ptr<GravityComponent> toSave) {
+void StorageSystem::addPosition(MyDocument& myDoc, std::map<int, std::shared_ptr<PositionComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations) {
+    MyNode rootNode { myDoc.GetRoot() };
+    for (auto const& gravComp : toSave) {
+        MyNode IDNode { "id", nullptr };
+        if (nodeLocations.count(gravComp.first))
+        {
+            IDNode = *existingIDNodes[nodeLocations[gravComp.first]];
+        } else {
+            IDNode.SetParent(rootNode);
+            IDNode.SetValue(std::to_string(gravComp.first));
+        }
 
+        MyNode groupingNode { "gravitycomponent", &IDNode };
+
+        std::vector<std::string> filling = gravComp.second->serialize();
+
+        MyNode xNode{ "xvelo", &groupingNode};
+        xNode.SetValue(filling[0]);
+        MyNode yNode { "yvelo", &groupingNode};
+        yNode.SetValue(filling[1]);
+
+        // Save positionComponent separately and add it again upon loading if the Entity ID is the same?
+        groupingNode.AddChild(xNode);
+        groupingNode.AddChild(yNode);
+        IDNode.AddChild(groupingNode);
+
+        myDoc.AddToRoot(IDNode);
+        rootNode.AddChild(IDNode);
+
+        existingIDNodes.push_back(&IDNode);
+        nodeLocations.insert(std::make_pair(gravComp.first, existingIDNodes.size()-1));
+    }
 }
 
-void StorageSystem::addMove(MyNode& my_doc, std::shared_ptr<MoveComponent> toSave) {
+void StorageSystem::addTurns(MyDocument& myDoc, std::map<int, std::shared_ptr<TurnComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations) {
+    MyNode rootNode { myDoc.GetRoot() };
+    for (auto const& turnComp : toSave) {
+        MyNode IDNode { "id", nullptr };
+        if (nodeLocations.count(turnComp.first))
+        {
+            IDNode = *existingIDNodes[nodeLocations[turnComp.first]];
+        } else {
+            IDNode.SetParent(rootNode);
+            IDNode.SetValue(std::to_string(turnComp.first));
+        }
 
-}
+        MyNode groupingNode { "gravitycomponent", &IDNode };
 
-void StorageSystem::addPosition(MyNode& my_doc, std::shared_ptr<PositionComponent> toSave) {
+        std::vector<std::string> filling = turnComp.second->serialize();
 
-}
+        MyNode energyNode{ "energy", &groupingNode};
+        energyNode.SetValue(filling[0]);
 
-void StorageSystem::addTurns(MyNode& my_doc, std::shared_ptr<TurnComponent> toSave) {
+        MyNode turnNode { "turn", &groupingNode};
+        turnNode.SetValue(filling[1]);
 
+
+        groupingNode.AddChild(energyNode);
+        groupingNode.AddChild(turnNode);
+        IDNode.AddChild(groupingNode);
+
+        myDoc.AddToRoot(IDNode);
+        rootNode.AddChild(IDNode);
+
+        existingIDNodes.push_back(&IDNode);
+        nodeLocations.insert(std::make_pair(turnComp.first, existingIDNodes.size()-1));
+    }
 }
 
 void StorageSystem::assignRelevantEntityManager(std::shared_ptr<EntityManager> entityManager) {
@@ -215,7 +337,11 @@ void StorageSystem::saveWorld() {
     std::map<int, int> nodeLocations;
     vector<MyNode*> nodeIDs;
 
-    addDrawables(trueRootNode, _entityManager->getAllEntitiesWithComponent<DrawableComponent>(), nodeIDs, nodeLocations);
+    addDrawables(myDoc, _entityManager->getAllEntitiesWithComponent<DrawableComponent>(), nodeIDs, nodeLocations);
+    addGravity(myDoc, _entityManager->getAllEntitiesWithComponent<GravityComponent>(), nodeIDs, nodeLocations);
+    //addMove(myDoc, _entityManager->getAllEntitiesWithComponent<MoveComponent>(), nodeIDs, nodeLocations);
+    //addPosition(myDoc, _entityManager->getAllEntitiesWithComponent<PositionComponent>(), nodeIDs, nodeLocations);
+    //addTurns(myDoc, _entityManager->getAllEntitiesWithComponent<TurnComponent>(), nodeIDs, nodeLocations);
     /*
     for (auto const& comp : draws)
     {
@@ -306,7 +432,7 @@ void StorageSystem::saveWorld() {
     // vector[0] > component name
     // vector[1] > values separated by an unusual symbol?
     // Or maybe the names of each grouping instead?
-    myDoc.AddToRoot(trueRootNode);
+//    myDoc.AddToRoot(trueRootNode);
     _writer.WriteXMLFile(myDoc, "LevelOne.xml");
     // cleaning of pointers to heap before exiting scope
 //    for (auto const& point : nodeIDs)

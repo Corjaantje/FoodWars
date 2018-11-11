@@ -12,7 +12,7 @@ DrawableComponent::~DrawableComponent() {
 
 std::vector<std::string> DrawableComponent::serialize() {
     std::vector<std::string> data;
-    data.emplace_back("shape");
+    data.emplace_back("drawablecomponent");
     data.push_back(std::to_string(shape->xPos));
     data.push_back(std::to_string(shape->yPos));
     data.push_back(std::to_string(shape->getHeight()));

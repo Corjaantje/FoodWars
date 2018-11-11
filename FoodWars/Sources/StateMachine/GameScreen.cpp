@@ -11,32 +11,28 @@
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
 GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context),
-    _audioFacade(context->getFacade<AudioFacade>()),
-    _entityManager(std::make_shared<EntityManager>()),
-    _visualFacade(context->getFacade<VisualFacade>()){
+                                                                      _entityManager(std::make_shared<EntityManager>()) {
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
-    _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
-    std::shared_ptr<CollisionSystem> collisionSystem = std::make_shared<CollisionSystem>(_entityManager);
-    _systems.push_back(std::make_shared<DrawSystem>(_entityManager, _visualFacade));
-    _systems.push_back(std::make_shared<JumpSystem>(_entityManager, _inputFacade, *collisionSystem.get()));
-    _systems.push_back(std::make_shared<MoveSystem>(_entityManager, _inputFacade, *collisionSystem.get()));
+    CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };
+    _systems.push_back(new JumpSystem { _entityManager, _inputFacade, *collisionSystem } );
+    _systems.push_back(new MoveSystem { _entityManager, _inputFacade, *collisionSystem });
     _systems.push_back(collisionSystem);
-    _systems.push_back(std::make_shared<GravitySystem>(_entityManager, *collisionSystem.get()));
+    _systems.push_back(new GravitySystem { _entityManager, *collisionSystem });
+    _systems.push_back(new DrawSystem {_entityManager, visualFacade});
     int player = _entityManager->createEntity();
 
-    DrawableComponent* drawableComponent = new DrawableComponent;
+    DrawableComponent *drawableComponent = new DrawableComponent;
     drawableComponent->shape = std::make_unique<ShapeSprite>(ShapeSprite({32, 48, 0, 0, "PlayerW_R0.png"}));
     _entityManager->addComponentToEntity(player, drawableComponent);
     _entityManager->addComponentToEntity(player, new BoxCollider(32, 48));
-    TurnComponent* turnComponent = new TurnComponent;
+    TurnComponent *turnComponent = new TurnComponent;
     turnComponent->switchTurn(true);
     _entityManager->addComponentToEntity(player, new MoveComponent);
     _entityManager->addComponentToEntity(player, new PositionComponent{32, 0});
     _entityManager->addComponentToEntity(player, turnComponent);
     _entityManager->addComponentToEntity(player, new GravityComponent());
 
-
-    DrawableComponent* drawableComponent2 = new DrawableComponent;
+    DrawableComponent *drawableComponent2 = new DrawableComponent;
     drawableComponent2->shape = std::make_unique<ShapeSprite>(ShapeSprite(32, 48, 0, 0, "PlayerL_L1.png"));
     player = _entityManager->createEntity();
     _entityManager->addComponentToEntity(player, drawableComponent2);
@@ -46,26 +42,28 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     _entityManager->addComponentToEntity(player, new BoxCollider(32, 48));
     _entityManager->addComponentToEntity(player, new GravityComponent());
 
-    std::shared_ptr<TurnSystem> turnSystem = std::make_shared<TurnSystem>(_entityManager);
+    TurnSystem* turnSystem = new TurnSystem {_entityManager};
     _systems.push_back(turnSystem);
     turnSystem->getRelevantEntities();
     turnSystem->setTurnTime(20);
 }
 
-void GameScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down)
-    {
+void GameScreen::update(std::shared_ptr<KeyEvent> event) {
+    if (event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down) {
         _context->setActiveScreen<MainMenuScreen>();
     }
 }
 
 GameScreen::~GameScreen() {
-}
+    for (auto const &iterator : _systems) {
+        delete iterator;
+    }
+};
 
 void GameScreen::update(double deltaTime) {
-    _audioFacade->playMusic("wildwest");
+    audioFacade->playMusic("wildwest");
     _inputFacade->pollEvents();
-    for(auto const &iterator : _systems){
+    for (auto const &iterator : _systems) {
         iterator->update(deltaTime);
     }
 }

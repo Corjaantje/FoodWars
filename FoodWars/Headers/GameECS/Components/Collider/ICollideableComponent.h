@@ -5,7 +5,7 @@
 
 class ICollideableComponent: public Component {
 public:
-    virtual ~ICollideableComponent(){}
+    ~ICollideableComponent() override = default;
 };
 
 #endif //PROJECT_SWA_ICOLLIDEABLECOMPONENT_H

@@ -38,42 +38,63 @@ void StorageSystem::addComponentTypeOf(std::string compName, map<int, MyNode> &f
     }
 }
 
-void StorageSystem::addDrawables(MyNode& myNode, std::shared_ptr<DrawableComponent> toSave) {
-    std::vector<std::string> filling = toSave->serialize();
+void StorageSystem::addDrawables(MyNode& myNode, std::map<int, std::shared_ptr<DrawableComponent>> toSave, vector<MyNode*>& existingIDNodes, std::map<int, int> &nodeLocations) {
+    MyNode rootNode { myNode };
+    for (auto const& drawComp : toSave) {
+        MyNode IDNode { "id", nullptr };
+        if (nodeLocations.count(drawComp.first))
+        {
+            IDNode.SetParent(*existingIDNodes[nodeLocations[drawComp.first]]);
+        } else {
+            IDNode.SetParent(rootNode);
+        }
+        IDNode.SetValue(std::to_string(drawComp.first));
+//        IDNode { std::to_string(drawComp.first), &rootNode };
 
-    MyNode drawNode{ filling[0], &myNode};
+        MyNode groupingNode { "drawablecomponent", &IDNode };
 
-    // Gathering values of the position
-    MyNode positionNode { "position", &drawNode};
+        std::vector<std::string> filling = drawComp.second->serialize();
 
-    MyNode xPos { "xpos", &positionNode};
-    xPos.SetValue(filling[1]);
-    MyNode yPos { "ypos", &positionNode};
-    yPos.SetValue(filling[2]);
+        MyNode drawNode{filling[0], &myNode};
 
-    positionNode.AddChild(yPos);
-    positionNode.AddChild(xPos);
+        // Gathering values of the position
+        MyNode positionNode{filling[3], &drawNode};
 
-    // Gathering values of the "shape"
-    MyNode shapeNode { "shape", &drawNode};
+        MyNode xPos{"xpos", &positionNode};
+        xPos.SetValue(filling[1]);
+        MyNode yPos{"ypos", &positionNode};
+        yPos.SetValue(filling[2]);
 
-    MyNode widthNode { "height", &shapeNode };
-    widthNode.SetValue(filling[3]);
-    MyNode heightNode { "width", &shapeNode };
-    heightNode.SetValue(filling[4]);
-    // MyNode colorNode { "color", &shape_node };
-    // colorNode.SetValue(IDK MAN)
+        positionNode.AddChild(yPos);
+        positionNode.AddChild(xPos);
 
-    shapeNode.AddChild(widthNode);
-    shapeNode.AddChild(heightNode);
-    //shape_node.AddChild(colorNode);
+        // Gathering values of the "shape"
+        MyNode shapeNode{"shape", &drawNode};
+
+        MyNode widthNode{"height", &shapeNode};
+        widthNode.SetValue(filling[4]);
+        MyNode heightNode{"width", &shapeNode};
+        heightNode.SetValue(filling[5]);
+        // MyNode colorNode { "color", &shape_node };
+        // colorNode.SetValue(IDK MAN)
+
+        shapeNode.AddChild(widthNode);
+        shapeNode.AddChild(heightNode);
+        //shape_node.AddChild(colorNode);
 
 
 
-    drawNode.AddChild(shapeNode);
-    drawNode.AddChild(positionNode);
+        drawNode.AddChild(shapeNode);
+        drawNode.AddChild(positionNode);
+        groupingNode.AddChild(drawNode);
+        IDNode.AddChild(groupingNode);
+        rootNode.AddChild(IDNode);
 
-    myNode.AddChild(drawNode);
+        existingIDNodes.push_back(&IDNode);
+        nodeLocations.insert(std::make_pair(drawComp.first, existingIDNodes.size()-1));
+    }
+    myNode.AddChild(rootNode);
+
 }
 
 void StorageSystem::addGravity(MyNode& my_doc, std::shared_ptr<GravityComponent> toSave) {
@@ -97,19 +118,24 @@ void StorageSystem::assignRelevantEntityManager(std::shared_ptr<EntityManager> e
 }
 
 void StorageSystem::saveWorld() {
-    WorldParser worldParser {};
-    MyNode initialRootNode {"root", nullptr};
-    MyDocument initialMyDoc { initialRootNode };
+    int iTesting = 4;
+    if (iTesting == 1) {
+        WorldParser worldParser{};
+        MyNode initialRootNode{"root", nullptr};
+        MyDocument initialMyDoc{initialRootNode};
 
-    // DrawableComponent
-    // GravityComponent
-    // MoveComponent
-    // PositionComponent
-    // TurnComponent
-    initialMyDoc = worldParser.ParseDrawableComponents(initialMyDoc, _entityManager->getAllEntitiesWithComponent<DrawableComponent>());
+        // DrawableComponent
+        // GravityComponent
+        // MoveComponent
+        // PositionComponent
+        // TurnComponent
+        initialMyDoc = worldParser.ParseDrawableComponents(initialMyDoc,
+                                                           _entityManager->getAllEntitiesWithComponent<DrawableComponent>());
 
-    std::string test1;
-    test1 = "This code works, right?";
+        std::string test1;
+        test1 = "This code works, right?";
+        _writer.WriteXMLFile(initialMyDoc, "LevelOne.xml");
+    }
 
     // map[0] > <EntityID> as base
     //            <DrawComponent>
@@ -179,15 +205,18 @@ void StorageSystem::saveWorld() {
 //    MoveComponent();
 //    PositionComponent();
 //    TurnComponent();
-    std::map<int, std::shared_ptr<DrawableComponent>> draws {_entityManager->getAllEntitiesWithComponent<DrawableComponent>()};
-    std::map<int, std::shared_ptr<GravityComponent>> gravs {_entityManager->getAllEntitiesWithComponent<GravityComponent>()};
-    std::map<int, std::shared_ptr<MoveComponent>> moves {_entityManager->getAllEntitiesWithComponent<MoveComponent>()};
-    std::map<int, std::shared_ptr<PositionComponent>> positions {_entityManager->getAllEntitiesWithComponent<PositionComponent>()};
-    std::map<int, std::shared_ptr<TurnComponent>> turns {_entityManager->getAllEntitiesWithComponent<TurnComponent>()};
+//    std::map<int, std::shared_ptr<DrawableComponent>> draws {_entityManager->getAllEntitiesWithComponent<DrawableComponent>()};
+//    std::map<int, std::shared_ptr<GravityComponent>> gravs {_entityManager->getAllEntitiesWithComponent<GravityComponent>()};
+//    std::map<int, std::shared_ptr<MoveComponent>> moves {_entityManager->getAllEntitiesWithComponent<MoveComponent>()};
+//    std::map<int, std::shared_ptr<PositionComponent>> positions {_entityManager->getAllEntitiesWithComponent<PositionComponent>()};
+//    std::map<int, std::shared_ptr<TurnComponent>> turns {_entityManager->getAllEntitiesWithComponent<TurnComponent>()};
 
     vector<int> entityIDs;
     std::map<int, int> nodeLocations;
     vector<MyNode*> nodeIDs;
+
+    addDrawables(trueRootNode, _entityManager->getAllEntitiesWithComponent<DrawableComponent>(), nodeIDs, nodeLocations);
+    /*
     for (auto const& comp : draws)
     {
         // Check if the Entity ID already exists
@@ -211,7 +240,7 @@ void StorageSystem::saveWorld() {
 //        MyNode* insertion = &IDNodes[comp.first];
 //        addDrawables(*insertion, comp.second);
         addDrawables(*nodeIDs[nodeLocations[comp.first]], comp.second);
-    }
+    } */
     std::string test;
     test = "I get here, right?";
     /*
@@ -277,12 +306,13 @@ void StorageSystem::saveWorld() {
     // vector[0] > component name
     // vector[1] > values separated by an unusual symbol?
     // Or maybe the names of each grouping instead?
+    myDoc.AddToRoot(trueRootNode);
     _writer.WriteXMLFile(myDoc, "LevelOne.xml");
     // cleaning of pointers to heap before exiting scope
-    for (auto const& point : nodeIDs)
-    {
-        delete point;
-    }
+//    for (auto const& point : nodeIDs)
+//    {
+//        delete point;
+//    }
 }
 
 bool StorageSystem::loadWorld() {

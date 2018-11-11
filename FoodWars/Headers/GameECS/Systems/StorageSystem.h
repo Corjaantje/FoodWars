@@ -20,7 +20,7 @@ private:
 //    StorageFacade _storageFacade;
     std::shared_ptr<EntityManager> _entityManager;
     template <typename Comp> void addComponentTypeOf(std::string compName, std::map<int, MyNode> &components, MyNode &rootNode);
-    void addDrawables(MyNode& myNode, std::shared_ptr<DrawableComponent> toSave);
+    void addDrawables(MyNode& myNode, std::map<int, std::shared_ptr<DrawableComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
     void addGravity(MyNode& myNode, std::shared_ptr<GravityComponent> toSave);
     void addMove(MyNode& myNode, std::shared_ptr<MoveComponent> toSave);
     void addPosition(MyNode& myNode, std::shared_ptr<PositionComponent> toSave);

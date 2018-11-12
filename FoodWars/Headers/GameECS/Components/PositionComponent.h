@@ -1,5 +1,6 @@
+#include "Component.h"
 
-class PositionComponent {
+class PositionComponent : public Component {
 public:
     int X;
     int Y;

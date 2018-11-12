@@ -7,6 +7,9 @@
 #include "../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../Headers/GameECS/Components/GravityComponent.h"
+#include "../../Headers/GameECS/Components/MoveComponent.h"
+#include "../../Headers/GameECS/Systems/CollisionSystem.h"
+#include "../../Headers/GameECS/Systems/JumpSystem.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 #include "../../Headers/StateMachine/PauseScreen.h"
 
@@ -14,8 +17,9 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager> &context, Entit
     _entityManager(std::make_shared<EntityManager>(entityManager)),
     _audioFacade(context->getFacade<AudioFacade>()),
     _visualFacade(context->getFacade<VisualFacade>()){
-    _inputFacade->getKeyEventObservable()->registerObserver(this);
+    _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
+    std::shared_ptr<CollisionSystem> collisionSystem = std::make_shared<CollisionSystem>(_entityManager);
     _systems.push_back(std::make_shared<DrawSystem>(_entityManager, _visualFacade));
     _systems.push_back(std::make_shared<MoveSystem>(_entityManager, _inputFacade));
     _systems.push_back(std::make_shared<GravitySystem>(_entityManager));

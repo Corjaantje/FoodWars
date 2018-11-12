@@ -5,7 +5,8 @@
 MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
     visualFacade = context->getFacade<VisualFacade>();
     audioFacade = context->getFacade<AudioFacade>();
-    _inputFacade->getKeyEventObservable()->registerObserver(this);
+    _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
+
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
     _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper2.png"});
 
@@ -25,7 +26,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _buttons.push_back(upgradesButton);
 
     // Settings
-    SpriteButton* settingsButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<SettingsScreen>(); }, 120, 120, 1335, 10, Colour{0,0,0,0}};
+    SpriteButton* settingsButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "settings.png", [c = _context]() {  c->setActiveScreen<SettingsScreen>(); }, 120, 120, 1335, 10, Colour{0,0,0,0}};
     settingsButton->addToRender(&_renderList);
     _buttons.push_back(settingsButton);
 
@@ -40,12 +41,12 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _buttons.push_back(creditsButton);
 
     // Quit
-    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this]() { this->quitGame(); }, 120, 120, 1476, 10, Colour{0,0,0,0}};
+    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [this]() { this->quitGame(); }, 120, 120, 1476, 10, Colour{0,0,0,0}};
     quitButton->addToRender(&_renderList);
     _buttons.push_back(quitButton);
 
     // High Scores
-    SpriteButton* highScoresButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}};
+    SpriteButton* highScoresButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "trophy.png", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}};
     highScoresButton->addToRender(&_renderList);
     _buttons.push_back(highScoresButton);
 }
@@ -63,7 +64,7 @@ void MainMenuScreen::update(double deltaTime) {
 }
 
 void MainMenuScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
+    if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }

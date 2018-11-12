@@ -1,3 +1,4 @@
+#include <utility>
 #include <iostream>
 #include <sstream>
 #include "../../../Headers/GameECS/Systems/DrawSystem.h"
@@ -5,16 +6,14 @@
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
+#include "../../../Headers/GameECS/Components/PositionComponent.h"
 
 DrawSystem::DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade){
-    _entityManager = entityManager;
-    _visualFacade = visualFacade;
-    std::cout << "Entity manager: " << entityManager << std::endl;
+    _entityManager = std::move(entityManager);
+    _visualFacade = std::move(visualFacade);
 }
 
-DrawSystem::~DrawSystem() {
-
-}
+DrawSystem::~DrawSystem() = default;
 
 void DrawSystem::update(double dt) {
     std::map<int, std::shared_ptr<DrawableComponent>> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
@@ -29,8 +28,16 @@ void DrawSystem::update(double dt) {
         _deltaTimeTotal = 0;
     }
     _renderList.textList.emplace_back(ShapeText(0, 0, _fpsString, 80, 75, 50, Colour(0, 0, 0, 0)));
-    for(int i=0; i < drawComps.size(); i++){
-        drawComps[i]->shape->addToRender(&_renderList);
+    _renderList.rectangleList.emplace_back(ShapeRectangle(640,480,0,0, Colour(173,216,230,0)));
+
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<DrawableComponent>()) {
+        std::shared_ptr<PositionComponent> positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
+        if(positionComponent) {
+            // todo: scale to match current resolution
+            iterator.second->shape->xPos = positionComponent->X;
+            iterator.second->shape->yPos = positionComponent->Y;
+        }
+        iterator.second->shape->addToRender(&_renderList);
     }
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         if(iterator.second->isMyTurn()){
@@ -41,4 +48,3 @@ void DrawSystem::update(double dt) {
     }
     _visualFacade->render(_renderList);
 }
-

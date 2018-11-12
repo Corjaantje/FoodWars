@@ -1,9 +1,6 @@
 #include <utility>
 
-//
-// Created by Lucas on 11/10/2018.
-//
-
+#include <utility>
 #include "../../Headers/StateMachine/ScreenStateManager.h"
 
 ScreenStateManager::ScreenStateManager() : _currentState(nullptr) {
@@ -12,4 +9,8 @@ ScreenStateManager::ScreenStateManager() : _currentState(nullptr) {
 
 std::shared_ptr<IScreen> ScreenStateManager::getCurrentState() {
     return _currentState;
+}
+
+void ScreenStateManager::setWindowResolutionCalculator(std::shared_ptr<WindowResolutionCalculator> windowResCalc) {
+    _windowResCalc = std::move(windowResCalc);
 }

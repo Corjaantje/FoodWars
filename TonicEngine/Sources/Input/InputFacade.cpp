@@ -6,35 +6,57 @@ InputFacade::InputFacade() {
     init();
 }
 
-InputFacade::~InputFacade() {
+InputFacade::~InputFacade() = default;
 
+void InputFacade::setWindowResolutionCalculator(std::shared_ptr<WindowResolutionCalculator> windowResCalc) {
+    _windowResCalc = windowResCalc;
 }
 
 void InputFacade::init() {
     _keyEventObservable = std::make_shared<KeyEventObservable>();
     _mouseEventObservable = std::make_shared<MouseEventObservable>();
     _windowEventObservable = std::make_shared<WindowEventObservable>();
-    _keycodeMap[SDLK_w] = KEY::KEY_W;
-    _keycodeMap[SDLK_a] = KEY::KEY_A;
-    _keycodeMap[SDLK_s] = KEY::KEY_S;
-    _keycodeMap[SDLK_d] = KEY::KEY_D;
-    _keycodeMap[SDLK_ESCAPE] = KEY::KEY_ESCAPE;
 }
 
 // Polls the key input events
 void InputFacade::pollEvents() {
     SDL_Event event;
+    //SDL_SetEventFilter(eventFilter);
 
-    if(SDL_PollEvent(&event)) {
+    SDL_EventState(SDL_KEYDOWN, SDL_IGNORE);
+    SDL_EventState(SDL_KEYUP, SDL_IGNORE);
+
+    while(SDL_PollEvent(&event)) {
         switch(event.type) {
-            case SDL_KEYDOWN: { // When a key is pressed
-                std::shared_ptr<KeyEvent> keyEvent = std::make_shared<KeyEvent>(_keycodeMap[event.key.keysym.sym], KeyEventType::Down);
-                _keyEventObservable.get()->notify(keyEvent);
+            case SDL_MOUSEBUTTONDOWN: { // When a click is registered
+                // check if left or right is clicked
+                //
+                //
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    std::shared_ptr<MouseEvent> mouseEvent = std::make_shared<MouseEvent>(
+                            _windowResCalc->getConvertedxPosClick(event.motion.x),
+                            _windowResCalc->getConvertedyPosClick(event.motion.y), MouseEventType::Down, MouseClickType::Left);
+                    _mouseEventObservable.get()->notify(mouseEvent);
+                } else if (event.button.button == SDL_BUTTON_RIGHT) {
+                    std::shared_ptr<MouseEvent> mouseEvent = std::make_shared<MouseEvent>(
+                            _windowResCalc->getConvertedxPosClick(event.motion.x),
+                            _windowResCalc->getConvertedyPosClick(event.motion.y), MouseEventType::Down, MouseClickType::Right);
+                    _mouseEventObservable.get()->notify(mouseEvent);
+                }
                 break;
             }
-            case SDL_MOUSEBUTTONDOWN: { // When a click is registered
-                std::shared_ptr<MouseEvent> mouseEvent = std::make_shared<MouseEvent>(event.motion.x, event.motion.y);
-                _mouseEventObservable.get()->notify(mouseEvent);
+            case SDL_MOUSEBUTTONUP: { // When a click is released
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    std::shared_ptr<MouseEvent> mouseEvent = std::make_shared<MouseEvent>(
+                            _windowResCalc->getConvertedxPosClick(event.motion.x),
+                            _windowResCalc->getConvertedyPosClick(event.motion.y), MouseEventType::Up, MouseClickType::Left);
+                    _mouseEventObservable.get()->notify(mouseEvent);
+                } else if (event.button.button == SDL_BUTTON_RIGHT) {
+                    std::shared_ptr<MouseEvent> mouseEvent = std::make_shared<MouseEvent>(
+                            _windowResCalc->getConvertedxPosClick(event.motion.x),
+                            _windowResCalc->getConvertedyPosClick(event.motion.y), MouseEventType::Up, MouseClickType::Right);
+                    _mouseEventObservable.get()->notify(mouseEvent);
+                }
                 break;
             }
             case SDL_QUIT: { // When the window is closed
@@ -56,6 +78,7 @@ void InputFacade::pollEvents() {
                 break;
         }
     }
+    _keyEventObservable->update();
 }
 
 std::shared_ptr<KeyEventObservable> InputFacade::getKeyEventObservable() {
@@ -68,4 +91,10 @@ std::shared_ptr<MouseEventObservable> InputFacade::getMouseEventObservable() {
 
 std::shared_ptr<WindowEventObservable> InputFacade::getWindowEventObservable() {
     return _windowEventObservable;
+}
+
+int InputFacade::eventFilter(const SDL_Event *event) {
+    if(event->type == SDL_KEYDOWN || event->type == SDL_KEYUP)
+        return 0;
+    return 1;
 }

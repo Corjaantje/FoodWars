@@ -6,6 +6,9 @@ KeyEventObservable::KeyEventObservable() {
     _keycodeMap[SDL_SCANCODE_S] = KEY::KEY_S;
     _keycodeMap[SDL_SCANCODE_D] = KEY::KEY_D;
     _keycodeMap[SDL_SCANCODE_ESCAPE] = KEY::KEY_ESCAPE;
+    _keycodeMap[SDL_SCANCODE_PAGEUP] = KEY::KEY_PAGEUP;
+    _keycodeMap[SDL_SCANCODE_PAGEDOWN] = KEY::KEY_PAGEDOWN;
+    _keycodeMap[SDL_SCANCODE_HOME] = KEY::KEY_HOME;
     for (auto const &iterator: _keycodeMap) {
         _pressedKeys[iterator.second] = false;
     }

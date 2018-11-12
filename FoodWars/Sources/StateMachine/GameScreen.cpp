@@ -54,8 +54,9 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
     if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down)
-    {
         _context->setActiveScreen<MainMenuScreen>();
+    if(event->getKey() == KEY::KEY_PAGEUP) {
+        
     }
 }
 

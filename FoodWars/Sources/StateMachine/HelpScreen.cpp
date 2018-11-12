@@ -1,34 +1,26 @@
 #include "../../Headers/StateMachine/HelpScreen.h"
+#include "../../Headers/StateMachine/MainMenuScreen.h"
 
 HelpScreen::HelpScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
     visualFacade = context->getFacade<VisualFacade>();
     audioFacade = context->getFacade<AudioFacade>();
-    _inputFacade->getKeyEventObservable()->registerObserver(this);
+    _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
+    _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
 
-    _renderList.spriteList.emplace_back(ShapeSprite{640, 480, 0, 0, "howtoplay.png"});
+    _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper4.png"});
 
-    /*Button *backButton = new Button{*_inputFacade->getMouseEventObservable(), "Back to Game",
-                                     [c = _context]() { c->setActiveScreen<MainMenuScreen>(); }, 150, 40, 0, 0};
+    // Backbutton
+    SpriteButton* backButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "backbutton.png", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 100, 100, 9, 9, Colour{0,0,0,0}};
     backButton->addToRender(&_renderList);
-    _buttons.push_back(backButton);*/
+    _buttons.push_back(backButton);
 
-    _renderList.spriteList.emplace_back(ShapeSprite{40, 40, 10, 10, "arrow_back.png"});
-
-    _renderList.textList.emplace_back(ShapeText(440, 250, "Controls", 24, 150, 30, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(440, 300, "Move left by pressing A", 24, 150, 22, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(440, 350, "Move right by pressing D", 24, 152, 22, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(440, 400, "Jump by pressing spacebar", 24, 154, 22, Colour(0, 0, 0, 0)));
-
-    /*_renderList.textList.emplace_back(ShapeText(130, 90, "Controls", 180, 400, 40, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(130, 140, "A player can move left by using A", 180, 400, 40, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(130, 190, "A player can move right by using D", 100, 400, 35, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(130, 240, "A player can jump by pressing spacebar", 100, 400, 35, Colour(0, 0, 0, 0)));
-    _renderList.textList.emplace_back(ShapeText(80, 290, "How to play", 100, 500, 35, Colour(0, 0, 0, 0)));*/
-    //_renderList.spriteList.emplace_back(ShapeSprite(55, 340, 550, 35, "howtoplay.png"));
+    _renderList.textList.emplace_back(ShapeText(1040, 480, "'A'", 0, 30, 30, Colour(255, 255, 255, 0)));
+    _renderList.textList.emplace_back(ShapeText(1040, 600, "'D'", 0, 30, 30, Colour(255, 255, 255, 0)));
+    _renderList.textList.emplace_back(ShapeText(1040, 720, "'Spacebar'", 0, 200, 30, Colour(255, 255, 255, 0)));
 }
 
 HelpScreen::~HelpScreen() {
-    for(Button* button: _buttons) {
+    for(IShape* button: _buttons) {
         delete button;
     }
 }

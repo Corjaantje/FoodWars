@@ -60,7 +60,6 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new UpgradesScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new HelpScreen(screenStateManager));
-    screenStateManager->setActiveScreen<HelpScreen>();
     screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new LevelEditorScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));

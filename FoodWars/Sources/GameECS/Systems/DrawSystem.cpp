@@ -11,6 +11,7 @@
 DrawSystem::DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade){
     _entityManager = std::move(entityManager);
     _visualFacade = std::move(visualFacade);
+    _timeLast = std::chrono::steady_clock::now().time_since_epoch();
 }
 
 DrawSystem::~DrawSystem() = default;
@@ -21,11 +22,12 @@ void DrawSystem::update(double dt) {
     _renderList.spriteList.clear();
     _renderList.textList.clear();
     _updateCallCount++;
-    _deltaTimeTotal += dt;
-    if(_updateCallCount >= 10){
-        _fpsString = std::to_string((10/_deltaTimeTotal)).substr(0, 2) + " FPS";
+    std::chrono::duration<double> currentTime = std::chrono::steady_clock::now().time_since_epoch();
+    double loggen = currentTime.count() - _timeLast.count();
+    if(loggen >= 1) {
+        _fpsString = std::to_string(_updateCallCount) + " FPS";
+        _timeLast = std::chrono::steady_clock::now().time_since_epoch();
         _updateCallCount = 0;
-        _deltaTimeTotal = 0;
     }
     _renderList.textList.emplace_back(ShapeText(0, 0, _fpsString, 80, 75, 50, Colour(0, 0, 0, 0)));
     _renderList.rectangleList.emplace_back(ShapeRectangle(640,480,0,0, Colour(173,216,230,0)));

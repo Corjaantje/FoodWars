@@ -20,9 +20,11 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager> &context, Entit
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
     std::shared_ptr<CollisionSystem> collisionSystem = std::make_shared<CollisionSystem>(_entityManager);
+    _systems.push_back(std::make_shared<JumpSystem>(_entityManager, _inputFacade, *collisionSystem));
+    _systems.push_back(std::make_shared<MoveSystem>(_entityManager, _inputFacade, *collisionSystem));
+    _systems.push_back(std::make_shared<GravitySystem>(_entityManager, *collisionSystem));
+    _systems.push_back(collisionSystem);
     _systems.push_back(std::make_shared<DrawSystem>(_entityManager, _visualFacade));
-    _systems.push_back(std::make_shared<MoveSystem>(_entityManager, _inputFacade));
-    _systems.push_back(std::make_shared<GravitySystem>(_entityManager));
 
     std::shared_ptr<TurnSystem> turnSystem = std::make_shared<TurnSystem>(_entityManager);
     _systems.push_back(turnSystem);

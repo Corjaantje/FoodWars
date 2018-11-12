@@ -77,14 +77,12 @@ int main(int argc, char** argv)
     std::chrono::duration<double> timeLast = std::chrono::steady_clock::now().time_since_epoch();
 
     while(!screenStateManager->getCurrentState()->isWindowClosed()) {
-        std::chrono::duration<double> deltaTime = (std::chrono::steady_clock::now().time_since_epoch() - timeLast) * timeModifier;
-
-        if(deltaTime.count() > amountOfUpdatesAllowedPerSecond) {
-            totalTime += deltaTime.count();
-            screenStateManager->getCurrentState()->update(deltaTime.count());
-            timeLast = std::chrono::steady_clock::now().time_since_epoch();
-        }
-        generalFacade->sleep(amountOfUpdatesAllowedPerSecond * 1000.0 - deltaTime.count());
+        std::chrono::duration<double> currentTime = std::chrono::steady_clock::now().time_since_epoch();
+        double deltaTime = (currentTime.count() - timeLast.count()) * timeModifier;
+        totalTime += deltaTime;
+        timeLast = currentTime;
+        screenStateManager->getCurrentState()->update(deltaTime);
+        generalFacade->sleep(amountOfUpdatesAllowedPerSecond * 1000 - deltaTime);
     }
     delete generalFacade;
     return 0;

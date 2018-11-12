@@ -4,6 +4,7 @@
 
 #include "../Headers/LevelManager.h"
 #include "../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
+#include "../Headers/GameECS/Components/MoveComponent.h"
 
 LevelManager::LevelManager()
 {
@@ -32,15 +33,19 @@ EntityManager LevelManager::startLevel(int level) {
 
             _entityManager.addComponentToEntity(player, drawablePlayerOne);
             _entityManager.addComponentToEntity(player, new BoxCollider(48, 72));
+            _entityManager.addComponentToEntity(player, new PositionComponent(32,0));
             auto turnComponent = new TurnComponent;
             turnComponent->switchTurn(true);
             turnComponent->setRemainingTime(30);
             _entityManager.addComponentToEntity(player, turnComponent);
+            _entityManager.addComponentToEntity(player, new MoveComponent);
             _entityManager.addComponentToEntity(player, new GravityComponent());
 
             player = _entityManager.createEntity();
             _entityManager.addComponentToEntity(player, drawablePlayerTwo);
+            _entityManager.addComponentToEntity(player, new PositionComponent(576,0));
             _entityManager.addComponentToEntity(player, new TurnComponent);
+            _entityManager.addComponentToEntity(player, new MoveComponent);
             _entityManager.addComponentToEntity(player, new BoxCollider(48, 72));
             _entityManager.addComponentToEntity(player, new GravityComponent());
             break;
@@ -53,7 +58,7 @@ EntityManager LevelManager::startLevel(int level) {
 }
 
 void LevelManager::generateTerrain() {
-    for(int y=400; y < 900; y+=16) {
+    for(int y=384; y < 900; y+=16) {
         for (int x=0; x < 1600; x+=16) {
             if ((y % 16 == 0) && (x % 16 == 0)) {
                 generateTerrainDrawables(x, y);
@@ -70,5 +75,6 @@ void LevelManager::generateTerrainDrawables(int x, int y) {
     auto *comp = new DrawableComponent();
     _entityManager.addComponentToEntity(terrain, comp);
     _entityManager.addComponentToEntity(terrain, new BoxCollider{16,16});
+    _entityManager.addComponentToEntity(terrain, new PositionComponent(x, y));
     comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({16, 16, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
 }

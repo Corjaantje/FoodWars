@@ -1,7 +1,6 @@
 #include <utility>
 #include "../../Headers/StateMachine/GameScreen.h"
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"
-#include "../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../Headers/GameECS/Components/GravityComponent.h"
@@ -9,6 +8,7 @@
 #include "../../Headers/GameECS/Systems/CollisionSystem.h"
 #include "../../Headers/GameECS/Systems/JumpSystem.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
+#include "../../Headers/GameECS/Components/DrawableComponent.h"
 
 GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context),
     _audioFacade(context->getFacade<AudioFacade>()),
@@ -55,8 +55,16 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
     if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down)
         _context->setActiveScreen<MainMenuScreen>();
+
+    //Adjusting gamespeed
     if(event->getKey() == KEY::KEY_PAGEUP) {
-        
+
+    }
+    if(event->getKey() == KEY::KEY_PAGEDOWN) {
+
+    }
+    if(event->getKey() == KEY::KEY_HOME) {
+
     }
 }
 

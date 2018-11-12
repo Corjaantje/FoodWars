@@ -56,8 +56,22 @@ void StorageSystem::addDrawables(MyDocument& myDoc, std::map<int, std::shared_pt
 
         std::vector<std::string> filling = drawComp.second->serialize();
 
+        if (filling[0] == "rectangle")
+        {
+            prepareRect(groupingNode, filling);
+        }
+        else if (filling[0] == "sprite")
+        {
+            prepareSprite(groupingNode, filling);
+        } else if (filling[0] == "text")
+        {
+            prepareText(groupingNode, filling);
+        } else
+        {
+            //TODO: throw an error?
+        }
 //        MyNode drawNode{filling[0], &groupingNode};
-
+        /*
         // Gathering values of the position
         MyNode positionNode{filling[3], &groupingNode};
 
@@ -90,6 +104,7 @@ void StorageSystem::addDrawables(MyDocument& myDoc, std::map<int, std::shared_pt
 //        groupingNode.AddChild(drawNode);
         groupingNode.AddChild(shapeNode);
         groupingNode.AddChild(positionNode);
+        */
         IDNode->AddChild(groupingNode);
 
         myDoc.AddToRoot(*IDNode);
@@ -243,6 +258,126 @@ void StorageSystem::addTurns(MyDocument& myDoc, std::map<int, std::shared_ptr<Tu
             nodeLocations.insert(std::make_pair(turnComp.first, existingIDNodes.size() - 1));
         }
     }
+}
+
+void StorageSystem::prepareRect(MyNode& parentNode, std::vector<std::string> filling) {
+    MyNode positionNode{filling[1], &parentNode};
+
+    MyNode xPos{"xpos", &positionNode};
+    xPos.SetValue(filling[2]);
+    MyNode yPos{"ypos", &positionNode};
+    yPos.SetValue(filling[3]);
+
+    positionNode.AddChild(yPos);
+    positionNode.AddChild(xPos);
+
+    MyNode dimensionNode{filling[4], &parentNode};
+
+    MyNode widthNode{"height", &dimensionNode};
+    widthNode.SetValue(filling[5]);
+    MyNode heightNode{"width", &dimensionNode};
+    heightNode.SetValue(filling[6]);
+
+    dimensionNode.AddChild(widthNode);
+    dimensionNode.AddChild(heightNode);
+
+    MyNode colorNode {filling[7], &parentNode};
+
+    MyNode red {"red", &colorNode};
+    red.SetValue(filling[8]);
+    MyNode green {"green", &colorNode};
+    green.SetValue(filling[9]);
+    MyNode blue {"blue", &colorNode};
+    blue.SetValue(filling[10]);
+    MyNode alpha {"alpha", &colorNode};
+    alpha.SetValue(filling[11]);
+
+    colorNode.AddChild(red);
+    colorNode.AddChild(green);
+    colorNode.AddChild(blue);
+    colorNode.AddChild(alpha);
+
+    parentNode.AddChild(positionNode);
+    parentNode.AddChild(dimensionNode);
+    parentNode.AddChild(colorNode);
+}
+
+void StorageSystem::prepareSprite(MyNode& parentNode, std::vector<std::string> filling) {
+    MyNode positionNode{filling[1], &parentNode};
+
+    MyNode xPos{"xpos", &positionNode};
+    xPos.SetValue(filling[2]);
+    MyNode yPos{"ypos", &positionNode};
+    yPos.SetValue(filling[3]);
+
+    positionNode.AddChild(yPos);
+    positionNode.AddChild(xPos);
+
+    MyNode dimensionNode{filling[4], &parentNode};
+
+    MyNode widthNode{"height", &dimensionNode};
+    widthNode.SetValue(filling[5]);
+    MyNode heightNode{"width", &dimensionNode};
+    heightNode.SetValue(filling[6]);
+
+    dimensionNode.AddChild(widthNode);
+    dimensionNode.AddChild(heightNode);
+
+    MyNode imageNode {filling[7], &parentNode};
+
+    MyNode urlNode {"path", &imageNode};
+    urlNode.SetValue(filling[8]);
+
+    imageNode.AddChild(urlNode);
+
+    parentNode.AddChild(positionNode);
+    parentNode.AddChild(dimensionNode);
+    parentNode.AddChild(imageNode);
+}
+
+void StorageSystem::prepareText(MyNode& parentNode, std::vector<std::string> filling) {
+    MyNode positionNode{filling[1], &parentNode};
+
+    MyNode xPos{"xpos", &positionNode};
+    xPos.SetValue(filling[2]);
+    MyNode yPos{"ypos", &positionNode};
+    yPos.SetValue(filling[3]);
+
+    positionNode.AddChild(yPos);
+    positionNode.AddChild(xPos);
+
+    MyNode dimensionNode{filling[4], &parentNode};
+
+    MyNode widthNode{"height", &dimensionNode};
+    widthNode.SetValue(filling[5]);
+    MyNode heightNode{"width", &dimensionNode};
+    heightNode.SetValue(filling[6]);
+
+    dimensionNode.AddChild(widthNode);
+    dimensionNode.AddChild(heightNode);
+
+    MyNode colorNode {filling[7], &parentNode};
+
+    MyNode red {"red", &colorNode};
+    red.SetValue(filling[8]);
+    MyNode green {"green", &colorNode};
+    green.SetValue(filling[9]);
+    MyNode blue {"blue", &colorNode};
+    blue.SetValue(filling[10]);
+    MyNode alpha {"alpha", &colorNode};
+    alpha.SetValue(filling[11]);
+
+    colorNode.AddChild(red);
+    colorNode.AddChild(green);
+    colorNode.AddChild(blue);
+    colorNode.AddChild(alpha);
+
+    MyNode textNode {"text", &parentNode};
+    textNode.SetValue(filling[12]);
+
+    parentNode.AddChild(positionNode);
+    parentNode.AddChild(dimensionNode);
+    parentNode.AddChild(colorNode);
 }
 
 void StorageSystem::assignRelevantEntityManager(std::shared_ptr<EntityManager> entityManager) {
@@ -452,8 +587,8 @@ void StorageSystem::saveWorld() {
 }
 
 bool StorageSystem::loadWorld() {
-
-
+//    MyDocument loadDoc = _reader.LoadFile("LevelOne.xml");
+    MyNode rootNode = _reader.LoadFile("LevelOne.xml")->GetRoot();
 
     return false;
 }

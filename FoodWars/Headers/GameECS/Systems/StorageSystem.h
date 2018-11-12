@@ -25,6 +25,9 @@ private:
     void addMove(MyDocument& myDoc, std::map<int, std::shared_ptr<MoveComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
     void addPosition(MyDocument& myDoc, std::map<int, std::shared_ptr<PositionComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
     void addTurns(MyDocument& myDoc, std::map<int, std::shared_ptr<TurnComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
+    void prepareRect(MyNode& parentNode, std::vector<std::string> filling);
+    void prepareSprite(MyNode& parentNode, std::vector<std::string> filling);
+    void prepareText(MyNode& parentNode, std::vector<std::string> filling);
 public:
     StorageSystem();
     ~StorageSystem();

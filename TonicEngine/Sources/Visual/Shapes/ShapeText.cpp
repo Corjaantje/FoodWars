@@ -16,3 +16,21 @@ std::string ShapeText::toString() {
     std::string s = std::to_string(xPos) + std::to_string(yPos) + text + std::to_string(fontSize) + std::to_string(width) + std::to_string(height) + std::to_string(colour.red) + std::to_string(colour.green) + std::to_string(colour.blue) + std::to_string(colour.alpha);
     return s;
 }
+
+std::vector<std::string> ShapeText::serialize() {
+    std::vector<std::string> data;
+    data.emplace_back("text");
+    data.emplace_back("position");
+    data.push_back(std::to_string(xPos));
+    data.push_back(std::to_string(yPos));
+    data.emplace_back("dimensions");
+    data.push_back(std::to_string(getHeight()));
+    data.push_back(std::to_string(getWidth()));
+    data.emplace_back("color");
+    data.emplace_back(std::to_string(colour.red));
+    data.emplace_back(std::to_string(colour.green));
+    data.emplace_back(std::to_string(colour.blue));
+    data.emplace_back(std::to_string(colour.alpha));
+    data.emplace_back(text);
+    return data;
+}

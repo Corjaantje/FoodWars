@@ -1,7 +1,10 @@
 #ifndef PROJECT_SWA_ISHAPE_H
 #define PROJECT_SWA_ISHAPE_H
+
+#include "../../Storage/ISerializable.h"
+
 class Renderlist;
-class IShape{
+class IShape : public ISerializable{
 public:
     int xPos;
     int yPos;

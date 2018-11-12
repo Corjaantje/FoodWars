@@ -58,9 +58,9 @@ EntityManager LevelManager::startLevel(int level) {
 }
 
 void LevelManager::generateTerrain() {
-    for(int y=384; y < 900; y+=16) {
-        for (int x=0; x < 1600; x+=16) {
-            if ((y % 16 == 0) && (x % 16 == 0)) {
+    for(int y=384; y < 900; y+=32) {
+        for (int x=0; x < 1600; x+=32) {
+            if ((y % 32 == 0) && (x % 32 == 0)) {
                 generateTerrainDrawables(x, y);
             }
         }
@@ -74,7 +74,7 @@ void LevelManager::generateTerrainDrawables(int x, int y) {
     int terrain = _entityManager.createEntity();
     auto *comp = new DrawableComponent();
     _entityManager.addComponentToEntity(terrain, comp);
-    _entityManager.addComponentToEntity(terrain, new BoxCollider{16,16});
+    _entityManager.addComponentToEntity(terrain, new BoxCollider{32,32});
     _entityManager.addComponentToEntity(terrain, new PositionComponent(x, y));
-    comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({16, 16, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
+    comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({32, 32, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
 }

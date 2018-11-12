@@ -34,7 +34,7 @@ void DrawSystem::update(double dt) {
     }
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         if(iterator.second->isMyTurn()){
-            ShapeText timerText {(1600/2)-100, 0, std::to_string(iterator.second->getRemainingTime()).substr(0, 4) + " sec.", 200, 150, 100, Colour{0, 0, 0, 0}};
+            ShapeText timerText {(1600/2)-100, 0, std::to_string(iterator.second->getRemainingTime()).substr(0, 4) + " sec.", 100, 100, 75, Colour{0, 0, 0, 0}};
             timerText.addToRender(&_renderList);
             break;
         }

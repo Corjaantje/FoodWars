@@ -4,4 +4,5 @@ void Renderlist::clearLists() {
     rectangleList.clear();
     spriteList.clear();
     textList.clear();
+    backgroundSpriteList.clear();
 }

@@ -8,8 +8,10 @@ LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> con
     _inputFacade->getMouseEventObservable()->registerObserver(this);
     _windowResCalc = _context->getWindowResolutionCalculator();
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
+    this->initButtons();
+}
 
-    //_renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
+void LevelCreationScreen::initButtons() {
 
     // MainMenu
     SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 50, 50, 0, 0, Colour{0,0,0,0}};
@@ -46,6 +48,36 @@ LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> con
     BlueDecrementButton->addToRender(&_renderList);
     _buttons.push_back(BlueDecrementButton);
 
+
+    //Wallpaper Next
+    SpriteButton* WallpaperNext = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.setNextWallpaper(); }, 50, 50, 710, 10, Colour{0,0,0,0}};
+    WallpaperNext->addToRender(&_renderList);
+    _buttons.push_back(WallpaperNext);
+
+    //Wallpaper Previous
+    SpriteButton* WallpaperPrevious = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.setPreviousWallpaper(); }, 50, 50, 460, 10, Colour{0,0,0,0}};
+    WallpaperPrevious->addToRender(&_renderList);
+    _buttons.push_back(WallpaperPrevious);
+
+    toggleCollidable = new SpriteButton {*_inputFacade->getMouseEventObservable(), "stateOff.png", [this] {
+        bool state = _levelBuilder.toggleCollidable();
+        if (state) {
+            toggleCollidable->changeImageURL(std::string("stateOn.png"));
+        } else {
+            toggleCollidable->changeImageURL(std::string("stateOff.png"));
+        }
+    }, 50, 50, 1030, 10, Colour{0, 0, 0, 0}};
+    _buttons.push_back(toggleCollidable);
+
+    toggleDamageable = new SpriteButton {*_inputFacade->getMouseEventObservable(), "stateOff.png", [this] {
+        bool state = _levelBuilder.toggleDamageable();
+        if (state) {
+            toggleDamageable->changeImageURL(std::string("stateOn.png"));
+        } else {
+            toggleDamageable->changeImageURL(std::string("stateOff.png"));
+        }
+    }, 50, 50, 1030, 85, Colour{0, 0, 0, 0}};
+    _buttons.push_back(toggleDamageable);
 }
 
 LevelCreationScreen::~LevelCreationScreen() {
@@ -55,11 +87,6 @@ LevelCreationScreen::~LevelCreationScreen() {
 }
 
 void LevelCreationScreen::update(double deltaTime) {
-    _levelBuilder.drawCurrentScene(_renderList);
-    for(int i=0; i < _buttons.size(); i++){
-        _buttons[i]->addToRender(&_renderList);
-    }
-    visualFacade->render(_renderList);
     audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
 }
@@ -68,11 +95,22 @@ void LevelCreationScreen::update(std::shared_ptr<KeyEvent> event){
     if(event->getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
+        this->callRender();
     }
 }
 
 void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
+    this->callRender();
     if(event->getMouseEventType() == MouseEventType::Down){
         _levelBuilder.placeBlock(event->getXPosition(), event->getYPosition());
     }
+}
+
+void LevelCreationScreen::callRender() {
+    _renderList.clearLists();
+    _levelBuilder.drawCurrentScene(_renderList);
+    for(int i=0; i < _buttons.size(); i++){
+        _buttons[i]->addToRender(&_renderList);
+    }
+    visualFacade->render(_renderList);
 }

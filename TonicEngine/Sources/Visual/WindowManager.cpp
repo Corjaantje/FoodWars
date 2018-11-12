@@ -50,6 +50,7 @@ void WindowManager::disablefullscreen(){
 void WindowManager::render(Renderlist renderlist) {
     SDL_RenderClear(_renderer);
     _renderer = _window->getRenderer();
+    renderSprites(renderlist.backgroundSpriteList);
     renderRectangles(renderlist.rectangleList);
     renderSprites(renderlist.spriteList);
     renderText(renderlist.textList);

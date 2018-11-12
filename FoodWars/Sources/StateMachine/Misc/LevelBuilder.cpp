@@ -6,6 +6,8 @@
 
 LevelBuilder::LevelBuilder() {
     _entityManager = new EntityManager();
+    _wallpaperList.emplace_back("WallpaperCity.png");
+    _wallpaperList.emplace_back("WallpaperSky.png");
 }
 
 void LevelBuilder::resetEntityManager() {
@@ -58,6 +60,16 @@ void LevelBuilder::decrementColorGreen() {
     }
 }
 
+bool LevelBuilder::toggleDamageable() {
+    _buildDamageable = !_buildDamageable;
+    return _buildDamageable;
+}
+
+bool LevelBuilder::toggleCollidable() {
+    _buildCollidable = !_buildCollidable;
+    return _buildCollidable;
+}
+
 void LevelBuilder::decrementColorBlue() {
     if(_colorBlue - COLOR_INCREMENT < 0){
         _colorBlue = 255 + (_colorBlue - COLOR_INCREMENT);
@@ -103,7 +115,6 @@ void LevelBuilder::undoPlaceBlock() {
 void LevelBuilder::drawCurrentScene(Renderlist &renderlist) {
     std::map<int, std::shared_ptr<DrawableComponent>> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
     renderlist.clearLists();
-    int count = drawComps.size();
     for(int i=0; i < drawComps.size(); i++){
         drawComps[i]->shape->addToRender(&renderlist);
     }
@@ -128,6 +139,10 @@ int LevelBuilder::roundYCoordToGrid(int y) {
 
 
 void LevelBuilder::drawAdditionalItems(Renderlist &renderlist) {
+    //TODO TEMP FIX TO MAKE A BACKGROUND WORK.
+    ShapeSprite wallpaper(1600, 900, 0, 0, _wallpaperList[_selectedWallpaper]);
+    renderlist.backgroundSpriteList.emplace_back(wallpaper);
+
     int height = 8;
     int width = 1600;
     renderlist.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "WallpaperLevelBuilder.png"});
@@ -135,6 +150,24 @@ void LevelBuilder::drawAdditionalItems(Renderlist &renderlist) {
     renderlist.rectangleList.emplace_back(rect);
     ShapeRectangle rect2(width, height, 0, 900-height, Colour(0, 0, 0, 255));
     renderlist.rectangleList.emplace_back(rect2);
+
     ShapeRectangle preview(64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255));
     renderlist.rectangleList.emplace_back(preview);
+}
+
+void LevelBuilder::setNextWallpaper() {
+    if(_wallpaperList.size() > 1){
+        int newIndex = (_selectedWallpaper + 1) % _wallpaperList.size();
+        _selectedWallpaper = newIndex;
+    }
+}
+
+void LevelBuilder::setPreviousWallpaper() {
+    if(_wallpaperList.size() > 1){
+        int newIndex = (_selectedWallpaper - 1);
+        if(newIndex < 0){
+            newIndex = _wallpaperList.size() - 1;
+        }
+        _selectedWallpaper = newIndex;
+    }
 }

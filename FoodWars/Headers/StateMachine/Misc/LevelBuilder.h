@@ -19,15 +19,17 @@ private:
     EntityManager* _entityManager = nullptr;
     std::vector<EntityMomento*> _momentoList;
     std::map<std::string, int> _CoordinateEntityMap;
-    Renderlist _renderList;
-    bool _buildCollidable;
-    bool _buildDamageable;
+    bool _buildCollidable = false;
+    bool _buildDamageable = false;
 
     int _shapeDimension = MINIMAL_SHAPE_DIM;
 
     int _colorRed = 0; //Between 0 and 255
     int _colorGreen = 0; //Between 0 and 255
     int _colorBlue = 0; //Between 0 and 255
+
+    std::vector<std::string> _wallpaperList;
+    int _selectedWallpaper = 0;
 public:
     void resetEntityManager();
 
@@ -44,6 +46,12 @@ public:
 
     void placeBlock(int x, int y);
     void undoPlaceBlock();
+
+    bool toggleCollidable();
+    bool toggleDamageable();
+
+    void setNextWallpaper();
+    void setPreviousWallpaper();
 
     void drawCurrentScene(Renderlist &renderlist);
 private:

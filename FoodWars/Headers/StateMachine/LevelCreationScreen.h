@@ -14,10 +14,14 @@ public:
     void update(std::shared_ptr<KeyEvent> event) override;
     void update(std::shared_ptr<MouseEvent> event) override;
 
+    SpriteButton* toggleCollidable = nullptr;
+    SpriteButton* toggleDamageable = nullptr;
+private:
+    void initButtons();
+    void callRender();
 private:
     LevelBuilder _levelBuilder;
     std::shared_ptr<WindowResolutionCalculator> _windowResCalc;
-    Renderlist* _renderlist;
 };
 
 #endif //PROJECT_SWA_LEVELEDITORSCREEN_H

@@ -101,8 +101,11 @@ void LevelCreationScreen::update(std::shared_ptr<KeyEvent> event){
 
 void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
     this->callRender();
-    if(event->getMouseEventType() == MouseEventType::Down){
+    if(event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left){
         _levelBuilder.placeBlock(event->getXPosition(), event->getYPosition());
+    }
+    if(event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Right){
+        _levelBuilder.removeBlock(event->getXPosition(), event->getYPosition());
     }
 }
 

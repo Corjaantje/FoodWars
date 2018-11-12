@@ -45,6 +45,7 @@ public:
     void decrementColorBlue();
 
     void placeBlock(int x, int y);
+    void removeBlock(int x, int y);
     void undoPlaceBlock();
 
     bool toggleCollidable();

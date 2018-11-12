@@ -105,6 +105,30 @@ void LevelBuilder::placeBlock(int x, int y) {
     }
 }
 
+void LevelBuilder::removeBlock(int x, int y) {
+    int convertedX = roundXCoordToGrid(x);
+    int convertedY = roundYCoordToGrid(y);
+    if(convertedY < BUILDING_LIMIT){
+        return;
+    }
+    std::string gridCoord = std::to_string(convertedX) + std::to_string(convertedY);
+    if(_CoordinateEntityMap.count(gridCoord) != 0){
+        int entityId = _CoordinateEntityMap[gridCoord];
+        int it = -1;
+        _entityManager->removeEntity(entityId);
+        for(int i=0; i< _momentoList.size(); i++){
+            if(_momentoList[i]->getState() == entityId){
+                it = i;
+            }
+        }
+        if(it != -1){
+        _momentoList.erase(_momentoList.begin() + it);
+        }
+        _CoordinateEntityMap.erase(gridCoord);
+    }
+
+}
+
 void LevelBuilder::undoPlaceBlock() {
     if(_momentoList.back() != 0){
         _entityManager->removeEntity(_momentoList.back()->getState());
@@ -115,8 +139,8 @@ void LevelBuilder::undoPlaceBlock() {
 void LevelBuilder::drawCurrentScene(Renderlist &renderlist) {
     std::map<int, std::shared_ptr<DrawableComponent>> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
     renderlist.clearLists();
-    for(int i=0; i < drawComps.size(); i++){
-        drawComps[i]->shape->addToRender(&renderlist);
+    for (auto &drawComp : drawComps) {
+        drawComp.second->shape->addToRender(&renderlist);
     }
     drawAdditionalItems(renderlist);
 }

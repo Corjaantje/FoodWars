@@ -10,6 +10,9 @@ public:
     ~SettingsScreen();
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;
+private:
+    ShapeText* musicVolume = nullptr;
+    ShapeText* effectVolume = nullptr;
 };
 
 #endif //PROJECT_SWA_SETTINGSSCREEN_H

@@ -8,7 +8,7 @@
 class UpgradesScreen : public IScreen, public IObserver<KeyEvent> {
 public:
     explicit UpgradesScreen(std::shared_ptr<ScreenStateManager> context);
-    ~UpgradesScreen();
+    ~UpgradesScreen() override;
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;
 };

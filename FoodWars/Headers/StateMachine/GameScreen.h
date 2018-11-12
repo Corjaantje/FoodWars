@@ -15,7 +15,7 @@ private:
     std::shared_ptr<AudioFacade> _audioFacade;
 public:
     explicit GameScreen(std::shared_ptr<ScreenStateManager> context);
-    ~GameScreen();
+    ~GameScreen() override;
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;
 };

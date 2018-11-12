@@ -16,7 +16,7 @@ private:
     void quitGame();
 public:
     explicit MainMenuScreen(std::shared_ptr<ScreenStateManager> context);
-    ~MainMenuScreen();
+    ~MainMenuScreen() override;
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;
 };

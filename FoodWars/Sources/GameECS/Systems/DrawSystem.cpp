@@ -93,6 +93,6 @@ void DrawSystem::generateTerrainDrawables(int x, int y) {
     _entityManager->addComponentToEntity(id, comp);
     _entityManager->addComponentToEntity(id, new BoxCollider{16,16});
     _entityManager->addComponentToEntity(id, new PositionComponent{x, y});
-    comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({16, 16, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
+    comp->shape = new ShapeRectangle({16, 16, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}});
 }
 

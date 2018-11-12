@@ -25,9 +25,7 @@ public:
         _inputFacade->getWindowEventObservable()->registerObserver(this);
     }
 
-    ~IScreen() {
-
-    }
+    virtual ~IScreen() = default;
     virtual void update(double deltaTime) {
 
     }

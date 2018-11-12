@@ -28,10 +28,6 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     _systems.push_back(std::make_shared<DrawSystem>(_entityManager, _visualFacade));
     int player = _entityManager->createEntity();
 
-    /*DrawableComponent* drawableComponent = new DrawableComponent;
-    drawableComponent->shape = std::make_unique<ShapeSprite>(ShapeSprite{32, 48, 0, 0, "PlayerW_R0.png"});
-    _entityManager->addComponentToEntity(player, drawableComponent);*/
-
     std::vector<IShape*> idleAnimation;
     idleAnimation.push_back(new ShapeSprite{32, 48, 0, 0, "PlayerW_R0.png"});
     idleAnimation.push_back(new ShapeSprite{32, 48, 0, 0, "PlayerW_R1.png"});
@@ -48,10 +44,8 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     _entityManager->addComponentToEntity(player, turnComponent);
     _entityManager->addComponentToEntity(player, new GravityComponent());
 
-    /*DrawableComponent* drawableComponent2 = new DrawableComponent;
-    drawableComponent2->shape = std::make_unique<ShapeSprite>(ShapeSprite{32, 48, 0, 0, "PlayerL_L1.png"});*/
-    player = _entityManager->createEntity();
 
+    player = _entityManager->createEntity();
     AnimationComponent* animationComponent2 = new AnimationComponent{idleAnimation, 0.1};
     _entityManager->addComponentToEntity(player, animationComponent2);
     _entityManager->addComponentToEntity(player, new DrawableComponent);

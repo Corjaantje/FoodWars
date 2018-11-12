@@ -7,12 +7,10 @@ SettingsScreen::SettingsScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
 
-    std::vector<std::string> wallpaperImages = {"wallpaper.png"};
-    _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, wallpaperImages});
+    _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
 
     // MainMenu
-    std::vector<std::string> quitButtonImages = {"exit.png"};
-    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), quitButtonImages, [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 50, 50, 0, 0, Colour{0,0,0,0}};
+    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 50, 50, 0, 0, Colour{0,0,0,0}};
     quitButton->addToRender(&_renderList);
     _buttons.push_back(quitButton);
 

@@ -7,13 +7,14 @@
 
 class ShapeRectangle : public IShape {
 public:
-    ShapeRectangle(int width, int height, int xPos, int yPos, Colour colour);
+    ShapeRectangle(int width, int height, int xPos, int yPos, Colour colour, int layer);
     ~ShapeRectangle() override;
     void addToRender(Renderlist* renderlist) override;
 public:
     int width;
     int height;
     Colour colour;
+    int layer;
 };
 
 

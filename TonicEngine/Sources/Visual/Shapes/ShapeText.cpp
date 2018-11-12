@@ -2,13 +2,13 @@
 #include "../../../Headers/Visual/Renderlist.h"
 
 ShapeText::ShapeText(const int x, const int y, std::string string, int fontSize, int width, int height,
-                     Colour colour)
-        : IShape(x, y), width(width), height(height), fontSize(fontSize), text(string), colour(colour) {};
+                     Colour colour, int layer)
+        : IShape(x, y), width(width), height(height), fontSize(fontSize), text(string), colour(colour), layer(layer) {};
 
 ShapeText::~ShapeText() {}
 
 void ShapeText::addToRender(Renderlist *renderlist) {
-    ShapeText shape(xPos, yPos, text, fontSize, width, height, colour);
+    ShapeText shape(xPos, yPos, text, fontSize, width, height, colour, layer);
     renderlist->textList.emplace_back(shape);
 }
 

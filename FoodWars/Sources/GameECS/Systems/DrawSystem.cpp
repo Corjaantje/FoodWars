@@ -28,8 +28,8 @@ void DrawSystem::update(double dt) {
         _updateCallCount = 0;
         _deltaTimeTotal = 0;
     }
-    _renderList.textList.emplace_back(ShapeText(0, 0, _fpsString, 80, 75, 50, Colour(0, 0, 0, 0)));
-    _renderList.rectangleList.emplace_back(ShapeRectangle(640,480,0,0, Colour(173,216,230,0)));
+    _renderList.textList.emplace_back(ShapeText(0, 0, _fpsString, 80, 75, 50, Colour(0, 0, 0, 0), 0));
+    _renderList.rectangleList.emplace_back(ShapeRectangle(640,480,0,0, Colour(173,216,230,0), 0));
 
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<DrawableComponent>()) {
         std::shared_ptr<PositionComponent> positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
@@ -42,7 +42,7 @@ void DrawSystem::update(double dt) {
     }
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         if(iterator.second->isMyTurn()){
-            ShapeText timerText {500, 0, std::to_string(iterator.second->getRemainingTime()).substr(0, 4) + " sec.", 100, 75, 50, Colour{0, 0, 0, 0}};
+            ShapeText timerText {500, 0, std::to_string(iterator.second->getRemainingTime()).substr(0, 4) + " sec.", 100, 75, 50, Colour{0, 0, 0, 0}, 0};
             timerText.addToRender(&_renderList);
             break;
         }
@@ -93,5 +93,5 @@ void DrawSystem::generateTerrainDrawables(int x, int y) {
     _entityManager->addComponentToEntity(id, comp);
     _entityManager->addComponentToEntity(id, new BoxCollider{16,16});
     _entityManager->addComponentToEntity(id, new PositionComponent{x, y});
-    comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({16, 16, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
+    comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({16, 16, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}, 0}));
 }

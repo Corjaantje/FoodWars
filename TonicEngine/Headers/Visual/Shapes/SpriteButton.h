@@ -15,7 +15,7 @@ private:
     std::string _imageURL;
     ShapeSprite shapeSprite;
 public:
-    SpriteButton(MouseEventObservable& mouseEventObservable, const std::string& value, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, Colour buttonColour);
+    SpriteButton(MouseEventObservable& mouseEventObservable, const std::string& value, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, Colour buttonColour, int layer);
 
     void update(std::shared_ptr<MouseEvent> event) override;
     void addToRender(Renderlist* renderlist) override;

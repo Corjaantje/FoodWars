@@ -25,7 +25,7 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     int player = _entityManager->createEntity();
 
     DrawableComponent* drawableComponent = new DrawableComponent;
-    drawableComponent->shape = std::make_unique<ShapeSprite>(ShapeSprite({32, 48, 0, 0, "PlayerW_R0.png"}));
+    drawableComponent->shape = std::make_unique<ShapeSprite>(ShapeSprite({32, 48, 0, 0, "PlayerW_R0.png", 0}));
     _entityManager->addComponentToEntity(player, drawableComponent);
     _entityManager->addComponentToEntity(player, new BoxCollider(32, 48));
     TurnComponent* turnComponent = new TurnComponent;
@@ -37,7 +37,7 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
 
 
     DrawableComponent* drawableComponent2 = new DrawableComponent;
-    drawableComponent2->shape = std::make_unique<ShapeSprite>(ShapeSprite(32, 48, 0, 0, "PlayerL_L1.png"));
+    drawableComponent2->shape = std::make_unique<ShapeSprite>(ShapeSprite(32, 48, 0, 0, "PlayerL_L1.png", 0));
     player = _entityManager->createEntity();
     _entityManager->addComponentToEntity(player, drawableComponent2);
     _entityManager->addComponentToEntity(player, new TurnComponent);

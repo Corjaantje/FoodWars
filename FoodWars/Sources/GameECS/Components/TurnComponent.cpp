@@ -49,7 +49,7 @@ std::vector<std::string> TurnComponent::serialize() {
     data.push_back(std::to_string(_myTurn));
 
 
-    return std::vector<std::string>();
+    return data;
 }
 
 

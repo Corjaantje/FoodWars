@@ -42,5 +42,5 @@ std::vector<std::string> PositionComponent::serialize() {
     data.push_back(std::to_string(Y));
 
 
-    return std::vector<std::string>();
+    return data;
 }

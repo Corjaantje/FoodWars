@@ -21,8 +21,7 @@ std::vector<std::string> MoveComponent::serialize() {
     data.push_back(std::to_string(xVelocity));
     data.push_back(std::to_string(yVelocity));
 
-
-    return std::vector<std::string>();
+    return data;
 }
 
 MoveComponent::~MoveComponent() = default;

@@ -12,13 +12,39 @@ LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> con
     //_renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
 
     // MainMenu
-    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 50, 50, 0, 0, Colour{0,0,0,0}};
+    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 50, 50, 0, 0, Colour{0,0,0,0}};
     quitButton->addToRender(&_renderList);
     _buttons.push_back(quitButton);
 
-    SpriteButton* settingsButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "settings.png", [this] { _levelBuilder.incrementColorRed(); }, 50, 50, 530, 0, Colour{0,0,0,0}};
-    settingsButton->addToRender(&_renderList);
-    _buttons.push_back(settingsButton);
+    //Color Red Increment
+    SpriteButton* RedIncrementButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.incrementColorRed(); }, 50, 50, 1520, 10, Colour{0,0,0,0}};
+    RedIncrementButton->addToRender(&_renderList);
+    _buttons.push_back(RedIncrementButton);
+
+    //Color Red Decrement
+    SpriteButton* RedDecrementButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.decrementColorRed(); }, 50, 50, 1370, 10, Colour{0,0,0,0}};
+    RedDecrementButton->addToRender(&_renderList);
+    _buttons.push_back(RedDecrementButton);
+
+    //Color Green Increment
+    SpriteButton* GreenIncrementButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.incrementColorGreen(); }, 50, 50, 1520, 75, Colour{0,0,0,0}};
+    GreenIncrementButton->addToRender(&_renderList);
+    _buttons.push_back(GreenIncrementButton);
+
+    //Color Green Decrement
+    SpriteButton* GreenDecrementButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.decrementColorGreen(); }, 50, 50, 1370, 75, Colour{0,0,0,0}};
+    GreenDecrementButton->addToRender(&_renderList);
+    _buttons.push_back(GreenDecrementButton);
+
+    //Color Blue Increment
+    SpriteButton* BlueIncrementButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.incrementColorBlue(); }, 50, 50, 1520, 140, Colour{0,0,0,0}};
+    BlueIncrementButton->addToRender(&_renderList);
+    _buttons.push_back(BlueIncrementButton);
+
+    //Color Blue Decrement
+    SpriteButton* BlueDecrementButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.decrementColorBlue(); }, 50, 50, 1370, 140, Colour{0,0,0,0}};
+    BlueDecrementButton->addToRender(&_renderList);
+    _buttons.push_back(BlueDecrementButton);
 
 }
 

@@ -8,7 +8,7 @@
 
 const int MINIMAL_SHAPE_DIM = 32;
 const int MAXIMAL_SHAPE_DIM = 64;
-const int COLOR_INCREMENT = 5;
+const int COLOR_INCREMENT = 10;
 const int BUILDING_LIMIT = 192;
 
 class LevelBuilder {
@@ -50,7 +50,7 @@ private:
     int roundXCoordToGrid(int x);
     int roundYCoordToGrid(int y);
 
-    void drawMarkedOffArea(Renderlist &renderlist);
+    void drawAdditionalItems(Renderlist &renderlist);
 };
 
 

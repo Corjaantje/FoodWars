@@ -6,13 +6,6 @@
 
 LevelBuilder::LevelBuilder() {
     _entityManager = new EntityManager();
-    for(int y=0; y < 900; y=y+MINIMAL_SHAPE_DIM){
-        this->incrementColorRed();
-        for(int x=0; x < 1600; x=x+MINIMAL_SHAPE_DIM){
-            this->placeBlock(x, y);
-            this->incrementColorBlue();
-        }
-    }
 }
 
 void LevelBuilder::resetEntityManager() {
@@ -114,7 +107,7 @@ void LevelBuilder::drawCurrentScene(Renderlist &renderlist) {
     for(int i=0; i < drawComps.size(); i++){
         drawComps[i]->shape->addToRender(&renderlist);
     }
-    drawMarkedOffArea(renderlist);
+    drawAdditionalItems(renderlist);
 }
 
 int LevelBuilder::roundXCoordToGrid(int x) {
@@ -133,11 +126,15 @@ int LevelBuilder::roundYCoordToGrid(int y) {
     return y - remainder;
 }
 
-void LevelBuilder::drawMarkedOffArea(Renderlist &renderlist) {
+
+void LevelBuilder::drawAdditionalItems(Renderlist &renderlist) {
     int height = 8;
     int width = 1600;
+    renderlist.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "WallpaperLevelBuilder.png"});
     ShapeRectangle rect(width, height, 0, BUILDING_LIMIT-height, Colour(0, 0, 0, 255));
     renderlist.rectangleList.emplace_back(rect);
     ShapeRectangle rect2(width, height, 0, 900-height, Colour(0, 0, 0, 255));
     renderlist.rectangleList.emplace_back(rect2);
+    ShapeRectangle preview(64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255));
+    renderlist.rectangleList.emplace_back(preview);
 }

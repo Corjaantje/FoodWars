@@ -16,6 +16,10 @@ public:
 
     SpriteButton* toggleCollidable = nullptr;
     SpriteButton* toggleDamageable = nullptr;
+
+    SpriteButton* toggleBuildTerrain = nullptr;
+    SpriteButton* toggleSetSpawn = nullptr;
+    bool buildTerrainActive = true;
 private:
     void initButtons();
     void callRender();

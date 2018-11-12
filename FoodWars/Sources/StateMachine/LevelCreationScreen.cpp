@@ -78,6 +78,30 @@ void LevelCreationScreen::initButtons() {
         }
     }, 50, 50, 1030, 85, Colour{0, 0, 0, 0}};
     _buttons.push_back(toggleDamageable);
+
+    toggleBuildTerrain = new SpriteButton {*_inputFacade->getMouseEventObservable(), "stateOn.png", [this] {
+        buildTerrainActive = !buildTerrainActive;
+        if (buildTerrainActive) {
+            toggleBuildTerrain->changeImageURL(std::string("stateOn.png"));
+            toggleSetSpawn->changeImageURL(std::string("stateOff.png"));
+        } else {
+            toggleBuildTerrain->changeImageURL(std::string("stateOff.png"));
+            toggleSetSpawn->changeImageURL(std::string("stateOn.png"));
+        }
+    }, 50, 50, 355, 10, Colour{0, 0, 0, 0}};
+    _buttons.push_back(toggleBuildTerrain);
+
+    toggleSetSpawn = new SpriteButton {*_inputFacade->getMouseEventObservable(), "stateOff.png", [this] {
+        buildTerrainActive = !buildTerrainActive;
+        if (!buildTerrainActive) {
+            toggleSetSpawn->changeImageURL(std::string("stateOn.png"));
+            toggleBuildTerrain->changeImageURL(std::string("stateOff.png"));
+        } else {
+            toggleSetSpawn->changeImageURL(std::string("stateOff.png"));
+            toggleBuildTerrain->changeImageURL(std::string("stateOn.png"));
+        }
+    }, 50, 50, 355, 75, Colour{0, 0, 0, 0}};
+    _buttons.push_back(toggleSetSpawn);
 }
 
 LevelCreationScreen::~LevelCreationScreen() {
@@ -101,11 +125,13 @@ void LevelCreationScreen::update(std::shared_ptr<KeyEvent> event){
 
 void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
     this->callRender();
-    if(event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left){
-        _levelBuilder.placeBlock(event->getXPosition(), event->getYPosition());
-    }
-    if(event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Right){
-        _levelBuilder.removeBlock(event->getXPosition(), event->getYPosition());
+    if(this->buildTerrainActive) {
+        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
+            _levelBuilder.placeBlock(event->getXPosition(), event->getYPosition());
+        }
+        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Right) {
+            _levelBuilder.removeBlock(event->getXPosition(), event->getYPosition());
+        }
     }
 }
 

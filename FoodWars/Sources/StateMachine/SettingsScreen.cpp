@@ -62,9 +62,7 @@ SettingsScreen::SettingsScreen(std::shared_ptr<ScreenStateManager> context) : IS
     lowerEffectVolumeButton->addToRender(&_renderList);
     _buttons.push_back(lowerEffectVolumeButton);
 
-    std::string effectVol = std::to_string(audioFacade->getEffectVolume());
-    auto& e = effectVol;
-    ShapeText* effectVolume = new ShapeText(630, 750, e, 12, 50, 30, Colour{255,255,255,0} );
+    ShapeText* effectVolume = new ShapeText(630, 750, std::to_string(audioFacade->getEffectVolume()), 12, 50, 30, Colour{255,255,255,0} );
     effectVolume->addToRender(&_renderList);
 
     TextButton* raiseEffectVolumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"+", [a = audioFacade]() {  a->setEffectVolume(a->getEffectVolume() + 5); }, 10, 30, 695, 750, Colour{255,255,255,0}, Colour{255,255,255,0}};

@@ -52,6 +52,15 @@ std::vector<std::string> TurnComponent::serialize() {
     return data;
 }
 
+void TurnComponent::setEnergy(int energy) {
+    _energy = energy;
+    if (_energy > _maxEnergy) {_energy = _maxEnergy;}
+}
+
+void TurnComponent::setMaxEnergy(int energy) {
+    _maxEnergy = energy;
+}
+
 
 
 

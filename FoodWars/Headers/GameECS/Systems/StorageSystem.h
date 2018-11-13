@@ -20,6 +20,7 @@ private:
 //    StorageFacade _storageFacade;
     std::shared_ptr<EntityManager> _entityManager;
     template <typename Comp> void addComponentTypeOf(std::string compName, std::map<int, MyNode> &components, MyNode &rootNode);
+    // part of Saving
     void addDrawables(MyDocument& myDoc, std::map<int, std::shared_ptr<DrawableComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
     void addGravity(MyDocument& myDoc, std::map<int, std::shared_ptr<GravityComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
     void addMove(MyDocument& myDoc, std::map<int, std::shared_ptr<MoveComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
@@ -28,6 +29,13 @@ private:
     void prepareRect(MyNode& parentNode, std::vector<std::string> filling);
     void prepareSprite(MyNode& parentNode, std::vector<std::string> filling);
     void prepareText(MyNode& parentNode, std::vector<std::string> filling);
+    // part of loading
+    void parseSavedInstance(MyNode& rootNode, EntityManager& _entity);
+    void parseDrawable(const MyNode& drawableNode, EntityManager& _entity, int identifier);
+    void parseGravity(const MyNode& gravityNode, EntityManager& _entity, int identifier);
+    void parseMove(const MyNode& moveNode, EntityManager& _entity, int identifier);
+    void parsePosition(const MyNode& positionNode, EntityManager& _entity, int identifier);
+    void parseTurn(const MyNode& turnNode, EntityManager& _entity, int identifier);
 public:
     StorageSystem();
     ~StorageSystem();
@@ -36,7 +44,7 @@ public:
     void saveWorld();
 
     // Pass a string for identifying the world?
-    bool loadWorld();
+    bool loadWorld(std::shared_ptr<EntityManager> toFill, std::string filePath);
 };
 
 

@@ -1,4 +1,7 @@
 #include "../../../Headers/GameECS/Systems/StorageSystem.h"
+#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
+#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
+#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeText.h"
 
 StorageSystem::StorageSystem() {
 //    _storageFacade =
@@ -261,6 +264,9 @@ void StorageSystem::addTurns(MyDocument& myDoc, std::map<int, std::shared_ptr<Tu
 }
 
 void StorageSystem::prepareRect(MyNode& parentNode, std::vector<std::string> filling) {
+    // To keep track of type
+    MyNode identifierNode{filling[0], &parentNode};
+
     MyNode positionNode{filling[1], &parentNode};
 
     MyNode xPos{"xpos", &positionNode};
@@ -297,12 +303,17 @@ void StorageSystem::prepareRect(MyNode& parentNode, std::vector<std::string> fil
     colorNode.AddChild(blue);
     colorNode.AddChild(alpha);
 
+
     parentNode.AddChild(positionNode);
     parentNode.AddChild(dimensionNode);
     parentNode.AddChild(colorNode);
+    parentNode.AddChild(identifierNode);
 }
 
 void StorageSystem::prepareSprite(MyNode& parentNode, std::vector<std::string> filling) {
+    // To keep track of type
+    MyNode identifierNode{filling[0], &parentNode};
+
     MyNode positionNode{filling[1], &parentNode};
 
     MyNode xPos{"xpos", &positionNode};
@@ -333,9 +344,13 @@ void StorageSystem::prepareSprite(MyNode& parentNode, std::vector<std::string> f
     parentNode.AddChild(positionNode);
     parentNode.AddChild(dimensionNode);
     parentNode.AddChild(imageNode);
+    parentNode.AddChild(identifierNode);
 }
 
 void StorageSystem::prepareText(MyNode& parentNode, std::vector<std::string> filling) {
+    // To keep track of type
+    MyNode identifierNode{filling[0], &parentNode};
+
     MyNode positionNode{filling[1], &parentNode};
 
     MyNode xPos{"xpos", &positionNode};
@@ -378,7 +393,132 @@ void StorageSystem::prepareText(MyNode& parentNode, std::vector<std::string> fil
     parentNode.AddChild(positionNode);
     parentNode.AddChild(dimensionNode);
     parentNode.AddChild(colorNode);
+    parentNode.AddChild(identifierNode);
 }
+
+void StorageSystem::parseSavedInstance(MyNode &rootNode, EntityManager& _entity) {
+    MyNode rootChild { "id", &rootNode};
+    std::map<int, int> identifier{};
+
+    for (auto const& piece : rootNode.GetChildren())
+    {
+        int savedID = piece.GetIntValue();
+        if (!identifier.count(savedID)) {
+            identifier[savedID] = _entity.createEntity();
+        }
+
+        if (piece.GetName() == "drawablecomponent"){
+            parseDrawable(piece, _entity, identifier[savedID]);
+        }
+        else if (piece.GetName() == "gravitycomponent"){
+            parseGravity(piece, _entity, identifier[savedID]);
+        }
+        else if (piece.GetName() == "movecomponent"){
+            parseMove(piece, _entity, identifier[savedID]);
+        }
+        else if (piece.GetName() == "positioncomponent"){
+            // Not useful right now, seeing as positioncomponent seems to be a part of drawablecomponent
+            // Maybe as a indication of spawnpoint?
+            parsePosition(piece, _entity, identifier[savedID]);
+        }
+        else if (piece.GetName() == "turncomponent"){
+            parseTurn(piece, _entity, identifier[savedID]);
+        }
+    }
+    std::vector<Attribute> atat = rootChild.GetAttributes();
+//    const XMLAttribute* xmlAt = rootChild.GetAttributes();
+}
+
+void StorageSystem::parseDrawable(const MyNode& drawableNode, EntityManager& _entity, int identifier) {
+    DrawableComponent *comp = new DrawableComponent();
+    _entity.addComponentToEntity(identifier, comp);
+
+    std::vector<MyNode> childNodes = drawableNode.GetChildren();
+    if (childNodes[0].GetName() == "rectangle") {
+        // Frankenstein's monster?
+        comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({
+            childNodes[2].GetChildren()[0].GetIntValue(),
+            childNodes[2].GetChildren()[1].GetIntValue(),
+            childNodes[3].GetChildren()[0].GetIntValue(),
+            childNodes[3].GetChildren()[1].GetIntValue(),
+            Colour{childNodes[1].GetChildren()[3].GetIntValue(),
+                   childNodes[1].GetChildren()[2].GetIntValue(),
+                   childNodes[1].GetChildren()[1].GetIntValue(),
+                   childNodes[1].GetChildren()[0].GetIntValue()}}));
+    }
+    else if (childNodes[0].GetName() == "sprite") {
+
+        comp->shape = std::make_unique<ShapeSprite>(ShapeSprite(
+                childNodes[2].GetChildren()[0].GetIntValue(),
+                childNodes[2].GetChildren()[1].GetIntValue(),
+                childNodes[3].GetChildren()[0].GetIntValue(),
+                childNodes[3].GetChildren()[1].GetIntValue(),
+                childNodes[0].GetChildren()[0].GetValue()
+                ));
+    }
+    else if (childNodes[0].GetName() == "text") {
+        // filling[1]:  color
+        //  2           alpha value
+        //  3           blue
+        //  4           green
+        //  5           red
+        //
+        //
+        //
+        //
+        comp->shape = std::make_unique<ShapeText>(ShapeText(
+                childNodes[0].GetChildren()[0].GetIntValue(),
+                childNodes[0].GetChildren()[0].GetIntValue(),
+                childNodes[0].GetChildren()[0].GetValue(),
+                childNodes[0].GetChildren()[0].GetIntValue(),
+                childNodes[0].GetChildren()[0].GetIntValue(),
+                childNodes[0].GetChildren()[0].GetIntValue(),
+                Colour{childNodes[0].GetChildren()[0].GetIntValue(),
+                       childNodes[0].GetChildren()[0].GetIntValue(),
+                       childNodes[0].GetChildren()[0].GetIntValue(),
+                       childNodes[0].GetChildren()[0].GetIntValue()}
+                ));
+    }
+}
+
+void StorageSystem::parseGravity(const MyNode& gravityNode, EntityManager& _entity, int identifier) {
+    GravityComponent *comp = new GravityComponent();
+    _entity.addComponentToEntity(identifier, comp);
+
+    std::vector<MyNode> childNodes = gravityNode.GetChildren();
+    comp->gravityApplied = childNodes[0].GetIntValue();
+}
+
+void StorageSystem::parseMove(const MyNode& moveNode, EntityManager& _entity, int identifier) {
+    MoveComponent *comp = new MoveComponent();
+    _entity.addComponentToEntity(identifier, comp);
+
+    std::vector<MyNode> childNodes = moveNode.GetChildren();
+    comp->xVelocity = childNodes[1].GetIntValue();
+    comp->yVelocity = childNodes[0].GetIntValue();
+}
+
+void StorageSystem::parsePosition(const MyNode& positionNode, EntityManager& _entity, int identifier) {
+    PositionComponent *comp = new PositionComponent();
+    _entity.addComponentToEntity(identifier, comp);
+
+    std::vector<MyNode> childNodes = positionNode.GetChildren();
+        // Bit of a special case I guess? Position is stored under DrawableComponent.
+}
+
+void StorageSystem::parseTurn(const MyNode& turnNode, EntityManager& _entity, int identifier) {
+    TurnComponent *comp = new TurnComponent();
+    _entity.addComponentToEntity(identifier, comp);
+
+    std::vector<MyNode> childNodes = turnNode.GetChildren();
+    comp->switchTurn(childNodes[0].GetIntValue());
+    // Should I cast it or not?
+//    comp->switchTurn(static_cast<bool>(childNodes[0].GetIntValue()));
+    comp->setEnergy(childNodes[1].GetIntValue());
+
+}
+
+// Public functions
 
 void StorageSystem::assignRelevantEntityManager(std::shared_ptr<EntityManager> entityManager) {
     _entityManager = entityManager;
@@ -481,6 +621,21 @@ void StorageSystem::saveWorld() {
     vector<int> entityIDs;
     std::map<int, int> nodeLocations;
     vector<MyNode*> nodeIDs;
+    DrawableComponent *comp = new DrawableComponent();
+    int newID = _entityManager->createEntity();
+    _entityManager->addComponentToEntity(newID, comp);
+    comp->shape = std::make_unique<ShapeText>(ShapeText(
+            100, //x
+            200, //y
+            "Whatsup",
+            12, //size
+            16, //width
+            32, //height
+            Colour{160,
+                   200,
+                   50,
+                   100}
+    ));
 
     addDrawables(myDoc, _entityManager->getAllEntitiesWithComponent<DrawableComponent>(), nodeIDs, nodeLocations);
     addGravity(myDoc, _entityManager->getAllEntitiesWithComponent<GravityComponent>(), nodeIDs, nodeLocations);
@@ -586,9 +741,17 @@ void StorageSystem::saveWorld() {
     }
 }
 
-bool StorageSystem::loadWorld() {
+bool StorageSystem::loadWorld(std::shared_ptr<EntityManager> toFill, std::string filePath) {
 //    MyDocument loadDoc = _reader.LoadFile("LevelOne.xml");
-    MyNode rootNode = _reader.LoadFile("LevelOne.xml")->GetRoot();
+    std::unique_ptr<MyDocument> myDoc = _reader.LoadFile(filePath);
+    MyNode rootNode = myDoc->GetRoot();
+    bool bSuccess = false;
 
-    return false;
+
+
+    return bSuccess;
 }
+
+
+
+

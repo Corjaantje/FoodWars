@@ -20,10 +20,13 @@ public:
     void lowerRemainingTime(double t);
     double getRemainingTime() const;
     bool isMyTurn() const;
+    void setEnergy(int energy);
+    void setMaxEnergy(int energy);
     std::vector<std::string> serialize() override;
 
 private:
     int _energy;
+    int _maxEnergy;
     double _remainingTime;
     bool _myTurn = false;
 };

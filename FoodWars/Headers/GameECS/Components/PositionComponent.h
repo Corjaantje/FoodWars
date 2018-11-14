@@ -1,3 +1,4 @@
+#include "Component.h"
 
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
 

@@ -4,20 +4,19 @@
 
 #include "IBaseSystem.h"
 #include "../../../../TonicEngine/Headers/Visual/VisualFacade.h"
+#include <chrono>
 
 class DrawSystem : public IBaseSystem {
 private:
+    std::chrono::duration<double> _timeLast;
     std::shared_ptr<EntityManager> _entityManager;
     std::shared_ptr<VisualFacade> _visualFacade;
     Renderlist _renderList;
     int _updateCallCount;
-    double _deltaTimeTotal;
     std::string _fpsString;
 public:
     DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade);
     ~DrawSystem();
-    void generateTerrain();
-    void generateTerrainDrawables(int x, int y);
     void update(double dt) override;
 };
 

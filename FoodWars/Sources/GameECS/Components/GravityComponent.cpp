@@ -1,7 +1,7 @@
 #include "../../../Headers/GameECS/Components/GravityComponent.h"
 
 GravityComponent::GravityComponent() {
-    gravityApplied = 100;
+    gravityApplied = 15;
 }
 
 std::vector<std::string> GravityComponent::serialize() {

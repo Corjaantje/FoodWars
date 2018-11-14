@@ -4,6 +4,7 @@
 #include "../../Headers/Visual/Window.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <algorithm>
 
 WindowManager::WindowManager(std::shared_ptr<WindowResolutionCalculator> windowResCalc) {
     _window = new Window(_title, _windowWidth, _windowHeight);
@@ -50,10 +51,57 @@ void WindowManager::disablefullscreen(){
 void WindowManager::render(Renderlist renderlist) {
     SDL_RenderClear(_renderer);
     _renderer = _window->getRenderer();
+
+    // Sort the list by layer ascending
+    quickSort(renderlist.rectangleList, 0, renderlist.rectangleList.size() - 1);
+
+    // Add the sorted shapelist to queue
+    //std::queue<ShapeRectangle> queue;
+    //queue.push(renderlist.rectangleList[i]);
     renderRectangles(renderlist.rectangleList);
     renderSprites(renderlist.spriteList);
     renderText(renderlist.textList);
     SDL_RenderPresent(_renderer);
+}
+
+void WindowManager::swap (ShapeRectangle &a,ShapeRectangle &b){
+    ShapeRectangle temp = a;
+    a = b;             // a/b refer to the parameters that were passed
+    b = temp;          // modifying a reference is the same as modifiying the original
+}
+
+int WindowManager::partition (std::vector<ShapeRectangle> rectangles, int low, int high)
+{
+    int pivot = rectangles[high].layer;    // pivot
+    int i = (low - 1);  // Index of smaller element
+
+    for (int j = low; j <= high- 1; j++)
+    {
+        // If current element is smaller than or
+        // equal to pivot
+        if (rectangles[j].layer <= pivot)
+        {
+            i++;    // increment index of smaller element
+            swap(rectangles[i],rectangles[j]);
+        }
+    }
+    swap(rectangles[i + 1], rectangles[high]);
+    return (i + 1);
+}
+
+void WindowManager::quickSort(std::vector<ShapeRectangle> rectangles, int low, int high)
+{
+    if (low < high)
+    {
+        /* pi is partitioning index, arr[p] is now
+           at right place */
+        int pi = partition(rectangles, low, high);
+
+        // Separately sort elements before
+        // partition and after partition
+        quickSort(rectangles, low, pi - 1);
+        quickSort(rectangles, pi + 1, high);
+    }
 }
 
 void WindowManager::renderRectangles(std::vector<ShapeRectangle> rectangleList) {

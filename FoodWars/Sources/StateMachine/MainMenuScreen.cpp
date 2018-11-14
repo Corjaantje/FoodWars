@@ -12,7 +12,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper2.png", 0});
 
     // Level Selection
-    TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Select Level", [c = _context]() {  c->setActiveScreen<LevelSelectionScreen>(); }, 370, 110, 615, 300, Colour{255,255,255,0}, Colour{255,255,255,0}, 0};
+    TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Select Level", [c = _context]() {  c->setActiveScreen<LevelSelectionScreen>(); }, 370, 110, 615, 300, Colour{255,255,255,0}, Colour{255,255,255,0}, 1};
     levelSelectionButton->addToRender(&_renderList);
     _buttons.push_back(levelSelectionButton);
 
@@ -42,12 +42,12 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _buttons.push_back(creditsButton);
 
     // Quit
-    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [this]() { this->quitGame(); }, 120, 120, 1476, 10, Colour{0,0,0,0}, 0};
+    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [this]() { this->quitGame(); }, 120, 120, 1476, 10, Colour{0,0,0,0}, 1};
     quitButton->addToRender(&_renderList);
     _buttons.push_back(quitButton);
 
     // High Scores
-    SpriteButton* highScoresButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "trophy.png", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}, 0};
+    SpriteButton* highScoresButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "trophy.png", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}, 1};
     highScoresButton->addToRender(&_renderList);
     _buttons.push_back(highScoresButton);
 }

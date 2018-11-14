@@ -9,11 +9,14 @@ class GameLevel {
 public:
     GameLevel() = default;
     ~GameLevel() = default;
-public:
+private:
     EntityManager _entityManager;
     std::string _backgroundMusic;
     std::vector<Coordinate> _spawnPoints;
-private:
+public:
+    void setEntityManager(EntityManager entityManager);
+    void setBackgroundMusic(std::string backgroundMusic);
+    void setSpawnPoints(std::vector<Coordinate> spawnPoints);
 };
 
 

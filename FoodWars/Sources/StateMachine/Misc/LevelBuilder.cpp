@@ -6,12 +6,9 @@
 
 LevelBuilder::LevelBuilder() {
     _entityManager = new EntityManager();
-    _wallpaperList.emplace_back("WallpaperCity.png");
-    _wallpaperList.emplace_back("WallpaperSky.png");
 
     _musicList.emplace_back("");
     _selectedMusic = 0;
-    _musicList.emplace_back("wildwest");
 }
 
 void LevelBuilder::resetEntityManager() {
@@ -22,17 +19,17 @@ void LevelBuilder::resetEntityManager() {
     _entityManager = new EntityManager();
 }
 
-void LevelBuilder::incrementShapeSize() {
-    if(_shapeDimension < MAXIMAL_SHAPE_DIM){
-        _shapeDimension++;
-    }
-}
-
-void LevelBuilder::decrementShapeSize() {
-    if(_shapeDimension > MINIMAL_SHAPE_DIM){
-        _shapeDimension--;
-    }
-}
+//void LevelBuilder::incrementShapeSize() {
+//    if(_shapeDimension < MAXIMAL_SHAPE_DIM){
+//        _shapeDimension++;
+//    }
+//}
+//
+//void LevelBuilder::decrementShapeSize() {
+//    if(_shapeDimension > MINIMAL_SHAPE_DIM){
+//        _shapeDimension--;
+//    }
+//}
 
 void LevelBuilder::incrementColorRed() {
     _colorRed = (_colorRed + COLOR_INCREMENT % 255);
@@ -118,6 +115,9 @@ void LevelBuilder::removeBlock(int x, int y) {
     std::string gridCoord = std::to_string(convertedX) + std::to_string(convertedY);
     if(_CoordinateEntityMap.count(gridCoord) != 0){
         int entityId = _CoordinateEntityMap[gridCoord];
+        if(entityId == SPAWNPOINT_ID){
+            return;
+        }
         int it = -1;
         _entityManager->removeEntity(entityId);
         for(int i=0; i< _momentoList.size(); i++){
@@ -133,12 +133,12 @@ void LevelBuilder::removeBlock(int x, int y) {
 
 }
 
-void LevelBuilder::undoPlaceBlock() {
-    if(_momentoList.back() != 0){
-        _entityManager->removeEntity(_momentoList.back()->getState());
-        _momentoList.pop_back();
-    }
-}
+//void LevelBuilder::undoPlaceBlock() {
+//    if(_momentoList.back() != 0){
+//        _entityManager->removeEntity(_momentoList.back()->getState());
+//        _momentoList.pop_back();
+//    }
+//}
 
 void LevelBuilder::drawCurrentScene(Renderlist &renderlist) {
     std::map<int, std::shared_ptr<DrawableComponent>> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
@@ -167,7 +167,7 @@ int LevelBuilder::roundYCoordToGrid(int y) {
 
 
 void LevelBuilder::drawAdditionalItems(Renderlist &renderlist) {
-    //TODO TEMP FIX TO MAKE A BACKGROUND WORK.
+    //TODO TEMP FIX TO MAKE A BACKGROUND WORK UNTILL WE HAVE LAYERS.
     ShapeSprite wallpaper(1600, 900, 0, 0, _wallpaperList[_selectedWallpaper]);
     renderlist.backgroundSpriteList.emplace_back(wallpaper);
 
@@ -181,6 +181,10 @@ void LevelBuilder::drawAdditionalItems(Renderlist &renderlist) {
 
     ShapeRectangle preview(64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255));
     renderlist.rectangleList.emplace_back(preview);
+
+    for (auto &_spawnPoint : _spawnPoints) {
+        renderlist.spriteList.emplace_back(ShapeSprite{MINIMAL_SHAPE_DIM, MINIMAL_SHAPE_DIM, _spawnPoint.getXCoord(), _spawnPoint.getYCoord(), "Spawnpoint.png"});
+    }
 }
 
 void LevelBuilder::setNextWallpaper() {
@@ -224,4 +228,60 @@ std::string LevelBuilder::getSelectedSong() {
         std::string song = _musicList[_selectedMusic];
         return song;
     }
+}
+
+void LevelBuilder::placeSpawnsPoint(int x, int y) {
+    int convertedX = roundXCoordToGrid(x);
+    int convertedY = roundYCoordToGrid(y);
+    if(convertedY < BUILDING_LIMIT){
+        return;
+    }
+    std::string gridCoord = std::to_string(convertedX) + std::to_string(convertedY);
+    if(_CoordinateEntityMap.count(gridCoord) == 0){
+        Coordinate coord{};
+        coord.setCoordinates(convertedX, convertedY);
+        _spawnPoints.emplace_back(coord);
+        _CoordinateEntityMap[gridCoord] = SPAWNPOINT_ID;
+    }
+
+}
+
+void LevelBuilder::removeSpawnpPoint(int x, int y) {
+    int convertedX = roundXCoordToGrid(x);
+    int convertedY = roundYCoordToGrid(y);
+    if(convertedY < BUILDING_LIMIT){
+        return;
+    }
+    std::string gridCoord = std::to_string(convertedX) + std::to_string(convertedY);
+    if(_CoordinateEntityMap.count(gridCoord) != 0){
+        int entityId = _CoordinateEntityMap[gridCoord];
+        if(entityId != SPAWNPOINT_ID){
+            return;
+        }
+        int it = -1;
+        for(int i = 0; i < _spawnPoints.size(); i++){
+            if(_spawnPoints[i].getXCoord() == convertedX && _spawnPoints[i].getYCoord() == convertedY){
+                it = i;
+            }
+        }
+        if(it != -1){
+            _spawnPoints.erase(_spawnPoints.begin() + it);
+            _CoordinateEntityMap.erase(gridCoord);
+        }
+    }
+}
+
+GameLevel LevelBuilder::buildConstructedLevel() {
+    GameLevel gameLevel{};
+    gameLevel.setEntityManager(*_entityManager);
+    gameLevel.setSpawnPoints(_spawnPoints);
+    gameLevel.setBackgroundMusic(_musicList[_selectedMusic]);
+    return gameLevel;
+}
+void LevelBuilder::addMusicConfig(std::string music) {
+    _musicList.emplace_back(music);
+}
+
+void LevelBuilder::addWallpaperConfig(std::string wallpaper) {
+    _wallpaperList.emplace_back(wallpaper);
 }

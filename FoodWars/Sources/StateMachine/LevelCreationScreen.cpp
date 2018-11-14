@@ -8,6 +8,11 @@ LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> con
     _inputFacade->getMouseEventObservable()->registerObserver(this);
     _windowResCalc = _context->getWindowResolutionCalculator();
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
+
+    _levelBuilder.addWallpaperConfig("WallpaperCity.png");
+    _levelBuilder.addWallpaperConfig("WallpaperSky.png");
+    _levelBuilder.addMusicConfig("wildwest");
+
     selectedSong = "none";
     this->initButtons();
 }
@@ -148,6 +153,14 @@ void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
         }
         if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Right) {
             _levelBuilder.removeBlock(event->getXPosition(), event->getYPosition());
+        }
+    }
+    else{
+        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
+            _levelBuilder.placeSpawnsPoint(event->getXPosition(), event->getYPosition());
+        }
+        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Right) {
+            _levelBuilder.removeSpawnpPoint(event->getXPosition(), event->getYPosition());
         }
     }
 }

@@ -11,6 +11,7 @@ const int MINIMAL_SHAPE_DIM = 32;
 const int MAXIMAL_SHAPE_DIM = 64;
 const int COLOR_INCREMENT = 10;
 const int BUILDING_LIMIT = 192;
+const int SPAWNPOINT_ID = -1;
 
 class LevelBuilder {
 public:
@@ -20,6 +21,7 @@ private:
     EntityManager* _entityManager = nullptr;
     std::vector<EntityMomento*> _momentoList;
     std::map<std::string, int> _CoordinateEntityMap;
+    std::vector<Coordinate> _spawnPoints;
     bool _buildCollidable = false;
     bool _buildDamageable = false;
 
@@ -37,8 +39,8 @@ private:
 public:
     void resetEntityManager();
 
-    void incrementShapeSize();
-    void decrementShapeSize();
+//    void incrementShapeSize();
+//    void decrementShapeSize();
 
     void incrementColorRed();
     void incrementColorGreen();
@@ -50,7 +52,10 @@ public:
 
     void placeBlock(int x, int y);
     void removeBlock(int x, int y);
-    void undoPlaceBlock();
+//    void undoPlaceBlock();
+
+    void placeSpawnsPoint(int x, int y);
+    void removeSpawnpPoint(int x, int y);
 
     bool toggleCollidable();
     bool toggleDamageable();
@@ -62,6 +67,9 @@ public:
     void setPreviousMusic();
     std::string getSelectedSong();
     void drawCurrentScene(Renderlist &renderlist);
+
+    void addWallpaperConfig(std::string music);
+    void addMusicConfig(std::string wallpaper);
 
     GameLevel buildConstructedLevel();
 private:

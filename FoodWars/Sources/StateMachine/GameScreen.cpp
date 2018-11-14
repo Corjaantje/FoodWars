@@ -57,14 +57,14 @@ void GameScreen::update(std::shared_ptr<KeyEvent> event){
         _context->setActiveScreen<MainMenuScreen>();
 
     //Adjusting gamespeed
-    if(event->getKey() == KEY::KEY_PAGEUP) {
-
+    if(event->getKey() == KEY::KEY_PAGEUP && event->getKeyEventType() == KeyEventType::Down) {
+        _context->setTimeModifier(2);
     }
-    if(event->getKey() == KEY::KEY_PAGEDOWN) {
-
+    if(event->getKey() == KEY::KEY_PAGEDOWN && event->getKeyEventType() == KeyEventType::Down) {
+        _context->setTimeModifier(0.50);
     }
-    if(event->getKey() == KEY::KEY_HOME) {
-
+    if(event->getKey() == KEY::KEY_HOME && event->getKeyEventType() == KeyEventType::Down) {
+        _context->setTimeModifier(1);
     }
 }
 
@@ -75,6 +75,6 @@ void GameScreen::update(double deltaTime) {
     _audioFacade->playMusic("wildwest");
     _inputFacade->pollEvents();
     for(auto const &iterator : _systems){
-        iterator->update(deltaTime);
+        iterator->update(deltaTime * _context->getTimeModifier());
     }
 }

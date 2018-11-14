@@ -10,11 +10,9 @@
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
     std::shared_ptr<EntityManager> _entityManager;
-    std::shared_ptr<VisualFacade> _visualFacade;
-    std::vector<std::shared_ptr<IBaseSystem>> _systems;
-    std::shared_ptr<AudioFacade> _audioFacade;
+    std::vector<IBaseSystem*> _systems;
 public:
-    explicit GameScreen(std::shared_ptr<ScreenStateManager> context);
+    explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager);
     ~GameScreen();
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;

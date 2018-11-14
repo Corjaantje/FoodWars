@@ -21,7 +21,7 @@ void ScreenStateManager::setTimeModifier(double modifiedTime) {
     else {
         double newTime = timeModifier * modifiedTime;
 
-        if (newTime >= 0.50 && newTime <= 2)
+        if (newTime >= 0.40 && newTime <= 2.50)
             timeModifier = newTime;
     }
 }

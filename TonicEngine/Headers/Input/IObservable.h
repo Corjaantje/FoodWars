@@ -11,11 +11,12 @@
 #include "../Events/IEvent.h"
 #include "IObserver.h"
 #include "../Events/KeyEvent.h"
+#include <algorithm>
 
 template <typename T>
 class IObservable {
 private:
-    std::vector<std::shared_ptr<IObserver<T>>> _observers;
+    std::vector<IObserver<T>*> _observers;
 public:
     IObservable() {
 
@@ -26,8 +27,12 @@ public:
     }
 
     void registerObserver(IObserver<T>* iObserver) {
-        _observers.push_back(std::shared_ptr<IObserver<T>>(iObserver));
-    };
+        _observers.push_back(iObserver);
+    }
+
+    void unregisterObserver(IObserver<T>* iObserver) {
+        _observers.erase(std::remove(_observers.begin(), _observers.end(), iObserver), _observers.end());
+    }
 
     void notify(std::shared_ptr<T> event) const {
         for(auto& observer: _observers){

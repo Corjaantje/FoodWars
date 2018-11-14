@@ -8,7 +8,7 @@
 class LevelEditorScreen : public IScreen, public IObserver<KeyEvent> {
 public:
     explicit LevelEditorScreen(std::shared_ptr<ScreenStateManager> context);
-    ~LevelEditorScreen() override;
+    ~LevelEditorScreen();
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;
 };

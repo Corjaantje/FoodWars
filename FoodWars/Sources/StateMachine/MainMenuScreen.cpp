@@ -1,13 +1,11 @@
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 #include "../../Headers/StateMachine/UpgradesScreen.h"
+#include "../../Headers/StateMachine/CreditScreen.h"
 
 
 MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
-    visualFacade = context->getFacade<VisualFacade>();
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
-
-    _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
     _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper2.png"});
 
     // Level Selection
@@ -36,7 +34,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _buttons.push_back(helpButton);
 
     // Credits
-    TextButton* creditsButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Credits", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 190, 100, 10, 790, Colour{255,255,255,0}, Colour{255,255,255,0}};
+    TextButton* creditsButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Credits", [c = _context]() {  c->setActiveScreen<CreditScreen>(); }, 190, 100, 10, 790, Colour{255,255,255,0}, Colour{255,255,255,0}};
     creditsButton->addToRender(&_renderList);
     _buttons.push_back(creditsButton);
 

@@ -1,4 +1,6 @@
 #include <utility>
+
+#include <utility>
 #include "../../Headers/StateMachine/GameScreen.h"
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../../Headers/GameECS/Components/DrawableComponent.h"
@@ -9,9 +11,11 @@
 #include "../../Headers/GameECS/Systems/CollisionSystem.h"
 #include "../../Headers/GameECS/Systems/JumpSystem.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
+#include "../../Headers/StateMachine/PauseScreen.h"
 
-GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context),
-                                                                      _entityManager(std::make_shared<EntityManager>()) {
+GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager) : IScreen(context),
+                                                                                        _entityManager(std::make_shared<EntityManager>(entityManager))
+{
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
     CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };
     _systems.push_back(new JumpSystem { _entityManager, _inputFacade, *collisionSystem } );
@@ -19,38 +23,14 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     _systems.push_back(collisionSystem);
     _systems.push_back(new GravitySystem { _entityManager, *collisionSystem });
     _systems.push_back(new DrawSystem {_entityManager, visualFacade});
-    int player = _entityManager->createEntity();
-
-    DrawableComponent *drawableComponent = new DrawableComponent;
-    drawableComponent->shape = std::make_unique<ShapeSprite>(ShapeSprite({32, 48, 0, 0, "PlayerW_R0.png"}));
-    _entityManager->addComponentToEntity(player, drawableComponent);
-    _entityManager->addComponentToEntity(player, new BoxCollider(32, 48));
-    TurnComponent *turnComponent = new TurnComponent;
-    turnComponent->switchTurn(true);
-    _entityManager->addComponentToEntity(player, new MoveComponent);
-    _entityManager->addComponentToEntity(player, new PositionComponent{32, 0});
-    _entityManager->addComponentToEntity(player, turnComponent);
-    _entityManager->addComponentToEntity(player, new GravityComponent());
-
-    DrawableComponent *drawableComponent2 = new DrawableComponent;
-    drawableComponent2->shape = std::make_unique<ShapeSprite>(ShapeSprite(32, 48, 0, 0, "PlayerL_L1.png"));
-    player = _entityManager->createEntity();
-    _entityManager->addComponentToEntity(player, drawableComponent2);
-    _entityManager->addComponentToEntity(player, new TurnComponent);
-    _entityManager->addComponentToEntity(player, new MoveComponent);
-    _entityManager->addComponentToEntity(player, new PositionComponent{576, 0});
-    _entityManager->addComponentToEntity(player, new BoxCollider(32, 48));
-    _entityManager->addComponentToEntity(player, new GravityComponent());
 
     TurnSystem* turnSystem = new TurnSystem {_entityManager};
     _systems.push_back(turnSystem);
-    turnSystem->getRelevantEntities();
-    turnSystem->setTurnTime(20);
 }
 
-void GameScreen::update(std::shared_ptr<KeyEvent> event) {
-    if (event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down) {
-        _context->setActiveScreen<MainMenuScreen>();
+void GameScreen::update(std::shared_ptr<KeyEvent> event){
+    if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down) {
+        _context->setActiveScreen<PauseScreen>();
     }
 }
 

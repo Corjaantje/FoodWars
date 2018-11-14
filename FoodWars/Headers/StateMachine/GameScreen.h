@@ -12,7 +12,7 @@ private:
     std::shared_ptr<EntityManager> _entityManager;
     std::vector<IBaseSystem*> _systems;
 public:
-    explicit GameScreen(std::shared_ptr<ScreenStateManager> context);
+    explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager);
     ~GameScreen();
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;

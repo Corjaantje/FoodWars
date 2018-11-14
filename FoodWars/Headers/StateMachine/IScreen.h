@@ -29,11 +29,12 @@ public:
         _inputFacade->getWindowEventObservable()->registerObserver(this);
     }
 
-    ~IScreen() = default;
-
+    ~IScreen() {
+        _inputFacade->getWindowEventObservable()->unregisterObserver(this);
+    }
     virtual void update(double deltaTime) = 0;
 
-    void update(std::shared_ptr<WindowEvent> event) override {
+    void update(std::shared_ptr<WindowEvent> event) {
         if (event->GetWindowEventType() == WindowEventType::Quit) {
             _isClosed = true;
         }

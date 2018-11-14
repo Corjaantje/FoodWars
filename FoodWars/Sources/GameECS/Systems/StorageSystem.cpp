@@ -514,8 +514,7 @@ void StorageSystem::saveWorld(std::string savePath) {
         myDoc.AddToRoot(*point);
     }
 
-    std::string testName = "LevelOne.xml";
-    _writer.WriteXMLFile(myDoc, testName);
+    _writer.WriteXMLFile(myDoc, savePath);
     for (auto const& point : nodeIDs)
     {
         delete point;

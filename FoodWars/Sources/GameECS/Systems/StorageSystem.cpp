@@ -110,9 +110,13 @@ void StorageSystem::addDrawables(MyDocument& myDoc, std::map<int, std::shared_pt
         */
         IDNode->AddChild(groupingNode);
 
-        myDoc.AddToRoot(*IDNode);
+
         rootNode.AddChild(*IDNode);
 
+//        if (IDNode->NextSiblingElement() == nullptr)
+//        {
+//            myDoc.AddToRoot(*IDNode);
+//        }
         if (!nodeLocations.count(drawComp.first)) {
             existingIDNodes.push_back(IDNode);
             nodeLocations.insert(std::make_pair(drawComp.first, existingIDNodes.size() - 1));
@@ -146,9 +150,13 @@ void StorageSystem::addGravity(MyDocument& myDoc, std::map<int, std::shared_ptr<
         groupingNode.AddChild(gravNode);
         IDNode->AddChild(groupingNode);
 
-        myDoc.AddToRoot(*IDNode);
+
         rootNode.AddChild(*IDNode);
 
+//        if (IDNode->NextSiblingElement() == nullptr)
+//        {
+//            myDoc.AddToRoot(*IDNode);
+//        }
         if (!nodeLocations.count(gravComp.first)) {
             existingIDNodes.push_back(IDNode);
             nodeLocations.insert(std::make_pair(gravComp.first, existingIDNodes.size() - 1));
@@ -181,9 +189,13 @@ void StorageSystem::addMove(MyDocument& myDoc, std::map<int, std::shared_ptr<Mov
         groupingNode.AddChild(yMoveNode);
         IDNode->AddChild(groupingNode);
 
-        myDoc.AddToRoot(*IDNode);
+
         rootNode.AddChild(*IDNode);
 
+//        if (IDNode->NextSiblingElement() == nullptr)
+//        {
+//            myDoc.AddToRoot(*IDNode);
+//        }
         if (!nodeLocations.count(moveComp.first)) {
             existingIDNodes.push_back(IDNode);
             nodeLocations.insert(std::make_pair(moveComp.first, existingIDNodes.size() - 1));
@@ -216,9 +228,13 @@ void StorageSystem::addPosition(MyDocument& myDoc, std::map<int, std::shared_ptr
         groupingNode.AddChild(yNode);
         IDNode->AddChild(groupingNode);
 
-        myDoc.AddToRoot(*IDNode);
+
         rootNode.AddChild(*IDNode);
 
+//        if (IDNode->NextSiblingElement() == nullptr)
+//        {
+//            myDoc.AddToRoot(*IDNode);
+//        }
         if(!nodeLocations.count(posComp.first)) {
             existingIDNodes.push_back(IDNode);
             nodeLocations.insert(std::make_pair(posComp.first, existingIDNodes.size() - 1));
@@ -253,9 +269,13 @@ void StorageSystem::addTurns(MyDocument& myDoc, std::map<int, std::shared_ptr<Tu
         groupingNode.AddChild(turnNode);
         IDNode->AddChild(groupingNode);
 
-        myDoc.AddToRoot(*IDNode);
+
         rootNode.AddChild(*IDNode);
 
+//        if (IDNode->NextSiblingElement() == nullptr)
+//        {
+//            myDoc.AddToRoot(*IDNode);
+//        }
         if (!nodeLocations.count(turnComp.first)) {
             existingIDNodes.push_back(IDNode);
             nodeLocations.insert(std::make_pair(turnComp.first, existingIDNodes.size() - 1));
@@ -400,13 +420,41 @@ void StorageSystem::parseSavedInstance(MyNode &rootNode, EntityManager& _entity)
     MyNode rootChild { "id", &rootNode};
     std::map<int, int> identifier{};
 
+    int totalIDcount = 0;
     for (auto const& piece : rootNode.GetChildren())
     {
         int savedID = piece.GetIntValue();
         if (!identifier.count(savedID)) {
             identifier[savedID] = _entity.createEntity();
         }
+        int childrenProcessed = 0;
+        while (childrenProcessed < piece.GetChildren().size())
+        {
+            MyNode componentNode = piece.GetChildren()[childrenProcessed];
+//            recursiveCrawl(componentNode, _entity, savedID);
+            if (componentNode.GetName() == "drawablecomponent"){
+                parseDrawable(componentNode, _entity, identifier[savedID]);
+            }
+            else if (componentNode.GetName() == "gravitycomponent"){
+                parseGravity(componentNode, _entity, identifier[savedID]);
+            }
+            else if (componentNode.GetName() == "movecomponent"){
+                parseMove(componentNode, _entity, identifier[savedID]);
+            }
+            else if (componentNode.GetName() == "positioncomponent"){
+                // Not useful right now, seeing as positioncomponent seems to be a part of drawablecomponent
+                // Maybe as a indication of spawnpoint?
+                parsePosition(componentNode, _entity, identifier[savedID]);
+            }
+            else if (componentNode.GetName() == "turncomponent"){
+                parseTurn(componentNode, _entity, identifier[savedID]);
+            }
+            childrenProcessed++;
+        }
+        totalIDcount++;
 
+//        recursiveCrawl(piece.GetChildren()[0], _entity, savedID);
+        /*
         if (piece.GetName() == "drawablecomponent"){
             parseDrawable(piece, _entity, identifier[savedID]);
         }
@@ -424,9 +472,57 @@ void StorageSystem::parseSavedInstance(MyNode &rootNode, EntityManager& _entity)
         else if (piece.GetName() == "turncomponent"){
             parseTurn(piece, _entity, identifier[savedID]);
         }
+        // */
     }
-    std::vector<Attribute> atat = rootChild.GetAttributes();
+    std::string questioning = "Am I even doing it right?";
+    /*
+    MyNode idNodes { "id", rootNode.FirstChildElement()};
+    while (idNodes.NextSiblingElement() != nullptr)
+    {
+        int savedID = idNodes.GetIntValue();
+        if (!identifier.count(savedID)){
+            identifier[savedID] = _entity.createEntity();
+        }
+
+        int childrenProcessed = 0;
+        while (childrenProcessed < idNodes.GetChildren().size())
+        {
+            MyNode componentNode = idNodes.GetChildren()[childrenProcessed];
+            recursiveCrawl(componentNode, _entity, savedID);
+        }
+//        recursiveCrawl(*idNodes.FirstChildElement(), _entity, savedID);
+    }
+     // */
+//    std::vector<Attribute> atat = rootChild.GetAttributes();
 //    const XMLAttribute* xmlAt = rootChild.GetAttributes();
+}
+
+void StorageSystem::recursiveCrawl(MyNode& piece, EntityManager& _entity, int id){
+    if (piece.NextSiblingElement() == nullptr)
+    {
+        return;
+    }
+    else
+    {
+        if (piece.GetName() == "drawablecomponent"){
+            parseDrawable(piece, _entity, id);
+        }
+        else if (piece.GetName() == "gravitycomponent"){
+            parseGravity(piece, _entity, id);
+        }
+        else if (piece.GetName() == "movecomponent"){
+            parseMove(piece, _entity, id);
+        }
+        else if (piece.GetName() == "positioncomponent"){
+            // Not useful right now, seeing as positioncomponent seems to be a part of drawablecomponent
+            // Maybe as a indication of spawnpoint?
+            parsePosition(piece, _entity, id);
+        }
+        else if (piece.GetName() == "turncomponent"){
+            parseTurn(piece, _entity, id);
+        }
+//        recursiveCrawl(piece.NextSiblingElement(), _entity, id);
+    }
 }
 
 void StorageSystem::parseDrawable(const MyNode& drawableNode, EntityManager& _entity, int identifier) {
@@ -453,7 +549,7 @@ void StorageSystem::parseDrawable(const MyNode& drawableNode, EntityManager& _en
                 childNodes[2].GetChildren()[1].GetIntValue(),
                 childNodes[3].GetChildren()[0].GetIntValue(),
                 childNodes[3].GetChildren()[1].GetIntValue(),
-                childNodes[0].GetChildren()[0].GetValue()
+                childNodes[1].GetChildren()[0].GetValue()
                 ));
     }
     else if (childNodes[0].GetName() == "text") {
@@ -499,22 +595,26 @@ void StorageSystem::parseMove(const MyNode& moveNode, EntityManager& _entity, in
 }
 
 void StorageSystem::parsePosition(const MyNode& positionNode, EntityManager& _entity, int identifier) {
+    /*
     PositionComponent *comp = new PositionComponent();
     _entity.addComponentToEntity(identifier, comp);
 
     std::vector<MyNode> childNodes = positionNode.GetChildren();
+     */
         // Bit of a special case I guess? Position is stored under DrawableComponent.
 }
 
 void StorageSystem::parseTurn(const MyNode& turnNode, EntityManager& _entity, int identifier) {
-    TurnComponent *comp = new TurnComponent();
+    std::vector<MyNode> childNodes = turnNode.GetChildren();
+    TurnComponent *comp = new TurnComponent(childNodes[1].GetIntValue(), childNodes[0].GetIntValue());
     _entity.addComponentToEntity(identifier, comp);
 
-    std::vector<MyNode> childNodes = turnNode.GetChildren();
-    comp->switchTurn(childNodes[0].GetIntValue());
+
+//    comp->switchTurn(childNodes[0].GetIntValue());
     // Should I cast it or not?
 //    comp->switchTurn(static_cast<bool>(childNodes[0].GetIntValue()));
-    comp->setEnergy(childNodes[1].GetIntValue());
+//    comp->setEnergy(childNodes[1].GetIntValue());
+    std::string teststring = "Odd.";
 
 }
 
@@ -621,27 +721,31 @@ void StorageSystem::saveWorld() {
     vector<int> entityIDs;
     std::map<int, int> nodeLocations;
     vector<MyNode*> nodeIDs;
-    DrawableComponent *comp = new DrawableComponent();
-    int newID = _entityManager->createEntity();
-    _entityManager->addComponentToEntity(newID, comp);
-    comp->shape = std::make_unique<ShapeText>(ShapeText(
-            100, //x
-            200, //y
-            "Whatsup",
-            12, //size
-            16, //width
-            32, //height
-            Colour{160,
-                   200,
-                   50,
-                   100}
-    ));
+//    DrawableComponent *comp = new DrawableComponent();
+//    int newID = _entityManager->createEntity();
+//    _entityManager->addComponentToEntity(newID, comp);
+//    comp->shape = std::make_unique<ShapeText>(ShapeText(
+//            100, //x
+//            200, //y
+//            "Whatsup",
+//            12, //size
+//            16, //width
+//            32, //height
+//            Colour{160,
+//                   200,
+//                   50,
+//                   100}
+//    ));
 
     addDrawables(myDoc, _entityManager->getAllEntitiesWithComponent<DrawableComponent>(), nodeIDs, nodeLocations);
     addGravity(myDoc, _entityManager->getAllEntitiesWithComponent<GravityComponent>(), nodeIDs, nodeLocations);
     addMove(myDoc, _entityManager->getAllEntitiesWithComponent<MoveComponent>(), nodeIDs, nodeLocations);
     addPosition(myDoc, _entityManager->getAllEntitiesWithComponent<PositionComponent>(), nodeIDs, nodeLocations);
     addTurns(myDoc, _entityManager->getAllEntitiesWithComponent<TurnComponent>(), nodeIDs, nodeLocations);
+    for (auto const& point : nodeIDs)
+    {
+        myDoc.AddToRoot(*point);
+    }
     /*
     for (auto const& comp : draws)
     {
@@ -733,20 +837,23 @@ void StorageSystem::saveWorld() {
     // vector[1] > values separated by an unusual symbol?
     // Or maybe the names of each grouping instead?
 //    myDoc.AddToRoot(trueRootNode);
-    _writer.WriteXMLFile(myDoc, "LevelOne.xml");
+    std::string testName = "LevelOne.xml";
+    _writer.WriteXMLFile(myDoc, testName);
     // cleaning of pointers to heap before exiting scope
     for (auto const& point : nodeIDs)
     {
         delete point;
     }
+//    std::shared_ptr<EntityManager> enterTaining;
+//    loadWorld(enterTaining, testName);
 }
 
 bool StorageSystem::loadWorld(std::shared_ptr<EntityManager> toFill, std::string filePath) {
 //    MyDocument loadDoc = _reader.LoadFile("LevelOne.xml");
-    std::unique_ptr<MyDocument> myDoc = _reader.LoadFile(filePath);
+    std::unique_ptr<MyDocument> myDoc = _reader.LoadFile("./"+filePath);
     MyNode rootNode = myDoc->GetRoot();
     bool bSuccess = false;
-
+    parseSavedInstance(rootNode, *toFill);
 
 
     return bSuccess;

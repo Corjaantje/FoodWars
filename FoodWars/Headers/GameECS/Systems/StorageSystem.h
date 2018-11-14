@@ -31,6 +31,7 @@ private:
     void prepareText(MyNode& parentNode, std::vector<std::string> filling);
     // part of loading
     void parseSavedInstance(MyNode& rootNode, EntityManager& _entity);
+    void recursiveCrawl(MyNode& baseNode, EntityManager& _entity, int id);
     void parseDrawable(const MyNode& drawableNode, EntityManager& _entity, int identifier);
     void parseGravity(const MyNode& gravityNode, EntityManager& _entity, int identifier);
     void parseMove(const MyNode& moveNode, EntityManager& _entity, int identifier);

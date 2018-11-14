@@ -30,7 +30,6 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
     if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down) {
-        std::cout << "switch to pause" << std::endl;
         _context->setActiveScreen<PauseScreen>();
     }
 }

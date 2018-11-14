@@ -12,7 +12,7 @@ class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
     std::shared_ptr<EntityManager> _entityManager;
     std::vector<IBaseSystem*> _systems;
-    std::shared_ptr<StorageSystem> _storage;
+    StorageSystem* _storage;
 public:
     explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager);
     ~GameScreen();

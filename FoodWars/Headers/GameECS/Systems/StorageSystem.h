@@ -42,7 +42,7 @@ public:
     ~StorageSystem();
 
     void assignRelevantEntityManager(std::shared_ptr<EntityManager> entityManager);
-    void saveWorld();
+    void saveWorld(std::string savePath);
 
     // Pass a string for identifying the world?
     bool loadWorld(std::shared_ptr<EntityManager> toFill, std::string filePath);

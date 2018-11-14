@@ -26,7 +26,7 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
 
     TurnSystem* turnSystem = new TurnSystem {_entityManager};
     _systems.push_back(turnSystem);
-    _storage = std::make_shared<StorageSystem>();
+    _storage = new StorageSystem();
     _storage->assignRelevantEntityManager(_entityManager);
 }
 

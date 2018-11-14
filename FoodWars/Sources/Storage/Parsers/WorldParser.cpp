@@ -26,16 +26,7 @@ void WorldParser::ParseToXML() {
 
     }
 }
-//void DrawSystem::generateTerrainDrawables(int x, int y) {
-//    int randomNum = rand() % 19 + (-9);
-//    int randomNum2 = rand() % 19 + (-9);
-//    int randomNum3 = rand() % 19 + (-9);
-//    int id = _entityManager->createEntity();
-//    DrawableComponent *comp = new DrawableComponent();
-//    _entityManager->addComponentToEntity(id, comp);
-//    _entityManager->addComponentToEntity(id, new BoxCollider{16,16});
-//    comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({16, 16, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
-//}
+
 MyDocument WorldParser::ParseDrawableComponents(MyDocument& my_doc, std::map<int, std::shared_ptr<DrawableComponent>> toSave) {
     MyNode root { my_doc.GetRoot() };
     MyNode group_node { "drawables", &root };
@@ -43,23 +34,18 @@ MyDocument WorldParser::ParseDrawableComponents(MyDocument& my_doc, std::map<int
     {
         MyNode drawNode{ "drawcomponent", &group_node};
 
-        // Does the "id" even matter? Dynamically assigning (on load) should work just as well
         MyNode idNode { "id", &drawNode};
         idNode.SetValue(std::to_string(0));
 
-        // Gathering values of the "shape"
         MyNode shapeNode { "shape", &drawNode};
 
         MyNode widthNode { "width", &shapeNode };
         widthNode.SetValue(std::to_string(drawComp.second->shape->getWidth()));
         MyNode heightNode { "height", &shapeNode };
         heightNode.SetValue(std::to_string(drawComp.second->shape->getHeight()));
-        // MyNode colorNode { "color", &shape_node };
-        // colorNode.SetValue(IDK MAN)
 
         shapeNode.AddChild(widthNode);
         shapeNode.AddChild(heightNode);
-        //shape_node.AddChild(colorNode);
 
         MyNode positionNode { "position", &drawNode};
 
@@ -71,7 +57,6 @@ MyDocument WorldParser::ParseDrawableComponents(MyDocument& my_doc, std::map<int
         positionNode.AddChild(yPos);
         positionNode.AddChild(xPos);
 
-        //draw_node.AddChild(id_node);
         drawNode.AddChild(shapeNode);
         drawNode.AddChild(positionNode);
 

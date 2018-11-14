@@ -8,6 +8,7 @@ LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> con
     _inputFacade->getMouseEventObservable()->registerObserver(this);
     _windowResCalc = _context->getWindowResolutionCalculator();
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
+    selectedSong = "none";
     this->initButtons();
 }
 
@@ -58,6 +59,22 @@ void LevelCreationScreen::initButtons() {
     SpriteButton* WallpaperPrevious = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.setPreviousWallpaper(); }, 50, 50, 460, 10, Colour{0,0,0,0}};
     WallpaperPrevious->addToRender(&_renderList);
     _buttons.push_back(WallpaperPrevious);
+
+    //Music Next
+    SpriteButton* MusicNext = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] {
+        _levelBuilder.setNextMusic();
+        selectedSong = _levelBuilder.getSelectedSong();
+        }, 50, 50, 710, 80, Colour{0,0,0,0}};
+    MusicNext->addToRender(&_renderList);
+    _buttons.push_back(MusicNext);
+
+    //Music Previous
+    SpriteButton* MusicPrevious = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] {
+        _levelBuilder.setPreviousMusic();
+        selectedSong = _levelBuilder.getSelectedSong();
+        }, 50, 50, 460, 80, Colour{0,0,0,0}};
+    MusicPrevious->addToRender(&_renderList);
+    _buttons.push_back(MusicPrevious);
 
     toggleCollidable = new SpriteButton {*_inputFacade->getMouseEventObservable(), "stateOff.png", [this] {
         bool state = _levelBuilder.toggleCollidable();
@@ -141,5 +158,6 @@ void LevelCreationScreen::callRender() {
     for(int i=0; i < _buttons.size(); i++){
         _buttons[i]->addToRender(&_renderList);
     }
+    _renderList.textList.emplace_back(ShapeText(610 - selectedSong.size() * 10, 130, selectedSong, 150, selectedSong.size() * 20, 50, Colour(0, 0, 0, 0)));
     visualFacade->render(_renderList);
 }

@@ -19,6 +19,7 @@ public:
 
     SpriteButton* toggleBuildTerrain = nullptr;
     SpriteButton* toggleSetSpawn = nullptr;
+    std::string selectedSong;
     bool buildTerrainActive = true;
 private:
     void initButtons();

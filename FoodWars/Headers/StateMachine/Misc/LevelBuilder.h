@@ -5,6 +5,7 @@
 #include "../../GameECS/Entities/EntityManager.h"
 #include "EntityMomento.h"
 #include "../../../../TonicEngine/Headers/Visual/Renderlist.h"
+#include "GameLevel.h"
 
 const int MINIMAL_SHAPE_DIM = 32;
 const int MAXIMAL_SHAPE_DIM = 64;
@@ -30,6 +31,9 @@ private:
 
     std::vector<std::string> _wallpaperList;
     int _selectedWallpaper = 0;
+
+    std::vector<std::string> _musicList;
+    int _selectedMusic = 0;
 public:
     void resetEntityManager();
 
@@ -54,7 +58,12 @@ public:
     void setNextWallpaper();
     void setPreviousWallpaper();
 
+    void setNextMusic();
+    void setPreviousMusic();
+    std::string getSelectedSong();
     void drawCurrentScene(Renderlist &renderlist);
+
+    GameLevel buildConstructedLevel();
 private:
     int roundXCoordToGrid(int x);
     int roundYCoordToGrid(int y);

@@ -8,6 +8,10 @@ LevelBuilder::LevelBuilder() {
     _entityManager = new EntityManager();
     _wallpaperList.emplace_back("WallpaperCity.png");
     _wallpaperList.emplace_back("WallpaperSky.png");
+
+    _musicList.emplace_back("");
+    _selectedMusic = 0;
+    _musicList.emplace_back("wildwest");
 }
 
 void LevelBuilder::resetEntityManager() {
@@ -193,5 +197,31 @@ void LevelBuilder::setPreviousWallpaper() {
             newIndex = _wallpaperList.size() - 1;
         }
         _selectedWallpaper = newIndex;
+    }
+}
+
+void LevelBuilder::setNextMusic() {
+    if(_musicList.size() > 1){
+        int newIndex = (_selectedMusic + 1) % _musicList.size();
+        _selectedMusic = newIndex;
+    }
+}
+
+void LevelBuilder::setPreviousMusic() {
+    if(_musicList.size() > 1){
+        int newIndex = (_selectedMusic - 1);
+        if(newIndex < 0){
+            newIndex = _musicList.size() - 1;
+        }
+        _selectedMusic = newIndex;
+    }
+}
+
+std::string LevelBuilder::getSelectedSong() {
+    if (_musicList[_selectedMusic].empty()) {
+        return "none";
+    } else{
+        std::string song = _musicList[_selectedMusic];
+        return song;
     }
 }

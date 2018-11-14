@@ -20,7 +20,7 @@ GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
     std::shared_ptr<CollisionSystem> collisionSystem = std::make_shared<CollisionSystem>(_entityManager);
 
-    _systems.push_back(std::make_shared<JumpSystem>(_entityManager, _inputFacade, *collisionSystem.get()));
+    _systems.push_back(std::make_shared<JumpSystem>(_entityManager, _inputFacade, _audioFacade, *collisionSystem.get()));
     _systems.push_back(std::make_shared<MoveSystem>(_entityManager, _inputFacade, *collisionSystem.get()));
     _systems.push_back(collisionSystem);
     _systems.push_back(std::make_shared<GravitySystem>(_entityManager, *collisionSystem.get()));
@@ -74,7 +74,7 @@ GameScreen::~GameScreen() {
 }
 
 void GameScreen::update(double deltaTime) {
-    _audioFacade->playMusic("wildwest");
+    _audioFacade->playMusic("nature");
     _inputFacade->pollEvents();
     for(auto const &iterator : _systems){
         iterator->update(deltaTime);

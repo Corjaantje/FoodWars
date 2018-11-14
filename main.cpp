@@ -44,9 +44,16 @@ int main(int argc, char** argv)
 
     GeneralFacade* generalFacade = new GeneralFacade();
 
-    audioFacade->addAudio("oof", "./Assets/Audio/oof.wav");
+    // Music
     audioFacade->addAudio("wildwest", "./Assets/Audio/wildwest.wav");
     audioFacade->addAudio("menu", "./Assets/Audio/menu.wav");
+    audioFacade->addAudio("space", "./Assets/Audio/space.wav");
+    audioFacade->addAudio("space2", "./Assets/Audio/space2.wav");
+    audioFacade->addAudio("nature", "./Assets/Audio/nature.wav");
+
+    // Sound Effects
+    audioFacade->addAudio("oof", "./Assets/Audio/oof.wav");
+    audioFacade->addAudio("jump", "./Assets/Audio/jump.wav");
 
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
     InputFacade* inputFacade = new InputFacade();

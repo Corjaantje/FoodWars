@@ -48,13 +48,14 @@ void DrawSystem::drawNonComponents() {
     //Framerate
     std::chrono::duration<double> currentTime = std::chrono::steady_clock::now().time_since_epoch();
     double loggen = currentTime.count() - _timeLast.count();
-    if(loggen >= 1) {
+    if (loggen >= 1) {
         _fpsString = "FPS: " + std::to_string(_updateCallCount);
         _timeLast = std::chrono::steady_clock::now().time_since_epoch();
         _updateCallCount = 0;
     }
-    _renderList.textList.emplace_back(ShapeText(27, 155, _fpsString, 180, 75, 37, Colour(255, 255, 255, 0)));
-
+    if(_showFPS) {
+        _renderList.textList.emplace_back(ShapeText(27, 155, _fpsString, 180, 75, 37, Colour(255, 255, 255, 0)));
+    }
     //Draw Turn Timer
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         if(iterator.second->isMyTurn()){
@@ -86,4 +87,8 @@ void DrawSystem::drawCurrentPlayer() {
         }
         _playerUpdateCount = 0;
     }
+}
+
+bool DrawSystem::toggleFpsCounter() {
+    _showFPS = !_showFPS;
 }

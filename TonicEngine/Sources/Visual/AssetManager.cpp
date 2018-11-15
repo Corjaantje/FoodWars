@@ -9,7 +9,6 @@ AssetManager::AssetManager() {
 
 SDL_Texture* AssetManager::GetSDLTextureFromPNG(SDL_Renderer *renderer, std::string fileName) {
     if(_surfaceMapPNG.count(fileName) == 0){
-        std::cout << "Could not find file " << fileName << std::endl;
         return nullptr;
     }
 
@@ -25,7 +24,6 @@ SDL_Texture* AssetManager::GetSDLTextureFromPNG(SDL_Renderer *renderer, std::str
 
 SDL_Texture* AssetManager::GetSDLTextureFromBMP(SDL_Renderer* renderer, std::string fileName) {
     if(_surfaceMapBMP.count(fileName) == 0){
-        std::cout << "Could not find file " << fileName << std::endl;
         return nullptr;
     }
 

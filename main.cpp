@@ -22,7 +22,7 @@
 
 #include "FoodWars/Headers/GameECS/Components/TurnComponent.h"
 #include "FoodWars/Headers/GameECS/Systems/TurnSystem.h"
-#include "FoodWars/Headers/StateMachine/LevelEditorScreen.h"
+#include "FoodWars/Headers/StateMachine/LevelCreationScreen.h"
 #include "FoodWars/Headers/StateMachine/SettingsScreen.h"
 #include "FoodWars/Headers/StateMachine/UpgradesScreen.h"
 #include "FoodWars/Headers/StateMachine/PauseScreen.h"
@@ -62,7 +62,7 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new CreditScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager, levelManager->_entityManager));
     screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager, levelManager));
-    screenStateManager->addOrSetScreenState(new LevelEditorScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new LevelCreationScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new PauseScreen(screenStateManager));
     screenStateManager->setActiveScreen<MainMenuScreen>();

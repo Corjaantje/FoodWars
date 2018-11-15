@@ -7,8 +7,8 @@
 #include "../../../../TonicEngine/Headers/Visual/Renderlist.h"
 #include "GameLevel.h"
 
-const int MINIMAL_SHAPE_DIM = 32;
-const int MAXIMAL_SHAPE_DIM = 64;
+const int SHAPE_DIMENSION = 32;
+//const int MAXIMAL_SHAPE_DIM = 64;
 const int COLOR_INCREMENT = 10;
 const int BUILDING_LIMIT = 192;
 const int SPAWNPOINT_ID = -1;
@@ -25,7 +25,7 @@ private:
     bool _buildCollidable = false;
     bool _buildDamageable = false;
 
-    int _shapeDimension = MINIMAL_SHAPE_DIM;
+    int _shapeDimension = SHAPE_DIMENSION;
 
     int _colorRed = 0; //Between 0 and 255
     int _colorGreen = 0; //Between 0 and 255

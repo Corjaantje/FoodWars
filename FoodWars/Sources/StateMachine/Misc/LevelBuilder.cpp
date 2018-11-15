@@ -26,7 +26,7 @@ void LevelBuilder::resetEntityManager() {
 //}
 //
 //void LevelBuilder::decrementShapeSize() {
-//    if(_shapeDimension > MINIMAL_SHAPE_DIM){
+//    if(_shapeDimension > SHAPE_DIMENSION){
 //        _shapeDimension--;
 //    }
 //}
@@ -150,7 +150,7 @@ void LevelBuilder::drawCurrentScene(Renderlist &renderlist) {
 }
 
 int LevelBuilder::roundXCoordToGrid(int x) {
-    int remainder = x % MINIMAL_SHAPE_DIM;
+    int remainder = x % SHAPE_DIMENSION;
     if (remainder == 0)
         return x;
 
@@ -158,7 +158,7 @@ int LevelBuilder::roundXCoordToGrid(int x) {
 }
 
 int LevelBuilder::roundYCoordToGrid(int y) {
-    int remainder = y % MINIMAL_SHAPE_DIM;
+    int remainder = y % SHAPE_DIMENSION;
     if (remainder == 0)
         return y;
 
@@ -183,7 +183,7 @@ void LevelBuilder::drawAdditionalItems(Renderlist &renderlist) {
     renderlist.rectangleList.emplace_back(preview);
 
     for (auto &_spawnPoint : _spawnPoints) {
-        renderlist.spriteList.emplace_back(ShapeSprite{MINIMAL_SHAPE_DIM, MINIMAL_SHAPE_DIM, _spawnPoint.getXCoord(), _spawnPoint.getYCoord(), "Spawnpoint.png"});
+        renderlist.spriteList.emplace_back(ShapeSprite{SHAPE_DIMENSION, SHAPE_DIMENSION, _spawnPoint.getXCoord(), _spawnPoint.getYCoord(), "Spawnpoint.png"});
     }
 }
 

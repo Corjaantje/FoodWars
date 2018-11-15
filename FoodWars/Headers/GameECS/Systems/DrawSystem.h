@@ -14,10 +14,17 @@ private:
     Renderlist _renderList;
     int _updateCallCount;
     std::string _fpsString;
+
+    std::string _playerIcon;
+    int _playerUpdateCount = 0;
 public:
     DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade);
-    ~DrawSystem();
+    ~DrawSystem() override;
     void update(double dt) override;
+private:
+    void drawNonComponents();
+    void drawCurrentPlayer();
+
 };
 
 

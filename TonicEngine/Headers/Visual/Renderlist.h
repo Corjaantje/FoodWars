@@ -10,7 +10,10 @@ class Renderlist {
 public:
     Renderlist() = default;
     ~Renderlist() = default;
+
+    void clearLists();
 public:
+    std::vector<ShapeSprite> backgroundSpriteList;
     std::vector<ShapeRectangle> rectangleList;
     std::vector<ShapeSprite> spriteList;
     std::vector<ShapeText> textList;

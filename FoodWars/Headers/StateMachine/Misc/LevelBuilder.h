@@ -3,7 +3,7 @@
 
 
 #include "../../GameECS/Entities/EntityManager.h"
-#include "EntityMomento.h"
+#include "EntityMemento.h"
 #include "../../../../TonicEngine/Headers/Visual/Renderlist.h"
 #include "GameLevel.h"
 
@@ -19,7 +19,7 @@ public:
     ~LevelBuilder() = default;
 private:
     EntityManager* _entityManager = nullptr;
-    std::vector<EntityMomento*> _momentoList;
+    std::vector<EntityMemento*> _mementoList;
     std::map<std::string, int> _CoordinateEntityMap;
     std::vector<Coordinate> _spawnPoints;
     bool _buildCollidable = false;
@@ -54,8 +54,8 @@ public:
     void removeBlock(int x, int y);
 //    void undoPlaceBlock();
 
-    void placeSpawnsPoint(int x, int y);
-    void removeSpawnpPoint(int x, int y);
+    void placeSpawnPoint(int x, int y);
+    void removeSpawnPoint(int x, int y);
 
     bool toggleCollidable();
     bool toggleDamageable();

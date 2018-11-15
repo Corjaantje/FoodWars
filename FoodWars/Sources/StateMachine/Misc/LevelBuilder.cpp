@@ -13,8 +13,8 @@ LevelBuilder::LevelBuilder() {
 
 void LevelBuilder::resetEntityManager() {
     delete _entityManager;
-    for(int i=0; i < _momentoList.size(); i++){
-        delete _momentoList[i];
+    for(int i=0; i < _mementoList.size(); i++){
+        delete _mementoList[i];
     }
     _entityManager = new EntityManager();
 }
@@ -89,8 +89,8 @@ void LevelBuilder::placeBlock(int x, int y) {
     std::string gridCoord = std::to_string(convertedX) + std::to_string(convertedY);
     if(_CoordinateEntityMap.count(gridCoord) == 0){
         int entity = _entityManager->createEntity();
-        auto momento = new EntityMomento(entity);
-        _momentoList.push_back(momento);
+        auto momento = new EntityMemento(entity);
+        _mementoList.push_back(momento);
 
         if(_buildCollidable){
             _entityManager->addComponentToEntity(entity, new BoxCollider(_shapeDimension, _shapeDimension));
@@ -120,13 +120,13 @@ void LevelBuilder::removeBlock(int x, int y) {
         }
         int it = -1;
         _entityManager->removeEntity(entityId);
-        for(int i=0; i< _momentoList.size(); i++){
-            if(_momentoList[i]->getState() == entityId){
+        for(int i=0; i< _mementoList.size(); i++){
+            if(_mementoList[i]->getState() == entityId){
                 it = i;
             }
         }
         if(it != -1){
-        _momentoList.erase(_momentoList.begin() + it);
+        _mementoList.erase(_mementoList.begin() + it);
         }
         _CoordinateEntityMap.erase(gridCoord);
     }
@@ -134,9 +134,9 @@ void LevelBuilder::removeBlock(int x, int y) {
 }
 
 //void LevelBuilder::undoPlaceBlock() {
-//    if(_momentoList.back() != 0){
-//        _entityManager->removeEntity(_momentoList.back()->getState());
-//        _momentoList.pop_back();
+//    if(_mementoList.back() != 0){
+//        _entityManager->removeEntity(_mementoList.back()->getState());
+//        _mementoList.pop_back();
 //    }
 //}
 
@@ -230,7 +230,7 @@ std::string LevelBuilder::getSelectedSong() {
     }
 }
 
-void LevelBuilder::placeSpawnsPoint(int x, int y) {
+void LevelBuilder::placeSpawnPoint(int x, int y) {
     int convertedX = roundXCoordToGrid(x);
     int convertedY = roundYCoordToGrid(y);
     if(convertedY < BUILDING_LIMIT){
@@ -246,7 +246,7 @@ void LevelBuilder::placeSpawnsPoint(int x, int y) {
 
 }
 
-void LevelBuilder::removeSpawnpPoint(int x, int y) {
+void LevelBuilder::removeSpawnPoint(int x, int y) {
     int convertedX = roundXCoordToGrid(x);
     int convertedY = roundYCoordToGrid(y);
     if(convertedY < BUILDING_LIMIT){

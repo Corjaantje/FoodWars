@@ -157,10 +157,10 @@ void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
     }
     else{
         if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
-            _levelBuilder.placeSpawnsPoint(event->getXPosition(), event->getYPosition());
+            _levelBuilder.placeSpawnPoint(event->getXPosition(), event->getYPosition());
         }
         if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Right) {
-            _levelBuilder.removeSpawnpPoint(event->getXPosition(), event->getYPosition());
+            _levelBuilder.removeSpawnPoint(event->getXPosition(), event->getYPosition());
         }
     }
 }

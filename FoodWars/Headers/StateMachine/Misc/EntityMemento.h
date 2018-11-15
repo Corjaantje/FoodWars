@@ -2,9 +2,9 @@
 #define PROJECT_SWA_ENTITYMOMENTO_H
 
 
-class EntityMomento {
+class EntityMemento {
 public:
-    EntityMomento(int entityID);
+    EntityMemento(int entityID);
     int getState() const;
 private:
     int _entityId;

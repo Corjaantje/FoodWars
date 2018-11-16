@@ -48,6 +48,22 @@ EntityManager LevelManager::startLevel(int level) {
             _entityManager.addComponentToEntity(player, new MoveComponent);
             _entityManager.addComponentToEntity(player, new BoxCollider(48, 72));
             _entityManager.addComponentToEntity(player, new GravityComponent());
+
+            int boundOne = _entityManager.createEntity();
+            _entityManager.addComponentToEntity(boundOne, new BoxCollider(1600, 1600));
+            _entityManager.addComponentToEntity(boundOne, new PositionComponent(-1600, 0));
+
+            int boundTwo = _entityManager.createEntity();
+            _entityManager.addComponentToEntity(boundTwo, new BoxCollider(1600, 1600));
+            _entityManager.addComponentToEntity(boundTwo, new PositionComponent(1600, 0));
+
+            int boundThree = _entityManager.createEntity();
+            _entityManager.addComponentToEntity(boundThree, new BoxCollider(900, 900));
+            _entityManager.addComponentToEntity(boundThree, new PositionComponent(0, -900));
+
+            int boundFour = _entityManager.createEntity();
+            _entityManager.addComponentToEntity(boundFour, new BoxCollider(900, 900));
+            _entityManager.addComponentToEntity(boundFour, new PositionComponent(0, 900));
             break;
         }
         default:

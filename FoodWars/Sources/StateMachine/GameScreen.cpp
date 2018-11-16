@@ -22,23 +22,33 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
     _systems.push_back(new MoveSystem { _entityManager, _inputFacade, *collisionSystem });
     _systems.push_back(collisionSystem);
     _systems.push_back(new GravitySystem { _entityManager, *collisionSystem });
-    _systems.push_back(new DrawSystem {_entityManager, visualFacade});
-
+    drawSystem = new DrawSystem {_entityManager, visualFacade};
+    _systems.push_back(drawSystem);
     TurnSystem* turnSystem = new TurnSystem {_entityManager};
     _systems.push_back(turnSystem);
 }
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down)
-        _context->setActiveScreen<PauseScreen>();
+    if (event->getKeyEventType() == KeyEventType::Down) {
+        if(event->getKey() == KEY::KEY_ESCAPE)
+            _context->setActiveScreen<PauseScreen>();
 
-    //Adjusting gamespeed
-    if(event->getKey() == KEY::KEY_PAGEUP && event->getKeyEventType() == KeyEventType::Down)
-        _context->setTimeModifier(2.50);
-    if(event->getKey() == KEY::KEY_PAGEDOWN && event->getKeyEventType() == KeyEventType::Down)
-        _context->setTimeModifier(0.40);
-    if(event->getKey() == KEY::KEY_HOME && event->getKeyEventType() == KeyEventType::Down)
-        _context->setTimeModifier(1);
+        //Adjusting gamespeed
+        if(event->getKey() == KEY::KEY_PAGEUP) {
+            _context->setTimeModifier(2.50);
+        }
+        if(event->getKey() == KEY::KEY_PAGEDOWN) {
+            _context->setTimeModifier(0.40);
+        }
+        if(event->getKey() == KEY::KEY_HOME) {
+            _context->setTimeModifier(1);
+        }
+
+        //Toggle Framerate
+        if(event->getKey() == KEY::KEY_F){
+            drawSystem->toggleFpsCounter();
+        }
+    }
 }
 
 GameScreen::~GameScreen() {

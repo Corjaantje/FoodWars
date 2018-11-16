@@ -10,13 +10,14 @@
 #include "../General/WindowResolutionCalculator.h"
 #include <vector>
 #include <memory>
+#include "IRenderer.h"
 
-class WindowManager {
+class WindowManager : public IRenderer {
 public:
     WindowManager(std::shared_ptr<WindowResolutionCalculator> windowResCalc);
     ~WindowManager();
 
-    void render(Renderlist renderlist);
+    void render(Renderlist &renderlist);
 
     void setTitle(const std::string &title);
     void setResolution(int width, int height);
@@ -32,6 +33,10 @@ public:
     void pollEvents();
     bool isWindowClosed();
 
+    void renderRectangle(const ShapeRectangle &rectangle) override;
+    void renderText(const ShapeText &text) override;
+    void renderSprite(const ShapeSprite &sprite) override;
+
 private:
     void renderRectangles(std::vector<ShapeRectangle> rectangleList);
     void renderSprites(std::vector<ShapeSprite> rectangleSprite);
@@ -45,7 +50,6 @@ private:
     int _windowHeight = DEFAULT_HEIGHT;
     int _windowWidth = DEFAULT_WIDTH;
     bool _fullscreen = false;
-    std::map<int, std::vector<IShape*>> _shapes; ;
 };
 
 

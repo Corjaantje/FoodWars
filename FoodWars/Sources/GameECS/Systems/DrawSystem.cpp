@@ -18,9 +18,7 @@ DrawSystem::~DrawSystem() = default;
 
 void DrawSystem::update(double dt) {
     std::map<int, std::shared_ptr<DrawableComponent>> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
-    _renderList.rectangleList.clear();
-    _renderList.spriteList.clear();
-    _renderList.textList.clear();
+    _renderList._shapes.clear();
     _updateCallCount++;
     _deltaTimeTotal += dt;
     if(_updateCallCount >= 10){
@@ -28,8 +26,8 @@ void DrawSystem::update(double dt) {
         _updateCallCount = 0;
         _deltaTimeTotal = 0;
     }
-    _renderList.textList.emplace_back(ShapeText(0, 0, _fpsString, 80, 75, 50, Colour(0, 0, 0, 0), 0));
-    _renderList.rectangleList.emplace_back(ShapeRectangle(640,480,0,0, Colour(173,216,230,0), 0));
+    _renderList._shapes[1].push_back(new ShapeText(0, 0, _fpsString, 80, 75, 50, Colour(0, 0, 0, 0), 0));
+    _renderList._shapes[1].push_back(new ShapeRectangle(640,480,0,0, Colour(173,216,230,0), 0));
 
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<DrawableComponent>()) {
         std::shared_ptr<PositionComponent> positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);

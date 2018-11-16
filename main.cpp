@@ -64,7 +64,7 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new LevelEditorScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
 
-    screenStateManager->setActiveScreen<MainMenuScreen>();
+    screenStateManager->setActiveScreen<GameScreen>();
 
     //Config
     double frameRateCap = 61.0;

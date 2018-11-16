@@ -78,3 +78,7 @@ void TextButton::setButtonColor(const Colour &colour) {
 void TextButton::setOnClickFunction(const std::function<void()> &onClick) {
     this->_onClickFunction = onClick;
 }
+
+void TextButton::render(IRenderer &renderer) const {
+    shapeText.render(renderer);
+}

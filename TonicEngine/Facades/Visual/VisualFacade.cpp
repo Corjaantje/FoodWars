@@ -40,7 +40,7 @@ void VisualFacade::disablefullscreen(){
     _windowManager->disablefullscreen();
 };
 
-void VisualFacade::render(Renderlist renderlist) {
+void VisualFacade::render(Renderlist &renderlist) {
     _windowManager->render(renderlist);
 }
 

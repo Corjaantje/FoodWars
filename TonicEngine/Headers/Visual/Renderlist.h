@@ -2,6 +2,7 @@
 #define PROJECT_SWA_RENDERLIST_H
 
 #include <vector>
+#include <map>
 #include "Shapes/ShapeRectangle.h"
 #include "Shapes/ShapeSprite.h"
 #include "Shapes/ShapeText.h"
@@ -11,9 +12,7 @@ public:
     Renderlist() = default;
     ~Renderlist() = default;
 public:
-    std::vector<ShapeRectangle> rectangleList;
-    std::vector<ShapeSprite> spriteList;
-    std::vector<ShapeText> textList;
+    std::map<int, std::vector<IShape*>> _shapes;
 };
 
 

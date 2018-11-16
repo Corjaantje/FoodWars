@@ -10,6 +10,7 @@ public:
     ShapeSprite(int width, int height, int xPos, int yPos, std::string imageURL, int layer);
     ~ShapeSprite() override;
     void addToRender(Renderlist* renderlist) override;
+    void render(IRenderer &renderer) const override;
 public:
     int width;
     int height;

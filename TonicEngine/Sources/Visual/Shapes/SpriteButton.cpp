@@ -20,3 +20,7 @@ void SpriteButton::update(std::shared_ptr<MouseEvent> event) {
        && (event->getYPosition() >= yPos && event->getYPosition() <= yPos + height)  && event->getMouseEventType() == MouseEventType::Down)
         _onClickFunction();
 }
+
+void SpriteButton::render(IRenderer &renderer) const {
+    shapeSprite.render(renderer);
+}

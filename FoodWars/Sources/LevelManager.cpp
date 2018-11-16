@@ -58,13 +58,20 @@ EntityManager LevelManager::startLevel(int level) {
 }
 
 void LevelManager::generateTerrain() {
-    for(int y=384; y < 900; y+=32) {
+    for(int y=480; y < 900; y+=32) {
         for (int x=0; x < 1600; x+=32) {
             if ((y % 32 == 0) && (x % 32 == 0)) {
                 generateTerrainDrawables(x, y);
             }
         }
     }
+    generateTerrainDrawables(0, 480-32);
+    generateTerrainDrawables(0, 480-64);
+    generateTerrainDrawables(32, 480-32);
+    generateTerrainDrawables(1600-32, 480-32);
+    generateTerrainDrawables(1600-32, 480-64);
+    generateTerrainDrawables(1600-64, 480-32);
+
 }
 
 void LevelManager::generateTerrainDrawables(int x, int y) {

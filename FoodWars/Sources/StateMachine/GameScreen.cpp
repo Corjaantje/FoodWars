@@ -22,8 +22,8 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
     _systems.push_back(new MoveSystem { _entityManager, _inputFacade, *collisionSystem });
     _systems.push_back(collisionSystem);
     _systems.push_back(new GravitySystem { _entityManager, *collisionSystem });
-    _systems.push_back(new DrawSystem {_entityManager, visualFacade});
-
+    drawSystem = new DrawSystem {_entityManager, visualFacade};
+    _systems.push_back(drawSystem);
     TurnSystem* turnSystem = new TurnSystem {_entityManager};
     _systems.push_back(turnSystem);
 }
@@ -31,6 +31,10 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
     if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down) {
         _context->setActiveScreen<PauseScreen>();
+    }
+    //Toggle Framerate
+    if(event->getKey() == KEY::KEY_F && event->getKeyEventType() == KeyEventType::Down){
+        drawSystem->toggleFpsCounter();
     }
 }
 

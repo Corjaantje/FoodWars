@@ -14,9 +14,7 @@ class TurnSystem : public IBaseSystem {
 private:
     int _timePerTurn;
     int _defaultTimePerTurn = 30;
-
     std::shared_ptr<EntityManager> _entityManager;
-
 public:
     TurnSystem(std::shared_ptr<EntityManager> entityManager);
     ~TurnSystem() override;

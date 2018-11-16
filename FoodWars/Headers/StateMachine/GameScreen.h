@@ -11,6 +11,7 @@ class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
     std::shared_ptr<EntityManager> _entityManager;
     std::vector<IBaseSystem*> _systems;
+    DrawSystem* drawSystem = nullptr;
 public:
     explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager);
     ~GameScreen();

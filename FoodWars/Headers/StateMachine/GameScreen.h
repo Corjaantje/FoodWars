@@ -13,6 +13,7 @@ private:
     std::shared_ptr<AudioFacade> _audioFacade;
     std::shared_ptr<VisualFacade> _visualFacade;
     std::vector<IBaseSystem*> _systems;
+    DrawSystem* drawSystem = nullptr;
 public:
     explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager);
     ~GameScreen();

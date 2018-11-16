@@ -59,6 +59,22 @@ EntityManager LevelManager::startLevel(int level) {
             _entityManager.addComponentToEntity(player, new GravityComponent());
             _entityManager.addComponentToEntity(player, animationComponent2);
 
+
+            int boundOne = _entityManager.createEntity();
+            _entityManager.addComponentToEntity(boundOne, new BoxCollider(1600, 1600));
+            _entityManager.addComponentToEntity(boundOne, new PositionComponent(-1600, 0));
+
+            int boundTwo = _entityManager.createEntity();
+            _entityManager.addComponentToEntity(boundTwo, new BoxCollider(1600, 1600));
+            _entityManager.addComponentToEntity(boundTwo, new PositionComponent(1600, 0));
+
+            int boundThree = _entityManager.createEntity();
+            _entityManager.addComponentToEntity(boundThree, new BoxCollider(900, 900));
+            _entityManager.addComponentToEntity(boundThree, new PositionComponent(0, -900));
+
+            int boundFour = _entityManager.createEntity();
+            _entityManager.addComponentToEntity(boundFour, new BoxCollider(900, 900));
+            _entityManager.addComponentToEntity(boundFour, new PositionComponent(0, 900));
             break;
         }
         default:
@@ -69,13 +85,20 @@ EntityManager LevelManager::startLevel(int level) {
 }
 
 void LevelManager::generateTerrain() {
-    for(int y=384; y < 900; y+=32) {
+    for(int y=480; y < 900; y+=32) {
         for (int x=0; x < 1600; x+=32) {
             if ((y % 32 == 0) && (x % 32 == 0)) {
                 generateTerrainDrawables(x, y);
             }
         }
     }
+    generateTerrainDrawables(0, 480-32);
+    generateTerrainDrawables(0, 480-64);
+    generateTerrainDrawables(32, 480-32);
+    generateTerrainDrawables(1600-32, 480-32);
+    generateTerrainDrawables(1600-32, 480-64);
+    generateTerrainDrawables(1600-64, 480-32);
+
 }
 
 void LevelManager::generateTerrainDrawables(int x, int y) {

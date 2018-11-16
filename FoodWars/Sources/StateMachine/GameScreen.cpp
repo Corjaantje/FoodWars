@@ -3,7 +3,6 @@
 #include <utility>
 #include "../../Headers/StateMachine/GameScreen.h"
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"
-#include "../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../Headers/GameECS/Components/GravityComponent.h"
@@ -11,6 +10,7 @@
 #include "../../Headers/GameECS/Systems/CollisionSystem.h"
 #include "../../Headers/GameECS/Systems/JumpSystem.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
+#include "../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../Headers/StateMachine/PauseScreen.h"
 
 GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager) : IScreen(context),
@@ -29,12 +29,25 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
 }
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down) {
-        _context->setActiveScreen<PauseScreen>();
-    }
-    //Toggle Framerate
-    if(event->getKey() == KEY::KEY_F && event->getKeyEventType() == KeyEventType::Down){
-        drawSystem->toggleFpsCounter();
+    if (event->getKeyEventType() == KeyEventType::Down) {
+        if(event->getKey() == KEY::KEY_ESCAPE)
+            _context->setActiveScreen<PauseScreen>();
+
+        //Adjusting gamespeed
+        if(event->getKey() == KEY::KEY_PAGEUP) {
+            _context->setTimeModifier(2.50);
+        }
+        if(event->getKey() == KEY::KEY_PAGEDOWN) {
+            _context->setTimeModifier(0.40);
+        }
+        if(event->getKey() == KEY::KEY_HOME) {
+            _context->setTimeModifier(1);
+        }
+
+        //Toggle Framerate
+        if(event->getKey() == KEY::KEY_F){
+            drawSystem->toggleFpsCounter();
+        }
     }
 }
 
@@ -47,7 +60,7 @@ GameScreen::~GameScreen() {
 void GameScreen::update(double deltaTime) {
     audioFacade->playMusic("wildwest");
     _inputFacade->pollEvents();
-    for (auto const &iterator : _systems) {
-        iterator->update(deltaTime);
+    for(auto const &iterator : _systems){
+        iterator->update(deltaTime * _context->getTimeModifier());
     }
 }

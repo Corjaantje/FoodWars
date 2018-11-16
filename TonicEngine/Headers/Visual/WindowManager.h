@@ -36,9 +36,6 @@ private:
     void renderRectangles(std::vector<ShapeRectangle> rectangleList);
     void renderSprites(std::vector<ShapeSprite> rectangleSprite);
     void renderText(std::vector<ShapeText> textList);
-    void quickSort(std::vector<ShapeRectangle>, int low, int high);
-    int partition (std::vector<ShapeRectangle>, int low, int high);
-    void swap (ShapeRectangle &a,ShapeRectangle &b);
 private:
     AssetManager* _assetManager = nullptr;
     Window *_window = nullptr;
@@ -48,6 +45,7 @@ private:
     int _windowHeight = DEFAULT_HEIGHT;
     int _windowWidth = DEFAULT_WIDTH;
     bool _fullscreen = false;
+    std::map<int, std::vector<IShape*>> _shapes; ;
 };
 
 

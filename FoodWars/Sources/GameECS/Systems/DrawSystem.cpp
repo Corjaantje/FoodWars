@@ -82,7 +82,9 @@ void DrawSystem::drawCurrentPlayer() {
         {
             if(x.second->isMyTurn()){
                 ShapeSprite* sprite = dynamic_cast<ShapeSprite*>(_entityManager->getComponentFromEntity<DrawableComponent>(x.first)->shape.get());
-                _playerIcon = sprite->imageURL;
+               if(sprite != nullptr) {
+                   _playerIcon = sprite->imageURL;
+               }
             }
         }
         _playerUpdateCount = 0;

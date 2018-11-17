@@ -16,7 +16,7 @@ HelpScreen::HelpScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
 
     _renderList.textList.emplace_back(ShapeText(1040, 480, "'A'", 0, 30, 30, Colour(255, 255, 255, 0)));
     _renderList.textList.emplace_back(ShapeText(1040, 600, "'D'", 0, 30, 30, Colour(255, 255, 255, 0)));
-    _renderList.textList.emplace_back(ShapeText(1040, 720, "'Spacebar'", 0, 200, 30, Colour(255, 255, 255, 0)));
+    _renderList.textList.emplace_back(ShapeText(1040, 720, "'W'", 0, 30, 30, Colour(255, 255, 255, 0)));
 }
 
 HelpScreen::~HelpScreen() {

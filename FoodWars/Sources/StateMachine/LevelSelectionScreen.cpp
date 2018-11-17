@@ -1,21 +1,29 @@
+#include <utility>
+
 #include "../../Headers/StateMachine/LevelSelectionScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
-LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
-    visualFacade = context->getFacade<VisualFacade>();
+LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager) : IScreen(context) {
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
-    _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
-
-    _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
+    _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaperLevelSelect.png"});
 
     // MainMenu
-    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 50, 50, 0, 0, Colour{0,0,0,0}};
+    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}};
     quitButton->addToRender(&_renderList);
     _buttons.push_back(quitButton);
 
+    // Highscore
+    //TODO ADD HIGHSCORE SCREEN BUTTON
+    SpriteButton* highscorebutton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 120, 120, 150, 10, Colour{0,0,0,0}};
+    highscorebutton->addToRender(&_renderList);
+    _buttons.push_back(highscorebutton);
+
     // Level 1
-    TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Level 1", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 200};
+    TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Level 1", [c = _context, levelManager = std::move(levelManager)]() {
+        c->addOrSetScreenState(new GameScreen{c, levelManager->startLevel(1)});
+        c->setActiveScreen<GameScreen>();
+    }, 250, 80, 680, 310, Colour(255, 255, 255, 255), Colour(255, 255, 255, 255)};
     levelSelectionButton->addToRender(&_renderList);
     _buttons.push_back(levelSelectionButton);
 }

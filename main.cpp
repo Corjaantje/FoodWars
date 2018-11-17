@@ -15,16 +15,18 @@
 #include "TonicEngine/Headers/Communication/CommunicationFacade.h"
 #include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
 #include "FoodWars/Headers/StateMachine/GameScreen.h"
+#include "FoodWars/Headers/StateMachine/CreditScreen.h"
 #include "TonicEngine/Headers/Input/PrintWindowObserver.h"
 #include "TonicEngine/Headers/Input/WindowClosedObserver.h"
 #include "TonicEngine/Facades/GeneralFacade.h"
 
 #include "FoodWars/Headers/GameECS/Components/TurnComponent.h"
 #include "FoodWars/Headers/GameECS/Systems/TurnSystem.h"
-#include "FoodWars/Headers/StateMachine/HighscoreScreen.h"
-#include "FoodWars/Headers/StateMachine/LevelEditorScreen.h"
+#include "FoodWars/Headers/StateMachine/LevelCreationScreen.h"
 #include "FoodWars/Headers/StateMachine/SettingsScreen.h"
 #include "FoodWars/Headers/StateMachine/UpgradesScreen.h"
+#include "FoodWars/Headers/StateMachine/PauseScreen.h"
+#include "FoodWars/Headers/StateMachine/HighscoreScreen.h"
 #include <ctime>
 #include <chrono>
 
@@ -49,6 +51,7 @@ int main(int argc, char** argv)
     audioFacade->addAudio("wildwest", "../FoodWars/Assets/Audio/wildwest.wav");
     audioFacade->addAudio("menu", "../FoodWars/Assets/Audio/menu.wav");
 
+    std::shared_ptr<LevelManager> levelManager = std::make_shared<LevelManager>();
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
     InputFacade* inputFacade = new InputFacade();
     inputFacade->setWindowResolutionCalculator(windowResolutionCalculator);
@@ -58,12 +61,13 @@ int main(int argc, char** argv)
     screenStateManager->addFacade(audioFacade);
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new UpgradesScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new HighscoreScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new LevelEditorScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new CreditScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager, levelManager->_entityManager));
+    screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager, levelManager));
+    screenStateManager->addOrSetScreenState(new LevelCreationScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
-
+    screenStateManager->addOrSetScreenState(new PauseScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new HighscoreScreen(screenStateManager));
     screenStateManager->setActiveScreen<MainMenuScreen>();
 
     //Config

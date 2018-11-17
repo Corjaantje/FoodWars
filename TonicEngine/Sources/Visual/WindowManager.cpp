@@ -50,6 +50,7 @@ void WindowManager::disablefullscreen(){
 void WindowManager::render(Renderlist renderlist) {
     SDL_RenderClear(_renderer);
     _renderer = _window->getRenderer();
+    renderSprites(renderlist.backgroundSpriteList);
     renderRectangles(renderlist.rectangleList);
     renderSprites(renderlist.spriteList);
     renderText(renderlist.textList);
@@ -88,10 +89,10 @@ void WindowManager::renderText(std::vector<ShapeText> textList) {
         ShapeText &shapeText = textList[i];
         SDL_Texture* Message = _assetManager->GetSDLTextureFromText(_renderer, shapeText);
         SDL_Rect Message_rect; //create a rect
-        Message_rect.x = shapeText.xPos * (_windowWidth / DEFAULT_WIDTH);  //controls the rect's x coordinate
-        Message_rect.y = shapeText.yPos * (_windowHeight / DEFAULT_HEIGHT); // controls the rect's y coordinte
-        Message_rect.w = shapeText.width * (_windowHeight / DEFAULT_HEIGHT) + 1; // controls the width of the rect
-        Message_rect.h = shapeText.height * (_windowWidth / DEFAULT_WIDTH) + 1; // controls the height of the rect
+        Message_rect.x = _windowResCalc->getConvertedxPosDraw(shapeText.xPos);  //controls the rect's x coordinate
+        Message_rect.y = _windowResCalc->getConvertedyPosDraw(shapeText.yPos); // controls the rect's y coordinte
+        Message_rect.w = _windowResCalc->getConvertedWidthDraw(shapeText.width);; // controls the width of the rect
+        Message_rect.h = _windowResCalc->getConvertedHeightDraw(shapeText.height); // controls the height of the rect
         SDL_RenderCopy(_renderer, Message, NULL, &Message_rect);
     }
 }

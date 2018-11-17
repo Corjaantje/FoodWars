@@ -7,7 +7,7 @@
 
 class ShapeText : public IShape {
 public:
-    ShapeText(int x, int y, std::string string, int fontSize, int width, int height, Colour colour, int layer);
+    ShapeText(int x, int y, std::string string, int fontSize, int width, int height, Colour colour);
     ~ShapeText() override;
     void addToRender(Renderlist* renderlist) override;
     void render(IRenderer &renderer) const override;

@@ -2,7 +2,7 @@
 #include "../../../Headers/Visual/Renderlist.h"
 
 ShapeText::ShapeText(const int x, const int y, std::string string, int fontSize, int width, int height,
-                     Colour colour, int layer)
+                     Colour colour)
         : IShape(x, y), width(width), height(height), fontSize(fontSize), text(string), colour(colour), layer(3) {};
 
 ShapeText::~ShapeText() {}

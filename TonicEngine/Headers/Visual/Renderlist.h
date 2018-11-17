@@ -11,6 +11,8 @@ class Renderlist {
 public:
     Renderlist() = default;
     ~Renderlist() = default;
+
+    void clearLists();
 public:
     std::map<int, std::vector<IShape*>> _shapes;
 };

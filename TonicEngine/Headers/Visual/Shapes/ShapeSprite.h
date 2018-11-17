@@ -7,7 +7,7 @@
 
 class ShapeSprite : public IShape {
 public:
-    ShapeSprite(int width, int height, int xPos, int yPos, std::string imageURL, int layer);
+    ShapeSprite(int width, int height, int xPos, int yPos, std::string imageURL);
     ~ShapeSprite() override;
     void addToRender(Renderlist* renderlist) override;
     void render(IRenderer &renderer) const override;

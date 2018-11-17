@@ -36,11 +36,6 @@ public:
     void renderRectangle(const ShapeRectangle &rectangle) override;
     void renderText(const ShapeText &text) override;
     void renderSprite(const ShapeSprite &sprite) override;
-
-private:
-    void renderRectangles(std::vector<ShapeRectangle> rectangleList);
-    void renderSprites(std::vector<ShapeSprite> rectangleSprite);
-    void renderText(std::vector<ShapeText> textList);
 private:
     AssetManager* _assetManager = nullptr;
     Window *_window = nullptr;

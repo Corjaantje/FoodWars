@@ -9,7 +9,8 @@
 #include "../../../TonicEngine/Facades/IFacade.h"
 #include "../../../TonicEngine/Headers/Visual/VisualFacade.h"
 #include "../../../TonicEngine/Headers/Audio/AudioFacade.h"
-#include "IScreen.h"
+
+class IScreen;
 
 class ScreenStateManager {
 private:
@@ -17,9 +18,16 @@ private:
     std::map<std::string, std::shared_ptr<IScreen>> _screenStates;
     std::map<std::string, std::shared_ptr<IFacade>> _facades;
     std::shared_ptr<WindowResolutionCalculator> _windowResCalc;
+
+    // Modifier for changing the gameplay speed
+    double timeModifier = 1.0;
 public:
     ScreenStateManager();
-    std::shared_ptr<IScreen> getCurrentState();
+    std::shared_ptr<IScreen> getCurrentState() const;
+
+    double getTimeModifier() const;
+
+    void setTimeModifier(double timeModifier);
 
     void setWindowResolutionCalculator(std::shared_ptr<WindowResolutionCalculator> windowResCalc);
 

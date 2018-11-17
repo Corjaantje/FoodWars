@@ -53,30 +53,12 @@ void WindowManager::render(Renderlist &renderlist) {
     SDL_RenderClear(_renderer);
     _renderer = _window->getRenderer();
     for (const auto &iterator: renderlist._shapes) {
-        std::cout <<  "render layer: " << iterator.first << std::endl;
+        //std::cout <<  "render layer: " << iterator.first << std::endl;
         for (const IShape* shape : iterator.second) {
             shape->render(*this);
         }
     }
     SDL_RenderPresent(_renderer);
-}
-
-void WindowManager::renderRectangles(std::vector<ShapeRectangle> rectangleList) {
-    for(int i=0; i< rectangleList.size(); i++){
-
-    }
-}
-
-void WindowManager::renderSprites(std::vector<ShapeSprite> rectangleSprite) {
-    for(int i=0; i< rectangleSprite.size(); i++){
-
-    }
-}
-
-void WindowManager::renderText(std::vector<ShapeText> textList) {
-    for(int i=0; i< textList.size(); i++){
-
-    }
 }
 
 void WindowManager::pollEvents() {
@@ -101,10 +83,10 @@ void WindowManager::renderRectangle(const ShapeRectangle &rectangleShape) {
 void WindowManager::renderText(const ShapeText &shapeText) {
     SDL_Texture* Message = _assetManager->GetSDLTextureFromText(_renderer, shapeText);
     SDL_Rect Message_rect; //create a rect
-    Message_rect.x = shapeText.xPos * (_windowWidth / DEFAULT_WIDTH);  //controls the rect's x coordinate
-    Message_rect.y = shapeText.yPos * (_windowHeight / DEFAULT_HEIGHT); // controls the rect's y coordinte
-    Message_rect.w = shapeText.width * (_windowHeight / DEFAULT_HEIGHT) + 1; // controls the width of the rect
-    Message_rect.h = shapeText.height * (_windowWidth / DEFAULT_WIDTH) + 1; // controls the height of the rect
+    Message_rect.x = _windowResCalc->getConvertedxPosDraw(shapeText.xPos);  //controls the rect's x coordinate
+    Message_rect.y = _windowResCalc->getConvertedyPosDraw(shapeText.yPos); // controls the rect's y coordinte
+    Message_rect.w = _windowResCalc->getConvertedWidthDraw(shapeText.width);; // controls the width of the rect
+    Message_rect.h = _windowResCalc->getConvertedHeightDraw(shapeText.height); // controls the height of the rect
     SDL_RenderCopy(_renderer, Message, NULL, &Message_rect);
 }
 

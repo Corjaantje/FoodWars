@@ -46,15 +46,27 @@ std::vector<IShape *> AnimationManager::lookLeftAnimation(int width, int height,
 
 // Returns list of sprites for a right looking animation
 std::vector<IShape *> AnimationManager::lookRightAnimation(int width, int height, int xPos, int yPos, int team) const {
-    return std::vector<IShape *>();
+    std::vector<IShape*> animation;
+    std::string teamImage = getTeamImage(team);
+
+    animation.push_back(new ShapeSprite{width, height, xPos, yPos, teamImage + "R0.png"});
+    return animation;
 }
 
 // Returns list of sprites for a left jumping animation
 std::vector<IShape *> AnimationManager::jumpLeftAnimation(int width, int height, int xPos, int yPos, int team) const {
-    return std::vector<IShape *>();
+    std::vector<IShape*> animation;
+    std::string teamImage = getTeamImage(team);
+
+    animation.push_back(new ShapeSprite{width, height, xPos, yPos, teamImage + "L1.png"});
+    return animation;
 }
 
 // Returns list of sprites for a right jumping animation
 std::vector<IShape *> AnimationManager::jumpRightAnimation(int width, int height, int xPos, int yPos, int team) const {
-    return std::vector<IShape *>();
+    std::vector<IShape*> animation;
+    std::string teamImage = getTeamImage(team);
+
+    animation.push_back(new ShapeSprite{width, height, xPos, yPos, teamImage + "R1.png"});
+    return animation;
 }

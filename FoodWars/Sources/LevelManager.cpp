@@ -23,17 +23,15 @@ EntityManager LevelManager::startLevel(int level) {
             generateTerrain();
 
             int player = _entityManager.createEntity();
-            std::vector<IShape*> idleAnimation;
-            idleAnimation.push_back(new ShapeSprite{48, 72, 32, 300, "PlayerW_R0.png"});
-            idleAnimation.push_back(new ShapeSprite{48, 72, 32, 300, "PlayerW_R1.png"});
-            idleAnimation.push_back(new ShapeSprite{48, 72, 32, 300, "PlayerW_R2.png"});
-            AnimationComponent* animationComponent = new AnimationComponent{idleAnimation, 0.1};
 
-            std::vector<IShape*> idleAnimation2;
-            idleAnimation2.push_back(new ShapeSprite{48, 72, 1500, 300, "PlayerL_L0.png"});
-            idleAnimation2.push_back(new ShapeSprite{48, 72, 1500, 300, "PlayerL_L1.png"});
-            idleAnimation2.push_back(new ShapeSprite{48, 72, 1500, 300, "PlayerL_L2.png"});
-            AnimationComponent* animationComponent2 = new AnimationComponent{idleAnimation2, 0.1};
+            // Spawn Location and animation interval
+            std::vector<IShape*> spawnAnimation;
+            spawnAnimation.push_back(new ShapeSprite{48, 72, 32, 300, "PlayerW_R0.png"});
+            AnimationComponent* animationComponent = new AnimationComponent{spawnAnimation, 0.1};
+
+            std::vector<IShape*> spawnAnimation2;
+            spawnAnimation2.push_back(new ShapeSprite{48, 72, 1500, 300, "PlayerW_L0.png"});
+            AnimationComponent* animationComponent2 = new AnimationComponent{spawnAnimation2, 0.1};
 
             // TurnComponent
             auto turnComponent = new TurnComponent;

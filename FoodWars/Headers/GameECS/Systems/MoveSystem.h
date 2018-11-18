@@ -12,9 +12,8 @@ private:
     KEY _pressedKey;
     std::shared_ptr<EntityManager> _entityManager;
     CollisionEventHandlerLamda* trapWalkOnCollision;
-    AnimationManager* _animationManager;
 public:
-    MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade, IObservable<CollisionEvent>& collisionEventObservable, AnimationManager* animationManager);
+    MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade, IObservable<CollisionEvent>& collisionEventObservable);
     ~MoveSystem() override;
     void update(double dt) override;
     void update(std::shared_ptr<KeyEvent> event) override;

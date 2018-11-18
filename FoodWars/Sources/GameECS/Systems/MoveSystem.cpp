@@ -14,7 +14,7 @@ MoveSystem::~MoveSystem() {
     delete trapWalkOnCollision;
 }
 
-MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade, IObservable<CollisionEvent>& collisionEventObservable, AnimationManager* animationManager) :_animationManager(animationManager) {
+MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade, IObservable<CollisionEvent>& collisionEventObservable){
     _entityManager = std::move(entityManager);
     inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
     trapWalkOnCollision  = new CollisionEventHandlerLamda {
@@ -39,43 +39,20 @@ MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared
 void MoveSystem::update(double dt) {
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         std::shared_ptr<MoveComponent> moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
-        std::shared_ptr<PositionComponent> positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
-        std::shared_ptr<BoxCollider> boxCollider = _entityManager->getComponentFromEntity<BoxCollider>(iterator.first);
-        std::shared_ptr<AnimationComponent> animationComponent = _entityManager->getComponentFromEntity<AnimationComponent>(iterator.first);
-        std::shared_ptr<JumpComponent> jumpComponent = _entityManager->getComponentFromEntity<JumpComponent>(iterator.first);
-        //TODO: Replace 0 (team) by teamcomponent
-        int team = 0;
         if (iterator.second->isMyTurn()) {
             if (_pressedKey == KEY::KEY_A) {
                 moveComponent->xVelocity = -100;
-                if(!animationComponent->getIsLookingLeft() || animationComponent->getIsIdle()) {
-                    animationComponent->setAnimationShapes(_animationManager->moveLeftAnimation(boxCollider->width, boxCollider->height, positionComponent->X, positionComponent->Y, team));
-                    animationComponent->setIsLookingLeft(true);
-                    animationComponent->setIsIdle(false);
-                }
             }
             else if (_pressedKey == KEY::KEY_D) {
                 moveComponent->xVelocity = 100;
-                if(animationComponent->getIsLookingLeft() || animationComponent->getIsIdle()) {
-                    animationComponent->setAnimationShapes(_animationManager->moveRightAnimation(boxCollider->width, boxCollider->height, positionComponent->X, positionComponent->Y, team));
-                    animationComponent->setIsLookingLeft(false);
-                    animationComponent->setIsIdle(false);
-                }
             }else
                 moveComponent->xVelocity = 0;
         } else {
             moveComponent->xVelocity = 0;
-
-            // Idle animation
-            if(!animationComponent->getIsIdle()) {
-                animationComponent->setAnimationShapes(_animationManager->lookLeftAnimation(boxCollider->width, boxCollider->height, positionComponent->X, positionComponent->Y, team));
-                animationComponent->setIsIdle(true);
-            }
         }
     }
 
     for (auto const &iterator: _entityManager->getAllEntitiesWithComponent<MoveComponent>()) {
-        int entity = iterator.first;
         std::shared_ptr<MoveComponent> moveComponent = iterator.second;
         std::shared_ptr<PositionComponent> positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
         if(positionComponent) {

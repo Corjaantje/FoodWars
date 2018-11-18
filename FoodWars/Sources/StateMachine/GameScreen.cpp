@@ -22,7 +22,7 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
     _animationManager = new AnimationManager{};
     CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };
-    _systems.push_back(new JumpSystem { _entityManager, _inputFacade, _audioFacade, *collisionSystem, _animationManager } );
+    _systems.push_back(new JumpSystem { _entityManager, _inputFacade, _audioFacade, *collisionSystem} );
     _systems.push_back(new MoveSystem { _entityManager, _inputFacade, *collisionSystem, _animationManager});
     _systems.push_back(collisionSystem);
     _systems.push_back(new GravitySystem { _entityManager, *collisionSystem });

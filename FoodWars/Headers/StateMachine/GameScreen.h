@@ -14,6 +14,7 @@ private:
     std::shared_ptr<VisualFacade> _visualFacade;
     std::vector<IBaseSystem*> _systems;
     DrawSystem* drawSystem = nullptr;
+    AnimationManager* _animationManager;
 public:
     explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager);
     ~GameScreen();

@@ -57,3 +57,19 @@ void AnimationComponent::setCurrentShapeIndex(int currentShapeIndex) {
 IShape *AnimationComponent::getCurrentShape() const {
     return _currentShape;
 }
+
+void AnimationComponent::setIsLookingLeft(bool isLookingLeft) {
+    _isLookingLeft = isLookingLeft;
+}
+
+bool AnimationComponent::getIsLookingLeft() const {
+    return _isLookingLeft;
+}
+
+bool AnimationComponent::getIsIdle() const {
+    return _isIdle;
+}
+
+void AnimationComponent::setIsIdle(bool isIdle) {
+    _isIdle = isIdle;
+}

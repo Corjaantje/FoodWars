@@ -9,7 +9,8 @@
 #include <sys/stat.h>
 
 StorageSystem::StorageSystem() {
-
+    _reader = new XMLReader();
+    _writer = new XMLWriter();
 }
 
 StorageSystem::~StorageSystem() {
@@ -228,6 +229,47 @@ void StorageSystem::addTurns(MyDocument& myDoc, std::map<int, std::shared_ptr<Tu
         if (!nodeLocations.count(turnComp.first)) {
             existingIDNodes.push_back(IDNode);
             nodeLocations.insert(std::make_pair(turnComp.first, existingIDNodes.size() - 1));
+        }
+    }
+}
+
+void StorageSystem::addCollideables(MyDocument &myDoc, std::map<int, std::shared_ptr<BoxCollider>> toSave,
+                                    vector<MyNode *> &existingIDNodes, std::map<int, int> &nodeLocations) {
+    MyNode rootNode { myDoc.GetRoot() };
+    for (auto const& collideComp : toSave) {
+        MyNode* IDNode = new MyNode { "id", nullptr };
+        if (nodeLocations.count(collideComp.first))
+        {
+            IDNode = existingIDNodes[nodeLocations[collideComp.first]];
+        } else {
+            IDNode->SetParent(rootNode);
+            IDNode->SetValue(std::to_string(collideComp.first));
+        }
+
+        std::vector<std::string> filling = collideComp.second->serialize();
+
+        MyNode groupingNode { filling[0], IDNode };
+
+
+
+        MyNode widthNode{ filling[1], &groupingNode};
+        widthNode.SetValue(filling[2]);
+
+        MyNode height { filling[3], &groupingNode};
+        height.SetValue(filling[4]);
+
+
+        groupingNode.AddChild(widthNode);
+        groupingNode.AddChild(height);
+        IDNode->AddChild(groupingNode);
+
+
+        rootNode.AddChild(*IDNode);
+
+
+        if (!nodeLocations.count(collideComp.first)) {
+            existingIDNodes.push_back(IDNode);
+            nodeLocations.insert(std::make_pair(collideComp.first, existingIDNodes.size() - 1));
         }
     }
 }
@@ -499,6 +541,12 @@ void StorageSystem::parseTurn(const MyNode& turnNode, EntityManager& _entity, in
 
 }
 
+void StorageSystem::parseCollideables(const MyNode& collideNode, EntityManager &_entity, int identifier) {
+    std::vector<MyNode> childNodes = collideNode.GetChildren();
+    BoxCollider *comp = new BoxCollider(childNodes[1].GetIntValue(), childNodes[0].GetIntValue());
+    _entity.addComponentToEntity(identifier, comp);
+}
+
 int StorageSystem::countFilesInDirectory(std::string targetdir) {
     DIR *dir;
     struct dirent *entry;
@@ -539,6 +587,8 @@ void StorageSystem::assignRelevantEntityManager(EntityManager& entityManager) {
 }
 
 void StorageSystem::saveWorld(){//std::string savePath) {
+    delete _writer;
+    _writer = new XMLWriter();
     MyNode trueRootNode {"root", nullptr};
     MyDocument myDoc { trueRootNode };
 
@@ -548,8 +598,11 @@ void StorageSystem::saveWorld(){//std::string savePath) {
     addDrawables(myDoc, _entityManager->getAllEntitiesWithComponent<DrawableComponent>(), nodeIDs, nodeLocations);
     addGravity(myDoc, _entityManager->getAllEntitiesWithComponent<GravityComponent>(), nodeIDs, nodeLocations);
     addMove(myDoc, _entityManager->getAllEntitiesWithComponent<MoveComponent>(), nodeIDs, nodeLocations);
-    //addPosition(myDoc, _entityManager->getAllEntitiesWithComponent<PositionComponent>(), nodeIDs, nodeLocations);
+    addPosition(myDoc, _entityManager->getAllEntitiesWithComponent<PositionComponent>(), nodeIDs, nodeLocations);
     addTurns(myDoc, _entityManager->getAllEntitiesWithComponent<TurnComponent>(), nodeIDs, nodeLocations);
+    addCollideables(myDoc, _entityManager->getAllEntitiesWithComponent<BoxCollider>(), nodeIDs, nodeLocations);
+    if (nodeIDs.size() <= 5)
+        return;
     for (auto const& point : nodeIDs)
     {
         myDoc.AddToRoot(*point);
@@ -559,7 +612,7 @@ void StorageSystem::saveWorld(){//std::string savePath) {
 //    Get number of files in the Levels directory
     std::string savingName = "Level"+to_string(countFilesInDirectory(const_cast<char *>("./Levels/")));
 
-    _writer.WriteXMLFile(myDoc, "./Levels/"+savingName+".xml");
+    _writer->WriteXMLFile(myDoc, "./Levels/"+savingName+".xml");
 
     for (auto const& point : nodeIDs)
     {
@@ -568,7 +621,9 @@ void StorageSystem::saveWorld(){//std::string savePath) {
 }
 
 bool StorageSystem::loadWorld(std::shared_ptr<EntityManager> toFill, std::string filePath) {
-    std::unique_ptr<MyDocument> myDoc = _reader.LoadFile("./"+filePath);
+    delete _reader;
+    _reader = new XMLReader();
+    std::unique_ptr<MyDocument> myDoc = _reader->LoadFile("./"+filePath);
     MyNode rootNode = myDoc->GetRoot();
     bool bSuccess = false;
     parseSavedInstance(rootNode, *toFill);
@@ -576,9 +631,3 @@ bool StorageSystem::loadWorld(std::shared_ptr<EntityManager> toFill, std::string
 
     return bSuccess;
 }
-
-
-
-
-
-

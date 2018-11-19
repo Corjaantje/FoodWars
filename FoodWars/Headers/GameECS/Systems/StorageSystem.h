@@ -9,14 +9,15 @@
 #include "../Components/GravityComponent.h"
 #include "../Components/MoveComponent.h"
 #include "../Components/TurnComponent.h"
+#include "../Components/Collider/BoxCollider.h"
 
 #include <algorithm>
 
 
 class StorageSystem{//}; : public IBaseSystem {
 private:
-    XMLReader _reader;
-    XMLWriter _writer;
+    XMLReader* _reader;
+    XMLWriter* _writer;
 //    StorageFacade _storageFacade;
 //    std::shared_ptr<EntityManager> _entityManager;
     EntityManager* _entityManager;
@@ -27,6 +28,7 @@ private:
     void addMove(MyDocument& myDoc, std::map<int, std::shared_ptr<MoveComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
     void addPosition(MyDocument& myDoc, std::map<int, std::shared_ptr<PositionComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
     void addTurns(MyDocument& myDoc, std::map<int, std::shared_ptr<TurnComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
+    void addCollideables(MyDocument& myDoc, std::map<int, std::shared_ptr<BoxCollider>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
     void prepareRect(MyNode& parentNode, std::vector<std::string> filling);
     void prepareSprite(MyNode& parentNode, std::vector<std::string> filling);
     void prepareText(MyNode& parentNode, std::vector<std::string> filling);
@@ -38,6 +40,7 @@ private:
     void parseMove(const MyNode& moveNode, EntityManager& _entity, int identifier);
     void parsePosition(const MyNode& positionNode, EntityManager& _entity, int identifier);
     void parseTurn(const MyNode& turnNode, EntityManager& _entity, int identifier);
+    void parseCollideables(const MyNode& collideNode, EntityManager& _entity, int identifier);
 
     int countFilesInDirectory(std::string dir);
 public:

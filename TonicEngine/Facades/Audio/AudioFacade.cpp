@@ -40,14 +40,16 @@ void AudioFacade::setEffectVolume(int volume) {
 
 // Plays Music
 void AudioFacade::playMusic(const char* filename) {
-    // Check if song is already playing
-    if(_backgroundMusic != nullptr)
-    // Stop music channel if empty or nullptr filename is passed
-    if(strcmp(filename, "") == 0 || filename == nullptr)
+
+    // Check if filename is empty or null
+    if(std::string(filename).empty() || filename == nullptr){
         _audioPlayer->stopMusic();
-    {
-        if (std::string(filename) == std::string(_backgroundMusic))
         return;
+    }
+    // Check if song is already playing
+    if(_backgroundMusic != nullptr){
+        if (std::string(filename) == std::string(_backgroundMusic))
+            return;
     }
 
     // Get path with the filename

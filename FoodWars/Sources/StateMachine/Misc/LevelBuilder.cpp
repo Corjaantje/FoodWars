@@ -98,7 +98,7 @@ void LevelBuilder::placeBlock(int x, int y) {
             //_entityManager->addComponentToEntity(entity, new DamageableComponent());
         }
         auto* drawComp = new DrawableComponent();
-        drawComp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle(_shapeDimension, _shapeDimension, convertedX, convertedY, Colour(_colorRed, _colorGreen, _colorBlue, 255)));
+        drawComp->shape = new ShapeRectangle(_shapeDimension, _shapeDimension, convertedX, convertedY, Colour(_colorRed, _colorGreen, _colorBlue, 255));
         _entityManager->addComponentToEntity(entity, drawComp);
         _CoordinateEntityMap[gridCoord] = entity;
     }
@@ -169,7 +169,7 @@ void LevelBuilder::drawAdditionalItems(Renderlist &renderlist) {
 
     int height = 8;
     int width = 1600;
-    renderlist._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "WallpaperLevelBuilder.png"));
+    renderlist._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenLevelBuilder.png"));
     renderlist._shapes[1].push_back(
             createShape<ShapeRectangle>(width, height, 0, BUILDING_LIMIT - height, Colour(0, 0, 0, 255)));
     renderlist._shapes[1].push_back(createShape<ShapeRectangle>(width, height, 0, 900 - height, Colour(0, 0, 0, 255)));

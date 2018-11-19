@@ -6,7 +6,7 @@ UpgradesScreen::UpgradesScreen(std::shared_ptr<ScreenStateManager> context) : IS
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
-    _renderList._shapes[1].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "wallpaper.png"));
+    _renderList._shapes[1].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenUpgrades.png"));
 
     // MainMenu
     SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 50, 50, 0, 0, Colour{0,0,0,0}};

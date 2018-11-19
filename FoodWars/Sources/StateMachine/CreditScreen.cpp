@@ -7,10 +7,10 @@ CreditScreen::CreditScreen(std::shared_ptr<ScreenStateManager> context) : IScree
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
 
-    _renderList._shapes[1].push_back(new ShapeSprite{1600, 900, 0, 0, "wallpaper3.png"});
+    _renderList._shapes[1].push_back(createSprite<ShapeSprite>(1600, 900, 0, 0, "ScreenCredits.png"));
 
     // Backbutton
-    SpriteButton* backButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "backbutton.png", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 100, 100, 9, 9, Colour{0,0,0,0}};
+    SpriteButton* backButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 140, 140, 12, 12, Colour{0,0,0,0}};
     backButton->addToRender(&_renderList);
     _sprites.push_back(backButton);
 

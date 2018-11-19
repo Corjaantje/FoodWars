@@ -7,6 +7,17 @@ HighscoreScreen::HighscoreScreen(std::shared_ptr<ScreenStateManager> context) : 
     _storageFacade = context->getFacade<StorageFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
+}
+
+HighscoreScreen::~HighscoreScreen() {
+    for(IShape* button: _buttons) {
+        delete button;
+    }
+}
+
+void HighscoreScreen::update(double deltaTime) {
+
+    _renderList.clearLists();
 
     _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper3.png"});
 
@@ -22,15 +33,7 @@ HighscoreScreen::HighscoreScreen(std::shared_ptr<ScreenStateManager> context) : 
     _renderList.textList.emplace_back(ShapeText(800, 350, _storageFacade->getHighscore(0) + " punten", 0, 250, 85, Colour(255, 255, 255, 0)));
     _renderList.textList.emplace_back(ShapeText(800, 510, _storageFacade->getHighscore(1) + " punten", 0, 250, 85, Colour(255, 255, 255, 0)));
     _renderList.textList.emplace_back(ShapeText(800, 670, _storageFacade->getHighscore(2) + " punten", 0, 250, 85, Colour(255, 255, 255, 0)));
-}
 
-HighscoreScreen::~HighscoreScreen() {
-    for(IShape* button: _buttons) {
-        delete button;
-    }
-}
-
-void HighscoreScreen::update(double deltaTime) {
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");
     _inputFacade->pollEvents();

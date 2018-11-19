@@ -15,6 +15,7 @@
 #include "TonicEngine/Headers/Communication/CommunicationFacade.h"
 #include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
 #include "FoodWars/Headers/StateMachine/GameScreen.h"
+#include "FoodWars/Headers/StateMachine/HelpScreen.h"
 #include "FoodWars/Headers/StateMachine/CreditScreen.h"
 #include "TonicEngine/Headers/Input/PrintWindowObserver.h"
 #include "TonicEngine/Headers/Input/WindowClosedObserver.h"
@@ -47,9 +48,16 @@ int main(int argc, char** argv)
 
     GeneralFacade* generalFacade = new GeneralFacade();
 
-    audioFacade->addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
-    audioFacade->addAudio("wildwest", "../FoodWars/Assets/Audio/wildwest.wav");
-    audioFacade->addAudio("menu", "../FoodWars/Assets/Audio/menu.wav");
+    // Music
+    audioFacade->addAudio("wildwest", "./Assets/Audio/wildwest.wav");
+    audioFacade->addAudio("menu", "./Assets/Audio/menu.wav");
+    audioFacade->addAudio("space", "./Assets/Audio/space.wav");
+    audioFacade->addAudio("space2", "./Assets/Audio/space2.wav");
+    audioFacade->addAudio("nature", "./Assets/Audio/nature.wav");
+
+    // Sound Effects
+    audioFacade->addAudio("oof", "./Assets/Audio/oof.wav");
+    audioFacade->addAudio("jump", "./Assets/Audio/jump.wav");
 
     std::shared_ptr<LevelManager> levelManager = std::make_shared<LevelManager>();
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
@@ -65,6 +73,7 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager, levelManager->_entityManager));
     screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager, levelManager));
     screenStateManager->addOrSetScreenState(new LevelCreationScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new HelpScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new PauseScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new HighscoreScreen(screenStateManager));

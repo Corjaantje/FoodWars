@@ -4,13 +4,16 @@
 #include "../../../Headers/Visual/Renderlist.h"
 
 ShapeSprite::ShapeSprite(int width, int height, int xPos, int yPos, std::string imageURL) : IShape(xPos, yPos), width(width), height(height), imageURL(
-        std::move(imageURL)) {
+        std::move(imageURL)), layer(2) {
 
 }
 ShapeSprite::~ShapeSprite() {
 
 }
 void ShapeSprite::addToRender(Renderlist *renderlist) {
-    ShapeSprite sprite(width, height, xPos, yPos, imageURL);
-    renderlist->spriteList.emplace_back(sprite);
+    renderlist->_shapes[layer].push_back(this);
+}
+
+void ShapeSprite::render(IRenderer &renderer) const {
+    renderer.renderSprite(*this);
 }

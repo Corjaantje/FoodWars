@@ -100,7 +100,7 @@ void LevelBuilder::placeBlock(int x, int y) {
             //_entityManager->addComponentToEntity(entity, new DamageableComponent());
         }
         auto* drawComp = new DrawableComponent();
-        drawComp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle(_shapeDimension, _shapeDimension, convertedX, convertedY, Colour(_colorRed, _colorGreen, _colorBlue, 255)));
+        drawComp->shape = new ShapeRectangle(_shapeDimension, _shapeDimension, convertedX, convertedY, Colour(_colorRed, _colorGreen, _colorBlue, 255));
         _entityManager->addComponentToEntity(entity, drawComp);
         _CoordinateEntityMap[gridCoord] = entity;
     }
@@ -168,22 +168,17 @@ int LevelBuilder::roundYCoordToGrid(int y) {
 
 void LevelBuilder::drawAdditionalItems(Renderlist &renderlist) {
     //TODO TEMP FIX TO MAKE A BACKGROUND WORK UNTILL WE HAVE LAYERS.
-    ShapeSprite wallpaper(1600, 900, 0, 0, _wallpaperList[_selectedWallpaper]);
-    renderlist.backgroundSpriteList.emplace_back(wallpaper);
+    renderlist._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, _wallpaperList[_selectedWallpaper]});
 
     int height = 8;
     int width = 1600;
-    renderlist.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "WallpaperLevelBuilder.png"});
-    ShapeRectangle rect(width, height, 0, BUILDING_LIMIT-height, Colour(0, 0, 0, 255));
-    renderlist.rectangleList.emplace_back(rect);
-    ShapeRectangle rect2(width, height, 0, 900-height, Colour(0, 0, 0, 255));
-    renderlist.rectangleList.emplace_back(rect2);
-
-    ShapeRectangle preview(64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255));
-    renderlist.rectangleList.emplace_back(preview);
+    renderlist._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, "WallpaperLevelBuilder.png"});
+    renderlist._shapes[1].push_back(new ShapeRectangle{width, height, 0, BUILDING_LIMIT-height, Colour(0, 0, 0, 255)});
+    renderlist._shapes[1].push_back(new ShapeRectangle{width, height, 0, 900-height, Colour(0, 0, 0, 255)});
+    renderlist._shapes[1].push_back(new ShapeRectangle{64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255)});
 
     for (auto &_spawnPoint : _spawnPoints) {
-        renderlist.spriteList.emplace_back(ShapeSprite{SHAPE_DIMENSION, SHAPE_DIMENSION, _spawnPoint.getXCoord(), _spawnPoint.getYCoord(), "Spawnpoint.png"});
+        renderlist._shapes[1].push_back(new ShapeSprite{SHAPE_DIMENSION, SHAPE_DIMENSION, _spawnPoint.getXCoord(), _spawnPoint.getYCoord(), "Spawnpoint.png"});
     }
 }
 

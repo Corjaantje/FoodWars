@@ -1,10 +1,7 @@
-//
-// Created by bryanvanlierop on 11/7/2018.
-//
-
 #include "../Headers/LevelManager.h"
 #include "../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 #include "../Headers/GameECS/Components/MoveComponent.h"
+#include "../Headers/GameECS/Components/AnimationComponent.h"
 
 LevelManager::LevelManager()
 {
@@ -20,34 +17,46 @@ EntityManager LevelManager::startLevel(int level) {
 
             int sky = _entityManager.createEntity();
             auto *comp = new DrawableComponent();
-            comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle(1600,900,0,0, Colour(173,216,230,0)));
+            comp->shape = new ShapeRectangle{1600,900,0,0, Colour{173,216,230,0}};
             _entityManager.addComponentToEntity(sky, comp);
 
             generateTerrain();
 
             int player = _entityManager.createEntity();
-            auto drawablePlayerOne = new DrawableComponent;
-            drawablePlayerOne->shape = std::make_unique<ShapeSprite>(ShapeSprite({48, 72, 32, 300, "PlayerW_R0.png"}));
-            auto drawablePlayerTwo = new DrawableComponent;
-            drawablePlayerTwo->shape = std::make_unique<ShapeSprite>(ShapeSprite(48, 72, 1500, 300, "PlayerL_L1.png"));
 
-            _entityManager.addComponentToEntity(player, drawablePlayerOne);
-            _entityManager.addComponentToEntity(player, new BoxCollider(48, 72));
-            _entityManager.addComponentToEntity(player, new PositionComponent(32,0));
+            // Spawn Location and animation interval
+            std::vector<IShape*> spawnAnimation;
+            spawnAnimation.push_back(new ShapeSprite{48, 72, 32, 300, "PlayerW_R0.png"});
+            AnimationComponent* animationComponent = new AnimationComponent{spawnAnimation, 0.1};
+
+            std::vector<IShape*> spawnAnimation2;
+            spawnAnimation2.push_back(new ShapeSprite{48, 72, 1500, 300, "PlayerW_L0.png"});
+            AnimationComponent* animationComponent2 = new AnimationComponent{spawnAnimation2, 0.1};
+
+            // TurnComponent
             auto turnComponent = new TurnComponent;
             turnComponent->switchTurn(true);
             turnComponent->setRemainingTime(30);
+
+            // Player 1
+            _entityManager.addComponentToEntity(player, new DrawableComponent);
+            _entityManager.addComponentToEntity(player, new BoxCollider(48, 72));
+            _entityManager.addComponentToEntity(player, new PositionComponent(32,0));
             _entityManager.addComponentToEntity(player, turnComponent);
             _entityManager.addComponentToEntity(player, new MoveComponent);
             _entityManager.addComponentToEntity(player, new GravityComponent());
+            _entityManager.addComponentToEntity(player, animationComponent);
 
+            // Player 2
             player = _entityManager.createEntity();
-            _entityManager.addComponentToEntity(player, drawablePlayerTwo);
+            _entityManager.addComponentToEntity(player, new DrawableComponent);
+            _entityManager.addComponentToEntity(player, new BoxCollider(48, 72));
             _entityManager.addComponentToEntity(player, new PositionComponent(576,0));
             _entityManager.addComponentToEntity(player, new TurnComponent);
             _entityManager.addComponentToEntity(player, new MoveComponent);
-            _entityManager.addComponentToEntity(player, new BoxCollider(48, 72));
             _entityManager.addComponentToEntity(player, new GravityComponent());
+            _entityManager.addComponentToEntity(player, animationComponent2);
+
 
             int boundOne = _entityManager.createEntity();
             _entityManager.addComponentToEntity(boundOne, new BoxCollider(1600, 1600));
@@ -99,5 +108,5 @@ void LevelManager::generateTerrainDrawables(int x, int y) {
     _entityManager.addComponentToEntity(terrain, comp);
     _entityManager.addComponentToEntity(terrain, new BoxCollider{32,32});
     _entityManager.addComponentToEntity(terrain, new PositionComponent(x, y));
-    comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({32, 32, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
+    comp->shape = new ShapeRectangle{32, 32, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}};
 }

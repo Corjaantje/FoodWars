@@ -23,6 +23,10 @@ void SpriteButton::update(std::shared_ptr<MouseEvent> event) {
         _onClickFunction();
 }
 
+void SpriteButton::render(IRenderer &renderer) const {
+    shapeSprite.render(renderer);
+}
+
 void SpriteButton::changeImageURL(std::string url) {
     _imageURL = url;
     shapeSprite.imageURL = _imageURL;

@@ -9,7 +9,7 @@ PauseScreen::PauseScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
 
-    _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
+    _renderList._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
 
     // Spel Hervatten
     TextButton* resumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Resume game", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 200};

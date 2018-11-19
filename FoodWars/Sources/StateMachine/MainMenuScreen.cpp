@@ -9,7 +9,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
 
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
-    _renderList._shapes[1].push_back(new ShapeSprite{1600, 900, 0, 0, "wallpaper2.png"});
+    _renderList._shapes[1].push_back(new ShapeSprite{1600, 900, 0, 0, "ScreenMainMenu.png"});
 
     // Level Selection
     TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Select Level", [c = _context]() {  c->setActiveScreen<LevelSelectionScreen>(); }, 370, 110, 615, 300, Colour{255,255,255,0}, Colour{255,255,255,0},};

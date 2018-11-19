@@ -37,7 +37,7 @@ void DrawSystem::update(double dt) {
 
 void DrawSystem::drawNonComponents() {
 
-    _renderList._shapes[2].push_back(new ShapeSprite{1600, 900, 0, 0, "FoodWarsUISmall.png"});
+    _renderList._shapes[2].push_back(new ShapeSprite{1600, 900, 0, 0, "ScreenGameSmallUI.png"});
     if(!_playerIcon.empty()) {
         _renderList._shapes[3].push_back(new ShapeSprite{36, 54, 47, 40, _playerIcon});
     }

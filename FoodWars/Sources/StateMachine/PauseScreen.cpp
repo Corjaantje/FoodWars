@@ -1,5 +1,4 @@
 #include "../../Headers/StateMachine/PauseScreen.h"
-#include "../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 #include "../../Headers/StateMachine/GameScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
@@ -9,28 +8,28 @@ PauseScreen::PauseScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
 
-    _renderList._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
+    _renderList._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "wallpaper.png"));
 
     // Spel Hervatten
     TextButton* resumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Resume game", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 200};
     resumeButton->addToRender(&_renderList);
-    _buttons.push_back(resumeButton);
+    _sprites.push_back(resumeButton);
 
     // Spel Opslaan
     TextButton* saveButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Save game", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 250};
     saveButton->addToRender(&_renderList);
-    _buttons.push_back(saveButton);
+    _sprites.push_back(saveButton);
 
     // Terug naar hoofdmenu
     TextButton* quitButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Back to main menu", [c = _context]() {
         c->setActiveScreen<MainMenuScreen>();
     }, 250, 30, 200, 300};
     quitButton->addToRender(&_renderList);
-    _buttons.push_back(quitButton);
+    _sprites.push_back(quitButton);
 }
 
 PauseScreen::~PauseScreen() {
-    for(IShape* button: _buttons) {
+    for (IShape *button: _sprites) {
         delete button;
     }
 }

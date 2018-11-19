@@ -12,19 +12,26 @@ CreditScreen::CreditScreen(std::shared_ptr<ScreenStateManager> context) : IScree
     // Backbutton
     SpriteButton* backButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "backbutton.png", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 100, 100, 9, 9, Colour{0,0,0,0}};
     backButton->addToRender(&_renderList);
-    _buttons.push_back(backButton);
+    _sprites.push_back(backButton);
 
-    _renderList._shapes[1].push_back(new ShapeText(610, 130, "Credits", 0, 400, 70, Colour(255,120,112,0)));
-    _renderList._shapes[1].push_back(new ShapeText(660, 320, "Lucas Bos", 0, 300, 45, Colour(255,255,255,0)));
-    _renderList._shapes[1].push_back(new ShapeText(640, 406, "Piet Burgmans", 0, 340, 45, Colour(255,255,255,0)));
-    _renderList._shapes[1].push_back(new ShapeText(645, 492, "Corne Hoskam", 0, 330, 45, Colour(255,255,255,0)));
-    _renderList._shapes[1].push_back(new ShapeText(625, 578, "Bryan van Lierop", 0, 370, 45, Colour(255,255,255,0)));
-    _renderList._shapes[1].push_back(new ShapeText(610, 664, "Maarten van Alebeek", 0, 400, 45, Colour(255,255,255,0)));
-    _renderList._shapes[1].push_back(new ShapeText(620, 750, "Shaun van Beurden", 0, 380, 45, Colour(255,255,255,0)));
+    _renderList._shapes[1].push_back(createShape<ShapeText>(610, 130, "Credits", 0, 400, 70, Colour(255, 120, 112, 0)));
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(660, 320, "Lucas Bos", 0, 300, 45, Colour(255, 255, 255, 0)));
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(640, 406, "Piet Burgmans", 0, 340, 45, Colour(255, 255, 255, 0)));
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(645, 492, "Corne Hoskam", 0, 330, 45, Colour(255, 255, 255, 0)));
+
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(625, 578, "Bryan van Lierop", 0, 370, 45, Colour(255, 255, 255, 0)));
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(610, 664, "Maarten van Alebeek", 0, 400, 45, Colour(255, 255, 255, 0)));
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(620, 750, "Shaun van Beurden", 0, 380, 45, Colour(255, 255, 255, 0)));
 }
 
 CreditScreen::~CreditScreen() {
-    for(IShape* button: _buttons) {
+    for (IShape *button: _sprites) {
         delete button;
     }
 }

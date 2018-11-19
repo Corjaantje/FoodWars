@@ -67,6 +67,7 @@ public:
 
     void placeSpawnPoint(int x, int y);
     void removeSpawnPoint(int x, int y);
+    std::vector<Coordinate> getSpawnPoints() const;
 
     bool toggleCollidable();
     bool toggleDamageable();

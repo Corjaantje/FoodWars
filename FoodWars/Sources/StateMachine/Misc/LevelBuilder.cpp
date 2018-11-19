@@ -7,7 +7,6 @@ LevelBuilder::LevelBuilder() {
 
     _musicList.emplace_back("");
     _selectedMusic = 0;
-    _storage = new StorageSystem();
 }
 
 void LevelBuilder::resetEntityManager() {
@@ -269,6 +268,10 @@ void LevelBuilder::removeSpawnPoint(int x, int y) {
             _CoordinateEntityMap.erase(gridCoord);
         }
     }
+}
+
+std::vector<Coordinate> LevelBuilder::getSpawnPoints() const {
+    return _spawnPoints;
 }
 
 GameLevel LevelBuilder::buildConstructedLevel() {

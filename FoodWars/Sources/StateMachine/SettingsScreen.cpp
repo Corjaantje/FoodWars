@@ -85,11 +85,9 @@ void SettingsScreen::update(double deltaTime) {
 
     // Update music volume
     musicVolume->text = std::to_string(audioFacade->getMusicVolume());
-    //ShapeText newMusicVolume(musicVolume->xPos, musicVolume->yPos, musicVolume->text,musicVolume->fontSize, musicVolume->width,musicVolume->height,musicVolume->colour);
 
     // Update effect volume
     effectVolume->text = std::to_string(audioFacade->getEffectVolume());
-  /*  ShapeText newEffectVolume(effectVolume->xPos, effectVolume->yPos, effectVolume->text,effectVolume->fontSize, effectVolume->width,effectVolume->height,effectVolume->colour);*/
 
     // Add to render
     _renderList._shapes[1].push_back(new ShapeText(musicVolume->xPos, musicVolume->yPos, musicVolume->text,musicVolume->fontSize, musicVolume->width,musicVolume->height,musicVolume->colour));

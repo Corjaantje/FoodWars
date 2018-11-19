@@ -7,6 +7,7 @@ class GravityComponent : public Component {
 public:
     double gravityApplied;
     GravityComponent();
+    explicit GravityComponent(double gravity);
 };
 
 #endif //PROJECT_SWA_GRAVITYCOMPONENT_H

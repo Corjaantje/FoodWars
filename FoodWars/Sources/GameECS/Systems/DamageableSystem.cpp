@@ -19,7 +19,6 @@ void DamageableSystem::update(double deltaTime) {
         }
         if(!x.second->IsAlive())
         {
-            std::cout <<"HELEMAAL KAPOT" << std::endl;
             _entityManager->removeEntity(x.first);
         }
     }
@@ -41,7 +40,8 @@ void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent
     //remove projectile
     if (_entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getEntity()))
     {
-        _entityManager->removeEntity(collisionEvent.getEntity());
+        //_entityManager->removeEntity(collisionEvent.getEntity());
+        _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity())->LowerHealth(5);
     }
     //lower target health
     else if (_entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity())) {
@@ -50,7 +50,8 @@ void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent
     //remove projectile
     if (_entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getOtherEntity()))
     {
-        _entityManager->removeEntity(collisionEvent.getOtherEntity());
+        //_entityManager->removeEntity(collisionEvent.getOtherEntity());
+        _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity())->LowerHealth(5);
     }
     //lower target health
     else {

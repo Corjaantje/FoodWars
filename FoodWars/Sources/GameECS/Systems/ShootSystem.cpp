@@ -15,8 +15,7 @@ ShootSystem::ShootSystem(std::shared_ptr<EntityManager> entityManager,
                                                 _visualFacade{std::move(visualFacade)},
                                                 _isShooting{false},
                                                 _projectileFired{false},
-                                                _projectile{0},
-                                                _projectileAcceleration{10}
+                                                _projectile{0}
 {
     inputFacade->getMouseEventObservable()->registerObserver(this);
 }
@@ -37,15 +36,12 @@ void ShootSystem::update(double deltaTime) {
             _projectileFired = false;
             _entityManager->removeEntity(_projectile);
         }
-        double accelerationChange = _projectileAcceleration * deltaTime;
-        projectileMove->yVelocity -= accelerationChange;
-        _projectileAcceleration -= accelerationChange;
 
     }
 }
 
 void ShootSystem::update(std::shared_ptr<MouseEvent> event) {
-    while(_isShooting && !_projectileFired)
+    if(_isShooting && !_projectileFired)
     {
         int currentPlayer = 0;
         auto turnComponents = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
@@ -58,34 +54,19 @@ void ShootSystem::update(std::shared_ptr<MouseEvent> event) {
         }
         auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(currentPlayer);
         if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
-            std::cout << "xPlayer: " << currentPlayerPos->X << " xMouse: " << event->getXPosition() << std::endl;
-            std::cout << "yPlayer: " << currentPlayerPos->Y << " yMouse: " << event->getYPosition() << std::endl;
             double distance = hypot(event->getXPosition() - currentPlayerPos->X, currentPlayerPos->Y - event->getYPosition());
-
-            double radius = acos((event->getXPosition() - currentPlayerPos->X) / distance);
-            double angle = radius *(180/M_PI);
-//            double vectorX = cos(angle);
-//            double vectorY = sin(angle);
 
             auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(currentPlayer);
             double angleX = event->getXPosition() - (currentPlayerPos->X);
             double angleY = event->getYPosition() - (currentPlayerPos->Y);
-            std::cout << "V: " << angleY << std::endl;
-            std::cout << "maxV: " << angleY * sin(radius)*angleY * sin(radius)/2*9.81 << std::endl;
+
             generateProjectile(currentPlayerPos, angleX, angleY);
             _isShooting = false;
             _projectileFired = true;
 
             for(const auto &iterator: turnComponents) {
                 if(iterator.second->isMyTurn()) {
-                    iterator.second->switchTurn(false);
-                    for(const auto& it2: turnComponents) {
-                        if(it2.first != iterator.first) {
-                            it2.second->switchTurn(true);
-                            it2.second->setRemainingTime(30.0);
-                            break;
-                        }
-                    }
+                    iterator.second->lowerEnergy(20);
                     break;
                 }
             }
@@ -99,7 +80,6 @@ void ShootSystem::toggleShooting() {
 
 void ShootSystem::generateProjectile(std::shared_ptr<PositionComponent> pos, double velocityX, double velocityY) {
     _projectile = _entityManager->createEntity();
-
     int posX = pos->X + static_cast<int>(velocityX / 4);
     int posY = pos->Y + static_cast<int>(velocityY / 4);
 
@@ -110,9 +90,11 @@ void ShootSystem::generateProjectile(std::shared_ptr<PositionComponent> pos, dou
     _entityManager->addComponentToEntity(_projectile, new PositionComponent(posX, posY));
     _entityManager->addComponentToEntity(_projectile, new BoxCollider(20, 20));
     _entityManager->addComponentToEntity(_projectile, new DamagingComponent());
+    _entityManager->addComponentToEntity(_projectile, new DamageableComponent { 10 });
+    _entityManager->addComponentToEntity(_projectile, new GravityComponent(25));
 
     auto moveComponent = new MoveComponent();
-    moveComponent->xVelocity = velocityX / 2;
-    moveComponent->yVelocity = velocityY / 2;
+    moveComponent->xVelocity = velocityX;
+    moveComponent->yVelocity = velocityY;
     _entityManager->addComponentToEntity(_projectile, moveComponent);
 }

@@ -17,15 +17,18 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context,
     CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };
     _systems.push_back(new JumpSystem { _entityManager, _inputFacade, *collisionSystem } );
     _systems.push_back(new MoveSystem { _entityManager, _inputFacade, *collisionSystem });
-    _systems.push_back(collisionSystem);
     _systems.push_back(new GravitySystem { _entityManager, *collisionSystem });
-    drawSystem = new DrawSystem {_entityManager, visualFacade, _inputFacade};
-    _systems.push_back(drawSystem);
-    _systems.push_back(new DamageableSystem { _entityManager, *collisionSystem});
+
     TurnSystem* turnSystem = new TurnSystem {_entityManager};
     _systems.push_back(turnSystem);
     shootSystem = new ShootSystem(_entityManager, visualFacade, _inputFacade);
     _systems.push_back(shootSystem);
+    _systems.push_back(new DamageableSystem { _entityManager, *collisionSystem});
+    _systems.push_back(collisionSystem);
+
+    drawSystem = new DrawSystem {_entityManager, visualFacade, _inputFacade};
+    _systems.push_back(drawSystem);
+
 }
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){

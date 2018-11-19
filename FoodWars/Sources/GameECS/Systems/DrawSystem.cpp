@@ -57,16 +57,17 @@ void DrawSystem::drawNonComponents() {
     }
     //Draw Turn Timer
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
-        double time = iterator.second->getRemainingTime();
+        if(iterator.second->isMyTurn()) {
+            double time = iterator.second->getRemainingTime();
             std::string text;
-            if(time < 10){
+            if (time < 10) {
                 text = std::to_string(time).substr(0, 3);
-            }
-            else{
+            } else {
                 text = std::to_string(time).substr(0, 4);
             }
             _renderList._shapes[3].push_back(new ShapeText(800, 45, text, 180, 75, 37, Colour(255, 255, 255, 0)));
             break;
+        }
     }
 }
 

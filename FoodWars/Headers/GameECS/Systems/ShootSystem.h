@@ -8,6 +8,7 @@
 #include "../../../../TonicEngine/Headers/Visual/VisualFacade.h"
 #include "../../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../../../../TonicEngine/Headers/Audio/AudioFacade.h"
+#include "../Components/Collider/BoxCollider.h"
 
 class ShootSystem : public IBaseSystem, public IObserver<MouseEvent>
 {
@@ -27,7 +28,9 @@ private:
     std::shared_ptr<EntityManager> _entityManager;
     std::shared_ptr<VisualFacade> _visualFacade;
     Renderlist _renderList;
-    void generateProjectile(std::shared_ptr<PositionComponent> pos, double velocityX, double velocityY);
+
+    void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
+                            double velocityX, double velocityY);
 };
 
 #endif //PROJECT_SWA_SHOOTSYSTEM_H

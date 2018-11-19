@@ -12,7 +12,7 @@ SettingsScreen::SettingsScreen(std::shared_ptr<ScreenStateManager> context) : IS
     // MainMenu
     SpriteButton* backButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 140, 140, 12, 12, Colour{0,0,0,0}};
     backButton->addToRender(&_renderList);
-    _buttons.push_back(backButton);
+    _sprites.push_back(backButton);
 
     //TODO: setresolution via visual facade
     // Aspect ratios

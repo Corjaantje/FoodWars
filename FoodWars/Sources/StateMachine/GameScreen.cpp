@@ -15,7 +15,12 @@
 #include "../../Headers/GameECS/Systems/AnimationSystem.h"
 #include "../../Headers/GameECS/Components/AnimationComponent.h"
 
-GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager) : IScreen(context), _entityManager(std::make_shared<EntityManager>(entityManager))
+GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameLevel* gameLevel) :
+    IScreen(context),
+    _entityManager(std::make_shared<EntityManager>(gameLevel->getEntityManager())),
+    _spawnPoints(gameLevel->getSpawnPoints()),
+    _wallpaper(gameLevel->getBackgroundWallpaper()),
+    _backgroundMusic(gameLevel->getBackgroundMusic().c_str())
 {
     _audioFacade = _context->getFacade<AudioFacade>();
     _visualFacade = _context->getFacade<VisualFacade>();
@@ -29,6 +34,17 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
     _systems.push_back(new AnimationSystem(_entityManager, _animationManager));
     _systems.push_back(new DrawSystem {_entityManager, visualFacade});
     _systems.push_back(new TurnSystem {_entityManager});
+
+    // Build level
+    buildLevel();
+}
+
+// Builds the level from the gameLevel
+void GameScreen::buildLevel() {
+
+    // Player spawns
+
+    // Music
 }
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
@@ -62,7 +78,7 @@ GameScreen::~GameScreen() {
 };
 
 void GameScreen::update(double deltaTime) {
-    _audioFacade->playMusic("nature");
+    _audioFacade->playMusic(_backgroundMusic);
     _inputFacade->pollEvents();
     for(auto const &iterator : _systems){
         iterator->update(deltaTime * _context->getTimeModifier());

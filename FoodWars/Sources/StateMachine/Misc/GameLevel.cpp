@@ -32,3 +32,4 @@ EntityManager GameLevel::getEntityManager() const {
 std::vector<Coordinate> GameLevel::getSpawnPoints() const {
     return _spawnPoints;
 }
+

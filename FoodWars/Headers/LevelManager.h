@@ -7,6 +7,7 @@
 #include "GameECS/Components/GravityComponent.h"
 #include "../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
 #include "GameECS/Components/Collider/BoxCollider.h"
+#include "StateMachine/Misc/GameLevel.h"
 
 class LevelManager {
 private:
@@ -15,8 +16,9 @@ private:
 public:
     LevelManager();
     ~LevelManager();
-    EntityManager startLevel(int level);
+    GameLevel* startLevel(int level);
     EntityManager _entityManager;
+    GameLevel* _gameLevel;
 
 };
 #endif //PROJECT_SWA_LEVELMANAGER_H

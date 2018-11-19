@@ -11,8 +11,9 @@ LevelManager::LevelManager()
 
 LevelManager::~LevelManager() = default;
 
-EntityManager LevelManager::startLevel(int level) {
-    switch(level)
+//TODO: Make gameLevel
+GameLevel* LevelManager::startLevel(int level) {
+    /*switch(level)
     {
         case 3: {
             _entityManager = EntityManager();
@@ -68,9 +69,9 @@ EntityManager LevelManager::startLevel(int level) {
             _entityManager.addComponentToEntity(boundTwo, new BoxCollider(1600, 1600));
             _entityManager.addComponentToEntity(boundTwo, new PositionComponent(1600, 0));
 
-            int boundThree = _entityManager.createEntity();
+            *//*int boundThree = _entityManager.createEntity();
             _entityManager.addComponentToEntity(boundThree, new BoxCollider(900, 900));
-            _entityManager.addComponentToEntity(boundThree, new PositionComponent(0, -900));
+            _entityManager.addComponentToEntity(boundThree, new PositionComponent(0, -900));*//*
 
             int boundFour = _entityManager.createEntity();
             _entityManager.addComponentToEntity(boundFour, new BoxCollider(900, 900));
@@ -86,8 +87,34 @@ EntityManager LevelManager::startLevel(int level) {
         default:
             std::cout << "Level does not exist" << std::endl;
             break;
-    }
-    return _entityManager;
+    }*/
+
+    // Load level
+    StorageSystem* storage = new StorageSystem();
+    _entityManager = EntityManager();
+    _gameLevel = storage->loadWorld(_entityManager, "Levels/Level21.xml");
+
+    if(_gameLevel){
+        if(_gameLevel->getSpawnPoints().empty()){
+            return nullptr;
+        }
+    }else
+        return nullptr;
+
+    int boundLeft = _entityManager.createEntity();
+    _entityManager.addComponentToEntity(boundLeft, new BoxCollider(1600, 1600));
+    _entityManager.addComponentToEntity(boundLeft, new PositionComponent(-1600, 0));
+
+    int boundRight = _entityManager.createEntity();
+    _entityManager.addComponentToEntity(boundRight, new BoxCollider(1600, 1600));
+    _entityManager.addComponentToEntity(boundRight, new PositionComponent(1600, 0));
+
+    int boundBottom = _entityManager.createEntity();
+    _entityManager.addComponentToEntity(boundBottom, new BoxCollider(900, 900));
+    _entityManager.addComponentToEntity(boundBottom, new PositionComponent(0, 900));
+
+    // Return gameLevel
+    return _gameLevel;
 }
 
 void LevelManager::generateTerrain() {

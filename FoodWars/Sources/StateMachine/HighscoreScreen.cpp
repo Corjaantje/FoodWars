@@ -9,11 +9,7 @@ HighscoreScreen::HighscoreScreen(std::shared_ptr<ScreenStateManager> context) : 
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
 }
 
-HighscoreScreen::~HighscoreScreen() {
-    for(IShape* button: _buttons) {
-        delete button;
-    }
-}
+HighscoreScreen::~HighscoreScreen() = default;
 
 void HighscoreScreen::update(double deltaTime) {
 
@@ -24,7 +20,7 @@ void HighscoreScreen::update(double deltaTime) {
     // Backbutton
     SpriteButton* backButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "backbutton.png", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 100, 100, 9, 9, Colour{0,0,0,0}};
     backButton->addToRender(&_renderList);
-    _buttons.push_back(backButton);
+    _sprites.push_back(backButton);
 
     _renderList._shapes[1].push_back(new ShapeText(610, 130, "Highscore", 0, 400, 70, Colour(255, 120, 112, 0)));
     _renderList._shapes[1].push_back(new ShapeText(560, 350, "Level 1: ", 0, 200, 85, Colour(255, 255, 255, 0)));

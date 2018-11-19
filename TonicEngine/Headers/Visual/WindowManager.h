@@ -7,17 +7,22 @@
 #include "Shapes/ShapeSprite.h"
 #include "Renderlist.h"
 #include "AssetManager.h"
+#include "../General/WindowResolutionCalculator.h"
 #include <vector>
+#include <memory>
+#include "IRenderer.h"
 
-class WindowManager {
+class WindowManager : public IRenderer {
 public:
-    WindowManager();
+    WindowManager(std::shared_ptr<WindowResolutionCalculator> windowResCalc);
     ~WindowManager();
 
-    void render(Renderlist renderlist);
+    void render(Renderlist &renderlist);
 
     void setTitle(const std::string &title);
     void setResolution(int width, int height);
+    int getWindowWidth() const;
+    int getWindowHeight() const;
 
     void openWindow();
     void closeWindow();
@@ -28,18 +33,17 @@ public:
     void pollEvents();
     bool isWindowClosed();
 
-private:
-    void renderRectangles(std::vector<ShapeRectangle> rectangleList);
-    void renderSprites(std::vector<ShapeSprite> rectangleSprite);
-    void renderText(std::vector<ShapeText> textList);
-
+    void renderRectangle(const ShapeRectangle &rectangle) override;
+    void renderText(const ShapeText &text) override;
+    void renderSprite(const ShapeSprite &sprite) override;
 private:
     AssetManager* _assetManager = nullptr;
     Window *_window = nullptr;
     SDL_Renderer *_renderer = nullptr;
+    std::shared_ptr<WindowResolutionCalculator> _windowResCalc = nullptr;
     std::string _title = "Default Title";
-    int _windowHeight = 480;
-    int _windowWidth = 640;
+    int _windowHeight = DEFAULT_HEIGHT;
+    int _windowWidth = DEFAULT_WIDTH;
     bool _fullscreen = false;
 };
 

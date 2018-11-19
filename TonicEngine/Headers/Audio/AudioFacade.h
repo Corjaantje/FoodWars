@@ -5,6 +5,7 @@
 #include "AudioPlayer.h"
 #include "../../Facades/IFacade.h"
 #include <string>
+#include <cstring>
 #include <map>
 
 class AudioFacade : public IFacade {

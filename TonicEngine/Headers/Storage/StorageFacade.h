@@ -28,6 +28,8 @@ public:
     MyDocument getSystemXML() const;
     MyDocument getUserXML() const;
 
+    string getHighscore(int level);
+
     // Placeholders for loading. Will end up using factories to return usable objects.
     void getAudioComponents();
     void getLevels();

@@ -14,6 +14,7 @@
 #include "MouseEventObservable.h"
 #include "../../Facades/IFacade.h"
 #include "WindowEventObservable.h"
+#include "../General/WindowResolutionCalculator.h"
 
 #ifndef PROJECT_SWA_INPUTOBSERVABLE_H
 #define PROJECT_SWA_INPUTOBSERVABLE_H
@@ -23,7 +24,9 @@ private:
     std::shared_ptr<KeyEventObservable> _keyEventObservable;
     std::shared_ptr<MouseEventObservable> _mouseEventObservable;
     std::shared_ptr<WindowEventObservable> _windowEventObservable;
+    int eventFilter(const SDL_Event* event);
     std::map<SDL_Keycode, KEY> _keycodeMap;
+    std::shared_ptr<WindowResolutionCalculator> _windowResCalc;
     void init();
 public:
     InputFacade();
@@ -32,6 +35,7 @@ public:
     std::shared_ptr<KeyEventObservable> getKeyEventObservable();
     std::shared_ptr<MouseEventObservable> getMouseEventObservable();
     std::shared_ptr<WindowEventObservable> getWindowEventObservable();
+    void setWindowResolutionCalculator(std::shared_ptr<WindowResolutionCalculator> windowResCalc);
     void pollEvents();
 };
 

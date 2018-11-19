@@ -5,7 +5,7 @@
 LevelTransitionScreen::LevelTransitionScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
     visualFacade = context->getFacade<VisualFacade>();
     audioFacade = context->getFacade<AudioFacade>();
-    _inputFacade->getKeyEventObservable()->registerObserver(this);
+    _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
 
     // MainMenu
     TextButton* mainMenuButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Main Menu", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 250, 30, 200, 200};

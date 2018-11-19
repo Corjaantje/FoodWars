@@ -15,7 +15,7 @@ public:
     virtual std::string getScreenName() const = 0;
     void setScore(int score) {
         _score = score;
-        _renderList.textList.emplace_back(ShapeText{0, 0, "Score: " + std::to_string(_score), 12, 250, 30, Colour{0,0,0,0}});
+        _renderList._shapes[1].push_back(new ShapeText{0, 0, "Score: " + std::to_string(_score), 12, 250, 30, Colour{0,0,0,0}});
     }
 };
 

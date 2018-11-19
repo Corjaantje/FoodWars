@@ -1,72 +1,75 @@
 #include <utility>
+
+#include <utility>
 #include "../../Headers/StateMachine/GameScreen.h"
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"
-#include "../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../Headers/GameECS/Components/GravityComponent.h"
-#include "../../Headers/GameECS/Components/DamageableComponent.h"
-#include "../../Headers/GameECS/Systems/DamageableSystem.h"
+#include "../../Headers/GameECS/Components/MoveComponent.h"
+#include "../../Headers/GameECS/Systems/CollisionSystem.h"
+#include "../../Headers/GameECS/Systems/JumpSystem.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
+#include "../../Headers/GameECS/Components/DrawableComponent.h"
+#include "../../Headers/StateMachine/PauseScreen.h"
+#include "../../Headers/GameECS/Systems/AnimationSystem.h"
+#include "../../Headers/GameECS/Components/AnimationComponent.h"
 #include "../../Headers/StateMachine/DrawTransitionScreen.h"
 #include "../../Headers/StateMachine/WinTransitionScreen.h"
 #include "../../Headers/StateMachine/LoseTransitionScreen.h"
 
-GameScreen::GameScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context),
-    _audioFacade(context->getFacade<AudioFacade>()),
-    _entityManager(std::make_shared<EntityManager>()),
-    _visualFacade(context->getFacade<VisualFacade>()){
-    _inputFacade->getKeyEventObservable()->registerObserver(this);
-
-    _systems.push_back(std::make_shared<DrawSystem>(_entityManager, _visualFacade));
-    _systems.push_back(std::make_shared<MoveSystem>(_entityManager, _inputFacade));
-    _systems.push_back(std::make_shared<GravitySystem>(_entityManager));
-
-    //create two players
-    teamOne[0] = _entityManager->createEntity();
-    teamTwo[0] = _entityManager->createEntity();
-
-    DrawableComponent* drawableComponent = new DrawableComponent;
-    drawableComponent->shape = std::make_unique<ShapeSprite>(ShapeSprite({32, 48, 32, 0, "PlayerW_R0.png"}));
-    _entityManager->addComponentToEntity(teamOne[0], drawableComponent);
-    _entityManager->addComponentToEntity(teamOne[0], new BoxCollider(32, 48));
-    TurnComponent* turnComponent = new TurnComponent;
-    turnComponent->switchTurn(true);
-    _entityManager->addComponentToEntity(teamOne[0], turnComponent);
-    _entityManager->addComponentToEntity(teamOne[0], new GravityComponent());
-    _entityManager->addComponentToEntity(teamOne[0], new DamageableComponent());
-
-    DrawableComponent* drawableComponent2 = new DrawableComponent;
-    drawableComponent2->shape = std::make_unique<ShapeSprite>(ShapeSprite(32, 48, 576, 0, "PlayerL_L1.png"));
-    _entityManager->addComponentToEntity(teamTwo[0], drawableComponent2);
-    _entityManager->addComponentToEntity(teamTwo[0], new TurnComponent);
-    _entityManager->addComponentToEntity(teamTwo[0], new BoxCollider(32, 48));
-    _entityManager->addComponentToEntity(teamTwo[0], new GravityComponent());
-    _entityManager->addComponentToEntity(teamTwo[0], new DamageableComponent());
-
-    std::shared_ptr<TurnSystem> turnSystem = std::make_shared<TurnSystem>(_entityManager);
-    _systems.push_back(turnSystem);
-    turnSystem->getRelevantEntities();
-    turnSystem->setTurnTime(20);
-    std::shared_ptr<DamageableSystem> damageSystem = std::make_shared<DamageableSystem>(_entityManager);
-    _systems.push_back(damageSystem);
+GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager) : IScreen(context), _entityManager(std::make_shared<EntityManager>(entityManager))
+{
+    _audioFacade = _context->getFacade<AudioFacade>();
+    _visualFacade = _context->getFacade<VisualFacade>();
+    _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
+    _animationManager = new AnimationManager{};
+    CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };
+    _systems.push_back(new JumpSystem { _entityManager, _inputFacade, _audioFacade, *collisionSystem} );
+    _systems.push_back(new MoveSystem{ _entityManager, _inputFacade, *collisionSystem});
+    _systems.push_back(collisionSystem);
+    _systems.push_back(new GravitySystem { _entityManager, *collisionSystem });
+    _systems.push_back(new AnimationSystem(_entityManager, _animationManager));
+    _systems.push_back(new DrawSystem {_entityManager, visualFacade});
+    _systems.push_back(new TurnSystem {_entityManager});
 }
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
-    {
-        _context->setActiveScreen<MainMenuScreen>();
+    if (event->getKeyEventType() == KeyEventType::Down) {
+        if(event->getKey() == KEY::KEY_ESCAPE)
+            _context->setActiveScreen<PauseScreen>();
+
+        //Adjusting gamespeed
+        if(event->getKey() == KEY::KEY_PAGEUP) {
+            _context->setTimeModifier(2.50);
+        }
+        if(event->getKey() == KEY::KEY_PAGEDOWN) {
+            _context->setTimeModifier(0.40);
+        }
+        if(event->getKey() == KEY::KEY_HOME) {
+            _context->setTimeModifier(1);
+        }
+
+        //Toggle Framerate
+        if(event->getKey() == KEY::KEY_F){
+            drawSystem->toggleFpsCounter();
+        }
     }
-    if (event->getKey() == KEY::KEY_A)
+    /*if (event->getKey() == KEY::KEY_A)
     {
         _entityManager->getComponentFromEntity<DamageableComponent>(teamTwo[0])->LowerHealth(10);
-    }
+    }*/
 }
 
-GameScreen::~GameScreen() = default;
+GameScreen::~GameScreen() {
+    for (auto const &iterator : _systems) {
+        delete iterator;
+    }
+    delete _animationManager;
+};
 
 void GameScreen::update(double deltaTime) {
-    std::map<int, std::shared_ptr<TurnComponent>> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
+    /*std::map<int, std::shared_ptr<TurnComponent>> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
     if(_entitiesWithTurnComponent.size() == 1)
     {
         //set score
@@ -88,11 +91,11 @@ void GameScreen::update(double deltaTime) {
         //set score
         _context->setActiveScreen<DrawTransitionScreen>();
         ((std::dynamic_pointer_cast<DrawTransitionScreen>(_context->getCurrentState())->setScore(0)));
-    }
+    }*/
     _audioFacade->playMusic("wildwest");
     _inputFacade->pollEvents();
-    for(auto const &iterator : _systems) {
-        iterator->update(deltaTime);
+    for(auto const &iterator : _systems){
+        iterator->update(deltaTime * _context->getTimeModifier());
     }
 
 }

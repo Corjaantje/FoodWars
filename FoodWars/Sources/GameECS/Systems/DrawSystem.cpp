@@ -21,9 +21,7 @@ DrawSystem::~DrawSystem() = default;
 
 void DrawSystem::update(double dt) {
     std::map<int, std::shared_ptr<DrawableComponent>> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
-    _renderList.rectangleList.clear();
-    _renderList.spriteList.clear();
-    _renderList.textList.clear();
+    _renderList._shapes.clear();
     _updateCallCount++;
     drawNonComponents();
     drawCurrentPlayer();
@@ -37,16 +35,14 @@ void DrawSystem::update(double dt) {
         }
         iterator.second->shape->addToRender(&_renderList);
     }
-
-
     _visualFacade->render(_renderList);
 }
 
 void DrawSystem::drawNonComponents() {
 
-    _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "FoodWarsUISmall.png"});
+    _renderList._shapes[2].push_back(new ShapeSprite{1600, 900, 0, 0, "FoodWarsUISmall.png"});
     if(!_playerIcon.empty()) {
-        _renderList.spriteList.emplace_back(ShapeSprite{36, 54, 47, 40, _playerIcon});
+        _renderList._shapes[3].push_back(new ShapeSprite{36, 54, 47, 40, _playerIcon});
     }
     //Framerate
     std::chrono::duration<double> currentTime = std::chrono::steady_clock::now().time_since_epoch();
@@ -57,7 +53,7 @@ void DrawSystem::drawNonComponents() {
         _updateCallCount = 0;
     }
     if(_showFPS) {
-        _renderList.textList.emplace_back(ShapeText(27, 155, _fpsString, 180, 75, 37, Colour(255, 255, 255, 0)));
+        _renderList._shapes[3].push_back(new ShapeText(27, 155, _fpsString, 180, 75, 37, Colour(255, 255, 255, 0)));
     }
     //Draw Turn Timer
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
@@ -69,8 +65,7 @@ void DrawSystem::drawNonComponents() {
             else{
                 text = std::to_string(time).substr(0, 4);
             }
-            ShapeText timerText {800, 45, text, 180, 75, 37, Colour{255, 255, 255, 0}};
-            timerText.addToRender(&_renderList);
+            _renderList._shapes[3].push_back(new ShapeText(800, 45, text, 180, 75, 37, Colour(255, 255, 255, 0)));
             break;
     }
 }

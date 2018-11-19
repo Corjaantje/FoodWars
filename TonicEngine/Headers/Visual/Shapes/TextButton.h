@@ -34,6 +34,8 @@ public:
 
     void update(std::shared_ptr<MouseEvent> event) override;
     void addToRender(Renderlist* renderlist) override;
+
+    void render(IRenderer &renderer) const override;
 };
 
 #endif //PROJECT_SWA_BUTTON_H

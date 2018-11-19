@@ -22,6 +22,7 @@ enum class KEY {
     KEY_PAGEUP,
     KEY_PAGEDOWN,
     KEY_HOME,
+    KEY_SPACEBAR,
     KEY_OTHER
 };
 

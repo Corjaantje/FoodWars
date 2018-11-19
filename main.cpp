@@ -15,6 +15,7 @@
 #include "TonicEngine/Headers/Communication/CommunicationFacade.h"
 #include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
 #include "FoodWars/Headers/StateMachine/GameScreen.h"
+#include "FoodWars/Headers/StateMachine/HelpScreen.h"
 #include "FoodWars/Headers/StateMachine/CreditScreen.h"
 #include "TonicEngine/Headers/Input/PrintWindowObserver.h"
 #include "TonicEngine/Headers/Input/WindowClosedObserver.h"
@@ -63,6 +64,7 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager, levelManager->_entityManager));
     screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager, levelManager));
     screenStateManager->addOrSetScreenState(new LevelCreationScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new HelpScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new PauseScreen(screenStateManager));
     screenStateManager->setActiveScreen<MainMenuScreen>();

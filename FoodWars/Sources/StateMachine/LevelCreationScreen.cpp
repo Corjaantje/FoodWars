@@ -171,6 +171,6 @@ void LevelCreationScreen::callRender() {
     for(int i=0; i < _buttons.size(); i++){
         _buttons[i]->addToRender(&_renderList);
     }
-    _renderList.textList.emplace_back(ShapeText(610 - selectedSong.size() * 10, 130, selectedSong, 150, selectedSong.size() * 20, 50, Colour(0, 0, 0, 0)));
+    _renderList._shapes[1].push_back(new ShapeText(610 - selectedSong.size() * 10, 130, selectedSong, 150, selectedSong.size() * 20, 50, Colour(0, 0, 0, 0)));
     visualFacade->render(_renderList);
 }

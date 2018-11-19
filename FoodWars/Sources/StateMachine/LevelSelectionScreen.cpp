@@ -6,7 +6,7 @@
 LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager) : IScreen(context) {
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
-    _renderList.spriteList.emplace_back(ShapeSprite{1600, 900, 0, 0, "wallpaperLevelSelect.png"});
+    _renderList._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, "wallpaperLevelSelect.png"});
 
     // MainMenu
     SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}};

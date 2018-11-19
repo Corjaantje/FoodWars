@@ -19,6 +19,8 @@ public:
     void changeImageURL(std::string url);
     void update(std::shared_ptr<MouseEvent> event) override;
     void addToRender(Renderlist* renderlist) override;
+
+    void render(IRenderer &renderer) const override;
 };
 
 #endif //PROJECT_SWA_SPRITEBUTTON_H

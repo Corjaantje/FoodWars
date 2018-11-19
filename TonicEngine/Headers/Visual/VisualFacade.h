@@ -13,7 +13,7 @@ public:
     VisualFacade(std::shared_ptr<WindowResolutionCalculator> windowResolutionCalculator);
     ~VisualFacade();
 
-    void render(Renderlist renderlist);
+    void render(Renderlist &renderlist);
 
     void setTitle(const std::string &title);
     void setResolution(int width, int height);

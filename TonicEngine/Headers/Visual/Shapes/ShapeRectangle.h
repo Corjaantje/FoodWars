@@ -14,6 +14,8 @@ public:
     int width;
     int height;
     Colour colour;
+    int layer;
+    void render(IRenderer &renderer) const override;
 };
 
 

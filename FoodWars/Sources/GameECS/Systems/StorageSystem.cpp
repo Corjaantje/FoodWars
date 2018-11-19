@@ -435,7 +435,7 @@ void StorageSystem::parseDrawable(const MyNode& drawableNode, EntityManager& _en
 
     std::vector<MyNode> childNodes = drawableNode.GetChildren();
     if (childNodes[0].GetName() == "rectangle") {
-        comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({
+        comp->shape = new ShapeRectangle({
             childNodes[2].GetChildren()[0].GetIntValue(),
             childNodes[2].GetChildren()[1].GetIntValue(),
             childNodes[3].GetChildren()[0].GetIntValue(),
@@ -443,20 +443,20 @@ void StorageSystem::parseDrawable(const MyNode& drawableNode, EntityManager& _en
             Colour{childNodes[1].GetChildren()[3].GetIntValue(),
                    childNodes[1].GetChildren()[2].GetIntValue(),
                    childNodes[1].GetChildren()[1].GetIntValue(),
-                   childNodes[1].GetChildren()[0].GetIntValue()}}));
+                   childNodes[1].GetChildren()[0].GetIntValue()}});
     }
     else if (childNodes[0].GetName() == "sprite") {
 
-        comp->shape = std::make_unique<ShapeSprite>(ShapeSprite(
+        comp->shape = new ShapeSprite(
                 childNodes[2].GetChildren()[0].GetIntValue(),
                 childNodes[2].GetChildren()[1].GetIntValue(),
                 childNodes[3].GetChildren()[0].GetIntValue(),
                 childNodes[3].GetChildren()[1].GetIntValue(),
                 childNodes[1].GetChildren()[0].GetValue()
-                ));
+                );
     }
     else if (childNodes[0].GetName() == "text") {
-        comp->shape = std::make_unique<ShapeText>(ShapeText(
+        comp->shape = new ShapeText(
                 childNodes[0].GetChildren()[0].GetIntValue(),
                 childNodes[0].GetChildren()[0].GetIntValue(),
                 childNodes[0].GetChildren()[0].GetValue(),
@@ -467,7 +467,7 @@ void StorageSystem::parseDrawable(const MyNode& drawableNode, EntityManager& _en
                        childNodes[0].GetChildren()[0].GetIntValue(),
                        childNodes[0].GetChildren()[0].GetIntValue(),
                        childNodes[0].GetChildren()[0].GetIntValue()}
-                ));
+                );
     }
 }
 
@@ -531,12 +531,12 @@ int StorageSystem::countFilesInDirectory(std::string targetdir) {
 }
 // Public functions
 
-void StorageSystem::assignRelevantEntityManager(std::shared_ptr<EntityManager> entityManager) {
-    _entityManager = entityManager;
-}
-//void StorageSystem::assignRelevantEntityManager(EntityManager& entityManager) {
-//    _entityManager = &entityManager;
+//void StorageSystem::assignRelevantEntityManager(std::shared_ptr<EntityManager> entityManager) {
+//    _entityManager = entityManager;
 //}
+void StorageSystem::assignRelevantEntityManager(EntityManager& entityManager) {
+    _entityManager = &entityManager;
+}
 
 void StorageSystem::saveWorld(){//std::string savePath) {
     MyNode trueRootNode {"root", nullptr};

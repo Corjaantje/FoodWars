@@ -29,8 +29,6 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
     _systems.push_back(new AnimationSystem(_entityManager, _animationManager));
     _systems.push_back(new DrawSystem {_entityManager, visualFacade});
     _systems.push_back(new TurnSystem {_entityManager});
-    _storage = new StorageSystem();
-    _storage->assignRelevantEntityManager(_entityManager);
 }
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
@@ -53,10 +51,6 @@ void GameScreen::update(std::shared_ptr<KeyEvent> event){
         if(event->getKey() == KEY::KEY_F){
             drawSystem->toggleFpsCounter();
         }
-    }
-    if (event->getKey() == KEY::KEY_D && event->getKeyEventType() == KeyEventType::Down)
-    {
-        _storage->saveWorld();
     }
 }
 

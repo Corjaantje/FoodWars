@@ -18,8 +18,8 @@ private:
     XMLReader _reader;
     XMLWriter _writer;
 //    StorageFacade _storageFacade;
-    std::shared_ptr<EntityManager> _entityManager;
-//    EntityManager* _entityManager;
+//    std::shared_ptr<EntityManager> _entityManager;
+    EntityManager* _entityManager;
     template <typename Comp> void addComponentTypeOf(std::string compName, std::map<int, MyNode> &components, MyNode &rootNode);
     // part of Saving
     void addDrawables(MyDocument& myDoc, std::map<int, std::shared_ptr<DrawableComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
@@ -44,8 +44,8 @@ public:
     StorageSystem();
     ~StorageSystem();
 
-//    void assignRelevantEntityManager(EntityManager& entityManager);
-    void assignRelevantEntityManager(std::shared_ptr<EntityManager> entityManager);
+    void assignRelevantEntityManager(EntityManager& entityManager);
+//    void assignRelevantEntityManager(std::shared_ptr<EntityManager> entityManager);
     void saveWorld();//std::string savePath);
 
     // Pass a string for identifying the world?

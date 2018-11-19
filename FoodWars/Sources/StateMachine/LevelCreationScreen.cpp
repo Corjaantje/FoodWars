@@ -19,6 +19,12 @@ LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> con
 
 void LevelCreationScreen::initButtons() {
 
+    //save attempt
+    SpriteButton* saveButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "settings.png", [this] {_levelBuilder.relinkAndSave(); }, 50, 50, 0, 100, Colour{0,0,0,0}};
+    saveButton->addToRender(&_renderList);
+    _buttons.push_back(saveButton);
+
+
     // MainMenu
     SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 50, 50, 0, 0, Colour{0,0,0,0}};
     quitButton->addToRender(&_renderList);

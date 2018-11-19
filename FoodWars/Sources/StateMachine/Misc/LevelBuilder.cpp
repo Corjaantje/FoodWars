@@ -9,6 +9,7 @@ LevelBuilder::LevelBuilder() {
 
     _musicList.emplace_back("");
     _selectedMusic = 0;
+    _storage = new StorageSystem();
 }
 
 void LevelBuilder::resetEntityManager() {
@@ -19,6 +20,9 @@ void LevelBuilder::resetEntityManager() {
     _entityManager = new EntityManager();
 }
 
+EntityManager *LevelBuilder::getEntityManager() {
+    return _entityManager;
+}
 //void LevelBuilder::incrementShapeSize() {
 //    if(_shapeDimension < MAXIMAL_SHAPE_DIM){
 //        _shapeDimension++;
@@ -280,3 +284,13 @@ void LevelBuilder::addMusicConfig(std::string music) {
 void LevelBuilder::addWallpaperConfig(std::string wallpaper) {
     _wallpaperList.emplace_back(wallpaper);
 }
+
+void LevelBuilder::relinkAndSave() {
+    _storage->assignRelevantEntityManager(*_entityManager);
+    _storage->saveWorld();
+    std::string weird = "";
+    weird = "really";
+    weird = "huh";
+}
+
+

@@ -12,7 +12,7 @@ public:
     DrawableComponent();
     ~DrawableComponent() override;
     IShape* shape;
-    std::unique_ptr<IShape> shape;
+//    std::unique_ptr<IShape> shape;
     std::vector<std::string> serialize() override;
 };
 

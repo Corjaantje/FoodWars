@@ -6,6 +6,7 @@
 #include "EntityMemento.h"
 #include "../../../../TonicEngine/Headers/Visual/Renderlist.h"
 #include "GameLevel.h"
+#include "../../GameECS/Systems/StorageSystem.h"
 
 const int SHAPE_DIMENSION = 32;
 //const int MAXIMAL_SHAPE_DIM = 64;
@@ -36,8 +37,12 @@ private:
 
     std::vector<std::string> _musicList;
     int _selectedMusic = 0;
+
+    StorageSystem* _storage;
 public:
     void resetEntityManager();
+    EntityManager* getEntityManager();
+    void relinkAndSave();
 
 //    void incrementShapeSize();
 //    void decrementShapeSize();

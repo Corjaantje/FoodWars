@@ -24,6 +24,7 @@ public:
 private:
     void initButtons();
     void callRender();
+
 private:
     LevelBuilder _levelBuilder;
     std::shared_ptr<WindowResolutionCalculator> _windowResCalc;

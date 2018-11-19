@@ -69,12 +69,12 @@ void GameScreen::update(double deltaTime) {
     {
         MainMenuScreen screen(_context);
         //set score
-        if (_entitiesWithTurnComponent.count(teamOne[0]) > 0) {
-            //You won
-        }
-        else {
-            //You lost
-        }
+//        if (_entitiesWithTurnComponent.count(teamOne[0]) > 0) {
+//            //You won
+//        }
+//        else {
+//            //You lost
+//        }
         _context->setActiveScreen<MainMenuScreen>();
     } else if(_entitiesWithTurnComponent.empty()) {
         MainMenuScreen screen(_context);
@@ -82,7 +82,6 @@ void GameScreen::update(double deltaTime) {
         //it's a draw!
         _context->setActiveScreen<MainMenuScreen>();
     }
-    _audioFacade->playMusic("wildwest");
     audioFacade->playMusic("wildwest");
     _inputFacade->pollEvents();
     for(auto const &iterator : _systems){

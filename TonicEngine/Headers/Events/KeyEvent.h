@@ -17,6 +17,7 @@ enum class KEY {
     KEY_S,
     KEY_D,
     KEY_F,
+    KEY_G,
     KEY_ESCAPE,
     KEY_PAGEUP,
     KEY_PAGEDOWN,

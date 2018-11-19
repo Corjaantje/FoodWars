@@ -50,6 +50,7 @@ public:
     }
 
     void removeEntity(int entityId);
+    bool exists(int entityId);
 };
 
 

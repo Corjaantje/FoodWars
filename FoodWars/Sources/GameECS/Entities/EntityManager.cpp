@@ -26,3 +26,13 @@ void EntityManager::removeEntity(int entityId) {
         iterator.second.erase(entityId);
     }
 }
+
+bool EntityManager::exists(int entityId) {
+    for (auto &iterator : _componentsByClass) {
+        if (iterator.second.find(entityId) == iterator.second.end())
+        {
+            return false;
+        }
+        return iterator.second.find(entityId)->second != nullptr;
+    }
+}

@@ -1,20 +1,17 @@
 #include <utility>
-
-#include <utility>
 #include "../../Headers/StateMachine/GameScreen.h"
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"
-#include "../../Headers/GameECS/Components/TurnComponent.h"
-#include "../../Headers/GameECS/Components/Collider/BoxCollider.h"
-#include "../../Headers/GameECS/Components/GravityComponent.h"
-#include "../../Headers/GameECS/Components/MoveComponent.h"
 #include "../../Headers/GameECS/Systems/CollisionSystem.h"
 #include "../../Headers/GameECS/Systems/JumpSystem.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 #include "../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../Headers/StateMachine/PauseScreen.h"
+#include "../../Headers/GameECS/Systems/DamageableSystem.h"
 
-GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager) : IScreen(context),
-                                                                                        _entityManager(std::make_shared<EntityManager>(entityManager))
+
+GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context,
+                        EntityManager entityManager) : IScreen(context),
+                            _entityManager(std::make_shared<EntityManager>(entityManager))
 {
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
     CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };
@@ -22,10 +19,13 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
     _systems.push_back(new MoveSystem { _entityManager, _inputFacade, *collisionSystem });
     _systems.push_back(collisionSystem);
     _systems.push_back(new GravitySystem { _entityManager, *collisionSystem });
-    drawSystem = new DrawSystem {_entityManager, visualFacade};
+    drawSystem = new DrawSystem {_entityManager, visualFacade, _inputFacade};
     _systems.push_back(drawSystem);
+    _systems.push_back(new DamageableSystem { _entityManager, *collisionSystem});
     TurnSystem* turnSystem = new TurnSystem {_entityManager};
     _systems.push_back(turnSystem);
+    shootSystem = new ShootSystem(_entityManager, visualFacade, _inputFacade);
+    _systems.push_back(shootSystem);
 }
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
@@ -44,6 +44,9 @@ void GameScreen::update(std::shared_ptr<KeyEvent> event){
             _context->setTimeModifier(1);
         }
 
+        if (event->getKey() == KEY::KEY_G){
+            shootSystem->toggleShooting();
+        }
         //Toggle Framerate
         if(event->getKey() == KEY::KEY_F){
             drawSystem->toggleFpsCounter();

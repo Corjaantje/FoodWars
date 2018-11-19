@@ -5,6 +5,8 @@
 #include "../Headers/LevelManager.h"
 #include "../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 #include "../Headers/GameECS/Components/MoveComponent.h"
+#include "../Headers/GameECS/Components/DamageableComponent.h"
+#include "../Headers/GameECS/Components/DamagingComponent.h"
 
 LevelManager::LevelManager()
 {
@@ -33,21 +35,33 @@ EntityManager LevelManager::startLevel(int level) {
 
             _entityManager.addComponentToEntity(player, drawablePlayerOne);
             _entityManager.addComponentToEntity(player, new BoxCollider(48, 72));
-            _entityManager.addComponentToEntity(player, new PositionComponent(32,0));
+            _entityManager.addComponentToEntity(player, new PositionComponent(32,100));
             auto turnComponent = new TurnComponent;
             turnComponent->switchTurn(true);
             turnComponent->setRemainingTime(30);
             _entityManager.addComponentToEntity(player, turnComponent);
             _entityManager.addComponentToEntity(player, new MoveComponent);
             _entityManager.addComponentToEntity(player, new GravityComponent());
+            _entityManager.addComponentToEntity(player, new DamageableComponent());
 
             player = _entityManager.createEntity();
             _entityManager.addComponentToEntity(player, drawablePlayerTwo);
-            _entityManager.addComponentToEntity(player, new PositionComponent(576,0));
+            _entityManager.addComponentToEntity(player, new PositionComponent(576,100));
             _entityManager.addComponentToEntity(player, new TurnComponent);
             _entityManager.addComponentToEntity(player, new MoveComponent);
             _entityManager.addComponentToEntity(player, new BoxCollider(48, 72));
             _entityManager.addComponentToEntity(player, new GravityComponent());
+            _entityManager.addComponentToEntity(player, new DamageableComponent());
+
+//            int projectile = _entityManager.createEntity();
+//            auto drawableComponent = new DrawableComponent;
+//            drawableComponent->shape = std::make_unique<ShapeRectangle>(ShapeRectangle(20, 20, 576, 0, Colour(0,0,0,0)));
+//            _entityManager.addComponentToEntity(projectile, drawableComponent);
+//            _entityManager.addComponentToEntity(projectile, new PositionComponent(576, 0));
+//            _entityManager.addComponentToEntity(projectile, new BoxCollider(20, 20));
+//            _entityManager.addComponentToEntity(projectile, new GravityComponent());
+//            _entityManager.addComponentToEntity(projectile, new DamagingComponent());
+//            _entityManager.addComponentToEntity(projectile, new DamageableComponent(1));
 
             int boundOne = _entityManager.createEntity();
             _entityManager.addComponentToEntity(boundOne, new BoxCollider(1600, 1600));
@@ -57,13 +71,16 @@ EntityManager LevelManager::startLevel(int level) {
             _entityManager.addComponentToEntity(boundTwo, new BoxCollider(1600, 1600));
             _entityManager.addComponentToEntity(boundTwo, new PositionComponent(1600, 0));
 
+
             int boundThree = _entityManager.createEntity();
             _entityManager.addComponentToEntity(boundThree, new BoxCollider(900, 900));
             _entityManager.addComponentToEntity(boundThree, new PositionComponent(0, -900));
 
+
             int boundFour = _entityManager.createEntity();
             _entityManager.addComponentToEntity(boundFour, new BoxCollider(900, 900));
             _entityManager.addComponentToEntity(boundFour, new PositionComponent(0, 900));
+
             break;
         }
         default:
@@ -99,5 +116,6 @@ void LevelManager::generateTerrainDrawables(int x, int y) {
     _entityManager.addComponentToEntity(terrain, comp);
     _entityManager.addComponentToEntity(terrain, new BoxCollider{32,32});
     _entityManager.addComponentToEntity(terrain, new PositionComponent(x, y));
+    _entityManager.addComponentToEntity(terrain, new DamageableComponent(1));
     comp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle({32, 32, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}}));
 }

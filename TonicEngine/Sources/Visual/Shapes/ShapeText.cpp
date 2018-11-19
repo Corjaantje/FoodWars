@@ -35,5 +35,7 @@ std::vector<std::string> ShapeText::serialize() {
     data.emplace_back(std::to_string(colour.blue));
     data.emplace_back(std::to_string(colour.alpha));
     data.emplace_back(text);
+    data.emplace_back("layer");
+    data.emplace_back(std::to_string(layer));
     return data;
 }

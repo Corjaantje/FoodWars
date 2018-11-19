@@ -315,7 +315,10 @@ void StorageSystem::prepareRect(MyNode& parentNode, std::vector<std::string> fil
     colorNode.AddChild(blue);
     colorNode.AddChild(alpha);
 
+    MyNode layerNode {filling[12], &parentNode};
+    layerNode.SetValue(filling[13]);
 
+    parentNode.AddChild(layerNode);
     parentNode.AddChild(positionNode);
     parentNode.AddChild(dimensionNode);
     parentNode.AddChild(colorNode);
@@ -353,6 +356,10 @@ void StorageSystem::prepareSprite(MyNode& parentNode, std::vector<std::string> f
 
     imageNode.AddChild(urlNode);
 
+    MyNode layerNode {filling[9], &parentNode};
+    layerNode.SetValue(filling[10]);
+
+    parentNode.AddChild(layerNode);
     parentNode.AddChild(positionNode);
     parentNode.AddChild(dimensionNode);
     parentNode.AddChild(imageNode);
@@ -402,6 +409,10 @@ void StorageSystem::prepareText(MyNode& parentNode, std::vector<std::string> fil
     MyNode textNode {"text", &parentNode};
     textNode.SetValue(filling[12]);
 
+    MyNode layerNode {filling[13], &parentNode};
+    layerNode.SetValue(filling[14]);
+
+    parentNode.AddChild(layerNode);
     parentNode.AddChild(positionNode);
     parentNode.AddChild(dimensionNode);
     parentNode.AddChild(colorNode);
@@ -487,6 +498,7 @@ void StorageSystem::parseDrawable(const MyNode& drawableNode, EntityManager& _en
                    childNodes[1].GetChildren()[2].GetIntValue(),
                    childNodes[1].GetChildren()[1].GetIntValue(),
                    childNodes[1].GetChildren()[0].GetIntValue()}});
+//        comp->shape->layer = childNodes[4].GetChildren()[0].GetIntValue();
     }
     else if (childNodes[0].GetName() == "sprite") {
 
@@ -497,6 +509,7 @@ void StorageSystem::parseDrawable(const MyNode& drawableNode, EntityManager& _en
                 childNodes[3].GetChildren()[1].GetIntValue(),
                 childNodes[1].GetChildren()[0].GetValue()
                 );
+//        comp->shape->layer = childNodes[4].GetChildren()[0].GetIntValue();
     }
     else if (childNodes[0].GetName() == "text") {
         comp->shape = new ShapeText(

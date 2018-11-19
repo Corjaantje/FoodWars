@@ -24,6 +24,7 @@ public:
 private:
     void initButtons();
     void callRender();
+    void relinkAndSave();
 
 private:
     LevelBuilder _levelBuilder;

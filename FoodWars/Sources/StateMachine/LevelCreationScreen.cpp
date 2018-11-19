@@ -20,8 +20,8 @@ LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> con
 
 void LevelCreationScreen::initButtons() {
 
-    //save attempt
-    SpriteButton* saveButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "settings.png", [this] {_levelBuilder.relinkAndSave(); }, 50, 50, 0, 100, Colour{0,0,0,0}};
+    //save attempt non const lvalue reference cannot bind to a temporary of type
+    SpriteButton* saveButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "settings.png", [this] { relinkAndSave(); }, 50, 50, 0, 100, Colour{0,0,0,0}};
     saveButton->addToRender(&_renderList);
     _buttons.push_back(saveButton);
 
@@ -180,4 +180,11 @@ void LevelCreationScreen::callRender() {
     }
     _renderList._shapes[1].push_back(new ShapeText(610 - selectedSong.size() * 10, 130, selectedSong, 150, selectedSong.size() * 20, 50, Colour(0, 0, 0, 0)));
     visualFacade->render(_renderList);
+}
+
+void LevelCreationScreen::relinkAndSave() {
+    StorageSystem storage;
+    EntityManager ent = _levelBuilder.buildConstructedLevel().getEntityManager();
+    storage.assignRelevantEntityManager(ent);
+    storage.saveWorld();
 }

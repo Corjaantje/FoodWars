@@ -80,8 +80,7 @@ EntityManager LevelManager::startLevel(int level) {
         case 1: {
             StorageSystem* storage = new StorageSystem();
             _entityManager = EntityManager();
-            storage->loadWorld(_entityManager, "Levels/Level19.xml");
-            std::string freezewhy = "tell me why";
+            storage->loadWorld(_entityManager, "Levels/Level21.xml");
             break;
         }
         default:

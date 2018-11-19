@@ -29,5 +29,7 @@ std::vector<std::string> ShapeSprite::serialize() {
     data.push_back(std::to_string(getWidth()));
     data.emplace_back("image");
     data.emplace_back(imageURL);
+    data.emplace_back("layer");
+    data.emplace_back(std::to_string(layer));
     return data;
 }

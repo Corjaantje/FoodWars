@@ -88,13 +88,13 @@ void ShootSystem::generateProjectile(std::shared_ptr<PositionComponent> pos, dou
 
     _entityManager->addComponentToEntity(_projectile, drawableComponent);
     _entityManager->addComponentToEntity(_projectile, new PositionComponent(posX, posY));
-    _entityManager->addComponentToEntity(_projectile, new BoxCollider(20, 20));
-    _entityManager->addComponentToEntity(_projectile, new DamagingComponent());
+    _entityManager->addComponentToEntity(_projectile, new BoxCollider(11, 38));
+    _entityManager->addComponentToEntity(_projectile, new DamagingComponent(100));
     _entityManager->addComponentToEntity(_projectile, new DamageableComponent { 10 });
-    _entityManager->addComponentToEntity(_projectile, new GravityComponent(25));
+    _entityManager->addComponentToEntity(_projectile, new GravityComponent(20));
 
     auto moveComponent = new MoveComponent();
     moveComponent->xVelocity = velocityX;
-    moveComponent->yVelocity = velocityY;
+    moveComponent->yVelocity = velocityY * 5;
     _entityManager->addComponentToEntity(_projectile, moveComponent);
 }

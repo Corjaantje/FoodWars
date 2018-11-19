@@ -30,6 +30,7 @@ void TurnSystem::update(double deltaTime) {
                     if(it2.first != iterator.first) {
                         it2.second->switchTurn(true);
                         it2.second->setRemainingTime((float) _timePerTurn);
+                        it2.second->setEnergy(100);
                         break;
                     }
                 }

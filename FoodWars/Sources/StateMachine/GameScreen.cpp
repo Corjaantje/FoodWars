@@ -67,14 +67,10 @@ void GameScreen::update(double deltaTime) {
     std::map<int, std::shared_ptr<TurnComponent>> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
     if(_entitiesWithTurnComponent.size() == 1)
     {
+        std::cout << "switch screen" << std::endl;
         MainMenuScreen screen(_context);
         //set score
-//        if (_entitiesWithTurnComponent.count(teamOne[0]) > 0) {
-//            //You won
-//        }
-//        else {
-//            //You lost
-//        }
+        //check win/lose
         _context->setActiveScreen<MainMenuScreen>();
     } else if(_entitiesWithTurnComponent.empty()) {
         MainMenuScreen screen(_context);

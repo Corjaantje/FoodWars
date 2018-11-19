@@ -27,34 +27,20 @@ void DamageableSystem::update(double deltaTime) {
 bool DamageableSystem::canHandle(const CollisionEvent &collisionEvent) {
     int target = collisionEvent.getEntity();
     int projectile = collisionEvent.getOtherEntity();
-    if (_entityManager->getComponentFromEntity<DamagingComponent>(projectile) &&
+    /*if (_entityManager->getComponentFromEntity<DamagingComponent>(projectile) &&
             _entityManager->getComponentFromEntity<DamageableComponent>(target)) {
         return true;
-    }
+    }*/
     return _entityManager->getComponentFromEntity<DamagingComponent>(target) &&
            _entityManager->getComponentFromEntity<DamageableComponent>(projectile);
 }
 
 void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent)
 {
-    //remove projectile
-    if (_entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getEntity()))
-    {
-        //_entityManager->removeEntity(collisionEvent.getEntity());
-        _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity())->LowerHealth(5);
-    }
-    //lower target health
-    else if (_entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity())) {
-        _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity())->LowerHealth(20);
-    }
-    //remove projectile
-    if (_entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getOtherEntity()))
-    {
-        //_entityManager->removeEntity(collisionEvent.getOtherEntity());
-        _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity())->LowerHealth(5);
-    }
-    //lower target health
-    else {
-        _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity())->LowerHealth(20);
-    }
+    auto projectile = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity());
+    projectile->Destroy();
+    auto target = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity());
+    target->LowerHealth(_entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getEntity())->GetDamage());
+
+    std::cout << "currentHP: " << target->GetHealth() << std::endl;
 }

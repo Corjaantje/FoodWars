@@ -127,11 +127,7 @@ void LevelCreationScreen::initButtons() {
     _sprites.push_back(toggleSetSpawn);
 }
 
-LevelCreationScreen::~LevelCreationScreen() {
-    for (IShape *button: _sprites) {
-        delete button;
-    }
-}
+LevelCreationScreen::~LevelCreationScreen() = default;
 
 void LevelCreationScreen::update(double deltaTime) {
     audioFacade->playMusic("menu");

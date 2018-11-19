@@ -14,11 +14,7 @@ UpgradesScreen::UpgradesScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _sprites.push_back(quitButton);
 }
 
-UpgradesScreen::~UpgradesScreen() {
-    for (IShape *button: _sprites) {
-        delete button;
-    }
-}
+UpgradesScreen::~UpgradesScreen() = default;
 
 void UpgradesScreen::update(double deltaTime) {
     visualFacade->render(_renderList);

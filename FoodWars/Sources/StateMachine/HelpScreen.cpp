@@ -14,9 +14,10 @@ HelpScreen::HelpScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     backButton->addToRender(&_renderList);
     _sprites.push_back(backButton);
 
-    _renderList._shapes[1].push_back(new ShapeText(1040, 480, "'A'", 0, 30, 30, Colour(255, 255, 255, 0)));
-    _renderList._shapes[1].push_back(new ShapeText(1040, 600, "'D'", 0, 30, 30, Colour(255, 255, 255, 0)));
-    _renderList._shapes[1].push_back(new ShapeText(1040, 720, "'Spacebar'", 0, 10*20, 30, Colour(255, 255, 255, 0)));
+    _renderList._shapes[1].push_back(createShape<ShapeText>(1040, 480, "'A'", 0, 30, 30, Colour(255, 255, 255, 0)));
+    _renderList._shapes[1].push_back(createShape<ShapeText>(1040, 600, "'D'", 0, 30, 30, Colour(255, 255, 255, 0)));
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(1040, 720, "'Spacebar'", 0, 10 * 20, 30, Colour(255, 255, 255, 0)));
 }
 
 HelpScreen::~HelpScreen() = default;

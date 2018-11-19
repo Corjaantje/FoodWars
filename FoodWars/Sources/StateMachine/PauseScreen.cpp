@@ -28,11 +28,7 @@ PauseScreen::PauseScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(
     _sprites.push_back(quitButton);
 }
 
-PauseScreen::~PauseScreen() {
-    for (IShape *button: _sprites) {
-        delete button;
-    }
-}
+PauseScreen::~PauseScreen() = default;
 
 void PauseScreen::update(double deltaTime) {
     visualFacade->render(_renderList);

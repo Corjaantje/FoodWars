@@ -15,11 +15,7 @@ CreditScreen::CreditScreen(std::shared_ptr<ScreenStateManager> context) : IScree
     _sprites.push_back(backButton);
 }
 
-CreditScreen::~CreditScreen() {
-    for (IShape *button: _sprites) {
-        delete button;
-    }
-}
+CreditScreen::~CreditScreen() = default;
 
 void CreditScreen::update(double deltaTime) {
     visualFacade->render(_renderList);

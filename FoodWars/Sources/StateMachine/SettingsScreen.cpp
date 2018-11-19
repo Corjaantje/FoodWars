@@ -7,7 +7,7 @@ SettingsScreen::SettingsScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
 
-    _renderList._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "wallpaper.png"));
+    _renderList._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenSettings.png"));
 
     // MainMenu
     SpriteButton* backButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 140, 140, 12, 12, Colour{0,0,0,0}};
@@ -49,9 +49,6 @@ SettingsScreen::SettingsScreen(std::shared_ptr<ScreenStateManager> context) : IS
     lowerMusicVolumeButton->addToRender(&_renderList);
     _sprites.push_back(lowerMusicVolumeButton);
 
-    musicVolume = new ShapeText(1240, 287, std::to_string(audioFacade->getMusicVolume()), 12, 40, 40, Colour{255,255,255,0} );
-    musicVolume->addToRender(&_renderList);
-
     TextButton* raiseMusicVolumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"", [a = audioFacade]() {  a->setMusicVolume(a->getMusicVolume() + 5); }, 42, 42, 1352, 282, Colour{255,255,255,0}, Colour{255,255,255,0}};
     raiseMusicVolumeButton->addToRender(&_renderList);
     _sprites.push_back(raiseMusicVolumeButton);
@@ -61,36 +58,33 @@ SettingsScreen::SettingsScreen(std::shared_ptr<ScreenStateManager> context) : IS
     lowerEffectVolumeButton->addToRender(&_renderList);
     _sprites.push_back(lowerEffectVolumeButton);
 
-    effectVolume = new ShapeText(1240, 377, std::to_string(audioFacade->getEffectVolume()), 12, 40, 40, Colour{255,255,255,0} );
-    effectVolume->addToRender(&_renderList);
+    musicVolume = (ShapeText *) createShape<ShapeText>(1240, 287, std::to_string(audioFacade->getMusicVolume()), 12, 40,
+                                                       40, Colour{255, 255, 255, 0});
+    effectVolume = (ShapeText *) createShape<ShapeText>(1240, 377, std::to_string(audioFacade->getEffectVolume()), 12,
+                                                        40, 40, Colour{255, 255, 255, 0});
 
     TextButton* raiseEffectVolumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"", [a = audioFacade]() {  a->setEffectVolume(a->getEffectVolume() + 5); }, 42, 42, 1352, 375, Colour{255,255,255,0}, Colour{255,255,255,0}};
     raiseEffectVolumeButton->addToRender(&_renderList);
     _sprites.push_back(raiseEffectVolumeButton);
 }
 
-SettingsScreen::~SettingsScreen() {
-    for (IShape *button: _sprites) {
-        delete button;
-    }
-}
+SettingsScreen::~SettingsScreen() = default;
 
 void SettingsScreen::update(double deltaTime) {
     _renderList.clearLists();
-    _renderList._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
-    for (int i = 0; i < _sprites.size(); i++) {
-        _sprites[i]->addToRender(&_renderList);
-    }
+    _renderList._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenSettings.png"));
 
     // Update music volume
     musicVolume->text = std::to_string(audioFacade->getMusicVolume());
-
-    // Update effect volume
     effectVolume->text = std::to_string(audioFacade->getEffectVolume());
 
     // Add to render
-    _renderList._shapes[1].push_back(new ShapeText(musicVolume->xPos, musicVolume->yPos, musicVolume->text,musicVolume->fontSize, musicVolume->width,musicVolume->height,musicVolume->colour));
-    _renderList._shapes[1].push_back(new ShapeText(effectVolume->xPos, effectVolume->yPos, effectVolume->text,effectVolume->fontSize, effectVolume->width,effectVolume->height,effectVolume->colour));
+    _renderList._shapes[1].push_back(musicVolume);
+    _renderList._shapes[1].push_back(effectVolume);
+
+    for (int i = 0; i < _sprites.size(); i++) {
+        _sprites[i]->addToRender(&_renderList);
+    }
 
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");

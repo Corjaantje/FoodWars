@@ -22,13 +22,23 @@ void HighscoreScreen::update(double deltaTime) {
     backButton->addToRender(&_renderList);
     _sprites.push_back(backButton);
 
-    _renderList._shapes[1].push_back(new ShapeText(610, 130, "Highscore", 0, 400, 70, Colour(255, 120, 112, 0)));
-    _renderList._shapes[1].push_back(new ShapeText(560, 350, "Level 1: ", 0, 200, 85, Colour(255, 255, 255, 0)));
-    _renderList._shapes[1].push_back(new ShapeText(560, 510, "Level 2: ", 0, 200, 85, Colour(255, 255, 255, 0)));
-    _renderList._shapes[1].push_back(new ShapeText(560, 670, "Level 3: ", 0, 200, 85, Colour(255, 255, 255, 0)));
-    _renderList._shapes[1].push_back(new ShapeText(800, 350, _storageFacade->getHighscore(0) + " punten", 0, 250, 85, Colour(255, 255, 255, 0)));
-    _renderList._shapes[1].push_back(new ShapeText(800, 510, _storageFacade->getHighscore(1) + " punten", 0, 250, 85, Colour(255, 255, 255, 0)));
-    _renderList._shapes[1].push_back(new ShapeText(800, 670, _storageFacade->getHighscore(2) + " punten", 0, 250, 85, Colour(255, 255, 255, 0)));
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(610, 130, "Highscore", 0, 400, 70, Colour(255, 120, 112, 0)));
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(560, 350, "Level 1: ", 0, 200, 85, Colour(255, 255, 255, 0)));
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(560, 510, "Level 2: ", 0, 200, 85, Colour(255, 255, 255, 0)));
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(560, 670, "Level 3: ", 0, 200, 85, Colour(255, 255, 255, 0)));
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(800, 350, _storageFacade->getHighscore(0) + " punten", 0, 250, 85,
+                                   Colour(255, 255, 255, 0)));
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(800, 510, _storageFacade->getHighscore(1) + " punten", 0, 250, 85,
+                                   Colour(255, 255, 255, 0)));
+    _renderList._shapes[1].push_back(
+            createShape<ShapeText>(800, 670, _storageFacade->getHighscore(2) + " punten", 0, 250, 85,
+                                   Colour(255, 255, 255, 0)));
 
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");

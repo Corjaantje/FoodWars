@@ -1,7 +1,4 @@
 #include <utility>
-
-#include <utility>
-
 #include "../../../Headers/StateMachine/Misc/GameLevel.h"
 
 void GameLevel::setBackgroundMusic(std::string backgroundMusic) {

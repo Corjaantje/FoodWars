@@ -19,6 +19,20 @@ StorageFacade::~StorageFacade() {
 
 }
 
+// Retrieve highscore
+string StorageFacade::getHighscore(int level) {
+
+    std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile("Assets/highscore.xml");
+    if (highscoreFile != nullptr) {
+        string score = highscoreFile->GetRoot().GetChildren()[level].GetChildren()[0].GetValue();
+
+        if (score != "") {
+            return score;
+        }
+    }
+    return "0";
+}
+
 // To allow switching between desired files.
 // Returns true if the desired file has been found. Prepares readableFile if true;
 bool StorageFacade::setTarget(std::string target) {

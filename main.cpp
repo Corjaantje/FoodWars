@@ -27,8 +27,10 @@
 #include "FoodWars/Headers/StateMachine/SettingsScreen.h"
 #include "FoodWars/Headers/StateMachine/UpgradesScreen.h"
 #include "FoodWars/Headers/StateMachine/PauseScreen.h"
+#include "FoodWars/Headers/StateMachine/HighscoreScreen.h"
 #include <ctime>
 #include <chrono>
+
 
 int main(int argc, char** argv)
 {
@@ -74,23 +76,29 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new HelpScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new PauseScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new HighscoreScreen(screenStateManager));
     screenStateManager->setActiveScreen<MainMenuScreen>();
 
     //Config
-    double frameRateCap = 75.0;
+    double frameRateCap = 61.0;
     double amountOfUpdatesAllowedPerSecond = 1.0 / frameRateCap; //= 16.666
     //End of config
+
+    double timeModifier = 1.0;
+    // Modifier for changing the gameplay speed
 
     double totalTime = 0;
     std::chrono::duration<double> timeLast = std::chrono::steady_clock::now().time_since_epoch();
 
     while(!screenStateManager->getCurrentState()->isWindowClosed()) {
-        std::chrono::duration<double> currentTime = std::chrono::steady_clock::now().time_since_epoch();
-        double deltaTime = (currentTime.count() - timeLast.count());
-        totalTime += deltaTime;
-        timeLast = currentTime;
-        screenStateManager->getCurrentState()->update(deltaTime);
-        generalFacade->sleep(amountOfUpdatesAllowedPerSecond * 1000 - deltaTime);
+        std::chrono::duration<double> deltaTime = (std::chrono::steady_clock::now().time_since_epoch() - timeLast) * timeModifier;
+
+        if(deltaTime.count() > amountOfUpdatesAllowedPerSecond) {
+            totalTime += deltaTime.count();
+            screenStateManager->getCurrentState()->update(deltaTime.count());
+            timeLast = std::chrono::steady_clock::now().time_since_epoch();
+        }
+        generalFacade->sleep(amountOfUpdatesAllowedPerSecond * 1000.0 - deltaTime.count());
     }
     delete generalFacade;
     return 0;

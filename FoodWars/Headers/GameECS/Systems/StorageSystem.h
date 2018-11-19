@@ -10,6 +10,8 @@
 #include "../Components/MoveComponent.h"
 #include "../Components/TurnComponent.h"
 #include "../Components/Collider/BoxCollider.h"
+#include "../../StateMachine/Misc/Coordinate.h"
+#include "../../StateMachine/Misc/GameLevel.h"
 
 #include <algorithm>
 
@@ -49,10 +51,10 @@ public:
 
     void assignRelevantEntityManager(EntityManager& entityManager);
 //    void assignRelevantEntityManager(std::shared_ptr<EntityManager> entityManager);
-    void saveWorld();//std::string savePath);
+    void saveWorld(std::string bgm, std::string bgimg, std::vector<Coordinate> spawnpoints);//std::string savePath);
 
     // Pass a string for identifying the world?
-    bool loadWorld(EntityManager& toFill, std::string filePath);
+    GameLevel loadWorld(EntityManager& toFill, std::string filePath);
 };
 
 

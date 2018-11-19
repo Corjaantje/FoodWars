@@ -80,7 +80,7 @@ EntityManager LevelManager::startLevel(int level) {
         case 1: {
             StorageSystem* storage = new StorageSystem();
             _entityManager = EntityManager();
-            storage->loadWorld(_entityManager, "Levels/Level21.xml");
+            GameLevel GLHF = storage->loadWorld(_entityManager, "Levels/Level22.xml");
             break;
         }
         default:

@@ -203,6 +203,10 @@ void LevelBuilder::setPreviousWallpaper() {
     }
 }
 
+std::string LevelBuilder::getCurrentWallpaper() {
+    return _wallpaperList[_selectedWallpaper];
+}
+
 void LevelBuilder::setNextMusic() {
     if(_musicList.size() > 1){
         int newIndex = (_selectedMusic + 1) % _musicList.size();

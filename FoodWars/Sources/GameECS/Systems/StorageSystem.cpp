@@ -425,6 +425,8 @@ void StorageSystem::parseSavedInstance(MyNode &rootNode, EntityManager& _entity)
 
     for (auto const& piece : rootNode.GetChildren())
     {
+        if (piece.GetName() == "id")
+        {
         int savedID = piece.GetIntValue();
         if (!identifier.count(savedID)) {
             identifier[savedID] = _entity.createEntity();
@@ -451,6 +453,7 @@ void StorageSystem::parseSavedInstance(MyNode &rootNode, EntityManager& _entity)
                 parseTurn(componentNode, _entity, identifier[savedID]);
             }
             childrenProcessed++;
+        }
         }
     }
 }
@@ -600,7 +603,7 @@ void StorageSystem::assignRelevantEntityManager(EntityManager& entityManager) {
     _entityManager = &entityManager;
 }
 
-void StorageSystem::saveWorld(){//std::string savePath) {
+void StorageSystem::saveWorld(std::string bgm, std::string bgimg, std::vector<Coordinate> spawnpoints){//std::string savePath) {
     delete _writer;
     _writer = new XMLWriter();
     MyNode trueRootNode {"root", nullptr};
@@ -622,7 +625,33 @@ void StorageSystem::saveWorld(){//std::string savePath) {
         myDoc.AddToRoot(*point);
     }
 
+//    MyNode altRoot {"secondary", nullptr };
+    MyNode bgmNode {"backgroundmusic", &trueRootNode};
+    bgmNode.SetValue(bgm);
 
+    MyNode wallpaperNode {"wallpaper", &trueRootNode};
+    wallpaperNode.SetValue(bgimg);
+
+    MyNode spawnNodes {"spawnpoints", &trueRootNode};
+
+    for (auto const& point : spawnpoints)
+    {
+        MyNode spawner {"spawn", &spawnNodes};
+
+        MyNode xPos {"x", &spawner};
+        xPos.SetValue(std::to_string(point.getXCoord()));
+        MyNode yPos {"y", &spawner};
+        yPos.SetValue(std::to_string(point.getYCoord()));
+
+        spawner.AddChild(yPos);
+        spawner.AddChild(xPos);
+
+        spawnNodes.AddChild(spawner);
+    }
+
+    myDoc.AddToRoot(spawnNodes);
+    myDoc.AddToRoot(wallpaperNode);
+    myDoc.AddToRoot(bgmNode);
 //    Get number of files in the Levels directory
     std::string savingName = "Level"+to_string(countFilesInDirectory(const_cast<char *>("./Levels/")));
 
@@ -634,7 +663,7 @@ void StorageSystem::saveWorld(){//std::string savePath) {
     }
 }
 
-bool StorageSystem::loadWorld(EntityManager& toFill, std::string filePath) {
+GameLevel StorageSystem::loadWorld(EntityManager& toFill, std::string filePath) {
     delete _reader;
     _reader = new XMLReader();
     std::unique_ptr<MyDocument> myDoc = _reader->LoadFile("./"+filePath);
@@ -642,6 +671,19 @@ bool StorageSystem::loadWorld(EntityManager& toFill, std::string filePath) {
     bool bSuccess = false;
     parseSavedInstance(rootNode, toFill);
 
+    GameLevel GLHF{};// = new GameLevel{};
+    GLHF.setEntityManager(toFill);
+    GLHF.setBackgroundMusic(rootNode.GetChildren()[0].GetValue());
+    GLHF.setBackgroundWallpaper(rootNode.GetChildren()[1].GetValue());
 
-    return bSuccess;
+    std::vector<Coordinate> spawnPoints;
+    for (auto const& spawn : rootNode.GetChildren()[2].GetChildren())
+    {
+        Coordinate spawner;
+        spawner.setCoordinates(spawn.GetChildren()[0].GetIntValue(), spawn.GetChildren()[1].GetIntValue());
+        spawnPoints.emplace_back(spawner);
+    }
+    GLHF.setSpawnPoints(spawnPoints);
+
+    return GLHF;
 }

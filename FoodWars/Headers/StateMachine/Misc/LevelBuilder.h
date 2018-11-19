@@ -74,6 +74,7 @@ public:
 
     void setNextWallpaper();
     void setPreviousWallpaper();
+    std::string getCurrentWallpaper();
 
     void setNextMusic();
     void setPreviousMusic();

@@ -39,13 +39,19 @@ void AudioFacade::setEffectVolume(int volume) {
 
 // Plays Music
 void AudioFacade::playMusic(const char* filename) {
-    if (filename != _backgroundMusic)
+    // Stop music channel if empty or nullptr filename is passed
+    if(strcmp(filename, "") == 0 || filename == nullptr)
+        _audioPlayer->stopMusic();
+    else if(filename != _backgroundMusic)
     {
         // Get path with the filename
         const char *path = getAudio(filename);
 
+        // Create music
         Mix_Music *music;
         music=Mix_LoadMUS(path);
+
+        // Can't create music, stop music channel
         if(!music)
             _audioPlayer->stopMusic();
 

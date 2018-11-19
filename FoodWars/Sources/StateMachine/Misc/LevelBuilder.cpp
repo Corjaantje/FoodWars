@@ -100,7 +100,7 @@ void LevelBuilder::placeBlock(int x, int y) {
             //_entityManager->addComponentToEntity(entity, new DamageableComponent());
         }
         auto* drawComp = new DrawableComponent();
-        drawComp->shape = std::make_unique<ShapeRectangle>(ShapeRectangle(_shapeDimension, _shapeDimension, convertedX, convertedY, Colour(_colorRed, _colorGreen, _colorBlue, 255)));
+        drawComp->shape = new ShapeRectangle(_shapeDimension, _shapeDimension, convertedX, convertedY, Colour(_colorRed, _colorGreen, _colorBlue, 255));
         _entityManager->addComponentToEntity(entity, drawComp);
         _CoordinateEntityMap[gridCoord] = entity;
     }

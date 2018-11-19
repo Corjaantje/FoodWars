@@ -12,20 +12,23 @@
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 #include "../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../Headers/StateMachine/PauseScreen.h"
+#include "../../Headers/GameECS/Systems/AnimationSystem.h"
+#include "../../Headers/GameECS/Components/AnimationComponent.h"
 
-GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager) : IScreen(context),
-                                                                                        _entityManager(std::make_shared<EntityManager>(entityManager))
+GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager) : IScreen(context), _entityManager(std::make_shared<EntityManager>(entityManager))
 {
+    _audioFacade = _context->getFacade<AudioFacade>();
+    _visualFacade = _context->getFacade<VisualFacade>();
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
+    _animationManager = new AnimationManager{};
     CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };
-    _systems.push_back(new JumpSystem { _entityManager, _inputFacade, *collisionSystem } );
-    _systems.push_back(new MoveSystem { _entityManager, _inputFacade, *collisionSystem });
+    _systems.push_back(new JumpSystem { _entityManager, _inputFacade, _audioFacade, *collisionSystem} );
+    _systems.push_back(new MoveSystem{ _entityManager, _inputFacade, *collisionSystem});
     _systems.push_back(collisionSystem);
     _systems.push_back(new GravitySystem { _entityManager, *collisionSystem });
-    drawSystem = new DrawSystem {_entityManager, visualFacade};
-    _systems.push_back(drawSystem);
-    TurnSystem* turnSystem = new TurnSystem {_entityManager};
-    _systems.push_back(turnSystem);
+    _systems.push_back(new AnimationSystem(_entityManager, _animationManager));
+    _systems.push_back(new DrawSystem {_entityManager, visualFacade});
+    _systems.push_back(new TurnSystem {_entityManager});
 }
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
@@ -55,10 +58,11 @@ GameScreen::~GameScreen() {
     for (auto const &iterator : _systems) {
         delete iterator;
     }
+    delete _animationManager;
 };
 
 void GameScreen::update(double deltaTime) {
-    audioFacade->playMusic("wildwest");
+    _audioFacade->playMusic("nature");
     _inputFacade->pollEvents();
     for(auto const &iterator : _systems){
         iterator->update(deltaTime * _context->getTimeModifier());

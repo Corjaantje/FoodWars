@@ -5,6 +5,7 @@
 #include "../../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../Events/CollisionEvent.h"
 #include "../Events/CollisionEventHandlerLamda.h"
+#include "../../AnimationManager.h"
 
 class MoveSystem : public IBaseSystem, public IObserver<KeyEvent> {
 private:

@@ -76,7 +76,7 @@ void DrawSystem::drawCurrentPlayer() {
         for (auto const& x : turnComps)
         {
             if(x.second->isMyTurn()){
-                ShapeSprite* sprite = dynamic_cast<ShapeSprite*>(_entityManager->getComponentFromEntity<DrawableComponent>(x.first)->shape.get());
+                ShapeSprite* sprite = dynamic_cast<ShapeSprite*>(_entityManager->getComponentFromEntity<DrawableComponent>(x.first)->shape);
                if(sprite != nullptr) {
                    _playerIcon = sprite->imageURL;
                }

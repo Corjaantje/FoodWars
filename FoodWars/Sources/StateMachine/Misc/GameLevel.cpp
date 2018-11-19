@@ -12,3 +12,15 @@ void GameLevel::setEntityManager(EntityManager entityManager) {
 void GameLevel::setSpawnPoints(std::vector<Coordinate> spawnPoints) {
     _spawnPoints = std::move(spawnPoints);
 }
+
+std::string GameLevel::getBackgroundMusic() const {
+    return _backgroundMusic;
+}
+
+EntityManager GameLevel::getEntityManager() const {
+    return _entityManager;
+}
+
+std::vector<Coordinate> GameLevel::getSpawnPoints() const {
+    return _spawnPoints;
+}

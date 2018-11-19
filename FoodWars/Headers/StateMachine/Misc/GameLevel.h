@@ -17,6 +17,10 @@ public:
     void setEntityManager(EntityManager entityManager);
     void setBackgroundMusic(std::string backgroundMusic);
     void setSpawnPoints(std::vector<Coordinate> spawnPoints);
+
+    EntityManager getEntityManager() const;
+    std::string getBackgroundMusic() const;
+    std::vector<Coordinate> getSpawnPoints() const;
 };
 
 

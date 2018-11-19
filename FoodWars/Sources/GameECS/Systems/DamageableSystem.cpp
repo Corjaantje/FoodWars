@@ -1,11 +1,12 @@
 #include "../../../Headers/GameECS/Systems/DamageableSystem.h"
-#include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/DamagingComponent.h"
+#include "../../../Headers/GameECS/Events/CollisionEventHandlerLamda.h"
 
 DamageableSystem::DamageableSystem(std::shared_ptr<EntityManager> entityManager,
         IObservable<CollisionEvent>& collisionEventObservable) :
                                                 _entityManager{std::move(entityManager)},
-                                                CollisionEventHandler(collisionEventObservable) {}
+                                                CollisionEventHandler(collisionEventObservable) {
+}
 
 DamageableSystem::~DamageableSystem() = default;
 
@@ -13,10 +14,6 @@ void DamageableSystem::update(double deltaTime) {
     _damageableComponents = _entityManager->getAllEntitiesWithComponent<DamageableComponent>();
     for(auto x : _damageableComponents)
     {
-        if (x.second == nullptr)
-        {
-            break;
-        }
         if(!x.second->IsAlive())
         {
             _entityManager->removeEntity(x.first);
@@ -27,10 +24,6 @@ void DamageableSystem::update(double deltaTime) {
 bool DamageableSystem::canHandle(const CollisionEvent &collisionEvent) {
     int target = collisionEvent.getEntity();
     int projectile = collisionEvent.getOtherEntity();
-    /*if (_entityManager->getComponentFromEntity<DamagingComponent>(projectile) &&
-            _entityManager->getComponentFromEntity<DamageableComponent>(target)) {
-        return true;
-    }*/
     return _entityManager->getComponentFromEntity<DamagingComponent>(target) &&
            _entityManager->getComponentFromEntity<DamageableComponent>(projectile);
 }

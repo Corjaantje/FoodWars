@@ -9,8 +9,10 @@
 
 
 ShootSystem::ShootSystem(std::shared_ptr<EntityManager> entityManager,
+                            std::shared_ptr<AudioFacade> audioFacade,
                             std::shared_ptr<VisualFacade> visualFacade,
                                 std::shared_ptr<InputFacade> inputFacade) :
+                                                _audioFacade(std::move(audioFacade)),
                                                 _entityManager{std::move(entityManager)},
                                                 _visualFacade{std::move(visualFacade)},
                                                 _isShooting{false},
@@ -26,13 +28,13 @@ void ShootSystem::update(double deltaTime) {
     if (!_entityManager->exists(_projectile)) _projectileFired = false;
     if(_projectileFired)
     {
-
         auto projectilePos = _entityManager->getComponentFromEntity<PositionComponent>(_projectile);
         auto projectileSize = _entityManager->getComponentFromEntity<BoxCollider>(_projectile);
         auto projectileMove = _entityManager->getComponentFromEntity<MoveComponent>(_projectile);
 
-        if ((projectilePos->X + projectileSize->width) >= 1590 || projectilePos->X <= 1 ||
-            projectilePos->Y <= 1 || (projectilePos->Y + projectileSize->height) >= 890) {
+        std::cout << projectilePos->X << ", " << projectilePos->Y << std::endl;
+        if ((projectilePos->X + projectileSize->width) >= 1590 || projectilePos->X <= 1
+                || (projectilePos->Y + projectileSize->height) >= 890) {
             _projectileFired = false;
             _entityManager->removeEntity(_projectile);
         }
@@ -64,12 +66,8 @@ void ShootSystem::update(std::shared_ptr<MouseEvent> event) {
             _isShooting = false;
             _projectileFired = true;
 
-            for(const auto &iterator: turnComponents) {
-                if(iterator.second->isMyTurn()) {
-                    iterator.second->lowerEnergy(20);
-                    break;
-                }
-            }
+            _entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->lowerEnergy(20);
+            _audioFacade->playEffect("jump");
         }
     }
 }
@@ -84,7 +82,7 @@ void ShootSystem::generateProjectile(std::shared_ptr<PositionComponent> pos, dou
     int posY = pos->Y + static_cast<int>(velocityY / 4);
 
     auto drawableComponent = new DrawableComponent;
-    drawableComponent->shape = std::make_unique<ShapeSprite>(ShapeSprite(11, 38, posX, posY, "carrot.png"));
+    drawableComponent->shape = new ShapeSprite(11, 38, posX, posY, "carrot.png");
 
     _entityManager->addComponentToEntity(_projectile, drawableComponent);
     _entityManager->addComponentToEntity(_projectile, new PositionComponent(posX, posY));

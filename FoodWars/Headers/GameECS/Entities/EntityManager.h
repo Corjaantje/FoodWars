@@ -20,9 +20,6 @@ public:
     template <typename Comp> void addComponentToEntity(int entity, Comp* component)
     {
         std::string componentType = typeid(Comp).name();
-        if(!_componentsByClass.count(componentType)){
-            _componentsByClass[componentType] = std::map<int, std::shared_ptr<Component>>();
-        }
         _componentsByClass[componentType][entity] = std::shared_ptr<Component>(component);
     }
 
@@ -33,7 +30,7 @@ public:
 
     template <typename Comp> std::shared_ptr<Comp> getComponentFromEntity(int entityId) {
         std::string name = typeid(Comp).name();
-        if (_componentsByClass.count(name) > 0)
+        if (_componentsByClass.count(name) > 0 && _componentsByClass.at(name).count(entityId) > 0)
             return std::dynamic_pointer_cast<Comp>(_componentsByClass[name][entityId]);
         return nullptr;
     }

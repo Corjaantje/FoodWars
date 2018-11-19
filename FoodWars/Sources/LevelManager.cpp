@@ -15,7 +15,7 @@ EntityManager LevelManager::startLevel(int level) {
     switch(level)
     {
         case 1: {
-            _entityManager = EntityManager();
+            _entityManager = EntityManager {};
 
             int sky = _entityManager.createEntity();
             auto *comp = new DrawableComponent();
@@ -69,12 +69,6 @@ EntityManager LevelManager::startLevel(int level) {
             _entityManager.addComponentToEntity(boundTwo, new BoxCollider(1600, 1600));
             _entityManager.addComponentToEntity(boundTwo, new PositionComponent(1600, 0));
 
-
-            int boundThree = _entityManager.createEntity();
-            _entityManager.addComponentToEntity(boundThree, new BoxCollider(900, 900));
-            _entityManager.addComponentToEntity(boundThree, new PositionComponent(0, -900));
-
-
             int boundFour = _entityManager.createEntity();
             _entityManager.addComponentToEntity(boundFour, new BoxCollider(900, 900));
             _entityManager.addComponentToEntity(boundFour, new PositionComponent(0, 900));
@@ -112,6 +106,7 @@ void LevelManager::generateTerrainDrawables(int x, int y) {
     int terrain = _entityManager.createEntity();
     auto *comp = new DrawableComponent();
     _entityManager.addComponentToEntity(terrain, comp);
+    _entityManager.addComponentToEntity(terrain, new DamageableComponent { 1 });
     _entityManager.addComponentToEntity(terrain, new BoxCollider{32,32});
     _entityManager.addComponentToEntity(terrain, new PositionComponent(x, y));
     comp->shape = new ShapeRectangle{32, 32, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}};

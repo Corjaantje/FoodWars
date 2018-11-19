@@ -7,11 +7,12 @@
 #include "../../../Headers/GameECS/Components/MoveComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/VisualFacade.h"
 #include "../../../../TonicEngine/Headers/Input/InputFacade.h"
+#include "../../../../TonicEngine/Headers/Audio/AudioFacade.h"
 
 class ShootSystem : public IBaseSystem, public IObserver<MouseEvent>
 {
 public:
-    explicit ShootSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade, std::shared_ptr<InputFacade> inputFacade);
+    explicit ShootSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<AudioFacade> audioFacade, std::shared_ptr<VisualFacade> visualFacade, std::shared_ptr<InputFacade> inputFacade);
     ~ShootSystem() override;
 
     void update(double deltaTime) override;
@@ -21,7 +22,7 @@ private:
     bool _isShooting;
     bool _projectileFired;
     int _projectile;
-    float _projectileAcceleration;
+    std::shared_ptr<AudioFacade> _audioFacade;
     std::shared_ptr<EntityManager> _entityManager;
     std::shared_ptr<VisualFacade> _visualFacade;
     Renderlist _renderList;

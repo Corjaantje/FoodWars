@@ -17,13 +17,13 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
     _animationManager = new AnimationManager{};
     CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };
-    _systems.push_back(new JumpSystem { _entityManager, _inputFacade, *collisionSystem } );
+    _systems.push_back(new JumpSystem { _entityManager, _inputFacade, audioFacade, *collisionSystem } );
     _systems.push_back(new MoveSystem { _entityManager, _inputFacade, *collisionSystem });
     _systems.push_back(new GravitySystem { _entityManager, *collisionSystem });
     _systems.push_back(new AnimationSystem(_entityManager, _animationManager));
     TurnSystem* turnSystem = new TurnSystem {_entityManager};
     _systems.push_back(turnSystem);
-    shootSystem = new ShootSystem(_entityManager, visualFacade, _inputFacade);
+    shootSystem = new ShootSystem(_entityManager, audioFacade, visualFacade, _inputFacade);
     _systems.push_back(shootSystem);
     _systems.push_back(new DamageableSystem { _entityManager, *collisionSystem});
     _systems.push_back(collisionSystem);

@@ -288,9 +288,6 @@ void LevelBuilder::addWallpaperConfig(std::string wallpaper) {
 void LevelBuilder::relinkAndSave() {
     _storage->assignRelevantEntityManager(*_entityManager);
     _storage->saveWorld();
-    std::string weird = "";
-    weird = "really";
-    weird = "huh";
 }
 
 

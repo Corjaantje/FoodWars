@@ -7,7 +7,7 @@ SettingsScreen::SettingsScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
 
-    _renderList._shapes[1].push_back(new ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
+    _renderList._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
 
     // MainMenu
     SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "exit.png", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 50, 50, 0, 0, Colour{0,0,0,0}};
@@ -77,22 +77,23 @@ SettingsScreen::~SettingsScreen() {
 }
 
 void SettingsScreen::update(double deltaTime) {
-    _renderList.textList.clear();
+    _renderList.clearLists();
+    _renderList._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
     for(int i=0; i < _buttons.size(); i++){
         _buttons[i]->addToRender(&_renderList);
     }
 
     // Update music volume
     musicVolume->text = std::to_string(audioFacade->getMusicVolume());
-    ShapeText newMusicVolume(musicVolume->xPos, musicVolume->yPos, musicVolume->text,musicVolume->fontSize, musicVolume->width,musicVolume->height,musicVolume->colour);
+    //ShapeText newMusicVolume(musicVolume->xPos, musicVolume->yPos, musicVolume->text,musicVolume->fontSize, musicVolume->width,musicVolume->height,musicVolume->colour);
 
     // Update effect volume
     effectVolume->text = std::to_string(audioFacade->getEffectVolume());
-    ShapeText newEffectVolume(effectVolume->xPos, effectVolume->yPos, effectVolume->text,effectVolume->fontSize, effectVolume->width,effectVolume->height,effectVolume->colour);
+  /*  ShapeText newEffectVolume(effectVolume->xPos, effectVolume->yPos, effectVolume->text,effectVolume->fontSize, effectVolume->width,effectVolume->height,effectVolume->colour);*/
 
     // Add to render
-    _renderList.textList.emplace_back(newMusicVolume);
-    _renderList.textList.emplace_back(newEffectVolume);
+    _renderList._shapes[1].push_back(new ShapeText(musicVolume->xPos, musicVolume->yPos, musicVolume->text,musicVolume->fontSize, musicVolume->width,musicVolume->height,musicVolume->colour));
+    _renderList._shapes[1].push_back(new ShapeText(effectVolume->xPos, effectVolume->yPos, effectVolume->text,effectVolume->fontSize, effectVolume->width,effectVolume->height,effectVolume->colour));
 
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");

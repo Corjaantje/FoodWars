@@ -268,6 +268,10 @@ void LevelBuilder::removeSpawnPoint(int x, int y) {
 
 GameLevel LevelBuilder::buildConstructedLevel() {
     GameLevel gameLevel{};
+    int background = _entityManager->createEntity();
+    auto* drawComp = new DrawableComponent();
+    drawComp->shape = new ShapeSprite(1600, 900, 0, 0, _wallpaperList[_selectedWallpaper]);
+    _entityManager->addComponentToEntity(background, drawComp);
     gameLevel.setEntityManager(*_entityManager);
     gameLevel.setSpawnPoints(_spawnPoints);
     gameLevel.setBackgroundMusic(_musicList[_selectedMusic]);

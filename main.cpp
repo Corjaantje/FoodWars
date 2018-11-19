@@ -15,6 +15,7 @@
 #include "TonicEngine/Headers/Communication/CommunicationFacade.h"
 #include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
 #include "FoodWars/Headers/StateMachine/GameScreen.h"
+#include "FoodWars/Headers/StateMachine/HelpScreen.h"
 #include "FoodWars/Headers/StateMachine/CreditScreen.h"
 #include "TonicEngine/Headers/Input/PrintWindowObserver.h"
 #include "TonicEngine/Headers/Input/WindowClosedObserver.h"
@@ -22,7 +23,7 @@
 
 #include "FoodWars/Headers/GameECS/Components/TurnComponent.h"
 #include "FoodWars/Headers/GameECS/Systems/TurnSystem.h"
-#include "FoodWars/Headers/StateMachine/LevelEditorScreen.h"
+#include "FoodWars/Headers/StateMachine/LevelCreationScreen.h"
 #include "FoodWars/Headers/StateMachine/SettingsScreen.h"
 #include "FoodWars/Headers/StateMachine/UpgradesScreen.h"
 #include "FoodWars/Headers/StateMachine/PauseScreen.h"
@@ -45,9 +46,16 @@ int main(int argc, char** argv)
 
     GeneralFacade* generalFacade = new GeneralFacade();
 
-    audioFacade->addAudio("oof", "../FoodWars/Assets/Audio/oof.wav");
-    audioFacade->addAudio("wildwest", "../FoodWars/Assets/Audio/wildwest.wav");
-    audioFacade->addAudio("menu", "../FoodWars/Assets/Audio/menu.wav");
+    // Music
+    audioFacade->addAudio("wildwest", "./Assets/Audio/wildwest.wav");
+    audioFacade->addAudio("menu", "./Assets/Audio/menu.wav");
+    audioFacade->addAudio("space", "./Assets/Audio/space.wav");
+    audioFacade->addAudio("space2", "./Assets/Audio/space2.wav");
+    audioFacade->addAudio("nature", "./Assets/Audio/nature.wav");
+
+    // Sound Effects
+    audioFacade->addAudio("oof", "./Assets/Audio/oof.wav");
+    audioFacade->addAudio("jump", "./Assets/Audio/jump.wav");
 
     std::shared_ptr<LevelManager> levelManager = std::make_shared<LevelManager>();
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
@@ -62,7 +70,8 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new CreditScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager, levelManager->_entityManager));
     screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager, levelManager));
-    screenStateManager->addOrSetScreenState(new LevelEditorScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new LevelCreationScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new HelpScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new PauseScreen(screenStateManager));
     screenStateManager->setActiveScreen<MainMenuScreen>();
@@ -72,15 +81,12 @@ int main(int argc, char** argv)
     double amountOfUpdatesAllowedPerSecond = 1.0 / frameRateCap; //= 16.666
     //End of config
 
-    double timeModifier = 1.0;
-    // Modifier for changing the gameplay speed
-
     double totalTime = 0;
     std::chrono::duration<double> timeLast = std::chrono::steady_clock::now().time_since_epoch();
 
     while(!screenStateManager->getCurrentState()->isWindowClosed()) {
         std::chrono::duration<double> currentTime = std::chrono::steady_clock::now().time_since_epoch();
-        double deltaTime = (currentTime.count() - timeLast.count()) * timeModifier;
+        double deltaTime = (currentTime.count() - timeLast.count());
         totalTime += deltaTime;
         timeLast = currentTime;
         screenStateManager->getCurrentState()->update(deltaTime);

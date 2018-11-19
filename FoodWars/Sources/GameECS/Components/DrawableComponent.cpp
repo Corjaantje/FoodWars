@@ -7,7 +7,7 @@ DrawableComponent::DrawableComponent() {
 
 
 DrawableComponent::~DrawableComponent() {
-
+    delete shape;
 }
 
 std::vector<std::string> DrawableComponent::serialize() {

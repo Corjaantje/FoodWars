@@ -1,14 +1,19 @@
 #ifndef PROJECT_SWA_ISHAPE_H
 #define PROJECT_SWA_ISHAPE_H
 
+#include "IRenderable.h"
+#include "../IRenderer.h"
+
+
 #include "../../Storage/ISerializable.h"
 
 class Renderlist;
-class IShape : public ISerializable{
+class IShape: public IRenderable, public ISerializable{
 public:
     int xPos;
     int yPos;
-    IShape(int x, int y): xPos(x), yPos(y) {
+    int layer;
+    IShape(int x, int y): xPos(x), yPos(y), layer(1) {
 
     }
     virtual ~IShape(){};

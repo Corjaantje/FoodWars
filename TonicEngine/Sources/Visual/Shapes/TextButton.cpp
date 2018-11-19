@@ -7,8 +7,8 @@ TextButton::TextButton(MouseEventObservable &mouseEventObservable) : ShapeRectan
     mouseEventObservable.registerObserver(this);
 }
 
-TextButton::TextButton(MouseEventObservable& mouseEventObservable, const std::string &text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos) :
-        TextButton(mouseEventObservable, text, onClick, width, height, xPos, yPos, Colour{255,255,255,100}, Colour{0, 0, 0, 0}){
+TextButton::TextButton(MouseEventObservable& mouseEventObservable, const std::string &text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos)
+        : TextButton(mouseEventObservable, text, onClick, width, height, xPos, yPos, Colour{255,255,255,100}, Colour{0, 0, 0, 0}){
 }
 
 TextButton::TextButton(MouseEventObservable& mouseEventObservable, const std::string &text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos,
@@ -77,4 +77,8 @@ void TextButton::setButtonColor(const Colour &colour) {
 
 void TextButton::setOnClickFunction(const std::function<void()> &onClick) {
     this->_onClickFunction = onClick;
+}
+
+void TextButton::render(IRenderer &renderer) const {
+    shapeText.render(renderer);
 }

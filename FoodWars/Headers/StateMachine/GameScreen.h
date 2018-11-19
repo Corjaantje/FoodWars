@@ -11,7 +11,11 @@
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
     std::shared_ptr<EntityManager> _entityManager;
+    std::shared_ptr<AudioFacade> _audioFacade;
+    std::shared_ptr<VisualFacade> _visualFacade;
     std::vector<IBaseSystem*> _systems;
+    DrawSystem* drawSystem = nullptr;
+    AnimationManager* _animationManager;
     StorageSystem* _storage;
 public:
     explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager);

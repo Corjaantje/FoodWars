@@ -184,9 +184,10 @@ void LevelCreationScreen::relinkAndSave() {
     // spawnpoints
     std::vector<Coordinate> spawns = _levelBuilder.getSpawnPoints();
     // background image?
-
+    std::string backgroundImage = _levelBuilder.getCurrentWallpaper();
     // background music
+    std::string backgroundMusic = _levelBuilder.getSelectedSong();
 
     storage.assignRelevantEntityManager(ent);
-    storage.saveWorld();
+    storage.saveWorld(backgroundMusic, backgroundImage, spawns);
 }

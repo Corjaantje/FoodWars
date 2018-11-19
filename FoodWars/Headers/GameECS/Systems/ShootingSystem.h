@@ -10,11 +10,11 @@
 #include "../../../../TonicEngine/Headers/Audio/AudioFacade.h"
 #include "../Components/Collider/BoxCollider.h"
 
-class ShootSystem : public IBaseSystem, public IObserver<MouseEvent>
+class ShootingSystem : public IBaseSystem, public IObserver<MouseEvent>
 {
 public:
-    explicit ShootSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<AudioFacade> audioFacade, std::shared_ptr<VisualFacade> visualFacade, std::shared_ptr<InputFacade> inputFacade);
-    ~ShootSystem() override;
+    explicit ShootingSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<AudioFacade> audioFacade, std::shared_ptr<VisualFacade> visualFacade, std::shared_ptr<InputFacade> inputFacade);
+    ~ShootingSystem() override;
 
     void update(double deltaTime) override;
     void update(std::shared_ptr<MouseEvent> event) override;

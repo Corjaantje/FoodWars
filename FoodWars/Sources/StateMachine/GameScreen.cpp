@@ -23,15 +23,13 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
     _systems.push_back(new AnimationSystem(_entityManager, _animationManager));
     TurnSystem* turnSystem = new TurnSystem {_entityManager};
     _systems.push_back(turnSystem);
-    shootSystem = new ShootSystem(_entityManager, audioFacade, visualFacade, _inputFacade);
-    _systems.push_back(shootSystem);
+    _shootingSystem = new ShootingSystem(_entityManager, audioFacade, visualFacade, _inputFacade);
+    _systems.push_back(_shootingSystem);
     _systems.push_back(new DamageableSystem { _entityManager, *collisionSystem});
     _systems.push_back(collisionSystem);
 
     drawSystem = new DrawSystem {_entityManager, visualFacade, _inputFacade};
     _systems.push_back(drawSystem);
-
-    
 }
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
@@ -51,7 +49,7 @@ void GameScreen::update(std::shared_ptr<KeyEvent> event){
         }
 
         if (event->getKey() == KEY::KEY_G){
-            shootSystem->toggleShooting();
+            _shootingSystem->toggleShooting();
         }
         //Toggle Framerate
         if(event->getKey() == KEY::KEY_F){
@@ -71,7 +69,6 @@ void GameScreen::update(double deltaTime) {
     std::map<int, std::shared_ptr<TurnComponent>> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
     if(_entitiesWithTurnComponent.size() == 1)
     {
-        std::cout << "switch screen" << std::endl;
         //set score
         //check win/lose
         _context->setActiveScreen<MainMenuScreen>();

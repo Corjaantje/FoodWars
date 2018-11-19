@@ -13,7 +13,9 @@ const int DamageableComponent::GetHealth() {
 }
 
 void DamageableComponent::LowerHealth(int value) {
-    _health -= value;
+    if ((_health - value) < 0)
+        _health = 0;
+    else _health -= value;
 }
 
 void DamageableComponent::IncreaseHealth(int value) {

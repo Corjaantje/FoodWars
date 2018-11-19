@@ -1,4 +1,4 @@
-#include "../../../Headers/GameECS/Systems/ShootSystem.h"
+#include "../../../Headers/GameECS/Systems/ShootingSystem.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
@@ -6,7 +6,7 @@
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeLine.h"
 
-ShootSystem::ShootSystem(std::shared_ptr<EntityManager> entityManager,
+ShootingSystem::ShootingSystem(std::shared_ptr<EntityManager> entityManager,
                             std::shared_ptr<AudioFacade> audioFacade,
                             std::shared_ptr<VisualFacade> visualFacade,
                                 std::shared_ptr<InputFacade> inputFacade) :
@@ -20,9 +20,9 @@ ShootSystem::ShootSystem(std::shared_ptr<EntityManager> entityManager,
     inputFacade->getMouseEventObservable()->registerObserver(this);
 }
 
-ShootSystem::~ShootSystem() = default;
+ShootingSystem::~ShootingSystem() = default;
 
-void ShootSystem::update(double deltaTime) {
+void ShootingSystem::update(double deltaTime) {
     if (!_entityManager->exists(_projectile)) _projectileFired = false;
     if(_projectileFired)
     {
@@ -38,7 +38,7 @@ void ShootSystem::update(double deltaTime) {
     }
 }
 
-void ShootSystem::update(std::shared_ptr<MouseEvent> event) {
+void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
     if(_isShooting && !_projectileFired)
     {
         int currentPlayer = 0;
@@ -90,13 +90,13 @@ void ShootSystem::update(std::shared_ptr<MouseEvent> event) {
     }
 }
 
-void ShootSystem::toggleShooting() {
+void ShootingSystem::toggleShooting() {
     if (!_projectileFired)
         _isShooting = !_isShooting;
 }
 
 void
-ShootSystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
+ShootingSystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
                                 double velocityX, double velocityY) {
     _projectile = _entityManager->createEntity();
     int projectileWidth = 11;

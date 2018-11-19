@@ -6,7 +6,7 @@
 #include "../GameECS/Systems/MoveSystem.h"
 #include "../GameECS/Systems/TurnSystem.h"
 #include "../GameECS/Systems/GravitySystem.h"
-#include "../GameECS/Systems/ShootSystem.h"
+#include "../GameECS/Systems/ShootingSystem.h"
 
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
@@ -16,7 +16,7 @@ private:
     std::vector<IBaseSystem*> _systems;
     DrawSystem* drawSystem = nullptr;
     AnimationManager* _animationManager;
-    ShootSystem* shootSystem = nullptr;
+    ShootingSystem* _shootingSystem = nullptr;
 public:
     explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager);
     ~GameScreen();

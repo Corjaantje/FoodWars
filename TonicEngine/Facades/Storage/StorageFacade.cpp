@@ -22,7 +22,7 @@ StorageFacade::~StorageFacade() {
 // Retrieve highscore
 string StorageFacade::getHighscore(int level) {
 
-    std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile("highscore.xml");
+    std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile("Assets/highscore.xml");
     if (highscoreFile != nullptr) {
         string score = highscoreFile->GetRoot().GetChildren()[level].GetChildren()[0].GetValue();
 

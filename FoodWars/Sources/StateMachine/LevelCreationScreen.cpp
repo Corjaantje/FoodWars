@@ -11,6 +11,7 @@ LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> con
 
     _levelBuilder.addWallpaperConfig("WallpaperCity.png");
     _levelBuilder.addWallpaperConfig("WallpaperSky.png");
+    _levelBuilder.addWallpaperConfig("WallpaperNature.png");
     _levelBuilder.addMusicConfig("wildwest");
 
     selectedSong = "none";

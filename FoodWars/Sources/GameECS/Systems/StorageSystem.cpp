@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <sys/stat.h>
 
 StorageSystem::StorageSystem() {
 
@@ -159,6 +160,8 @@ void StorageSystem::addPosition(MyDocument& myDoc, std::map<int, std::shared_ptr
     MyNode rootNode { myDoc.GetRoot() };
     for (auto const& posComp : toSave) {
         MyNode* IDNode = new MyNode { "id", nullptr };
+        if (posComp.second != nullptr)
+        {
         if (nodeLocations.count(posComp.first))
         {
             IDNode = existingIDNodes[nodeLocations[posComp.first]];
@@ -186,6 +189,7 @@ void StorageSystem::addPosition(MyDocument& myDoc, std::map<int, std::shared_ptr
         if(!nodeLocations.count(posComp.first)) {
             existingIDNodes.push_back(IDNode);
             nodeLocations.insert(std::make_pair(posComp.first, existingIDNodes.size() - 1));
+        }
         }
     }
 }
@@ -495,27 +499,44 @@ void StorageSystem::parseTurn(const MyNode& turnNode, EntityManager& _entity, in
 
 }
 
-int StorageSystem::countFilesInDirectory(char* dir) {
-    DIR *dp;
-    int filesInDir = 0;
-    struct dirent *ep;
-    dp = opendir(dir);
+int StorageSystem::countFilesInDirectory(std::string targetdir) {
+    DIR *dir;
+    struct dirent *entry;
+    struct stat info;
 
-    if (dp != NULL)
-    {
-        while (ep == readdir (dp))
-        {
-            filesInDir++;
-        }
-        (void) closedir(dp);
+    int filesFound = 0;
+    dir = opendir(targetdir.c_str());
+    if(!dir){
+        closedir(dir);
+        return filesFound;
     }
-    return filesInDir;
+
+    while((entry = readdir(dir)) != nullptr){
+        if(entry->d_name[0] != '.'){
+            std::string path = std::string(targetdir) + "/" + std::string(entry->d_name);
+            stat(path.c_str(),&info);
+//            if(S_ISDIR(info.st_mode)){
+//                this->FindAssets(path);
+//            }
+//            else{
+                if(path.find(".xml") != std::string::npos){
+                    filesFound++;
+                }
+//            }
+
+        }
+    };
+    closedir(dir);
+    return filesFound;
 }
 // Public functions
 
 void StorageSystem::assignRelevantEntityManager(std::shared_ptr<EntityManager> entityManager) {
     _entityManager = entityManager;
 }
+//void StorageSystem::assignRelevantEntityManager(EntityManager& entityManager) {
+//    _entityManager = &entityManager;
+//}
 
 void StorageSystem::saveWorld(){//std::string savePath) {
     MyNode trueRootNode {"root", nullptr};
@@ -527,7 +548,7 @@ void StorageSystem::saveWorld(){//std::string savePath) {
     addDrawables(myDoc, _entityManager->getAllEntitiesWithComponent<DrawableComponent>(), nodeIDs, nodeLocations);
     addGravity(myDoc, _entityManager->getAllEntitiesWithComponent<GravityComponent>(), nodeIDs, nodeLocations);
     addMove(myDoc, _entityManager->getAllEntitiesWithComponent<MoveComponent>(), nodeIDs, nodeLocations);
-    addPosition(myDoc, _entityManager->getAllEntitiesWithComponent<PositionComponent>(), nodeIDs, nodeLocations);
+    //addPosition(myDoc, _entityManager->getAllEntitiesWithComponent<PositionComponent>(), nodeIDs, nodeLocations);
     addTurns(myDoc, _entityManager->getAllEntitiesWithComponent<TurnComponent>(), nodeIDs, nodeLocations);
     for (auto const& point : nodeIDs)
     {
@@ -536,11 +557,9 @@ void StorageSystem::saveWorld(){//std::string savePath) {
 
 
 //    Get number of files in the Levels directory
-
-
     std::string savingName = "Level"+to_string(countFilesInDirectory(const_cast<char *>("./Levels/")));
 
-    _writer.WriteXMLFile(myDoc, savingName);
+    _writer.WriteXMLFile(myDoc, "./Levels/"+savingName+".xml");
 
     for (auto const& point : nodeIDs)
     {

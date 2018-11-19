@@ -19,6 +19,7 @@ private:
     XMLWriter _writer;
 //    StorageFacade _storageFacade;
     std::shared_ptr<EntityManager> _entityManager;
+//    EntityManager* _entityManager;
     template <typename Comp> void addComponentTypeOf(std::string compName, std::map<int, MyNode> &components, MyNode &rootNode);
     // part of Saving
     void addDrawables(MyDocument& myDoc, std::map<int, std::shared_ptr<DrawableComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
@@ -38,11 +39,12 @@ private:
     void parsePosition(const MyNode& positionNode, EntityManager& _entity, int identifier);
     void parseTurn(const MyNode& turnNode, EntityManager& _entity, int identifier);
 
-    int countFilesInDirectory(char* dir);
+    int countFilesInDirectory(std::string dir);
 public:
     StorageSystem();
     ~StorageSystem();
 
+//    void assignRelevantEntityManager(EntityManager& entityManager);
     void assignRelevantEntityManager(std::shared_ptr<EntityManager> entityManager);
     void saveWorld();//std::string savePath);
 

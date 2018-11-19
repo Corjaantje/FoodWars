@@ -34,7 +34,7 @@ void GameScreen::update(std::shared_ptr<KeyEvent> event){
     if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down) {
         _context->setActiveScreen<PauseScreen>();
     }
-    if (event->getKey() == KEY::KEY_D)
+    if (event->getKey() == KEY::KEY_D && event->getKeyEventType() == KeyEventType::Down)
     {
         _storage->saveWorld();
     }

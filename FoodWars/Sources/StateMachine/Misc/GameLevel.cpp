@@ -13,6 +13,14 @@ void GameLevel::setSpawnPoints(std::vector<Coordinate> spawnPoints) {
     _spawnPoints = std::move(spawnPoints);
 }
 
+void GameLevel::setBackgroundWallpaper(std::string backgroundWallpaper) {
+    _backgroundWallpaper = std::move(backgroundWallpaper);
+}
+
+std::string GameLevel::getBackgroundWallpaper() const {
+    return _backgroundWallpaper;
+}
+
 std::string GameLevel::getBackgroundMusic() const {
     return _backgroundMusic;
 }

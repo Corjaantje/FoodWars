@@ -2,6 +2,10 @@
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeText.h"
+// For checking # of files in directory
+#include <stdio.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 StorageSystem::StorageSystem() {
 
@@ -491,13 +495,29 @@ void StorageSystem::parseTurn(const MyNode& turnNode, EntityManager& _entity, in
 
 }
 
+int StorageSystem::countFilesInDirectory(char* dir) {
+    DIR *dp;
+    int filesInDir = 0;
+    struct dirent *ep;
+    dp = opendir(dir);
+
+    if (dp != NULL)
+    {
+        while (ep == readdir (dp))
+        {
+            filesInDir++;
+        }
+        (void) closedir(dp);
+    }
+    return filesInDir;
+}
 // Public functions
 
 void StorageSystem::assignRelevantEntityManager(std::shared_ptr<EntityManager> entityManager) {
     _entityManager = entityManager;
 }
 
-void StorageSystem::saveWorld(std::string savePath) {
+void StorageSystem::saveWorld(){//std::string savePath) {
     MyNode trueRootNode {"root", nullptr};
     MyDocument myDoc { trueRootNode };
 
@@ -514,7 +534,14 @@ void StorageSystem::saveWorld(std::string savePath) {
         myDoc.AddToRoot(*point);
     }
 
-    _writer.WriteXMLFile(myDoc, savePath);
+
+//    Get number of files in the Levels directory
+
+
+    std::string savingName = "Level"+to_string(countFilesInDirectory(const_cast<char *>("./Levels/")));
+
+    _writer.WriteXMLFile(myDoc, savingName);
+
     for (auto const& point : nodeIDs)
     {
         delete point;
@@ -530,6 +557,8 @@ bool StorageSystem::loadWorld(std::shared_ptr<EntityManager> toFill, std::string
 
     return bSuccess;
 }
+
+
 
 
 

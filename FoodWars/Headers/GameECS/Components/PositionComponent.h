@@ -2,7 +2,7 @@
 
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
 
-class PositionComponent: public ISerializable {
+class PositionComponent: public Component, public ISerializable {
 public:
     int X;
     int Y;

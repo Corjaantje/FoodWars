@@ -37,12 +37,14 @@ private:
     void parseMove(const MyNode& moveNode, EntityManager& _entity, int identifier);
     void parsePosition(const MyNode& positionNode, EntityManager& _entity, int identifier);
     void parseTurn(const MyNode& turnNode, EntityManager& _entity, int identifier);
+
+    int countFilesInDirectory(char* dir);
 public:
     StorageSystem();
     ~StorageSystem();
 
     void assignRelevantEntityManager(std::shared_ptr<EntityManager> entityManager);
-    void saveWorld(std::string savePath);
+    void saveWorld();//std::string savePath);
 
     // Pass a string for identifying the world?
     bool loadWorld(std::shared_ptr<EntityManager> toFill, std::string filePath);

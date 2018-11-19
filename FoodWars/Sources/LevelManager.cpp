@@ -2,17 +2,19 @@
 #include "../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 #include "../Headers/GameECS/Components/MoveComponent.h"
 #include "../Headers/GameECS/Components/AnimationComponent.h"
+#include "../Headers/GameECS/Systems/StorageSystem.h"
 
 LevelManager::LevelManager()
 {
     _entityManager = EntityManager();
 }
+
 LevelManager::~LevelManager() = default;
 
 EntityManager LevelManager::startLevel(int level) {
     switch(level)
     {
-        case 1: {
+        case 3: {
             _entityManager = EntityManager();
 
             int sky = _entityManager.createEntity();
@@ -75,6 +77,13 @@ EntityManager LevelManager::startLevel(int level) {
             _entityManager.addComponentToEntity(boundFour, new PositionComponent(0, 900));
             break;
         }
+        case 1: {
+            StorageSystem* storage = new StorageSystem();
+            _entityManager = EntityManager();
+            storage->loadWorld(_entityManager, "Levels/Level19.xml");
+            std::string freezewhy = "tell me why";
+            break;
+        }
         default:
             std::cout << "Level does not exist" << std::endl;
             break;
@@ -110,3 +119,4 @@ void LevelManager::generateTerrainDrawables(int x, int y) {
     _entityManager.addComponentToEntity(terrain, new PositionComponent(x, y));
     comp->shape = new ShapeRectangle{32, 32, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}};
 }
+

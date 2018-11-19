@@ -52,7 +52,7 @@ public:
     void saveWorld();//std::string savePath);
 
     // Pass a string for identifying the world?
-    bool loadWorld(std::shared_ptr<EntityManager> toFill, std::string filePath);
+    bool loadWorld(EntityManager& toFill, std::string filePath);
 };
 
 

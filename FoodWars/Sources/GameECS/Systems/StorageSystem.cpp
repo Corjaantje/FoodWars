@@ -620,13 +620,13 @@ void StorageSystem::saveWorld(){//std::string savePath) {
     }
 }
 
-bool StorageSystem::loadWorld(std::shared_ptr<EntityManager> toFill, std::string filePath) {
+bool StorageSystem::loadWorld(EntityManager& toFill, std::string filePath) {
     delete _reader;
     _reader = new XMLReader();
     std::unique_ptr<MyDocument> myDoc = _reader->LoadFile("./"+filePath);
     MyNode rootNode = myDoc->GetRoot();
     bool bSuccess = false;
-    parseSavedInstance(rootNode, *toFill);
+    parseSavedInstance(rootNode, toFill);
 
 
     return bSuccess;

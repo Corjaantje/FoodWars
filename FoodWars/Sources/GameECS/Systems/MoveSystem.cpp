@@ -6,13 +6,15 @@
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Events/CollisionEventHandlerLamda.h"
+#include "../../../Headers/GameECS/Components/AnimationComponent.h"
+#include "../../../Headers/GameECS/Components/JumpComponent.h"
 #include <cmath>
 
 MoveSystem::~MoveSystem() {
     delete trapWalkOnCollision;
 }
 
-MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade, IObservable<CollisionEvent>& collisionEventObservable) {
+MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade, IObservable<CollisionEvent>& collisionEventObservable){
     _entityManager = std::move(entityManager);
     inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
     trapWalkOnCollision  = new CollisionEventHandlerLamda {
@@ -42,9 +44,10 @@ void MoveSystem::update(double dt) {
         if (iterator.second->isMyTurn()) {
             if (_pressedKey == KEY::KEY_A) {
                 moveComponent->xVelocity = -100;
-            } else if (_pressedKey == KEY::KEY_D) {
+            }
+            else if (_pressedKey == KEY::KEY_D) {
                 moveComponent->xVelocity = 100;
-            } else
+            }else
                 moveComponent->xVelocity = 0;
         } else {
             moveComponent->xVelocity = 0;
@@ -52,7 +55,6 @@ void MoveSystem::update(double dt) {
     }
 
     for (auto const &iterator: _entityManager->getAllEntitiesWithComponent<MoveComponent>()) {
-        int entity = iterator.first;
         std::shared_ptr<MoveComponent> moveComponent = iterator.second;
         std::shared_ptr<PositionComponent> positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
         if(positionComponent) {

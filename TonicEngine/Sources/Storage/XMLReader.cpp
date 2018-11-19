@@ -66,13 +66,16 @@ std::unique_ptr<MyDocument> XMLReader::ReadXMLFile(XMLDocument & doc)
 {
     XMLNode* docRoot = doc.FirstChild();
 
-    MyNode rootNode{ docRoot->Value(), nullptr };
-    XMLElement* firstElem = docRoot->FirstChildElement();
+    if (docRoot != nullptr) {
+        MyNode rootNode{docRoot->Value(), nullptr};
+        XMLElement *firstElem = docRoot->FirstChildElement();
 
-    ReadRecursively(*firstElem, rootNode);
+        ReadRecursively(*firstElem, rootNode);
 
-    MyDocument* myDoc = new MyDocument{ rootNode };
+        MyDocument *myDoc = new MyDocument{rootNode};
 
 
-    return std::unique_ptr<MyDocument> { myDoc };
+        return std::unique_ptr<MyDocument>{myDoc};
+    }
+    return nullptr;
 }

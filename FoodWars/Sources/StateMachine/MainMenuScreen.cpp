@@ -2,6 +2,7 @@
 #include "../../Headers/StateMachine/UpgradesScreen.h"
 #include "../../Headers/StateMachine/HelpScreen.h"
 #include "../../Headers/StateMachine/CreditScreen.h"
+#include "../../Headers/StateMachine/HighscoreScreen.h"
 
 
 MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
@@ -9,7 +10,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
 
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
-    _renderList._shapes[1].push_back(new ShapeSprite{1600, 900, 0, 0, "wallpaper2.png"});
+    _renderList._shapes[1].push_back(new ShapeSprite{1600, 900, 0, 0, "ScreenMainMenu.png"});
 
     // Level Selection
     TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Select Level", [c = _context]() {  c->setActiveScreen<LevelSelectionScreen>(); }, 370, 110, 615, 300, Colour{255,255,255,0}, Colour{255,255,255,0},};
@@ -47,7 +48,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _buttons.push_back(quitButton);
 
     // High Scores
-    SpriteButton* highScoresButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}};
+    SpriteButton* highScoresButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<HighscoreScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}};
     highScoresButton->addToRender(&_renderList);
     _buttons.push_back(highScoresButton);
 }

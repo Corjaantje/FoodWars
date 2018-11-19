@@ -6,7 +6,6 @@
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeLine.h"
 
-
 ShootSystem::ShootSystem(std::shared_ptr<EntityManager> entityManager,
                             std::shared_ptr<AudioFacade> audioFacade,
                             std::shared_ptr<VisualFacade> visualFacade,
@@ -36,7 +35,6 @@ void ShootSystem::update(double deltaTime) {
             _projectileFired = false;
             _entityManager->removeEntity(_projectile);
         }
-
     }
 }
 
@@ -44,7 +42,6 @@ void ShootSystem::update(std::shared_ptr<MouseEvent> event) {
     if(_isShooting && !_projectileFired)
     {
         int currentPlayer = 0;
-
         auto turnComponents = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
         for (auto const &x : turnComponents)
         {
@@ -54,7 +51,6 @@ void ShootSystem::update(std::shared_ptr<MouseEvent> event) {
             }
         }
         auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(currentPlayer);
-        //double distance = hypot(event->getXPosition() - currentPlayerPos->X, currentPlayerPos->Y - event->getYPosition());
         auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(currentPlayer);
         int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
         int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
@@ -113,18 +109,16 @@ ShootSystem::generateProjectile(const PositionComponent &playerPositionComponent
 
     auto drawableComponent = new DrawableComponent;
     drawableComponent->shape = new ShapeSprite(projectileWidth, projectileHeight, posX, posY, "carrot-new.png");
-
+    const double speedModifier = 2.5;
     _entityManager->addComponentToEntity(_projectile, drawableComponent);
     _entityManager->addComponentToEntity(_projectile, new PositionComponent(posX, posY));
     _entityManager->addComponentToEntity(_projectile, new BoxCollider(projectileWidth, projectileHeight));
     _entityManager->addComponentToEntity(_projectile, new DamagingComponent(25));
     _entityManager->addComponentToEntity(_projectile, new DamageableComponent { 10 });
-    _entityManager->addComponentToEntity(_projectile, new GravityComponent(25));
+    _entityManager->addComponentToEntity(_projectile, new GravityComponent(6.5 * speedModifier));
 
     auto moveComponent = new MoveComponent();
-    moveComponent->xVelocity = velocityX * 5;
-    moveComponent->yVelocity = velocityY * 6.25;
+    moveComponent->xVelocity = velocityX * speedModifier;
+    moveComponent->yVelocity = velocityY * speedModifier;
     _entityManager->addComponentToEntity(_projectile, moveComponent);
-
-
 }

@@ -172,7 +172,7 @@ void LevelBuilder::drawAdditionalItems(Renderlist &renderlist) {
 
     int height = 8;
     int width = 1600;
-    renderlist._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, "ScreenLevelBuilder.png"});
+    renderlist._shapes[2].push_back(new ShapeSprite{1600, 900, 0, 0, "ScreenLevelBuilder.png"});
     renderlist._shapes[1].push_back(new ShapeRectangle{width, height, 0, BUILDING_LIMIT-height, Colour(0, 0, 0, 255)});
     renderlist._shapes[1].push_back(new ShapeRectangle{width, height, 0, 900-height, Colour(0, 0, 0, 255)});
     renderlist._shapes[1].push_back(new ShapeRectangle{64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255)});

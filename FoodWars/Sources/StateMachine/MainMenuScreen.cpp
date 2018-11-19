@@ -2,6 +2,7 @@
 #include "../../Headers/StateMachine/UpgradesScreen.h"
 #include "../../Headers/StateMachine/HelpScreen.h"
 #include "../../Headers/StateMachine/CreditScreen.h"
+#include "../../Headers/StateMachine/HighscoreScreen.h"
 
 
 MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
@@ -47,7 +48,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _buttons.push_back(quitButton);
 
     // High Scores
-    SpriteButton* highScoresButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}};
+    SpriteButton* highScoresButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<HighscoreScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}};
     highScoresButton->addToRender(&_renderList);
     _buttons.push_back(highScoresButton);
 }

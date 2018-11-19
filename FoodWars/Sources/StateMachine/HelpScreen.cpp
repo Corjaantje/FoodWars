@@ -12,18 +12,14 @@ HelpScreen::HelpScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     // Backbutton
     SpriteButton* backButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 140, 140, 12, 12, Colour{0,0,0,0}};
     backButton->addToRender(&_renderList);
-    _buttons.push_back(backButton);
+    _sprites.push_back(backButton);
 
     _renderList._shapes[1].push_back(new ShapeText(1040, 480, "'A'", 0, 30, 30, Colour(255, 255, 255, 0)));
     _renderList._shapes[1].push_back(new ShapeText(1040, 600, "'D'", 0, 30, 30, Colour(255, 255, 255, 0)));
     _renderList._shapes[1].push_back(new ShapeText(1040, 720, "'Spacebar'", 0, 10*20, 30, Colour(255, 255, 255, 0)));
 }
 
-HelpScreen::~HelpScreen() {
-    for(IShape* button: _buttons) {
-        delete button;
-    }
-}
+HelpScreen::~HelpScreen() = default;
 
 void HelpScreen::update(double deltaTime) {
     visualFacade->render(_renderList);

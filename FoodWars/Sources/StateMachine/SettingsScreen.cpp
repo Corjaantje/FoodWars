@@ -47,26 +47,26 @@ SettingsScreen::SettingsScreen(std::shared_ptr<ScreenStateManager> context) : IS
     // Music volume control
     TextButton* lowerMusicVolumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"-", [a = audioFacade]() {  a->setMusicVolume(a->getMusicVolume() - 5); }, 10, 30, 615, 700, Colour{255,255,255,0}, Colour{255,255,255,0}};
     lowerMusicVolumeButton->addToRender(&_renderList);
-    _buttons.push_back(lowerMusicVolumeButton);
+    _sprites.push_back(lowerMusicVolumeButton);
 
     musicVolume = new ShapeText(630, 700, std::to_string(audioFacade->getMusicVolume()), 12, 50, 30, Colour{255,255,255,0} );
     musicVolume->addToRender(&_renderList);
 
     TextButton* raiseMusicVolumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"+", [a = audioFacade]() {  a->setMusicVolume(a->getMusicVolume() + 5); }, 10, 30, 695, 700, Colour{255,255,255,0}, Colour{255,255,255,0}};
     raiseMusicVolumeButton->addToRender(&_renderList);
-    _buttons.push_back(raiseMusicVolumeButton);
+    _sprites.push_back(raiseMusicVolumeButton);
 
     // Music volume control
     TextButton* lowerEffectVolumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"-", [a = audioFacade]() {  a->setEffectVolume(a->getEffectVolume() - 5); }, 10, 30, 615, 750, Colour{255,255,255,0}, Colour{255,255,255,0}};
     lowerEffectVolumeButton->addToRender(&_renderList);
-    _buttons.push_back(lowerEffectVolumeButton);
+    _sprites.push_back(lowerEffectVolumeButton);
 
     effectVolume = new ShapeText(630, 750, std::to_string(audioFacade->getEffectVolume()), 12, 50, 30, Colour{255,255,255,0} );
     effectVolume->addToRender(&_renderList);
 
     TextButton* raiseEffectVolumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"+", [a = audioFacade]() {  a->setEffectVolume(a->getEffectVolume() + 5); }, 10, 30, 695, 750, Colour{255,255,255,0}, Colour{255,255,255,0}};
     raiseEffectVolumeButton->addToRender(&_renderList);
-    _buttons.push_back(raiseEffectVolumeButton);
+    _sprites.push_back(raiseEffectVolumeButton);
 }
 
 SettingsScreen::~SettingsScreen() {
@@ -78,8 +78,8 @@ SettingsScreen::~SettingsScreen() {
 void SettingsScreen::update(double deltaTime) {
     _renderList.clearLists();
     _renderList._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, "wallpaper.png"});
-    for(int i=0; i < _buttons.size(); i++){
-        _buttons[i]->addToRender(&_renderList);
+    for (int i = 0; i < _sprites.size(); i++) {
+        _sprites[i]->addToRender(&_renderList);
     }
 
     // Update music volume

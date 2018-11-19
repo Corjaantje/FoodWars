@@ -1,5 +1,6 @@
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 #include "../../Headers/StateMachine/UpgradesScreen.h"
+#include "../../Headers/StateMachine/HelpScreen.h"
 #include "../../Headers/StateMachine/CreditScreen.h"
 
 
@@ -31,7 +32,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     _buttons.push_back(settingsButton);
 
     // Help
-    TextButton* helpButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Help", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 190, 100, 10, 680, Colour{255,255,255,0}, Colour{255,255,255,0}};
+    TextButton* helpButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Help", [c = _context]() {  c->setActiveScreen<HelpScreen>(); }, 190, 100, 10, 680, Colour{255,255,255,0}, Colour{255,255,255,0}};
     helpButton->addToRender(&_renderList);
     _buttons.push_back(helpButton);
 

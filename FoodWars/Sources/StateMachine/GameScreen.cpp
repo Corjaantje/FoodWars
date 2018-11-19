@@ -72,12 +72,10 @@ void GameScreen::update(double deltaTime) {
     if(_entitiesWithTurnComponent.size() == 1)
     {
         std::cout << "switch screen" << std::endl;
-        MainMenuScreen screen(_context);
         //set score
         //check win/lose
         _context->setActiveScreen<MainMenuScreen>();
     } else if(_entitiesWithTurnComponent.empty()) {
-        MainMenuScreen screen(_context);
         //set score
         //it's a draw!
         _context->setActiveScreen<MainMenuScreen>();

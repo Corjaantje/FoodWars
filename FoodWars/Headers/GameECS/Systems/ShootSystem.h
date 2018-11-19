@@ -22,6 +22,7 @@ private:
     bool _isShooting;
     bool _projectileFired;
     int _projectile;
+    int _shootingLine;
     std::shared_ptr<AudioFacade> _audioFacade;
     std::shared_ptr<EntityManager> _entityManager;
     std::shared_ptr<VisualFacade> _visualFacade;

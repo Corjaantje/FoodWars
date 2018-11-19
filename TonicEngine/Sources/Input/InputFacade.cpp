@@ -45,6 +45,15 @@ void InputFacade::pollEvents() {
                 }
                 break;
             }
+            case SDL_MOUSEMOTION: {
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    std::shared_ptr<MouseEvent> mouseEvent = std::make_shared<MouseEvent>(
+                            _windowResCalc->getConvertedxPosClick(event.motion.x),
+                            _windowResCalc->getConvertedyPosClick(event.motion.y), MouseEventType::Drag, MouseClickType::Left);
+                    _mouseEventObservable.get()->notify(mouseEvent);
+                }
+                break;
+            }
             case SDL_MOUSEBUTTONUP: { // When a click is released
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     std::shared_ptr<MouseEvent> mouseEvent = std::make_shared<MouseEvent>(

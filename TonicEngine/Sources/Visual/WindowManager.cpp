@@ -2,6 +2,7 @@
 
 #include "../../Headers/Visual/WindowManager.h"
 #include "../../Headers/Visual/Window.h"
+#include "../../Headers/Visual/Shapes/ShapeLine.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <algorithm>
@@ -87,7 +88,7 @@ void WindowManager::renderText(const ShapeText &shapeText) {
     Message_rect.y = _windowResCalc->getConvertedyPosDraw(shapeText.yPos); // controls the rect's y coordinte
     Message_rect.w = _windowResCalc->getConvertedWidthDraw(shapeText.width);; // controls the width of the rect
     Message_rect.h = _windowResCalc->getConvertedHeightDraw(shapeText.height); // controls the height of the rect
-    SDL_RenderCopy(_renderer, Message, NULL, &Message_rect);
+    SDL_RenderCopy(_renderer, Message, nullptr, &Message_rect);
 }
 
 void WindowManager::renderSprite(const ShapeSprite &shapeSprite) {
@@ -97,5 +98,16 @@ void WindowManager::renderSprite(const ShapeSprite &shapeSprite) {
     rect.h = _windowResCalc->getConvertedHeightDraw(shapeSprite.height);
     rect.w = _windowResCalc->getConvertedWidthDraw(shapeSprite.width);
     SDL_Texture* texture = _assetManager->GetSDLTextureFromPNG(_renderer, shapeSprite.imageURL);
-    SDL_RenderCopy(_renderer, texture, NULL, &rect);
+    SDL_RenderCopy(_renderer, texture, nullptr, &rect);
 }
+
+void WindowManager::renderLine(const ShapeLine &line) {
+
+    int x = _windowResCalc->getConvertedxPosDraw(line.xPos);
+    int y = _windowResCalc->getConvertedyPosDraw(line.yPos);
+    int x2 = _windowResCalc->getConvertedxPosDraw(line.xPos2);
+    int y2 = _windowResCalc->getConvertedyPosDraw(line.yPos2);
+    SDL_RenderDrawLine(_renderer, x, y, x2, y2);
+}
+
+

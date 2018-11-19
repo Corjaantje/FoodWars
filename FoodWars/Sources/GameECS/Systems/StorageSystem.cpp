@@ -14,7 +14,8 @@ StorageSystem::StorageSystem() {
 }
 
 StorageSystem::~StorageSystem() {
-
+    delete _reader;
+    delete _writer;
 }
 
 // May be worth keeping? Would make for a nicer implementation than the current one. Do not know how to make it work.

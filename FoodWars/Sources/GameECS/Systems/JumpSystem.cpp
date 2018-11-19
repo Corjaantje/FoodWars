@@ -31,7 +31,7 @@ JumpSystem::JumpSystem(const std::shared_ptr<EntityManager> &entityManager,
 }
 
 void JumpSystem::update(std::shared_ptr<KeyEvent> event) {
-    if(event->getKeyEventType() == KeyEventType::Down && event->getKey() == KEY::KEY_W) {
+    if(event->getKeyEventType() == KeyEventType::Down && event->getKey() == KEY::KEY_SPACEBAR) {
         for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
             if(iterator.second->isMyTurn()){
                 if(!_entityManager->getComponentFromEntity<JumpComponent>(iterator.first)) {

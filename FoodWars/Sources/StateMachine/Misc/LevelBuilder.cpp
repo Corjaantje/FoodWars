@@ -1,8 +1,6 @@
 #include "../../../Headers/StateMachine/Misc/LevelBuilder.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
-#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
-#include "../../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
 
 LevelBuilder::LevelBuilder() {
     _entityManager = new EntityManager();
@@ -165,20 +163,23 @@ int LevelBuilder::roundYCoordToGrid(int y) {
     return y - remainder;
 }
 
-
 void LevelBuilder::drawAdditionalItems(Renderlist &renderlist) {
     //TODO TEMP FIX TO MAKE A BACKGROUND WORK UNTILL WE HAVE LAYERS.
-    renderlist._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, _wallpaperList[_selectedWallpaper]});
+    renderlist._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, _wallpaperList[_selectedWallpaper]));
 
     int height = 8;
     int width = 1600;
-    renderlist._shapes[2].push_back(new ShapeSprite{1600, 900, 0, 0, "ScreenLevelBuilder.png"});
-    renderlist._shapes[1].push_back(new ShapeRectangle{width, height, 0, BUILDING_LIMIT-height, Colour(0, 0, 0, 255)});
-    renderlist._shapes[1].push_back(new ShapeRectangle{width, height, 0, 900-height, Colour(0, 0, 0, 255)});
-    renderlist._shapes[1].push_back(new ShapeRectangle{64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255)});
+    renderlist._shapes[2].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenLevelBuilder.png"));
+    renderlist._shapes[1].push_back(
+            createShape<ShapeRectangle>(width, height, 0, BUILDING_LIMIT - height, Colour(0, 0, 0, 255)));
+    renderlist._shapes[1].push_back(createShape<ShapeRectangle>(width, height, 0, 900 - height, Colour(0, 0, 0, 255)));
+    renderlist._shapes[1].push_back(
+            createShape<ShapeRectangle>(64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255)));
 
     for (auto &_spawnPoint : _spawnPoints) {
-        renderlist._shapes[1].push_back(new ShapeSprite{SHAPE_DIMENSION, SHAPE_DIMENSION, _spawnPoint.getXCoord(), _spawnPoint.getYCoord(), "Spawnpoint.png"});
+        renderlist._shapes[1].push_back(
+                createShape<ShapeSprite>(SHAPE_DIMENSION, SHAPE_DIMENSION, _spawnPoint.getXCoord(),
+                                         _spawnPoint.getYCoord(), "Spawnpoint.png"));
     }
 }
 
@@ -283,4 +284,14 @@ void LevelBuilder::addMusicConfig(std::string music) {
 
 void LevelBuilder::addWallpaperConfig(std::string wallpaper) {
     _wallpaperList.emplace_back(wallpaper);
+}
+
+LevelBuilder::~LevelBuilder() {
+    for (IShape *shape: _sprites) {
+        delete shape;
+    }
+    for (EntityMemento *entityMemento: _mementoList) {
+        delete entityMemento;
+    }
+    delete _entityManager;
 }

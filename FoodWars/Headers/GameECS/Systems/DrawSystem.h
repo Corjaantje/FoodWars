@@ -9,6 +9,7 @@
 class DrawSystem : public IBaseSystem {
 private:
     std::chrono::duration<double> _timeLast;
+    std::vector<IShape *> _sprites;
     std::shared_ptr<EntityManager> _entityManager;
     std::shared_ptr<VisualFacade> _visualFacade;
     Renderlist _renderList;
@@ -24,10 +25,17 @@ public:
     ~DrawSystem() override;
     void update(double dt) override;
     bool toggleFpsCounter();
+
 private:
     void drawNonComponents();
     void drawCurrentPlayer();
 
+    template<typename T, typename... Args>
+    IShape *createShape(Args &&... args) {
+        T *shape = new T(std::forward<Args>(args)...);
+        _sprites.push_back(shape);
+        return shape;
+    }
 };
 
 

@@ -108,7 +108,7 @@ ShootingSystem::generateProjectile(const PositionComponent &playerPositionCompon
     if (velocityY < 0) posY -= projectileHeight + 1;
 
     auto drawableComponent = new DrawableComponent;
-    drawableComponent->shape = new ShapeSprite(projectileWidth, projectileHeight, posX, posY, "carrot-new.png");
+    drawableComponent->shape = new ShapeSprite(projectileWidth, projectileHeight, posX, posY, "carrot.png");
     const double speedModifier = 2.5;
     _entityManager->addComponentToEntity(_projectile, drawableComponent);
     _entityManager->addComponentToEntity(_projectile, new PositionComponent(posX, posY));

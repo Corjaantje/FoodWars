@@ -1,12 +1,6 @@
 #include <utility>
-
-#include <utility>
 #include "../../Headers/StateMachine/GameScreen.h"
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"
-#include "../../Headers/GameECS/Components/TurnComponent.h"
-#include "../../Headers/GameECS/Components/Collider/BoxCollider.h"
-#include "../../Headers/GameECS/Components/GravityComponent.h"
-#include "../../Headers/GameECS/Components/MoveComponent.h"
 #include "../../Headers/GameECS/Systems/CollisionSystem.h"
 #include "../../Headers/GameECS/Systems/JumpSystem.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
@@ -14,6 +8,7 @@
 #include "../../Headers/StateMachine/PauseScreen.h"
 #include "../../Headers/GameECS/Systems/AnimationSystem.h"
 #include "../../Headers/GameECS/Components/AnimationComponent.h"
+#include "../../Headers/GameECS/Systems/DamageableSystem.h"
 
 GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameLevel* gameLevel) :
     IScreen(context),
@@ -38,13 +33,20 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameL
 
     _animationManager = new AnimationManager{};
     CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };
-    _systems.push_back(new JumpSystem { _entityManager, _inputFacade, _audioFacade, *collisionSystem} );
-    _systems.push_back(new MoveSystem{ _entityManager, _inputFacade, *collisionSystem});
-    _systems.push_back(collisionSystem);
+    _systems.push_back(new JumpSystem { _entityManager, _inputFacade, audioFacade, *collisionSystem } );
+    _systems.push_back(new MoveSystem { _entityManager, _inputFacade, *collisionSystem });
     _systems.push_back(new GravitySystem { _entityManager, *collisionSystem });
     _systems.push_back(new AnimationSystem(_entityManager, _animationManager));
-    _systems.push_back(new DrawSystem {_entityManager, _visualFacade});
-    _systems.push_back(new TurnSystem {_entityManager});
+    _systems.push_back(new DrawSystem {_entityManager, _visualFacade, _inputFacade});
+    TurnSystem* turnSystem = new TurnSystem {_entityManager};
+    _systems.push_back(turnSystem);
+    _shootingSystem = new ShootingSystem(_entityManager, audioFacade, visualFacade, _inputFacade);
+    _systems.push_back(_shootingSystem);
+    _systems.push_back(new DamageableSystem { _entityManager, *collisionSystem});
+    _systems.push_back(collisionSystem);
+
+    drawSystem = new DrawSystem {_entityManager, visualFacade, _inputFacade};
+    _systems.push_back(drawSystem);
 }
 
 void GameScreen::spawnPlayers() {
@@ -112,6 +114,9 @@ void GameScreen::update(std::shared_ptr<KeyEvent> event){
             _context->setTimeModifier(1);
         }
 
+        if (event->getKey() == KEY::KEY_G){
+            _shootingSystem->toggleShooting();
+        }
         //Toggle Framerate
         if(event->getKey() == KEY::KEY_F){
             drawSystem->toggleFpsCounter();
@@ -127,6 +132,17 @@ GameScreen::~GameScreen() {
 };
 
 void GameScreen::update(double deltaTime) {
+    std::map<int, std::shared_ptr<TurnComponent>> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
+    if(_entitiesWithTurnComponent.size() == 1)
+    {
+        //set score
+        //check win/lose
+        _context->setActiveScreen<MainMenuScreen>();
+    } else if(_entitiesWithTurnComponent.empty()) {
+        //set score
+        //it's a draw!
+        _context->setActiveScreen<MainMenuScreen>();
+    }
     _audioFacade->playMusic(_backgroundMusic.c_str());
     _inputFacade->pollEvents();
     for(auto const &iterator : _systems){

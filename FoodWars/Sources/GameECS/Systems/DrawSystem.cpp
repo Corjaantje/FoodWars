@@ -4,8 +4,11 @@
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/PositionComponent.h"
+#include "../../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 
-DrawSystem::DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade){
+DrawSystem::DrawSystem(std::shared_ptr<EntityManager> entityManager,
+                        std::shared_ptr<VisualFacade> visualFacade,
+                        std::shared_ptr<InputFacade> inputFacade) : _inputFacade {std::move(inputFacade)} {
     _entityManager = std::move(entityManager);
     _visualFacade = std::move(visualFacade);
     _timeLast = std::chrono::steady_clock::now().time_since_epoch();
@@ -52,13 +55,12 @@ void DrawSystem::drawNonComponents() {
     }
     //Draw Turn Timer
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
-        if(iterator.second->isMyTurn()){
+        if(iterator.second->isMyTurn()) {
             double time = iterator.second->getRemainingTime();
             std::string text;
-            if(time < 10){
+            if (time < 10) {
                 text = std::to_string(time).substr(0, 3);
-            }
-            else{
+            } else {
                 text = std::to_string(time).substr(0, 4);
             }
             _renderList._shapes[3].push_back(
@@ -74,6 +76,7 @@ void DrawSystem::drawCurrentPlayer() {
         std::map<int, std::shared_ptr<TurnComponent>> turnComps = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
         for (auto const& x : turnComps)
         {
+            if(x.second == NULL) break;
             if(x.second->isMyTurn()){
                 ShapeSprite* sprite = dynamic_cast<ShapeSprite*>(_entityManager->getComponentFromEntity<DrawableComponent>(x.first)->shape);
                if(sprite != nullptr) {

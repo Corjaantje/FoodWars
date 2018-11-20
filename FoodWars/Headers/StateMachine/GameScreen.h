@@ -6,6 +6,7 @@
 #include "../GameECS/Systems/MoveSystem.h"
 #include "../GameECS/Systems/TurnSystem.h"
 #include "../GameECS/Systems/GravitySystem.h"
+#include "../GameECS/Systems/ShootingSystem.h"
 #include "../GameECS/Systems/StorageSystem.h"
 #include "Misc/Coordinate.h"
 #include "Misc/GameLevel.h"
@@ -22,6 +23,7 @@ private:
     std::vector<IBaseSystem*> _systems;
     DrawSystem* drawSystem = nullptr;
     AnimationManager* _animationManager;
+    ShootingSystem* _shootingSystem = nullptr;
     StorageSystem* _storage;
 public:
     explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameLevel* gameLevel);

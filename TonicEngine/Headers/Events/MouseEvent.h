@@ -5,7 +5,8 @@
 
 enum class MouseEventType {
     Down,
-    Up
+    Up,
+    Drag
 };
 
 enum class MouseClickType {

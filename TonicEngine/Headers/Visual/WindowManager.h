@@ -36,6 +36,8 @@ public:
     void renderRectangle(const ShapeRectangle &rectangle) override;
     void renderText(const ShapeText &text) override;
     void renderSprite(const ShapeSprite &sprite) override;
+    void renderLine(const ShapeLine &line) override;
+
 private:
     AssetManager* _assetManager = nullptr;
     Window *_window = nullptr;

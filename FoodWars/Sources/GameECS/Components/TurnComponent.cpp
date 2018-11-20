@@ -12,17 +12,15 @@ TurnComponent::TurnComponent() {
 }
 
 // Alternative amount of energy
-TurnComponent::TurnComponent(int energy): _energy(energy) {
+TurnComponent::TurnComponent(double energy): _energy(energy) {
 
 }
 
-TurnComponent::TurnComponent(int energy, bool myTurn): _energy(energy), _myTurn(myTurn) {
+TurnComponent::TurnComponent(double energy, bool myTurn): _energy(energy), _myTurn(myTurn) {
 
 }
 
-TurnComponent::~TurnComponent() {
-
-}
+TurnComponent::~TurnComponent() = default;
 
 void TurnComponent::switchTurn(bool change) {
     _myTurn = change;
@@ -44,14 +42,25 @@ bool TurnComponent::isMyTurn() const {
     return _myTurn;
 }
 
+void TurnComponent::lowerEnergy(double delta) {
+    _energy -= delta;
+}
+
 std::vector<std::string> TurnComponent::serialize() {
     std::vector<std::string> data;
     data.push_back(std::to_string(_energy));
     data.push_back(std::to_string(_myTurn));
-
-
     return data;
 }
+
+double TurnComponent::getEnergy() const {
+    return _energy;
+}
+
+void TurnComponent::setEnergy(double energy) {
+    _energy = energy;
+}
+   
 
 void TurnComponent::setEnergy(int energy) {
     _energy = energy;
@@ -61,8 +70,6 @@ void TurnComponent::setEnergy(int energy) {
 void TurnComponent::setMaxEnergy(int energy) {
     _maxEnergy = energy;
 }
-
-
 
 
 

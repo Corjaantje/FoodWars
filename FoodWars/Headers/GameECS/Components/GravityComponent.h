@@ -9,6 +9,7 @@ public:
     double gravityApplied;
     GravityComponent();
     std::vector<std::string> serialize() override;
+    explicit GravityComponent(double gravity);
 };
 
 #endif //PROJECT_SWA_GRAVITYCOMPONENT_H

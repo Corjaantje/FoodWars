@@ -11,13 +11,16 @@
 class TurnComponent: public Component, ISerializable {
 public:
     TurnComponent();
-    TurnComponent(int energy);
-    TurnComponent(int energy, bool myTurn); // May be useless?
+    TurnComponent(double energy);
+    TurnComponent(double energy, bool myTurn); // May be useless?
     ~TurnComponent() override;
 
     void switchTurn(bool change);
     void setRemainingTime(double t);
+    void lowerEnergy(double delta);
     void lowerRemainingTime(double t);
+    double getEnergy() const;
+    void setEnergy(double energy);
     double getRemainingTime() const;
     bool isMyTurn() const;
     void setEnergy(int energy);
@@ -25,9 +28,9 @@ public:
     std::vector<std::string> serialize() override;
 
 private:
-    int _energy;
-    int _maxEnergy;
+    double _energy;
     double _remainingTime;
+    int _maxEnergy;
     bool _myTurn = false;
 };
 

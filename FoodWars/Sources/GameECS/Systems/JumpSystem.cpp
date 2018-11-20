@@ -17,8 +17,6 @@ void JumpSystem::update(double dt) {
         double accelerationChange = iterator.second->getAcceleration() * dt * 15;
         moveComponent->yVelocity -= accelerationChange;
         iterator.second->setAcceleration(iterator.second->getAcceleration() - accelerationChange);
-        if(iterator.second->getAcceleration() <= 0)
-            _entityManager->removeComponentFromEntity<JumpComponent>(iterator.first);
     }
 }
 

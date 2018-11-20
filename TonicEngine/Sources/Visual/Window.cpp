@@ -47,14 +47,14 @@ void Window::pollEvents(){
 
 //TODO Find a better way to dynamically set more Window Flag settings
 bool Window::createWindow() {
-    auto _flags = SDL_WINDOW_RESIZABLE;
+    auto _flags = SDL_WINDOW_SHOWN;
     if(_fullscreen) {
         _flags = SDL_WINDOW_FULLSCREEN;
     }
         _window = SDL_CreateWindow(
                 _title.c_str(),
-                SDL_WINDOWPOS_CENTERED,
-                SDL_WINDOWPOS_CENTERED,
+                10,
+                10,
                 _width,
                 _height,
                 _flags);

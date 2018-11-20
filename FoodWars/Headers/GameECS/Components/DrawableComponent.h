@@ -10,7 +10,7 @@ class DrawableComponent: public Component {
 public:
     DrawableComponent();
     ~DrawableComponent() override;
-    std::unique_ptr<IShape> shape;
+    IShape* shape;
 };
 
 

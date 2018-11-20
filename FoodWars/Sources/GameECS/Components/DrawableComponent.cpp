@@ -7,5 +7,5 @@ DrawableComponent::DrawableComponent() {
 
 
 DrawableComponent::~DrawableComponent() {
-
+    delete shape;
 }

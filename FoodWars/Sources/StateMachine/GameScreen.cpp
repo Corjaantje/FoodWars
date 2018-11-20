@@ -18,17 +18,23 @@
 GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameLevel* gameLevel) :
     IScreen(context),
     _entityManager(std::make_shared<EntityManager>(gameLevel->getEntityManager())),
-    _spawnPoints(gameLevel->getSpawnPoints()),
-    _wallpaper(gameLevel->getBackgroundWallpaper()),
-    _backgroundMusic(gameLevel->getBackgroundMusic().c_str())
+    _spawnPoints(gameLevel->getSpawnPoints())
 {
+    std::string level = gameLevel->getBackgroundWallpaper();
+    _wallpaper = level;
+
+    std::string music = gameLevel->getBackgroundMusic();
+    _backgroundMusic = music;
+
+
     _audioFacade = _context->getFacade<AudioFacade>();
     _visualFacade = _context->getFacade<VisualFacade>();
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
 
     // Build level
-    spawnPlayers();
     addBackground();
+    spawnPlayers();
+
 
     _animationManager = new AnimationManager{};
     CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };
@@ -85,7 +91,7 @@ void GameScreen::addBackground() {
     int background = _entityManager->createEntity();
     auto *comp = new DrawableComponent();
     //TODO: use sprite
-    comp->shape = new ShapeRectangle{1600,900,0,0, Colour{173,216,230,0}};
+    comp->shape = new ShapeSprite{1600,900,0,0, _wallpaper};
     _entityManager->addComponentToEntity(background, comp);
 }
 
@@ -121,7 +127,7 @@ GameScreen::~GameScreen() {
 };
 
 void GameScreen::update(double deltaTime) {
-    _audioFacade->playMusic(_backgroundMusic);
+    _audioFacade->playMusic(_backgroundMusic.c_str());
     _inputFacade->pollEvents();
     for(auto const &iterator : _systems){
         iterator->update(deltaTime * _context->getTimeModifier());

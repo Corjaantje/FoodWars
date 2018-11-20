@@ -14,7 +14,7 @@ class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
     std::shared_ptr<EntityManager> _entityManager;
     std::string _wallpaper;
-    const char* _backgroundMusic;
+    std::string _backgroundMusic;
     std::vector<Coordinate> _spawnPoints;
 
     std::shared_ptr<AudioFacade> _audioFacade;

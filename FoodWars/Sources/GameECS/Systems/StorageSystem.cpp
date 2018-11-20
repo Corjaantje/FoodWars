@@ -557,7 +557,9 @@ void StorageSystem::parseMove(const MyNode& moveNode, EntityManager& _entity, in
 }
 
 void StorageSystem::parsePosition(const MyNode& positionNode, EntityManager& _entity, int identifier) {
-        // Bit of a special case I guess? Position is stored under DrawableComponent.
+        std::vector<MyNode> childNodes = positionNode.GetChildren();
+        PositionComponent *comp = new PositionComponent(childNodes[0].GetIntValue(), childNodes[1].GetIntValue());
+        _entity.addComponentToEntity(identifier, comp);
 }
 
 void StorageSystem::parseTurn(const MyNode& turnNode, EntityManager& _entity, int identifier) {

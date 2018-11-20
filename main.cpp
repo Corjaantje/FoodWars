@@ -1,36 +1,20 @@
 #include <memory>
 
-#include <ctime>
-#include <afxres.h>
-#include "TonicEngine/Headers/Visual/Window.h"
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
 #include "TonicEngine/Headers/Input/InputFacade.h"
-#include "TonicEngine/Headers/Input/PrintKeyInputObserver.h"
-#include "TonicEngine/Headers/Input/PrintMouseInputObserver.h"
 #include "TonicEngine/Headers/Audio/AudioFacade.h"
 #include "FoodWars/Headers/GameECS/Entities/EntityManager.h"
 #include "FoodWars/Headers/GameECS/Systems/DrawSystem.h"
-#include "FoodWars/Headers/GameECS/Components/DrawableComponent.h"
 #include "FoodWars/Headers/StateMachine/ScreenStateManager.h"
-#include "TonicEngine/Headers/Communication/CommunicationFacade.h"
 #include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
-#include "FoodWars/Headers/StateMachine/GameScreen.h"
 #include "FoodWars/Headers/StateMachine/HelpScreen.h"
 #include "FoodWars/Headers/StateMachine/CreditScreen.h"
-#include "TonicEngine/Headers/Input/PrintWindowObserver.h"
-#include "TonicEngine/Headers/Input/WindowClosedObserver.h"
 #include "TonicEngine/Facades/GeneralFacade.h"
 
-#include "FoodWars/Headers/GameECS/Components/TurnComponent.h"
-#include "FoodWars/Headers/GameECS/Systems/TurnSystem.h"
-#include "FoodWars/Headers/StateMachine/LevelCreationScreen.h"
-#include "FoodWars/Headers/StateMachine/SettingsScreen.h"
 #include "FoodWars/Headers/StateMachine/UpgradesScreen.h"
 #include "FoodWars/Headers/StateMachine/PauseScreen.h"
 #include "FoodWars/Headers/StateMachine/HighscoreScreen.h"
 #include "FoodWars/Headers/StateMachine/AdvertisingScreen.h"
-#include <ctime>
-#include <chrono>
 
 
 int main(int argc, char** argv)
@@ -90,18 +74,14 @@ int main(int argc, char** argv)
     double timeModifier = 1.0;
     // Modifier for changing the gameplay speed
 
-    double totalTime = 0;
     std::chrono::duration<double> timeLast = std::chrono::steady_clock::now().time_since_epoch();
 
     while(!screenStateManager->getCurrentState()->isWindowClosed()) {
-        std::chrono::duration<double> deltaTime = (std::chrono::steady_clock::now().time_since_epoch() - timeLast) * timeModifier;
-
-        if(deltaTime.count() > amountOfUpdatesAllowedPerSecond) {
-            totalTime += deltaTime.count();
-            screenStateManager->getCurrentState()->update(deltaTime.count());
-            timeLast = std::chrono::steady_clock::now().time_since_epoch();
-        }
-        generalFacade->sleep(amountOfUpdatesAllowedPerSecond * 1000.0 - deltaTime.count());
+        std::chrono::duration<double> currentTime = std::chrono::steady_clock::now().time_since_epoch();
+        double deltaTime = (currentTime.count() - timeLast.count()) * timeModifier;
+        timeLast = currentTime;
+        screenStateManager->getCurrentState()->update(deltaTime);
+        generalFacade->sleep(amountOfUpdatesAllowedPerSecond * 1000 - deltaTime);
     }
     delete generalFacade;
     return 0;

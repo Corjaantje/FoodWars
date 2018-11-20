@@ -39,6 +39,7 @@ MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared
 void MoveSystem::update(double dt) {
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         std::shared_ptr<MoveComponent> moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
+
         if (iterator.second->isMyTurn()) {
             if (_pressedKey == KEY::KEY_A) {
                 moveComponent->xVelocity = -100;

@@ -1,6 +1,7 @@
 #include "../../../Headers/StateMachine/Misc/LevelBuilder.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
+#include "../../../Headers/GameECS/Components/PositionComponent.h"
 
 LevelBuilder::LevelBuilder() {
     _entityManager = new EntityManager();
@@ -30,15 +31,15 @@ void LevelBuilder::resetEntityManager() {
 //}
 
 void LevelBuilder::incrementColorRed() {
-    _colorRed = (_colorRed + COLOR_INCREMENT % 255);
+    _colorRed = ((_colorRed + COLOR_INCREMENT) % 255);
 }
 
 void LevelBuilder::incrementColorGreen() {
-    _colorGreen = (_colorGreen + COLOR_INCREMENT % 255);
+    _colorGreen = ((_colorGreen + COLOR_INCREMENT) % 255);
 }
 
 void LevelBuilder::incrementColorBlue() {
-    _colorBlue = (_colorBlue + COLOR_INCREMENT % 255);
+    _colorBlue = ((_colorBlue + COLOR_INCREMENT) % 255);
 }
 
 void LevelBuilder::decrementColorRed() {
@@ -100,6 +101,8 @@ void LevelBuilder::placeBlock(int x, int y) {
         auto* drawComp = new DrawableComponent();
         drawComp->shape = new ShapeRectangle(_shapeDimension, _shapeDimension, convertedX, convertedY, Colour(_colorRed, _colorGreen, _colorBlue, 255));
         _entityManager->addComponentToEntity(entity, drawComp);
+
+        _entityManager->addComponentToEntity(entity, new PositionComponent(convertedX, convertedY));
         _CoordinateEntityMap[gridCoord] = entity;
     }
 }

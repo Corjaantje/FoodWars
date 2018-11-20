@@ -70,7 +70,7 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new UpgradesScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new CreditScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager, levelManager->startLevel(1)));
+    screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager, new GameLevel()));
     screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager, levelManager));
     screenStateManager->addOrSetScreenState(new LevelCreationScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new HelpScreen(screenStateManager));

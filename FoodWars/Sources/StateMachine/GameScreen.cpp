@@ -27,8 +27,8 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameL
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
 
     // Build level
-    //spawnPlayers();
-    //addBackground();
+    spawnPlayers();
+    addBackground();
 
     _animationManager = new AnimationManager{};
     CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };

@@ -98,7 +98,7 @@ void LevelBuilder::placeBlock(int x, int y) {
         }
         if(_buildDamageable) {
             //TODO Nog geen damageable component
-            //_entityManager->addComponentToEntity(entity, new DamageableComponent());
+            _entityManager->addComponentToEntity(entity, new DamageableComponent());
         }
         auto* drawComp = new DrawableComponent();
         drawComp->shape = new ShapeRectangle(_shapeDimension, _shapeDimension, convertedX, convertedY, Colour(_colorRed, _colorGreen, _colorBlue, 255));

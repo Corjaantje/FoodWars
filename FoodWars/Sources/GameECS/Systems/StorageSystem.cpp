@@ -53,6 +53,7 @@ void StorageSystem::addDrawables(MyDocument& myDoc, std::map<int, std::shared_pt
         MyNode* IDNode = new MyNode { "id", nullptr };
         if (nodeLocations.count(drawComp.first))
         {
+            delete IDNode;
             IDNode = existingIDNodes[nodeLocations[drawComp.first]];
         } else {
             IDNode->SetParent(rootNode);
@@ -96,6 +97,7 @@ void StorageSystem::addGravity(MyDocument& myDoc, std::map<int, std::shared_ptr<
         MyNode* IDNode = new MyNode { "id", nullptr };
         if (nodeLocations.count(gravComp.first))
         {
+            delete IDNode;
             IDNode = existingIDNodes[nodeLocations[gravComp.first]];
         } else {
             IDNode->SetParent(rootNode);
@@ -129,6 +131,7 @@ void StorageSystem::addMove(MyDocument& myDoc, std::map<int, std::shared_ptr<Mov
         MyNode* IDNode = new MyNode { "id", nullptr };
         if (nodeLocations.count(moveComp.first))
         {
+            delete IDNode;
             IDNode = existingIDNodes[nodeLocations[moveComp.first]];
         } else {
             IDNode->SetParent(rootNode);
@@ -166,6 +169,7 @@ void StorageSystem::addPosition(MyDocument& myDoc, std::map<int, std::shared_ptr
         {
         if (nodeLocations.count(posComp.first))
         {
+            delete IDNode;
             IDNode = existingIDNodes[nodeLocations[posComp.first]];
         } else {
             IDNode->SetParent(rootNode);
@@ -202,6 +206,7 @@ void StorageSystem::addTurns(MyDocument& myDoc, std::map<int, std::shared_ptr<Tu
         MyNode* IDNode = new MyNode { "id", nullptr };
         if (nodeLocations.count(turnComp.first))
         {
+            delete IDNode;
             IDNode = existingIDNodes[nodeLocations[turnComp.first]];
         } else {
             IDNode->SetParent(rootNode);
@@ -241,6 +246,7 @@ void StorageSystem::addCollideables(MyDocument &myDoc, std::map<int, std::shared
         MyNode* IDNode = new MyNode { "id", nullptr };
         if (nodeLocations.count(collideComp.first))
         {
+            delete IDNode;
             IDNode = existingIDNodes[nodeLocations[collideComp.first]];
         } else {
             IDNode->SetParent(rootNode);

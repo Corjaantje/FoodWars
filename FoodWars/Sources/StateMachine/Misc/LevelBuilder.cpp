@@ -30,15 +30,15 @@ void LevelBuilder::resetEntityManager() {
 //}
 
 void LevelBuilder::incrementColorRed() {
-    _colorRed = (_colorRed + COLOR_INCREMENT % 255);
+    _colorRed = ((_colorRed + COLOR_INCREMENT) % 255);
 }
 
 void LevelBuilder::incrementColorGreen() {
-    _colorGreen = (_colorGreen + COLOR_INCREMENT % 255);
+    _colorGreen = ((_colorGreen + COLOR_INCREMENT) % 255);
 }
 
 void LevelBuilder::incrementColorBlue() {
-    _colorBlue = (_colorBlue + COLOR_INCREMENT % 255);
+    _colorBlue = ((_colorBlue + COLOR_INCREMENT) % 255);
 }
 
 void LevelBuilder::decrementColorRed() {

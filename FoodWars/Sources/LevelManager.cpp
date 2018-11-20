@@ -91,7 +91,7 @@ GameLevel* LevelManager::startLevel(int level) {
     // Load level
     StorageSystem* storage = new StorageSystem();
     _entityManager = EntityManager();
-    _gameLevel = storage->loadWorld(_entityManager, "Assets/Levels/Level0.xml");
+    _gameLevel = storage->loadWorld(_entityManager, "Levels/Level3.xml");
 
     if(_gameLevel){
         if(_gameLevel->getSpawnPoints().empty()){
@@ -109,7 +109,7 @@ GameLevel* LevelManager::startLevel(int level) {
     _entityManager.addComponentToEntity(boundRight, new PositionComponent(1600, 0));
 
     int boundBottom = _entityManager.createEntity();
-    _entityManager.addComponentToEntity(boundBottom, new BoxCollider(900, 900));
+    _entityManager.addComponentToEntity(boundBottom, new BoxCollider(1600, 1600));
     _entityManager.addComponentToEntity(boundBottom, new PositionComponent(0, 900));
 
     // Return gameLevel

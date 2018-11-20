@@ -452,6 +452,9 @@ void StorageSystem::parseSavedInstance(MyNode &rootNode, EntityManager& _entity)
             else if (componentNode.GetName() == "turncomponent"){
                 parseTurn(componentNode, _entity, identifier[savedID]);
             }
+            else if (componentNode.GetName() == "collidecomponent"){
+                parseCollideables(componentNode, _entity, identifier[savedID]);
+            }
             childrenProcessed++;
         }
         }

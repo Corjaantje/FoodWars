@@ -47,7 +47,7 @@ std::vector<std::string> AdvertisingManager::getAdvertisements() const {
 
 //reads currentAd from file
 std::string AdvertisingManager::getCurrentAd() const {
-    if (_advertisements.empty()) return "";
+    if (_advertisements.empty()) return "no-ad.png";
 
     std::ifstream f("./Assets/Sprites/Advertisements/current.txt");
     std::string firstLine;
@@ -60,7 +60,7 @@ std::string AdvertisingManager::getCurrentAd() const {
 
     //if current.txt is empty or the advertisement mentioned does not exist -> take the first ad (last one in the vector)
     if (firstLine.empty() || std::find(_advertisements.begin(), _advertisements.end(), firstLine) == _advertisements.end()) {
-        return _advertisements.back();
+        return "no-ad.png";
     }
     return firstLine;
 }

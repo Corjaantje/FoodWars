@@ -44,7 +44,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context, cons
     _sprites.push_back(creditsButton);
 
     // Advertisement
-    advertisement = new SpriteButton {*_inputFacade->getMouseEventObservable(), advertisingManager.getCurrentAd(), [c = _context]() {  c->setActiveScreen<AdvertisingScreen>(); }, 150, 150, 500, 750, Colour{255,255,255,0}};
+    advertisement = new SpriteButton {*_inputFacade->getMouseEventObservable(), advertisingManager.getCurrentAd(), [c = _context]() {  c->setActiveScreen<AdvertisingScreen>(); }, 400, 150, 300, 750, Colour{255,255,255,0}};
     advertisement->addToRender(&_renderList);
     _sprites.push_back(advertisement);
 

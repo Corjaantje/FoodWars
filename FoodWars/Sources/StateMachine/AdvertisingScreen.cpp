@@ -19,8 +19,8 @@ AdvertisingScreen::AdvertisingScreen(std::shared_ptr<ScreenStateManager> context
     }
 
     //get index from currentAd
-    currentIndex = 2;
-    shownAD = new ShapeSprite(300, 300, (1600/2)-150, (900/2)-150, _advertisingManager->getCurrentAd());
+    currentIndex = 0;
+    shownAD = new ShapeSprite(400, 150, (1600/2)-200, (900/2)-75, _advertisingManager->getCurrentAd());
 
     _renderList._shapes[1].push_back(shownAD);
 

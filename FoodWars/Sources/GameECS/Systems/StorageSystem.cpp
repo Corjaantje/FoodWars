@@ -452,6 +452,9 @@ void StorageSystem::parseSavedInstance(MyNode &rootNode, EntityManager& _entity)
             else if (componentNode.GetName() == "turncomponent"){
                 parseTurn(componentNode, _entity, identifier[savedID]);
             }
+            else if (componentNode.GetName() == "collidecomponent"){
+                parseCollideables(componentNode, _entity, identifier[savedID]);
+            }
             childrenProcessed++;
         }
         }
@@ -569,30 +572,26 @@ int StorageSystem::countFilesInDirectory(std::string targetdir) {
     struct dirent *entry;
     struct stat info;
 
-    int filesFound = 0;
+    int highestFileFound = 0;
     dir = opendir(targetdir.c_str());
     if(!dir){
         closedir(dir);
-        return filesFound;
+        return highestFileFound;
     }
 
     while((entry = readdir(dir)) != nullptr){
         if(entry->d_name[0] != '.'){
             std::string path = std::string(targetdir) + "/" + std::string(entry->d_name);
             stat(path.c_str(),&info);
-//            if(S_ISDIR(info.st_mode)){
-//                this->FindAssets(path);
-//            }
-//            else{
-                if(path.find(".xml") != std::string::npos){
-                    filesFound++;
-                }
-//            }
 
+                if(path.find(".xml") != std::string::npos){
+                    int fileNum = std::stoi(std::string(entry->d_name).substr(5, std::string(entry->d_name).length()-9));
+                    highestFileFound = fileNum >= highestFileFound ? fileNum+1 : highestFileFound;
+                }
         }
     };
     closedir(dir);
-    return filesFound;
+    return highestFileFound;
 }
 // Public functions
 

@@ -281,6 +281,41 @@ void StorageSystem::addCollideables(MyDocument &myDoc, std::map<int, std::shared
     }
 }
 
+void StorageSystem::addDamageable(MyDocument &myDoc, std::map<int, std::shared_ptr<DamageableComponent>> toSave,
+                                    vector<MyNode *> &existingIDNodes, std::map<int, int> &nodeLocations) {
+    MyNode rootNode { myDoc.GetRoot() };
+    for (auto const& collideComp : toSave) {
+        MyNode* IDNode = new MyNode { "id", nullptr };
+        if (nodeLocations.count(collideComp.first))
+        {
+            delete IDNode;
+            IDNode = existingIDNodes[nodeLocations[collideComp.first]];
+        } else {
+            IDNode->SetParent(rootNode);
+            IDNode->SetValue(std::to_string(collideComp.first));
+        }
+
+        std::vector<std::string> filling = collideComp.second->serialize();
+
+        MyNode groupingNode { filling[0], IDNode };
+
+        MyNode healthNode { filling[1], &groupingNode};
+        healthNode.SetValue(filling[2]);
+
+        groupingNode.AddChild(healthNode);
+        IDNode->AddChild(groupingNode);
+
+
+        rootNode.AddChild(*IDNode);
+
+
+        if (!nodeLocations.count(collideComp.first)) {
+            existingIDNodes.push_back(IDNode);
+            nodeLocations.insert(std::make_pair(collideComp.first, existingIDNodes.size() - 1));
+        }
+    }
+}
+
 void StorageSystem::prepareRect(MyNode& parentNode, std::vector<std::string> filling) {
     // To keep track of type
     MyNode identifierNode{filling[0], &parentNode};
@@ -461,6 +496,9 @@ void StorageSystem::parseSavedInstance(MyNode &rootNode, EntityManager& _entity)
             else if (componentNode.GetName() == "collidecomponent"){
                 parseCollideables(componentNode, _entity, identifier[savedID]);
             }
+            else if (componentNode.GetName() == "damageablecomponent"){
+                parseDamageable(componentNode, _entity, identifier[savedID]);
+            }
             childrenProcessed++;
         }
         }
@@ -575,6 +613,12 @@ void StorageSystem::parseCollideables(const MyNode& collideNode, EntityManager &
     _entity.addComponentToEntity(identifier, comp);
 }
 
+void StorageSystem::parseDamageable(const MyNode &damageNode, EntityManager &_entity, int identifier) {
+    std::vector<MyNode> childNodes = damageNode.GetChildren();
+    DamageableComponent *comp = new DamageableComponent(childNodes[0].GetIntValue());
+    _entity.addComponentToEntity(identifier, comp);
+}
+
 int StorageSystem::countFilesInDirectory(std::string targetdir) {
     DIR *dir;
     struct dirent *entry;
@@ -625,6 +669,7 @@ void StorageSystem::saveWorld(std::string bgm, std::string bgimg, std::vector<Co
     addPosition(myDoc, _entityManager->getAllEntitiesWithComponent<PositionComponent>(), nodeIDs, nodeLocations);
     addTurns(myDoc, _entityManager->getAllEntitiesWithComponent<TurnComponent>(), nodeIDs, nodeLocations);
     addCollideables(myDoc, _entityManager->getAllEntitiesWithComponent<BoxCollider>(), nodeIDs, nodeLocations);
+    addDamageable(myDoc, _entityManager->getAllEntitiesWithComponent<DamageableComponent>(), nodeIDs, nodeLocations);
     if (nodeIDs.size() <= 5)
         return;
     for (auto const& point : nodeIDs)

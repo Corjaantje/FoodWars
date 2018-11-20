@@ -12,6 +12,7 @@
 #include "../Components/Collider/BoxCollider.h"
 #include "../../StateMachine/Misc/Coordinate.h"
 #include "../../StateMachine/Misc/GameLevel.h"
+#include "../Components/DamageableComponent.h"
 
 #include <algorithm>
 
@@ -31,6 +32,7 @@ private:
     void addPosition(MyDocument& myDoc, std::map<int, std::shared_ptr<PositionComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
     void addTurns(MyDocument& myDoc, std::map<int, std::shared_ptr<TurnComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
     void addCollideables(MyDocument& myDoc, std::map<int, std::shared_ptr<BoxCollider>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
+    void addDamageable(MyDocument& myDoc, std::map<int, std::shared_ptr<DamageableComponent>> toSave, vector<MyNode*> &existingIDNodes, std::map<int, int> &nodeLocations);
     void prepareRect(MyNode& parentNode, std::vector<std::string> filling);
     void prepareSprite(MyNode& parentNode, std::vector<std::string> filling);
     void prepareText(MyNode& parentNode, std::vector<std::string> filling);
@@ -43,6 +45,7 @@ private:
     void parsePosition(const MyNode& positionNode, EntityManager& _entity, int identifier);
     void parseTurn(const MyNode& turnNode, EntityManager& _entity, int identifier);
     void parseCollideables(const MyNode& collideNode, EntityManager& _entity, int identifier);
+    void parseDamageable(const MyNode& damageNode, EntityManager& _entity, int identifier);
 
     int countFilesInDirectory(std::string dir);
 public:

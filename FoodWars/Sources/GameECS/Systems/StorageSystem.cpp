@@ -287,42 +287,42 @@ void StorageSystem::prepareRect(MyNode& parentNode, std::vector<std::string> fil
 
     MyNode positionNode{filling[1], &parentNode};
 
-    MyNode xPos{"xpos", &positionNode};
-    xPos.SetValue(filling[2]);
-    MyNode yPos{"ypos", &positionNode};
-    yPos.SetValue(filling[3]);
+    MyNode xPos{filling[2], &positionNode};
+    xPos.SetValue(filling[3]);
+    MyNode yPos{filling[4], &positionNode};
+    yPos.SetValue(filling[5]);
 
     positionNode.AddChild(yPos);
     positionNode.AddChild(xPos);
 
-    MyNode dimensionNode{filling[4], &parentNode};
+    MyNode dimensionNode{filling[6], &parentNode};
 
     MyNode widthNode{"height", &dimensionNode};
-    widthNode.SetValue(filling[5]);
+    widthNode.SetValue(filling[7]);
     MyNode heightNode{"width", &dimensionNode};
-    heightNode.SetValue(filling[6]);
+    heightNode.SetValue(filling[8]);
 
     dimensionNode.AddChild(widthNode);
     dimensionNode.AddChild(heightNode);
 
-    MyNode colorNode {filling[7], &parentNode};
+    MyNode colorNode {filling[9], &parentNode};
 
     MyNode red {"red", &colorNode};
-    red.SetValue(filling[8]);
+    red.SetValue(filling[10]);
     MyNode green {"green", &colorNode};
-    green.SetValue(filling[9]);
+    green.SetValue(filling[11]);
     MyNode blue {"blue", &colorNode};
-    blue.SetValue(filling[10]);
+    blue.SetValue(filling[12]);
     MyNode alpha {"alpha", &colorNode};
-    alpha.SetValue(filling[11]);
+    alpha.SetValue(filling[13]);
 
     colorNode.AddChild(red);
     colorNode.AddChild(green);
     colorNode.AddChild(blue);
     colorNode.AddChild(alpha);
 
-    MyNode layerNode {filling[12], &parentNode};
-    layerNode.SetValue(filling[13]);
+    MyNode layerNode {filling[14], &parentNode};
+    layerNode.SetValue(filling[15]);
 
     parentNode.AddChild(layerNode);
     parentNode.AddChild(positionNode);
@@ -662,7 +662,7 @@ void StorageSystem::saveWorld(std::string bgm, std::string bgimg, std::vector<Co
 //    Get number of files in the Levels directory
     std::string savingName = "Level"+to_string(countFilesInDirectory(const_cast<char *>("./Levels/")));
 
-    _writer->WriteXMLFile(myDoc, "./Levels/"+savingName+".xml");
+    _writer->WriteXMLFile(myDoc, "./Assets/Levels/"+savingName+".xml");
 
     for (auto const& point : nodeIDs)
     {

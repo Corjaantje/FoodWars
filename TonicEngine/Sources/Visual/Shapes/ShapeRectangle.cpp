@@ -21,7 +21,9 @@ std::vector<std::string> ShapeRectangle::serialize() {
     std::vector<std::string> data;
     data.emplace_back("rectangle");
     data.emplace_back("position");
+    data.emplace_back("xpos");
     data.push_back(std::to_string(xPos));
+    data.emplace_back("ypos");
     data.push_back(std::to_string(yPos));
     data.emplace_back("dimensions");
     data.push_back(std::to_string(getHeight()));

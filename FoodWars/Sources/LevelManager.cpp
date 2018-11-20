@@ -14,84 +14,17 @@ LevelManager::LevelManager()
 LevelManager::~LevelManager() = default;
 
 GameLevel* LevelManager::startLevel(int level) {
-    /*switch(level)
-    {
-        case 1: {
-            _entityManager = EntityManager {};
+    // check if spawnpoints.empty > resume game
 
-            int sky = _entityManager.createEntity();
-            auto *comp = new DrawableComponent();
-            comp->shape = new ShapeRectangle{1600,900,0,0, Colour{173,216,230,0}};
-            _entityManager.addComponentToEntity(sky, comp);
+    // else set players
+        // get spawn points
+            // choose two spawn points at random
 
-            generateTerrain();
-
-            int player = _entityManager.createEntity();
-
-            // Spawn Location and animation interval
-            std::vector<IShape*> spawnAnimation;
-            spawnAnimation.push_back(new ShapeSprite{48, 72, 32, 300, "PlayerW_R0.png"});
-            AnimationComponent* animationComponent = new AnimationComponent{spawnAnimation, 0.1};
-
-            std::vector<IShape*> spawnAnimation2;
-            spawnAnimation2.push_back(new ShapeSprite{48, 72, 1500, 300, "PlayerW_L0.png"});
-            AnimationComponent* animationComponent2 = new AnimationComponent{spawnAnimation2, 0.1};
-
-            // TurnComponent
-            auto turnComponent = new TurnComponent;
-            turnComponent->switchTurn(true);
-            turnComponent->setRemainingTime(30);
-
-            // Player 1
-            _entityManager.addComponentToEntity(player, new DrawableComponent);
-            _entityManager.addComponentToEntity(player, new BoxCollider(48, 72));
-            _entityManager.addComponentToEntity(player, new PositionComponent(32,0));
-            _entityManager.addComponentToEntity(player, turnComponent);
-            _entityManager.addComponentToEntity(player, new MoveComponent);
-            _entityManager.addComponentToEntity(player, new GravityComponent());
-            _entityManager.addComponentToEntity(player, animationComponent);
-            _entityManager.addComponentToEntity(player, new DamageableComponent());
-
-            // Player 2
-            player = _entityManager.createEntity();
-            _entityManager.addComponentToEntity(player, new DrawableComponent);
-            _entityManager.addComponentToEntity(player, new BoxCollider(48, 72));
-            _entityManager.addComponentToEntity(player, new PositionComponent(576,0));
-            _entityManager.addComponentToEntity(player, new TurnComponent);
-            _entityManager.addComponentToEntity(player, new MoveComponent);
-            _entityManager.addComponentToEntity(player, new GravityComponent());
-            _entityManager.addComponentToEntity(player, animationComponent2);
-            _entityManager.addComponentToEntity(player, new DamageableComponent());
-
-            int boundOne = _entityManager.createEntity();
-            _entityManager.addComponentToEntity(boundOne, new BoxCollider(1600, 1600));
-            _entityManager.addComponentToEntity(boundOne, new PositionComponent(-1600, 0));
-
-            int boundTwo = _entityManager.createEntity();
-            _entityManager.addComponentToEntity(boundTwo, new BoxCollider(1600, 1600));
-            _entityManager.addComponentToEntity(boundTwo, new PositionComponent(1600, 0));
-
-            int boundFour = _entityManager.createEntity();
-            _entityManager.addComponentToEntity(boundFour, new BoxCollider(900, 900));
-            _entityManager.addComponentToEntity(boundFour, new PositionComponent(0, 900));
-
-            break;
-        }
-        case 1: {
-            StorageSystem* storage = new StorageSystem();
-            _entityManager = EntityManager();
-            GameLevel* GLHF = storage->loadWorld(_entityManager, "Levels/Level22.xml");
-            break;
-        }
-        default:
-            std::cout << "Level does not exist" << std::endl;
-            break;
-    }*/
 
     // Load level
     StorageSystem* storage = new StorageSystem();
     _entityManager = EntityManager();
-    _gameLevel = storage->loadWorld(_entityManager, "Assets/Levels/Level0.xml");
+    _gameLevel = storage->loadWorld(_entityManager, "Assets/Levels/Level1.xml");
 
     if(_gameLevel){
         if(_gameLevel->getSpawnPoints().empty()){
@@ -100,17 +33,6 @@ GameLevel* LevelManager::startLevel(int level) {
     }else
         return nullptr;
 
-    int boundLeft = _entityManager.createEntity();
-    _entityManager.addComponentToEntity(boundLeft, new BoxCollider(1600, 1600));
-    _entityManager.addComponentToEntity(boundLeft, new PositionComponent(-1600, 0));
-
-    int boundRight = _entityManager.createEntity();
-    _entityManager.addComponentToEntity(boundRight, new BoxCollider(1600, 1600));
-    _entityManager.addComponentToEntity(boundRight, new PositionComponent(1600, 0));
-
-    int boundBottom = _entityManager.createEntity();
-    _entityManager.addComponentToEntity(boundBottom, new BoxCollider(1600, 1600));
-    _entityManager.addComponentToEntity(boundBottom, new PositionComponent(0, 900));
 
     // Return gameLevel
     return _gameLevel;
@@ -145,4 +67,3 @@ void LevelManager::generateTerrainDrawables(int x, int y) {
     _entityManager.addComponentToEntity(terrain, new PositionComponent(x, y));
     comp->shape = new ShapeRectangle{32, 32, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}};
 }
-

@@ -1,6 +1,7 @@
 #include "../../../Headers/StateMachine/Misc/LevelBuilder.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
+#include "../../../Headers/GameECS/Components/PositionComponent.h"
 
 LevelBuilder::LevelBuilder() {
     _entityManager = new EntityManager();
@@ -103,6 +104,8 @@ void LevelBuilder::placeBlock(int x, int y) {
         auto* drawComp = new DrawableComponent();
         drawComp->shape = new ShapeRectangle(_shapeDimension, _shapeDimension, convertedX, convertedY, Colour(_colorRed, _colorGreen, _colorBlue, 255));
         _entityManager->addComponentToEntity(entity, drawComp);
+
+        _entityManager->addComponentToEntity(entity, new PositionComponent(convertedX, convertedY));
         _CoordinateEntityMap[gridCoord] = entity;
     }
 }

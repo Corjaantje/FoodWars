@@ -185,8 +185,8 @@ void StorageSystem::addPosition(MyDocument& myDoc, std::map<int, std::shared_ptr
         MyNode yNode { "ypos", &groupingNode};
         yNode.SetValue(filling[1]);
 
-        groupingNode.AddChild(xNode);
         groupingNode.AddChild(yNode);
+        groupingNode.AddChild(xNode);
         IDNode->AddChild(groupingNode);
 
 
@@ -660,7 +660,7 @@ void StorageSystem::saveWorld(std::string bgm, std::string bgimg, std::vector<Co
     myDoc.AddToRoot(wallpaperNode);
     myDoc.AddToRoot(bgmNode);
 //    Get number of files in the Levels directory
-    std::string savingName = "Level"+to_string(countFilesInDirectory(const_cast<char *>("./Levels/")));
+    std::string savingName = "Level"+to_string(countFilesInDirectory(const_cast<char *>("./Assets/Levels/")));
 
     _writer->WriteXMLFile(myDoc, "./Assets/Levels/"+savingName+".xml");
 

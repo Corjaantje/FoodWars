@@ -91,7 +91,7 @@ GameLevel* LevelManager::startLevel(int level) {
     // Load level
     StorageSystem* storage = new StorageSystem();
     _entityManager = EntityManager();
-    _gameLevel = storage->loadWorld(_entityManager, "Levels/Level3.xml");
+    _gameLevel = storage->loadWorld(_entityManager, "Assets/Levels/Level1.xml");
 
     if(_gameLevel){
         if(_gameLevel->getSpawnPoints().empty()){

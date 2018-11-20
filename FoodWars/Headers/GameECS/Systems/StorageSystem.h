@@ -54,7 +54,7 @@ public:
     void saveWorld(std::string bgm, std::string bgimg, std::vector<Coordinate> spawnpoints);//std::string savePath);
 
     // Pass a string for identifying the world?
-    GameLevel loadWorld(EntityManager& toFill, std::string filePath);
+    GameLevel* loadWorld(EntityManager& toFill, std::string filePath);
 };
 
 

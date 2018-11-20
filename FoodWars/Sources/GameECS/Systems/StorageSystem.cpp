@@ -663,7 +663,7 @@ void StorageSystem::saveWorld(std::string bgm, std::string bgimg, std::vector<Co
     }
 }
 
-GameLevel StorageSystem::loadWorld(EntityManager& toFill, std::string filePath) {
+GameLevel* StorageSystem::loadWorld(EntityManager& toFill, std::string filePath) {
     delete _reader;
     _reader = new XMLReader();
     std::unique_ptr<MyDocument> myDoc = _reader->LoadFile("./"+filePath);
@@ -671,10 +671,10 @@ GameLevel StorageSystem::loadWorld(EntityManager& toFill, std::string filePath) 
     bool bSuccess = false;
     parseSavedInstance(rootNode, toFill);
 
-    GameLevel GLHF{};// = new GameLevel{};
-    GLHF.setEntityManager(toFill);
-    GLHF.setBackgroundMusic(rootNode.GetChildren()[0].GetValue());
-    GLHF.setBackgroundWallpaper(rootNode.GetChildren()[1].GetValue());
+    GameLevel* GLHF = new GameLevel{};
+    GLHF->setEntityManager(toFill);
+    GLHF->setBackgroundMusic(rootNode.GetChildren()[0].GetValue());
+    GLHF->setBackgroundWallpaper(rootNode.GetChildren()[1].GetValue());
 
     std::vector<Coordinate> spawnPoints;
     for (auto const& spawn : rootNode.GetChildren()[2].GetChildren())
@@ -683,7 +683,7 @@ GameLevel StorageSystem::loadWorld(EntityManager& toFill, std::string filePath) 
         spawner.setCoordinates(spawn.GetChildren()[0].GetIntValue(), spawn.GetChildren()[1].GetIntValue());
         spawnPoints.emplace_back(spawner);
     }
-    GLHF.setSpawnPoints(spawnPoints);
+    GLHF->setSpawnPoints(spawnPoints);
 
     return GLHF;
 }

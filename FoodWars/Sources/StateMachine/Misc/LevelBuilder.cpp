@@ -1,7 +1,6 @@
 #include "../../../Headers/StateMachine/Misc/LevelBuilder.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
-#include "../../../Headers/GameECS/Components/PositionComponent.h"
 
 LevelBuilder::LevelBuilder() {
     _entityManager = new EntityManager();

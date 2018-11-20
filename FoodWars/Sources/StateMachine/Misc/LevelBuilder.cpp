@@ -1,6 +1,7 @@
 #include "../../../Headers/StateMachine/Misc/LevelBuilder.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
+#include "../../../Headers/GameECS/Components/DamageableComponent.h"
 
 LevelBuilder::LevelBuilder() {
     _entityManager = new EntityManager();
@@ -98,7 +99,7 @@ void LevelBuilder::placeBlock(int x, int y) {
         }
         if(_buildDamageable) {
             //TODO Nog geen damageable component
-            _entityManager->addComponentToEntity(entity, new DamageableComponent());
+            _entityManager->addComponentToEntity(entity, new DamageableComponent(1));
         }
         auto* drawComp = new DrawableComponent();
         drawComp->shape = new ShapeRectangle(_shapeDimension, _shapeDimension, convertedX, convertedY, Colour(_colorRed, _colorGreen, _colorBlue, 255));

@@ -25,6 +25,11 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameL
     _audioFacade = _context->getFacade<AudioFacade>();
     _visualFacade = _context->getFacade<VisualFacade>();
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
+
+    // Build level
+    //spawnPlayers();
+    //addBackground();
+
     _animationManager = new AnimationManager{};
     CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };
     _systems.push_back(new JumpSystem { _entityManager, _inputFacade, _audioFacade, *collisionSystem} );
@@ -32,20 +37,58 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameL
     _systems.push_back(collisionSystem);
     _systems.push_back(new GravitySystem { _entityManager, *collisionSystem });
     _systems.push_back(new AnimationSystem(_entityManager, _animationManager));
-    _systems.push_back(new DrawSystem {_entityManager, visualFacade});
+    _systems.push_back(new DrawSystem {_entityManager, _visualFacade});
     _systems.push_back(new TurnSystem {_entityManager});
-
-    // Build level
-    buildLevel();
 }
 
-// Builds the level from the gameLevel
-void GameScreen::buildLevel() {
+void GameScreen::spawnPlayers() {
+    /*std::vector<IShape*> spawnAnimation2;
+    spawnAnimation2.push_back(new ShapeSprite{48, 72, 1500, 300, "PlayerW_L0.png"});
+    AnimationComponent* animationComponent2 = new AnimationComponent{spawnAnimation2, 0.1};*/
 
-    // Player spawns
+    for(const auto &iterator : _spawnPoints) {
+        // Spawn Location and animation interval
+        std::vector<IShape*> spawnAnimation;
+        //TODO: replace png depending on teamcomponent
+        spawnAnimation.push_back(new ShapeSprite{48, 72, iterator.getXCoord(), iterator.getYCoord(), "PlayerW_R0.png"});
+        AnimationComponent* animationComponent = new AnimationComponent{spawnAnimation, 0.1};
 
-    // Music
+        // TurnComponent
+        auto turnComponent = new TurnComponent;
+        turnComponent->switchTurn(true);
+        turnComponent->setRemainingTime(30);
+
+        // Player
+        int player = _entityManager->createEntity();
+        _entityManager->addComponentToEntity(player, new DrawableComponent);
+        _entityManager->addComponentToEntity(player, new BoxCollider(48, 72));
+        _entityManager->addComponentToEntity(player, new PositionComponent(32,0));
+        _entityManager->addComponentToEntity(player, turnComponent);
+        _entityManager->addComponentToEntity(player, new MoveComponent);
+        _entityManager->addComponentToEntity(player, new GravityComponent());
+        _entityManager->addComponentToEntity(player, animationComponent);
+    }
+
+
+   /* // Player 2
+    player = _entityManager->createEntity();
+    _entityManager->addComponentToEntity(player, new DrawableComponent);
+    _entityManager->addComponentToEntity(player, new BoxCollider(48, 72));
+    _entityManager->addComponentToEntity(player, new PositionComponent(576,0));
+    _entityManager->addComponentToEntity(player, new TurnComponent);
+    _entityManager->addComponentToEntity(player, new MoveComponent);
+    _entityManager->addComponentToEntity(player, new GravityComponent());
+    _entityManager->addComponentToEntity(player, animationComponent2);*/
 }
+
+void GameScreen::addBackground() {
+    int background = _entityManager->createEntity();
+    auto *comp = new DrawableComponent();
+    //TODO: use sprite
+    comp->shape = new ShapeRectangle{1600,900,0,0, Colour{173,216,230,0}};
+    _entityManager->addComponentToEntity(background, comp);
+}
+
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
     if (event->getKeyEventType() == KeyEventType::Down) {
@@ -84,3 +127,7 @@ void GameScreen::update(double deltaTime) {
         iterator->update(deltaTime * _context->getTimeModifier());
     }
 }
+
+
+
+

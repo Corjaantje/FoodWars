@@ -28,7 +28,8 @@ public:
     ~GameScreen();
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;
-    void buildLevel();
+    void spawnPlayers();
+    void addBackground();
 };
 
 #endif //PROJECT_SWA_GAMESCREEN_H

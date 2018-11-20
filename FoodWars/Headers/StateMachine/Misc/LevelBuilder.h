@@ -23,8 +23,8 @@ private:
     std::vector<EntityMemento*> _mementoList;
     std::map<std::string, int> _CoordinateEntityMap;
     std::vector<Coordinate> _spawnPoints;
-    bool _buildCollidable = false;
-    bool _buildDamageable = false;
+    bool _buildCollidable = true;
+    bool _buildDamageable = true;
 
     int _shapeDimension = SHAPE_DIMENSION;
 

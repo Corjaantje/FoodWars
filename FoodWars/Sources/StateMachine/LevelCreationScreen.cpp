@@ -82,7 +82,7 @@ void LevelCreationScreen::initButtons() {
     MusicPrevious->addToRender(&_renderList);
     _sprites.push_back(MusicPrevious);
 
-    toggleCollidable = new SpriteButton {*_inputFacade->getMouseEventObservable(), "stateOff.png", [this] {
+    toggleCollidable = new SpriteButton {*_inputFacade->getMouseEventObservable(), "stateOn.png", [this] {
         bool state = _levelBuilder.toggleCollidable();
         if (state) {
             toggleCollidable->changeImageURL(std::string("stateOn.png"));
@@ -92,7 +92,7 @@ void LevelCreationScreen::initButtons() {
     }, 50, 50, 1030, 10, Colour{0, 0, 0, 0}};
     _sprites.push_back(toggleCollidable);
 
-    toggleDamageable = new SpriteButton {*_inputFacade->getMouseEventObservable(), "stateOff.png", [this] {
+    toggleDamageable = new SpriteButton {*_inputFacade->getMouseEventObservable(), "stateOn.png", [this] {
         bool state = _levelBuilder.toggleDamageable();
         if (state) {
             toggleDamageable->changeImageURL(std::string("stateOn.png"));

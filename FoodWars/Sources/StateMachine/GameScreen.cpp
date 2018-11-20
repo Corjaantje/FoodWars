@@ -53,13 +53,54 @@ void GameScreen::spawnPlayers() {
     /*std::vector<IShape*> spawnAnimation2;
     spawnAnimation2.push_back(new ShapeSprite{48, 72, 1500, 300, "PlayerW_L0.png"});
     AnimationComponent* animationComponent2 = new AnimationComponent{spawnAnimation2, 0.1};*/
+    if(!_spawnPoints.empty())
+    {
+        // TurnComponent
+        auto turnComponent = new TurnComponent;
+        turnComponent->switchTurn(true);
+        turnComponent->setRemainingTime(5);
 
-    // TurnComponent
-    auto turnComponent = new TurnComponent;
-    turnComponent->switchTurn(true);
-    turnComponent->setRemainingTime(30);
+        // Spawn Location and animation interval
+        std::vector<IShape*> spawnAnimation;
+        //TODO: replace png depending on teamcomponent
+        spawnAnimation.push_back(new ShapeSprite{48, 72, _spawnPoints[0].getXCoord(), _spawnPoints[0].getYCoord(), "PlayerW_R0.png"});
+        AnimationComponent* animationComponent = new AnimationComponent{spawnAnimation, 0.1};
 
-    for(const auto &iterator : _spawnPoints) {
+        // Player
+        int player = _entityManager->createEntity();
+        _entityManager->addComponentToEntity(player, new DrawableComponent);
+        _entityManager->addComponentToEntity(player, new BoxCollider(48, 72));
+        _entityManager->addComponentToEntity(player, new PositionComponent(_spawnPoints[0].getXCoord(),_spawnPoints[0].getYCoord()));
+        _entityManager->addComponentToEntity(player, turnComponent);
+        _entityManager->addComponentToEntity(player, new MoveComponent);
+        _entityManager->addComponentToEntity(player, new GravityComponent());
+        _entityManager->addComponentToEntity(player, animationComponent);
+        _entityManager->addComponentToEntity(player, new DamageableComponent);
+
+        std::vector<IShape*> spawnAnimation2;
+        spawnAnimation2.push_back(new ShapeSprite{48, 72, _spawnPoints[1].getXCoord(), _spawnPoints[1].getYCoord(), "PlayerG_R0.png"});
+        AnimationComponent* animationComponent2 = new AnimationComponent{spawnAnimation2, 0.1};
+
+        // Player
+        player = _entityManager->createEntity();
+        _entityManager->addComponentToEntity(player, new DrawableComponent);
+        _entityManager->addComponentToEntity(player, new BoxCollider(48, 72));
+        _entityManager->addComponentToEntity(player, new PositionComponent(_spawnPoints[1].getXCoord(), _spawnPoints[1].getYCoord()));
+        _entityManager->addComponentToEntity(player, new TurnComponent);
+        _entityManager->addComponentToEntity(player, new MoveComponent);
+        _entityManager->addComponentToEntity(player, new GravityComponent());
+        _entityManager->addComponentToEntity(player, animationComponent2);
+        _entityManager->addComponentToEntity(player, new DamageableComponent);
+    }
+
+
+    /*for(const auto &iterator : _spawnPoints) {
+
+        // TurnComponent
+        auto turnComponent = new TurnComponent;
+        turnComponent->switchTurn(true);
+        turnComponent->setRemainingTime(5);
+
         // Spawn Location and animation interval
         std::vector<IShape*> spawnAnimation;
         //TODO: replace png depending on teamcomponent
@@ -75,8 +116,7 @@ void GameScreen::spawnPlayers() {
         _entityManager->addComponentToEntity(player, new MoveComponent);
         _entityManager->addComponentToEntity(player, new GravityComponent());
         _entityManager->addComponentToEntity(player, animationComponent);
-        turnComponent = new TurnComponent;
-    }
+    }*/
 
 
    /* // Player 2
@@ -93,8 +133,7 @@ void GameScreen::spawnPlayers() {
 void GameScreen::addBackground() {
     //int background = _entityManager->createEntity();
     //auto *comp = new DrawableComponent();
-    //TODO: use sprite
-    //comp->shape = new ShapeSprite{1600,900,0,0, _wallpaper};
+    _renderList._shapes[1].push_back(createShape<ShapeSprite>(1600,900,0,0, _wallpaper));
     //_entityManager->addComponentToEntity(background, comp);
 }
 

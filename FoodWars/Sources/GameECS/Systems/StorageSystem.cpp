@@ -675,6 +675,16 @@ GameLevel* StorageSystem::loadWorld(EntityManager& toFill, std::string filePath)
     _reader = new XMLReader();
     std::unique_ptr<MyDocument> myDoc = _reader->LoadFile("./"+filePath);
     MyNode rootNode = myDoc->GetRoot();
+
+    // wallpaper
+    rootNode.GetChildren()[1].GetValue();
+
+    int background = toFill.createEntity();
+    auto *comp = new DrawableComponent();
+    //TODO: use sprite
+    comp->shape = new ShapeRectangle{1600,900,0,0, Colour{173,216,230,0}};
+    toFill.addComponentToEntity(background, comp);
+
     parseSavedInstance(rootNode, toFill);
 
     GameLevel* gameLevel = new GameLevel{};

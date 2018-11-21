@@ -7,9 +7,7 @@ WinTransitionScreen::WinTransitionScreen(std::shared_ptr<ScreenStateManager> con
     _renderList._shapes[0].push_back(new ShapeSprite{640, 480, 0, 0, "wallpaper.png"});
 
     // Next Level
-    TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Next Level", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 300};
-    levelSelectionButton->addToRender(&_renderList);
-    _buttons.push_back(levelSelectionButton);
+    _renderList._shapes[1].push_back(createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"Next Level", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 300));
 }
 
 std::string WinTransitionScreen::getScreenName() const {

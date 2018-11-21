@@ -24,12 +24,13 @@ void TurnSystem::update(double deltaTime) {
     for(const auto &iterator: turnComponents) {
         if(iterator.second->isMyTurn()) {
             iterator.second->lowerRemainingTime(deltaTime);
-            if(iterator.second->getRemainingTime() <= 0) {
+            if(iterator.second->getRemainingTime() <= 0 || iterator.second->getEnergy() <= 0) {
                 iterator.second->switchTurn(false);
                 for(const auto& it2: turnComponents) {
                     if(it2.first != iterator.first) {
                         it2.second->switchTurn(true);
                         it2.second->setRemainingTime((float) _timePerTurn);
+                        it2.second->setEnergy(100);
                         break;
                     }
                 }

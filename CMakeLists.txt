@@ -3,6 +3,7 @@ project(Project_SWA)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
+#set(CMAKE_CXX_FLAGS_DEBUG "-Os")
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_ttf REQUIRED)
@@ -75,3 +76,4 @@ add_executable(Project_SWA ${SOURCE_FILES} ${SOURCES1} ${SOURCES2} ${SOURCES3} $
 target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2_mixer -lSDL2_image -lSDL2main -lSDL2 -lSDL2_ttf  -mwindows -static-libgcc -static-libstdc++)
 file(REMOVE_RECURSE ./cmake-build-debug/Assets/)
 file(COPY Assets DESTINATION .)
+file(COPY _INSTALLATION_/BUILDFILES/ DESTINATION .)

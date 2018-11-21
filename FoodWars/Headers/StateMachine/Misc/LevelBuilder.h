@@ -16,14 +16,15 @@ const int SPAWNPOINT_ID = -1;
 class LevelBuilder {
 public:
     LevelBuilder();
-    ~LevelBuilder() = default;
+
+    ~LevelBuilder();
 private:
     EntityManager* _entityManager = nullptr;
     std::vector<EntityMemento*> _mementoList;
     std::map<std::string, int> _CoordinateEntityMap;
     std::vector<Coordinate> _spawnPoints;
-    bool _buildCollidable = false;
-    bool _buildDamageable = false;
+    bool _buildCollidable = true;
+    bool _buildDamageable = true;
 
     int _shapeDimension = SHAPE_DIMENSION;
 
@@ -36,6 +37,14 @@ private:
 
     std::vector<std::string> _musicList;
     int _selectedMusic = 0;
+    std::vector<IShape *> _sprites;
+
+    template<typename T, typename... Args>
+    IShape *createShape(Args &&... args) {
+        T *shape = new T(std::forward<Args>(args)...);
+        _sprites.push_back(shape);
+        return shape;
+    }
 public:
     void resetEntityManager();
 

@@ -10,18 +10,18 @@
 LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager) : IScreen(context) {
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
-    _renderList._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, "ScreenLevelSelection.png"});
+    _renderList._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenLevelSelection.png"));
 
     // MainMenu
     SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}};
     quitButton->addToRender(&_renderList);
-    _buttons.push_back(quitButton);
+    _sprites.push_back(quitButton);
 
     // Highscore
     //TODO ADD HIGHSCORE SCREEN BUTTON
     SpriteButton* highscorebutton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 120, 120, 150, 10, Colour{0,0,0,0}};
     highscorebutton->addToRender(&_renderList);
-    _buttons.push_back(highscorebutton);
+    _sprites.push_back(highscorebutton);
 
     // Level 1
     TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Level 1", [c = _context, levelManager = std::move(levelManager)]() {
@@ -29,26 +29,11 @@ LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> c
         c->setActiveScreen<GameScreen>();
     }, 250, 80, 680, 310, Colour(255, 255, 255, 255), Colour(255, 255, 255, 255)};
     levelSelectionButton->addToRender(&_renderList);
-    _buttons.push_back(levelSelectionButton);
-
-    // Win Transition screen
-    TextButton* winScreen = new TextButton {*_inputFacade->getMouseEventObservable(),"Win", [c = _context]() {  c->setActiveScreen<WinTransitionScreen>(); }, 250, 30, 200, 250};
-    winScreen->addToRender(&_renderList);
-    _buttons.push_back(winScreen);
-
-    // Lose Transition screen
-    TextButton* loseScreen = new TextButton {*_inputFacade->getMouseEventObservable(),"Lose", [c = _context]() {  c->setActiveScreen<LoseTransitionScreen>(); }, 250, 30, 200, 300};
-    loseScreen->addToRender(&_renderList);
-    _buttons.push_back(loseScreen);
-
-    // Draw Transition screen
-    TextButton* drawScreen = new TextButton {*_inputFacade->getMouseEventObservable(),"Draw", [c = _context]() {  c->setActiveScreen<DrawTransitionScreen>(); }, 250, 30, 200, 350};
-    drawScreen->addToRender(&_renderList);
-    _buttons.push_back(drawScreen);
+    _sprites.push_back(levelSelectionButton);
 }
 
 LevelSelectionScreen::~LevelSelectionScreen() {
-    for(IShape* button: _buttons) {
+    for (IShape *button: _sprites) {
         delete button;
     }
 }

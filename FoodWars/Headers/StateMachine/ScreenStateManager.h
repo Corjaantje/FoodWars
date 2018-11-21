@@ -60,7 +60,7 @@ public:
     std::shared_ptr<Facade> getFacade() {
         std::string facadeName = typeid(Facade).name();
         if(_facades.count(facadeName) > 0){
-            return std::dynamic_pointer_cast<Facade>(_facades[facadeName]);
+            return std::static_pointer_cast<Facade>(_facades[facadeName]);
         }
         return nullptr;
     }

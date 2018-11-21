@@ -1,27 +1,28 @@
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 
-DamageableComponent::DamageableComponent(int health) {
-    this->health = health;
-}
+DamageableComponent::DamageableComponent(int health) : _health{health} {}
 
-DamageableComponent::DamageableComponent() {
-    health = 100;
-}
+DamageableComponent::DamageableComponent() : _health{100} {}
 
 const bool DamageableComponent::IsAlive() {
-    return health >= 0;
+    return _health > 0;
 }
 
 const int DamageableComponent::GetHealth() {
-    return health;
+    return _health;
 }
 
 void DamageableComponent::LowerHealth(int value) {
-    health -= value;
+    if ((_health - value) < 0)
+        _health = 0;
+    else _health -= value;
 }
 
 void DamageableComponent::IncreaseHealth(int value) {
-    health += value;
+    _health += value;
 }
 
+void DamageableComponent::Destroy() {
+    _health = 0;
+}
 DamageableComponent::~DamageableComponent() = default;

@@ -7,22 +7,18 @@ LevelTransitionScreen::LevelTransitionScreen(std::shared_ptr<ScreenStateManager>
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
 
-    // MainMenu
-    TextButton* mainMenuButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Main Menu", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 250, 30, 200, 200};
-    mainMenuButton->addToRender(&_renderList);
-    _buttons.push_back(mainMenuButton);
+    _renderList._shapes[1].push_back(createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"Main Menu", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 250, 30, 200, 200));
 
     // Upgrades
-    TextButton* upgradesButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Upgrades", [c = _context, this]() {  c->setActiveScreen<UpgradesScreen>();  ((std::dynamic_pointer_cast<UpgradesScreen>( c->getCurrentState())->setPreviousScreen(getScreenName()))); }, 250, 30, 200, 250};
-    upgradesButton->addToRender(&_renderList);
-    _buttons.push_back(upgradesButton);
+    _renderList._shapes[1].push_back(createShape<TextButton>(*_inputFacade->getMouseEventObservable(),
+            "Upgrades", [c = _context, this]()
+            {
+                c->setActiveScreen<UpgradesScreen>();
+                ((std::static_pointer_cast<UpgradesScreen>( c->getCurrentState())->setPreviousScreen(getScreenName())));
+            }, 250, 30, 200, 250));
 }
 
-LevelTransitionScreen::~LevelTransitionScreen() {
-    for(IShape* button: _buttons) {
-        delete button;
-    }
-}
+LevelTransitionScreen::~LevelTransitionScreen() = default;
 
 void LevelTransitionScreen::update(double deltaTime) {
     visualFacade->render(_renderList);

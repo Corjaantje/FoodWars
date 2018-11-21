@@ -1,5 +1,5 @@
-#ifndef PROJECT_SWA_PLAYERCOMPONENT_H
-#define PROJECT_SWA_PLAYERCOMPONENT_H
+#ifndef PROJECT_SWA_DAMAGEABLECOMPONENT_H
+#define PROJECT_SWA_DAMAGEABLECOMPONENT_H
 
 #include "Component.h"
 
@@ -12,8 +12,9 @@ public:
     const int GetHealth();
     void LowerHealth(int value);
     void IncreaseHealth(int value);
+    void Destroy();
     const bool IsAlive();
 private:
-    int health; // 0 - 100
+    int _health; // 0 - 100
 };
-#endif
+#endif //PROJECT_SWA_DAMAGEABLECOMPONENT_H

@@ -17,7 +17,7 @@ protected:
     Renderlist _renderList;
     std::shared_ptr<ScreenStateManager> _context;
     bool _isClosed;
-    std::vector<IShape *> _buttons;
+    std::vector<IShape *> _sprites;
 public:
 
     explicit IScreen(const std::shared_ptr<ScreenStateManager> &context) : _context(context),
@@ -31,16 +31,27 @@ public:
 
     ~IScreen() {
         _inputFacade->getWindowEventObservable()->unregisterObserver(this);
+        for (IShape *shape: _sprites) {
+            delete shape;
+        }
     }
+
     virtual void update(double deltaTime) = 0;
 
-    void update(std::shared_ptr<WindowEvent> event) {
+    void update(std::shared_ptr<WindowEvent> event) override {
         if (event->GetWindowEventType() == WindowEventType::Quit) {
             _isClosed = true;
         }
         if (event->GetWindowEventType() == WindowEventType::Resize) {
             visualFacade->setResolution(event->getWidth(), event->getHeight());
         }
+    }
+
+    template<typename T, typename... Args>
+    IShape *createShape(Args &&... args) {
+        T *shape = new T(std::forward<Args>(args)...);
+        _sprites.push_back(shape);
+        return shape;
     }
 
     bool isWindowClosed() const {

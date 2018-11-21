@@ -6,9 +6,8 @@ DrawTransitionScreen::DrawTransitionScreen(std::shared_ptr<ScreenStateManager> c
     _renderList._shapes[0].push_back(new ShapeSprite{640, 480, 0, 0, "wallpaper.png"});
 
     // Retry
-    TextButton* retryButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Retry", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 300};
-    retryButton->addToRender(&_renderList);
-    _buttons.push_back(retryButton);
+    _renderList._shapes[1].push_back(createShape<TextButton>(*_inputFacade->getMouseEventObservable(),
+            "Retry", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 250, 30, 200, 300));
 }
 
 std::string DrawTransitionScreen::getScreenName() const {

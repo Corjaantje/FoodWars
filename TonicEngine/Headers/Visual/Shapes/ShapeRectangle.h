@@ -16,6 +16,10 @@ public:
     Colour colour;
     int layer;
     void render(IRenderer &renderer) const override;
+
+    int getWidth() const override  { return width; }
+    int getHeight() const override { return height; }
+    std::vector<std::string> serialize() override;
 };
 
 

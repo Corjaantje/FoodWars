@@ -1,6 +1,7 @@
 #include "../../../Headers/StateMachine/Misc/LevelBuilder.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
+#include "../../../Headers/GameECS/Components/DamageableComponent.h"
 
 LevelBuilder::LevelBuilder() {
     _entityManager = new EntityManager();
@@ -17,6 +18,9 @@ void LevelBuilder::resetEntityManager() {
     _entityManager = new EntityManager();
 }
 
+EntityManager *LevelBuilder::getEntityManager() {
+    return _entityManager;
+}
 //void LevelBuilder::incrementShapeSize() {
 //    if(_shapeDimension < MAXIMAL_SHAPE_DIM){
 //        _shapeDimension++;
@@ -95,7 +99,7 @@ void LevelBuilder::placeBlock(int x, int y) {
         }
         if(_buildDamageable) {
             //TODO Nog geen damageable component
-            //_entityManager->addComponentToEntity(entity, new DamageableComponent());
+            _entityManager->addComponentToEntity(entity, new DamageableComponent(1));
         }
         auto* drawComp = new DrawableComponent();
         drawComp->shape = new ShapeRectangle(_shapeDimension, _shapeDimension, convertedX, convertedY, Colour(_colorRed, _colorGreen, _colorBlue, 255));
@@ -202,6 +206,10 @@ void LevelBuilder::setPreviousWallpaper() {
     }
 }
 
+std::string LevelBuilder::getCurrentWallpaper() {
+    return _wallpaperList[_selectedWallpaper];
+}
+
 void LevelBuilder::setNextMusic() {
     if(_musicList.size() > 1){
         int newIndex = (_selectedMusic + 1) % _musicList.size();
@@ -267,6 +275,10 @@ void LevelBuilder::removeSpawnPoint(int x, int y) {
             _CoordinateEntityMap.erase(gridCoord);
         }
     }
+}
+
+std::vector<Coordinate> LevelBuilder::getSpawnPoints() const {
+    return _spawnPoints;
 }
 
 GameLevel LevelBuilder::buildConstructedLevel() {

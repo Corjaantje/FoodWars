@@ -3,15 +3,16 @@
 #include "../../Headers/StateMachine/HelpScreen.h"
 #include "../../Headers/StateMachine/CreditScreen.h"
 #include "../../Headers/StateMachine/HighscoreScreen.h"
+#include "../../Headers/StateMachine/AdvertisingScreen.h"
 
 
-MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
+MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context, const AdvertisingManager& advertisingManager) : IScreen(context), advertisingManager(&advertisingManager) {
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
 
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
     _renderList._shapes[1].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenMainMenu.png"));
-
+    
     // Level Selection
     TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Select Level", [c = _context]() {  c->setActiveScreen<LevelSelectionScreen>(); }, 370, 110, 615, 300, Colour{255,255,255,0}, Colour{255,255,255,0},};
     levelSelectionButton->addToRender(&_renderList);
@@ -42,6 +43,11 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
     creditsButton->addToRender(&_renderList);
     _sprites.push_back(creditsButton);
 
+    // Advertisement
+    advertisement = new SpriteButton {*_inputFacade->getMouseEventObservable(), advertisingManager.getCurrentAd(), [c = _context]() {  c->setActiveScreen<AdvertisingScreen>(); }, 400, 150, 300, 750, Colour{255,255,255,0}};
+    advertisement->addToRender(&_renderList);
+    _sprites.push_back(advertisement);
+
     // Quit
     SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this]() { this->quitGame(); }, 120, 120, 1476, 10, Colour{0,0,0,0}};
     quitButton->addToRender(&_renderList);
@@ -63,6 +69,7 @@ void MainMenuScreen::update(double deltaTime) {
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
+    advertisement->changeImageURL(advertisingManager->getCurrentAd());
 }
 
 void MainMenuScreen::update(std::shared_ptr<KeyEvent> event){

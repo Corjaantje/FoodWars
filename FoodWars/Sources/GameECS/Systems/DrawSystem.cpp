@@ -5,6 +5,7 @@
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/PositionComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
+#include "../../../Headers/GameECS/Components/DamageableComponent.h"
 
 DrawSystem::DrawSystem(std::shared_ptr<EntityManager> entityManager,
                         std::shared_ptr<VisualFacade> visualFacade,
@@ -38,6 +39,7 @@ void DrawSystem::update(double dt) {
 void DrawSystem::drawNonComponents() {
 
     _renderList._shapes[2].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenGameSmallUI.png"));
+
     if(!_playerIcon.empty()) {
         _renderList._shapes[3].push_back(createShape<ShapeSprite>(36, 54, 47, 40, _playerIcon));
     }
@@ -53,9 +55,17 @@ void DrawSystem::drawNonComponents() {
         _renderList._shapes[3].push_back(
                 createShape<ShapeText>(27, 155, _fpsString, 180, 75, 37, Colour(255, 255, 255, 0)));
     }
-    //Draw Turn Timer
+    //Draw Turn Timer and HP
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         if(iterator.second->isMyTurn()) {
+            int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->GetHealth() * 2;
+            _renderList._shapes[3].push_back(createShape<ShapeText>(1350, 27, "HP: " + std::to_string(hpWidth / 2),180, 75, 25, Colour(255, 255, 255, 0)));
+            _renderList._shapes[2].push_back(createShape<ShapeRectangle>(hpWidth, 25, 1350, 27, Colour(50, 205, 50, 0)));
+
+            int energyWidth = static_cast<int>(iterator.second->getEnergy() * 2);
+            _renderList._shapes[3].push_back(createShape<ShapeText>(1350, 67, "EP: " + std::to_string(energyWidth / 2),180, 75, 25, Colour(255, 255, 255, 0)));
+            _renderList._shapes[2].push_back(createShape<ShapeRectangle>(energyWidth, 25, 1350, 69, Colour(0, 191, 255, 0)));
+
             double time = iterator.second->getRemainingTime();
             std::string text;
             if (time < 10) {
@@ -76,7 +86,6 @@ void DrawSystem::drawCurrentPlayer() {
         std::map<int, std::shared_ptr<TurnComponent>> turnComps = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
         for (auto const& x : turnComps)
         {
-            if(x.second == NULL) break;
             if(x.second->isMyTurn()){
                 ShapeSprite* sprite = dynamic_cast<ShapeSprite*>(_entityManager->getComponentFromEntity<DrawableComponent>(x.first)->shape);
                if(sprite != nullptr) {

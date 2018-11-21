@@ -64,13 +64,11 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
         double toY = playerCenterY + deltaY;
 
         if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
-            _shootingLine = _entityManager->createEntity();
-            auto d = new DrawableComponent();
-            d->shape = new ShapeLine(playerCenterX, playerCenterY, toX, toY, Colour(0, 0, 0, 0));
-            _entityManager->addComponentToEntity(_shootingLine, d);
+            createShootingLine(playerCenterX, playerCenterY, toX, toY);
         }
 
         if (event->getMouseEventType() == MouseEventType::Drag) {
+            if (!_entityManager->exists(_shootingLine)) createShootingLine(playerCenterX, playerCenterY, toX, toY);
             auto drawable = _entityManager->getComponentFromEntity<DrawableComponent>(_shootingLine);
             auto line = static_cast<ShapeLine *>(drawable->shape);
             line->xPos = playerCenterX;
@@ -88,6 +86,13 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
             _audioFacade->playEffect("jump");
         }
     }
+}
+
+void ShootingSystem::createShootingLine(int fromX, int fromY, int toX, int toY) {
+    _shootingLine = _entityManager->createEntity();
+    auto d = new DrawableComponent();
+    d->shape = new ShapeLine(fromX, fromY, toX, toY, Colour(0, 0, 0, 0));
+    _entityManager->addComponentToEntity(_shootingLine, d);
 }
 
 void ShootingSystem::toggleShooting() {

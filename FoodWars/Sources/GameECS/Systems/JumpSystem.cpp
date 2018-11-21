@@ -36,6 +36,7 @@ void JumpSystem::update(std::shared_ptr<KeyEvent> event) {
             if(iterator.second->isMyTurn()){
                 if(!_entityManager->getComponentFromEntity<JumpComponent>(iterator.first)) {
                     _entityManager->addComponentToEntity(iterator.first, new JumpComponent);
+                    iterator.second->lowerEnergy(5);
                     _audioFacade->playEffect("jump");
                 }
                 break;

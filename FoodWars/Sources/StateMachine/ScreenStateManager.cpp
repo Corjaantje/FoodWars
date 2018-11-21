@@ -11,6 +11,13 @@ std::shared_ptr<IScreen> ScreenStateManager::getCurrentState() const {
     return _currentState;
 }
 
+void ScreenStateManager::setActiveScreen(const std::string &screenName) {
+    if(_screenStates.count(screenName) > 0){
+        _currentState = _screenStates[screenName];
+    }
+}
+
+
 void ScreenStateManager::setWindowResolutionCalculator(std::shared_ptr<WindowResolutionCalculator> windowResCalc) {
     _windowResCalc = std::move(windowResCalc);
 }

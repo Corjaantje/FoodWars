@@ -2,6 +2,10 @@
 
 #include "../../Headers/StateMachine/LevelSelectionScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
+#include "../../Headers/StateMachine/LevelTransitionScreen.h"
+#include "../../Headers/StateMachine/LoseTransitionScreen.h"
+#include "../../Headers/StateMachine/WinTransitionScreen.h"
+#include "../../Headers/StateMachine/DrawTransitionScreen.h"
 #include "../../../TonicEngine/Headers/Storage/FileManager.h"
 
 LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager) : IScreen(context), _levelManager(levelManager), _currentIndex(0) {
@@ -33,7 +37,7 @@ LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> c
         //_renderList._shapes[1].push_back(button);
     }
     //1, 2
-    for(int i = (3 - (_levels.size() % 3)); i <= (_levels.size() % 3); i++) {
+    for(int i = _levels.size() % 3; i <= 3; i++) {
         TextButton* button = new TextButton {*_inputFacade->getMouseEventObservable(), "",
                                              []() {
                                              }, 250, 80, 680, 310 + i * 125, Colour(255, 255, 255, 255), Colour(255, 255, 255, 255)};

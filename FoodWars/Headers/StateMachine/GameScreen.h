@@ -30,7 +30,6 @@ public:
     ~GameScreen();
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;
-    void spawnPlayers();
     void addBackground();
 };
 

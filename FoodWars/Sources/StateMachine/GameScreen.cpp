@@ -21,7 +21,6 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameL
     std::string music = gameLevel->getBackgroundMusic();
     _backgroundMusic = music;
 
-
     _audioFacade = _context->getFacade<AudioFacade>();
     _visualFacade = _context->getFacade<VisualFacade>();
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
@@ -41,64 +40,6 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameL
 
     drawSystem = new DrawSystem {_entityManager, visualFacade, _inputFacade};
     _systems.push_back(drawSystem);
-
-    // Build level
-    spawnPlayers();
-}
-
-void GameScreen::spawnPlayers() {
-    if(!_spawnPoints.empty())
-    {
-        // Spawn Location and animation interval
-        std::vector<IShape*> spawnAnimation;
-        //TODO: replace png depending on teamcomponent
-        spawnAnimation.push_back(new ShapeSprite{48, 72, _spawnPoints[0].getXCoord(), _spawnPoints[0].getYCoord(), "PlayerW_R0.png"});
-        AnimationComponent* animationComponent = new AnimationComponent{spawnAnimation, 0.1};
-
-        std::vector<IShape*> spawnAnimation2;
-        spawnAnimation2.push_back(new ShapeSprite{48, 72, _spawnPoints[1].getXCoord(), _spawnPoints[1].getYCoord(), "PlayerG_R0.png"});
-        AnimationComponent* animationComponent2 = new AnimationComponent{spawnAnimation2, 0.1};
-
-        // TurnComponent
-        auto turnComponent = new TurnComponent;
-        turnComponent->switchTurn(true);
-        turnComponent->setRemainingTime(5);
-
-        // Player
-        int player = _entityManager->createEntity();
-        _entityManager->addComponentToEntity(player, new DrawableComponent);
-        _entityManager->addComponentToEntity(player, new BoxCollider(48, 72));
-        _entityManager->addComponentToEntity(player, new PositionComponent(_spawnPoints[0].getXCoord(),_spawnPoints[0].getYCoord()));
-        _entityManager->addComponentToEntity(player, turnComponent);
-        _entityManager->addComponentToEntity(player, new MoveComponent);
-        _entityManager->addComponentToEntity(player, new GravityComponent());
-        _entityManager->addComponentToEntity(player, animationComponent);
-        _entityManager->addComponentToEntity(player, new DamageableComponent);
-
-        // Player
-        player = _entityManager->createEntity();
-        _entityManager->addComponentToEntity(player, new DrawableComponent);
-        _entityManager->addComponentToEntity(player, new BoxCollider(48, 72));
-        _entityManager->addComponentToEntity(player, new PositionComponent(_spawnPoints[1].getXCoord(), _spawnPoints[1].getYCoord()));
-        _entityManager->addComponentToEntity(player, new TurnComponent);
-        _entityManager->addComponentToEntity(player, new MoveComponent);
-        _entityManager->addComponentToEntity(player, new GravityComponent());
-        _entityManager->addComponentToEntity(player, animationComponent2);
-        _entityManager->addComponentToEntity(player, new DamageableComponent);
-
-        int boundLeft = _entityManager->createEntity();
-        _entityManager->addComponentToEntity(boundLeft, new BoxCollider(900, 900));
-        _entityManager->addComponentToEntity(boundLeft, new PositionComponent(-900, 0));
-
-        int boundRight = _entityManager->createEntity();
-        _entityManager->addComponentToEntity(boundRight, new BoxCollider(900, 900));
-        _entityManager->addComponentToEntity(boundRight, new PositionComponent(1600, 0));
-
-        int boundBottom = _entityManager->createEntity();
-        _entityManager->addComponentToEntity(boundBottom, new BoxCollider(1600, 1600));
-        _entityManager->addComponentToEntity(boundBottom, new PositionComponent(0, 900));
-
-    }
 }
 
 void GameScreen::addBackground() {

@@ -151,7 +151,7 @@ void LevelCreationScreen::update(std::shared_ptr<KeyEvent> event){
 void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
     this->callRender();
     if(this->buildTerrainActive) {
-        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
+        if ((event->getMouseEventType() == MouseEventType::Down || event->getMouseEventType() == MouseEventType::Drag) && event->getMouseClickType() == MouseClickType::Left) {
             _levelBuilder.placeBlock(event->getXPosition(), event->getYPosition());
         }
         if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Right) {

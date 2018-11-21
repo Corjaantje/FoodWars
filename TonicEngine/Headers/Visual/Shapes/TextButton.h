@@ -10,7 +10,7 @@
 #include "../../Events/MouseEvent.h"
 #include "../../Input/MouseEventObservable.h"
 
-class TextButton : public ShapeRectangle, IObserver<MouseEvent>{
+class TextButton : public ShapeRectangle, public IObserver<MouseEvent>{
 private:
     MouseEventObservable *observable;
     std::function<void()> _onClickFunction;

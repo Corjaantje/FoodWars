@@ -21,6 +21,7 @@ private:
     int _currentIndex;
     std::shared_ptr<LevelManager> _levelManager;
     void swapLevels(bool directionNext);
+    MouseEventObservable* mouseEventObservable;
 };
 
 #endif //PROJECT_SWA_LEVELSELECTIONSCREEN_H

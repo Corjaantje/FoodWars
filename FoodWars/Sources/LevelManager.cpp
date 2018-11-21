@@ -4,82 +4,34 @@
 #include "../Headers/GameECS/Components/AnimationComponent.h"
 #include "../Headers/GameECS/Components/DamageableComponent.h"
 #include "../Headers/GameECS/Components/DamagingComponent.h"
+#include "../Headers/GameECS/Systems/StorageSystem.h"
 
 LevelManager::LevelManager()
 {
     _entityManager = EntityManager();
 }
+
 LevelManager::~LevelManager() = default;
 
-EntityManager LevelManager::startLevel(int level) {
-    switch(level)
-    {
-        case 1: {
-            _entityManager = EntityManager {};
+GameLevel* LevelManager::startLevel(int level) {
+    // Load level
+    StorageSystem* storage = new StorageSystem();
+    _entityManager = EntityManager();
+    _gameLevel = storage->loadWorld(_entityManager, "Assets/Levels/Level1.xml");
 
-            int sky = _entityManager.createEntity();
-            auto *comp = new DrawableComponent();
-            comp->shape = new ShapeRectangle{1600,900,0,0, Colour{173,216,230,0}};
-            _entityManager.addComponentToEntity(sky, comp);
-
-            generateTerrain();
-
-            int player = _entityManager.createEntity();
-
-            // Spawn Location and animation interval
-            std::vector<IShape*> spawnAnimation;
-            spawnAnimation.push_back(new ShapeSprite{48, 72, 32, 300, "PlayerW_R0.png"});
-            AnimationComponent* animationComponent = new AnimationComponent{spawnAnimation, 0.1};
-
-            std::vector<IShape*> spawnAnimation2;
-            spawnAnimation2.push_back(new ShapeSprite{48, 72, 1500, 300, "PlayerW_L0.png"});
-            AnimationComponent* animationComponent2 = new AnimationComponent{spawnAnimation2, 0.1};
-
-            // TurnComponent
-            auto turnComponent = new TurnComponent;
-            turnComponent->switchTurn(true);
-            turnComponent->setRemainingTime(30);
-
-            // Player 1
-            _entityManager.addComponentToEntity(player, new DrawableComponent);
-            _entityManager.addComponentToEntity(player, new BoxCollider(48, 72));
-            _entityManager.addComponentToEntity(player, new PositionComponent(32,0));
-            _entityManager.addComponentToEntity(player, turnComponent);
-            _entityManager.addComponentToEntity(player, new MoveComponent);
-            _entityManager.addComponentToEntity(player, new GravityComponent());
-            _entityManager.addComponentToEntity(player, animationComponent);
-            _entityManager.addComponentToEntity(player, new DamageableComponent());
-
-            // Player 2
-            player = _entityManager.createEntity();
-            _entityManager.addComponentToEntity(player, new DrawableComponent);
-            _entityManager.addComponentToEntity(player, new BoxCollider(48, 72));
-            _entityManager.addComponentToEntity(player, new PositionComponent(576,0));
-            _entityManager.addComponentToEntity(player, new TurnComponent);
-            _entityManager.addComponentToEntity(player, new MoveComponent);
-            _entityManager.addComponentToEntity(player, new GravityComponent());
-            _entityManager.addComponentToEntity(player, animationComponent2);
-            _entityManager.addComponentToEntity(player, new DamageableComponent());
-
-            int boundOne = _entityManager.createEntity();
-            _entityManager.addComponentToEntity(boundOne, new BoxCollider(1600, 1600));
-            _entityManager.addComponentToEntity(boundOne, new PositionComponent(-1600, 0));
-
-            int boundTwo = _entityManager.createEntity();
-            _entityManager.addComponentToEntity(boundTwo, new BoxCollider(1600, 1600));
-            _entityManager.addComponentToEntity(boundTwo, new PositionComponent(1600, 0));
-
-            int boundFour = _entityManager.createEntity();
-            _entityManager.addComponentToEntity(boundFour, new BoxCollider(900, 900));
-            _entityManager.addComponentToEntity(boundFour, new PositionComponent(0, 900));
-
-            break;
+    if(_gameLevel){
+        if(_gameLevel->getSpawnPoints().empty()){
+            return nullptr;
         }
-        default:
-            std::cout << "Level does not exist" << std::endl;
-            break;
-    }
-    return _entityManager;
+        // either choose or delete spawnpoints until you have 2
+        spawnPlayers();
+
+    }else
+        return nullptr;
+
+
+    // Return gameLevel
+    return _gameLevel;
 }
 
 void LevelManager::generateTerrain() {
@@ -110,4 +62,65 @@ void LevelManager::generateTerrainDrawables(int x, int y) {
     _entityManager.addComponentToEntity(terrain, new BoxCollider{32,32});
     _entityManager.addComponentToEntity(terrain, new PositionComponent(x, y));
     comp->shape = new ShapeRectangle{32, 32, x, y, Colour{149 + randomNum, 69 + randomNum2, 53 + randomNum3, 100}};
+}
+
+void LevelManager::spawnPlayers(){
+    std::vector<Coordinate> spawnPoints = _gameLevel->getSpawnPoints();
+    EntityManager* entityManager = &_gameLevel->getEntityManager();
+    int randomNum = rand() % spawnPoints.size();
+    int randomNum2 = rand() % spawnPoints.size();
+    Coordinate spawnPoint1 = spawnPoints[randomNum];
+    while(randomNum == randomNum2){
+        randomNum2 = rand() % spawnPoints.size();
+    }
+    Coordinate spawnPoint2 = spawnPoints[randomNum2];
+
+    // Spawn Location and animation interval
+    std::vector<IShape*> spawnAnimation;
+    //TODO: replace png depending on teamcomponent
+    spawnAnimation.push_back(new ShapeSprite{48, 72, spawnPoint1.getXCoord(), spawnPoint1.getYCoord(), "PlayerW_R0.png"});
+    AnimationComponent* animationComponent = new AnimationComponent{spawnAnimation, 0.1};
+
+    std::vector<IShape*> spawnAnimation2;
+    spawnAnimation2.push_back(new ShapeSprite{48, 72, spawnPoint2.getXCoord(), spawnPoint2.getYCoord(), "PlayerG_R0.png"});
+    AnimationComponent* animationComponent2 = new AnimationComponent{spawnAnimation2, 0.1};
+
+    // TurnComponent
+    auto turnComponent = new TurnComponent;
+    turnComponent->switchTurn(true);
+    turnComponent->setRemainingTime(5);
+
+    // Player
+    int player = entityManager->createEntity();
+    entityManager->addComponentToEntity(player, new DrawableComponent);
+    entityManager->addComponentToEntity(player, new BoxCollider(48, 72));
+    entityManager->addComponentToEntity(player, new PositionComponent(spawnPoint1.getXCoord(), spawnPoint1.getYCoord()));
+    entityManager->addComponentToEntity(player, turnComponent);
+    entityManager->addComponentToEntity(player, new MoveComponent);
+    entityManager->addComponentToEntity(player, new GravityComponent());
+    entityManager->addComponentToEntity(player, animationComponent);
+    entityManager->addComponentToEntity(player, new DamageableComponent);
+
+    // Player
+    player = entityManager->createEntity();
+    entityManager->addComponentToEntity(player, new DrawableComponent);
+    entityManager->addComponentToEntity(player, new BoxCollider(48, 72));
+    entityManager->addComponentToEntity(player, new PositionComponent(spawnPoint2.getXCoord(), spawnPoint2.getYCoord()));
+    entityManager->addComponentToEntity(player, new TurnComponent);
+    entityManager->addComponentToEntity(player, new MoveComponent);
+    entityManager->addComponentToEntity(player, new GravityComponent());
+    entityManager->addComponentToEntity(player, animationComponent2);
+    entityManager->addComponentToEntity(player, new DamageableComponent);
+
+    int boundLeft = entityManager->createEntity();
+    entityManager->addComponentToEntity(boundLeft, new BoxCollider(900, 900));
+    entityManager->addComponentToEntity(boundLeft, new PositionComponent(-900, 0));
+
+    int boundRight = entityManager->createEntity();
+    entityManager->addComponentToEntity(boundRight, new BoxCollider(900, 900));
+    entityManager->addComponentToEntity(boundRight, new PositionComponent(1600, 0));
+
+    int boundBottom = entityManager->createEntity();
+    entityManager->addComponentToEntity(boundBottom, new BoxCollider(1600, 1600));
+    entityManager->addComponentToEntity(boundBottom, new PositionComponent(0, 900));
 }

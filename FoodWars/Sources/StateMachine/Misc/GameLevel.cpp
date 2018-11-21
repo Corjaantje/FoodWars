@@ -25,10 +25,11 @@ std::string GameLevel::getBackgroundMusic() const {
     return _backgroundMusic;
 }
 
-EntityManager GameLevel::getEntityManager() const {
+EntityManager& GameLevel::getEntityManager() {
     return _entityManager;
 }
 
 std::vector<Coordinate> GameLevel::getSpawnPoints() const {
     return _spawnPoints;
 }
+

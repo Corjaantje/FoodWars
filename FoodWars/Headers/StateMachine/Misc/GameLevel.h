@@ -20,7 +20,7 @@ public:
     void setBackgroundWallpaper(std::string backgroundWallpaper);
     void setSpawnPoints(std::vector<Coordinate> spawnPoints);
 
-    EntityManager getEntityManager() const;
+    EntityManager& getEntityManager();
     std::string getBackgroundMusic() const;
     std::string getBackgroundWallpaper() const;
     std::vector<Coordinate> getSpawnPoints() const;

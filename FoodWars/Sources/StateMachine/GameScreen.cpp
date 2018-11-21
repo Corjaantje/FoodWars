@@ -11,11 +11,21 @@
 #include "../../Headers/StateMachine/WinTransitionScreen.h"
 #include "../../Headers/StateMachine/LoseTransitionScreen.h"
 
-GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager) : IScreen(context), _entityManager(std::make_shared<EntityManager>(entityManager))
+GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameLevel* gameLevel) :
+    IScreen(context),
+    _entityManager(std::make_shared<EntityManager>(gameLevel->getEntityManager())),
+    _spawnPoints(gameLevel->getSpawnPoints())
 {
+    std::string level = gameLevel->getBackgroundWallpaper();
+    _wallpaper = level;
+    addBackground();
+    std::string music = gameLevel->getBackgroundMusic();
+    _backgroundMusic = music;
+
     _audioFacade = _context->getFacade<AudioFacade>();
     _visualFacade = _context->getFacade<VisualFacade>();
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
+
     _animationManager = new AnimationManager{};
     CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };
     _systems.push_back(new JumpSystem { _entityManager, _inputFacade, audioFacade, *collisionSystem } );
@@ -40,6 +50,15 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
         count++;
     }
 }
+
+void GameScreen::addBackground() {
+    int background = _entityManager->createEntity();
+    auto *comp = new DrawableComponent();
+    comp->shape = new ShapeSprite(1600,900,0,0, _wallpaper);
+    comp->shape->layer = 0;
+    _entityManager->addComponentToEntity(background, comp);
+}
+
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
     if (event->getKeyEventType() == KeyEventType::Down) {
@@ -89,10 +108,14 @@ void GameScreen::update(double deltaTime) {
         _context->setActiveScreen<DrawTransitionScreen>();
         ((std::static_pointer_cast<LevelTransitionScreen>(_context->getCurrentState())->setScore(100)));
     }
+    _audioFacade->playMusic(_backgroundMusic.c_str());
 
-    _audioFacade->playMusic("nature");
     _inputFacade->pollEvents();
     for(auto const &iterator : _systems){
         iterator->update(deltaTime * _context->getTimeModifier());
     }
 }
+
+
+
+

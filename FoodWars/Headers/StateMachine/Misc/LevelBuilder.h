@@ -6,6 +6,7 @@
 #include "EntityMemento.h"
 #include "../../../../TonicEngine/Headers/Visual/Renderlist.h"
 #include "GameLevel.h"
+#include "../../GameECS/Systems/StorageSystem.h"
 
 const int SHAPE_DIMENSION = 32;
 //const int MAXIMAL_SHAPE_DIM = 64;
@@ -47,6 +48,7 @@ private:
     }
 public:
     void resetEntityManager();
+    EntityManager* getEntityManager();
 
 //    void incrementShapeSize();
 //    void decrementShapeSize();
@@ -65,12 +67,14 @@ public:
 
     void placeSpawnPoint(int x, int y);
     void removeSpawnPoint(int x, int y);
+    std::vector<Coordinate> getSpawnPoints() const;
 
     bool toggleCollidable();
     bool toggleDamageable();
 
     void setNextWallpaper();
     void setPreviousWallpaper();
+    std::string getCurrentWallpaper();
 
     void setNextMusic();
     void setPreviousMusic();

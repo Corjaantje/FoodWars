@@ -11,7 +11,7 @@ class MoveSystem : public IBaseSystem, public IObserver<KeyEvent> {
 private:
     KEY _pressedKey;
     std::shared_ptr<EntityManager> _entityManager;
-    CollisionEventHandlerLamda* trapWalkOnCollision;
+    CollisionEventHandlerLamda* autoClimbOnCollision;
 public:
     MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade, IObservable<CollisionEvent>& collisionEventObservable);
     ~MoveSystem() override;

@@ -15,3 +15,7 @@ void ShapeLine::addToRender(Renderlist *renderlist) {
 void ShapeLine::render(IRenderer &renderer) const {
     renderer.renderLine(*this);
 }
+
+std::vector<std::string> ShapeLine::serialize() {
+    return std::vector<std::string>();
+}

@@ -31,6 +31,14 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
 
     drawSystem = new DrawSystem {_entityManager, visualFacade, _inputFacade};
     _systems.push_back(drawSystem);
+
+    int count = 0;
+    for (auto const& t : _entityManager->getAllEntitiesWithComponent<TurnComponent>())
+    {
+        if (count == 0) playerOne = t.first;
+        else playerTwo = t.first;
+        count++;
+    }
 }
 
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
@@ -72,11 +80,13 @@ void GameScreen::update(double deltaTime) {
     {
         //set score
         //check win/lose
-        _context->setActiveScreen<MainMenuScreen>();
+        if (_entityManager->exists(playerOne)) _context->setActiveScreen<WinTransitionScreen>();
+        else _context->setActiveScreen<LoseTransitionScreen>();
+        
     } else if(_entitiesWithTurnComponent.empty()) {
         //set score
         //it's a draw!
-        _context->setActiveScreen<MainMenuScreen>();
+        _context->setActiveScreen<DrawTransitionScreen>();
     }
     _audioFacade->playMusic("nature");
     _inputFacade->pollEvents();

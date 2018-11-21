@@ -17,6 +17,8 @@ private:
     DrawSystem* drawSystem = nullptr;
     AnimationManager* _animationManager;
     ShootingSystem* _shootingSystem = nullptr;
+    int playerOne;
+    int playerTwo;
 public:
     explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, EntityManager entityManager);
     ~GameScreen();

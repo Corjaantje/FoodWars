@@ -90,7 +90,7 @@ void LevelManager::spawnPlayers(){
     // TurnComponent
     auto turnComponent = new TurnComponent;
     turnComponent->switchTurn(true);
-    turnComponent->setRemainingTime(5);
+    turnComponent->setRemainingTime(30);
 
     // Player
     int player = entityManager->createEntity();

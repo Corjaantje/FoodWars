@@ -24,7 +24,8 @@ TextButton::TextButton(MouseEventObservable &mouseEventObservable, const std::st
         const std::function<void()> &onClick, int width, int height, int xPos, int yPos, int xOffSet,
         int yOffSet, Colour buttonColour, Colour textColour) :
         ShapeRectangle(width, height, xPos, yPos, buttonColour), _text(text), _onClickFunction(onClick),
-        shapeText(xPos + xOffSet, yPos + yOffSet, _text, 180, width - (2 * xOffSet), height - (2 * yOffSet), textColour){
+        shapeText(xPos + xOffSet, yPos + yOffSet, _text, 180, width - (2 * xOffSet), height - (2 * yOffSet),
+                  textColour), observable(&mouseEventObservable) {
     mouseEventObservable.registerObserver(this);
 }
 
@@ -81,4 +82,8 @@ void TextButton::setOnClickFunction(const std::function<void()> &onClick) {
 
 void TextButton::render(IRenderer &renderer) const {
     shapeText.render(renderer);
+}
+
+TextButton::~TextButton() {
+    observable->unregisterObserver(this);
 }

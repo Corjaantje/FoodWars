@@ -10,8 +10,9 @@
 #include "../../Events/MouseEvent.h"
 #include "../../Input/MouseEventObservable.h"
 
-class TextButton : public ShapeRectangle, IObserver<MouseEvent>{
+class TextButton : public ShapeRectangle, public IObserver<MouseEvent>{
 private:
+    MouseEventObservable *observable;
     std::function<void()> _onClickFunction;
     std::string _text;
     ShapeText shapeText;
@@ -23,6 +24,7 @@ public:
     TextButton(MouseEventObservable& mouseEventObservable, const std::string& text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, Colour buttonColour, Colour textColour);
     TextButton(MouseEventObservable& mouseEventObservable, const std::string& text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, int xOffSet, int yOffSet, Colour buttonColour, Colour textColour);
 
+    ~TextButton();
 
     void setXOffSet(int xOffSet);
     void setYOffSet(int yOffSet);

@@ -17,7 +17,9 @@ GameLevel* LevelManager::startLevel(int level) {
     // Load level
     StorageSystem* storage = new StorageSystem();
     _entityManager = EntityManager();
-    _gameLevel = storage->loadWorld(_entityManager, "Assets/Levels/Level0.xml");
+    std::string levelXML = "Assets/Levels/Level" + std::to_string(level) +".xml";
+    std::cout << "Load level " << levelXML << std::endl;
+    _gameLevel = storage->loadWorld(_entityManager, levelXML);
 
     if(_gameLevel){
         if(_gameLevel->getSpawnPoints().empty()){
@@ -88,7 +90,7 @@ void LevelManager::spawnPlayers(){
     // TurnComponent
     auto turnComponent = new TurnComponent;
     turnComponent->switchTurn(true);
-    turnComponent->setRemainingTime(5);
+    turnComponent->setRemainingTime(30);
 
     // Player
     int player = entityManager->createEntity();

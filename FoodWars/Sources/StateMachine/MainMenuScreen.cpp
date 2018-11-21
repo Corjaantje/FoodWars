@@ -11,10 +11,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IS
 
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
     _renderList._shapes[1].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenMainMenu.png"));
-
-    // advertisement
-    _renderList._shapes[1].push_back(new ShapeSprite{250, 125, 125, 355, "advertisement.png"});
-
+    
     // Level Selection
     TextButton* levelSelectionButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Select Level", [c = _context]() {  c->setActiveScreen<LevelSelectionScreen>(); }, 370, 110, 615, 300, Colour{255,255,255,0}, Colour{255,255,255,0},};
     levelSelectionButton->addToRender(&_renderList);

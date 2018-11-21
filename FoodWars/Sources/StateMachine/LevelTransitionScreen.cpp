@@ -33,4 +33,8 @@ void LevelTransitionScreen::update(std::shared_ptr<KeyEvent> event){
     }
 }
 
+void LevelTransitionScreen::setScore(int score) {
+    _renderList._shapes[1].push_back(new ShapeText{790, 75, std::to_string(score), 12, 95, 50, Colour{0,0,0,0}});
+}
+
 

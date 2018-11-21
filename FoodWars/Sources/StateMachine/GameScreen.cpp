@@ -78,14 +78,18 @@ void GameScreen::update(double deltaTime) {
     std::map<int, std::shared_ptr<TurnComponent>> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
     if(_entitiesWithTurnComponent.size() == 1)
     {
-        //set score
-        if (_entityManager->exists(playerOne)) _context->setActiveScreen<WinTransitionScreen>();
-        else _context->setActiveScreen<LoseTransitionScreen>();
-
+        if (_entityManager->exists(playerOne)) {
+            _context->setActiveScreen<WinTransitionScreen>();
+        }
+        else {
+            _context->setActiveScreen<LoseTransitionScreen>();
+        }
+        ((std::static_pointer_cast<LevelTransitionScreen>(_context->getCurrentState())->setScore(100)));
     } else if(_entitiesWithTurnComponent.empty()) {
-        //set score
         _context->setActiveScreen<DrawTransitionScreen>();
+        ((std::static_pointer_cast<LevelTransitionScreen>(_context->getCurrentState())->setScore(100)));
     }
+
     _audioFacade->playMusic("nature");
     _inputFacade->pollEvents();
     for(auto const &iterator : _systems){

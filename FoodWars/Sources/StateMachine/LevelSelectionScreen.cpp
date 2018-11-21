@@ -22,11 +22,11 @@ LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> c
 
     generateLevelButtons();
 
-    SpriteButton* previousButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "carrot.png", [this]() {  swapLevels(false); }, 60, 60, 535, 444, Colour{0,0,0,0}};
+    SpriteButton* previousButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this]() {  swapLevels(false); }, 60, 60, 535, 444, Colour{0,0,0,0}};
     previousButton->addToRender(&_renderList);
     _sprites.push_back(previousButton);
 
-    SpriteButton* nextButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "carrot.png", [this]() {  swapLevels(true); }, 60, 60, 1000,444, Colour{0,0,0,0}};
+    SpriteButton* nextButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this]() {  swapLevels(true); }, 60, 60, 1000,444, Colour{0,0,0,0}};
     nextButton->addToRender(&_renderList);
     _sprites.push_back(nextButton);
 }

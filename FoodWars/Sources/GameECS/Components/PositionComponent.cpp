@@ -25,3 +25,12 @@ PositionComponent &PositionComponent::operator--(int) {
         Y++;
     return *this;
 }
+
+std::vector<std::string> PositionComponent::serialize() {
+    std::vector<std::string> data;
+    data.push_back(std::to_string(X));
+    data.push_back(std::to_string(Y));
+
+
+    return data;
+}

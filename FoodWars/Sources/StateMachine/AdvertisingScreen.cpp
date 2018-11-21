@@ -10,7 +10,7 @@ AdvertisingScreen::AdvertisingScreen(std::shared_ptr<ScreenStateManager> context
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
 
-    _renderList._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "wallpaper.png"));
+    _renderList._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenAdvertisements.png"));
 
     if (_advertisingManager->getAdvertisements().empty())
     {
@@ -20,17 +20,19 @@ AdvertisingScreen::AdvertisingScreen(std::shared_ptr<ScreenStateManager> context
 
     //get index from currentAd
     currentIndex = 0;
-    shownAD = new ShapeSprite(400, 150, (1600/2)-200, (900/2)-75, _advertisingManager->getCurrentAd());
+    shownAD = new ShapeSprite(400, 150, (1600/2)-200, (900/2)-90, _advertisingManager->getCurrentAd());
 
     _renderList._shapes[1].push_back(shownAD);
 
-    _renderList._shapes[1].push_back(createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "wallpaper.png",
-            [this] { swapAdvertisement(false); }, 25, 25, (1600/2)- 250 - 12, (900/2) - 12, Colour(0,0,0,0)));
-    _renderList._shapes[1].push_back(createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "wallpaper.png",
-            [this] { swapAdvertisement(true); }, 25, 25, (1600/2)+ 250 - 12, (900/2) - 12, Colour(0,0,0,0)));
+    _renderList._shapes[1].push_back(createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}));
+
+    _renderList._shapes[1].push_back(createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [this] { swapAdvertisement(false); }, 50, 50, 440, 400, Colour(0,0,0,0)));
+    _renderList._shapes[1].push_back(createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [this] { swapAdvertisement(true); }, 50, 50, 1110, 400, Colour(0,0,0,0)));
 
     _renderList._shapes[1].push_back(createShape<TextButton>(*_inputFacade->getMouseEventObservable(),
-                                                             "Save AD", [c = context, a = _advertisingManager, this] { a->setCurrentAd(shownAD->imageURL); c->setActiveScreen<MainMenuScreen>();  }, 400, 100, (1600/2)-200, 600));
+                                                             "", [c = context, a = _advertisingManager, this] { a->setCurrentAd(shownAD->imageURL); c->setActiveScreen<MainMenuScreen>();  }, 400, 100, (1600/2)-200, 600));
 }
 
 AdvertisingScreen::~AdvertisingScreen()

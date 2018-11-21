@@ -3,7 +3,6 @@
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
 #include "TonicEngine/Headers/Input/InputFacade.h"
 #include "TonicEngine/Headers/Audio/AudioFacade.h"
-#include "FoodWars/Headers/GameECS/Entities/EntityManager.h"
 #include "FoodWars/Headers/GameECS/Systems/DrawSystem.h"
 #include "FoodWars/Headers/StateMachine/ScreenStateManager.h"
 #include "FoodWars/Headers/StateMachine/MainMenuScreen.h"
@@ -76,9 +75,12 @@ int main(int argc, char** argv)
     while(!screenStateManager->getCurrentState()->isWindowClosed()) {
         std::chrono::duration<double> currentTime = std::chrono::steady_clock::now().time_since_epoch();
         double deltaTime = (currentTime.count() - timeLast.count()) * timeModifier;
+        if (deltaTime > 1) deltaTime = 1;
         timeLast = currentTime;
         screenStateManager->getCurrentState()->update(deltaTime);
-        generalFacade->sleep(amountOfUpdatesAllowedPerSecond * 1000 - deltaTime);
+        double sleepTime = amountOfUpdatesAllowedPerSecond * 1000 - deltaTime;
+        if (sleepTime > 0.0)
+            generalFacade->sleep(sleepTime);
     }
     delete generalFacade;
     return 0;

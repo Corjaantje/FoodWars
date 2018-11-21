@@ -3,11 +3,7 @@
 #include "../../../Headers/GameECS/Systems/MoveSystem.h"
 #include "../../../Headers/GameECS/Components/MoveComponent.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
-#include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
-#include "../../../Headers/GameECS/Events/CollisionEventHandlerLamda.h"
-#include "../../../Headers/GameECS/Components/AnimationComponent.h"
-#include "../../../Headers/GameECS/Components/JumpComponent.h"
 #include <cmath>
 
 MoveSystem::~MoveSystem() {
@@ -37,15 +33,18 @@ MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared
 }
 
 void MoveSystem::update(double dt) {
+    const int walkingEnergyCostPerSecond = 20;
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         std::shared_ptr<MoveComponent> moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
 
         if (iterator.second->isMyTurn()) {
             if (_pressedKey == KEY::KEY_A) {
                 moveComponent->xVelocity = -100;
+                iterator.second->lowerEnergy(walkingEnergyCostPerSecond * dt);
             }
             else if (_pressedKey == KEY::KEY_D) {
                 moveComponent->xVelocity = 100;
+                iterator.second->lowerEnergy(walkingEnergyCostPerSecond * dt);
             }else
                 moveComponent->xVelocity = 0;
         } else {

@@ -19,6 +19,8 @@ public:
     void update(double deltaTime) override;
     void update(std::shared_ptr<MouseEvent> event) override;
     void toggleShooting();
+
+    void createShootingLine(int fromX, int fromY, int toX, int toY);
 private:
     bool _isShooting;
     bool _projectileFired;

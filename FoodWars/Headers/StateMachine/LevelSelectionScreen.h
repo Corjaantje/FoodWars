@@ -13,13 +13,14 @@ public:
     ~LevelSelectionScreen();
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;
+
+    void generateLevelButtons();
 private:
     std::vector<std::string> _levels;
     std::vector<TextButton*> _levelButtons;
     int _currentIndex;
     std::shared_ptr<LevelManager> _levelManager;
     void swapLevels(bool directionNext);
-    int currentLevel = 0;
 };
 
 #endif //PROJECT_SWA_LEVELSELECTIONSCREEN_H

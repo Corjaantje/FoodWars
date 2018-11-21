@@ -2,11 +2,6 @@
 
 #include "../../Headers/StateMachine/LevelSelectionScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
-#include "../../Headers/StateMachine/LevelTransitionScreen.h"
-#include "../../Headers/StateMachine/LoseTransitionScreen.h"
-#include "../../Headers/StateMachine/WinTransitionScreen.h"
-#include "../../Headers/StateMachine/DrawTransitionScreen.h"
-#include "../../../TonicEngine/Headers/Storage/FileManager.h"
 
 LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager) : IScreen(context), _levelManager(levelManager), _currentIndex(0) {
     audioFacade = context->getFacade<AudioFacade>();
@@ -24,25 +19,7 @@ LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> c
     highscorebutton->addToRender(&_renderList);
     _sprites.push_back(highscorebutton);
 
-    _levels = FileManager().getFiles("Assets/Levels/", "xml");
-    std::sort(_levels.begin(), _levels.end());
-    for (int i = 0; i < _levels.size(); i++) {
-        int fileNum = std::stoi(_levels[i].substr(5, _levels[i].find('.')));
-        TextButton* button = new TextButton {*_inputFacade->getMouseEventObservable(), "Level " + std::to_string(fileNum),
-                                             [c = _context, this, fileNum]() {
-                                                 c->addOrSetScreenState(new GameScreen{c, _levelManager->startLevel(fileNum)});
-                                                 c->setActiveScreen<GameScreen>();
-                                             }, 250, 80, 680, 310 + (i % 3) * 125, Colour(255, 255, 255, 255), Colour(255, 255, 255, 255)};
-        _levelButtons.push_back(button);
-        //_renderList._shapes[1].push_back(button);
-    }
-    //1, 2
-    for(int i = _levels.size() % 3; i <= 3; i++) {
-        TextButton* button = new TextButton {*_inputFacade->getMouseEventObservable(), "",
-                                             []() {
-                                             }, 250, 80, 680, 310 + i * 125, Colour(255, 255, 255, 255), Colour(255, 255, 255, 255)};
-        _levelButtons.push_back(button);
-    }
+    generateLevelButtons();
 
     SpriteButton* previousButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "carrot.png", [this]() {  swapLevels(false); }, 60, 60, 535, 444, Colour{0,0,0,0}};
     previousButton->addToRender(&_renderList);
@@ -51,6 +28,35 @@ LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> c
     SpriteButton* nextButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "carrot.png", [this]() {  swapLevels(true); }, 60, 60, 1000,444, Colour{0,0,0,0}};
     nextButton->addToRender(&_renderList);
     _sprites.push_back(nextButton);
+}
+
+void LevelSelectionScreen::generateLevelButtons() {
+    for (const TextButton *button: _levelButtons) {
+        delete button;
+    }
+    _levelButtons.clear();
+    _currentIndex = 0;
+    _levels = FileManager().getFiles("Assets/Levels/", "xml");
+    std::sort(_levels.begin(), _levels.end());
+    for (int i = 0; i < _levels.size(); i++) {
+        int fileNum = std::stoi(_levels[i].substr(5, _levels[i].find('.')));
+        TextButton *button = new TextButton{*_inputFacade->getMouseEventObservable(),
+                                            "Level " + std::to_string(fileNum),
+                                            [c = _context, this, fileNum]() {
+                                                c->addOrSetScreenState(
+                                                        new GameScreen{c, _levelManager->startLevel(fileNum)});
+                                                c->setActiveScreen<GameScreen>();
+                                            }, 250, 80, 680, 310 + (i % 3) * 125, Colour(255, 255, 255, 255),
+                                            Colour(255, 255, 255, 255)};
+        _levelButtons.push_back(button);
+    }
+    //1, 2
+    for (int i = _levels.size() % 3; i <= 3; i++) {
+        TextButton *button = new TextButton{*_inputFacade->getMouseEventObservable(), "",
+                                            []() {}, 250, 80, 680, 310 + i * 125, Colour(255, 255, 255, 255),
+                                            Colour(255, 255, 255, 255)};
+        _levelButtons.push_back(button);
+    }
 }
 
 LevelSelectionScreen::~LevelSelectionScreen() {

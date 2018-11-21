@@ -11,8 +11,13 @@
 #include "TonicEngine/Facades/GeneralFacade.h"
 
 #include "FoodWars/Headers/StateMachine/UpgradesScreen.h"
+#include "FoodWars/Headers/StateMachine/LevelTransitionScreen.h"
+#include "FoodWars/Headers/StateMachine/LoseTransitionScreen.h"
+#include "FoodWars/Headers/StateMachine/WinTransitionScreen.h"
+#include "FoodWars/Headers/StateMachine/DrawTransitionScreen.h"
 #include "FoodWars/Headers/StateMachine/PauseScreen.h"
 #include "FoodWars/Headers/StateMachine/HighscoreScreen.h"
+#include "FoodWars/Headers/StateMachine/AdvertisingScreen.h"
 
 
 int main(int argc, char** argv)
@@ -43,6 +48,7 @@ int main(int argc, char** argv)
     audioFacade->addAudio("jump", "./Assets/Audio/jump.wav");
 
     std::shared_ptr<LevelManager> levelManager = std::make_shared<LevelManager>();
+    AdvertisingManager advertisingManager = AdvertisingManager();
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
     InputFacade* inputFacade = new InputFacade();
     inputFacade->setWindowResolutionCalculator(windowResolutionCalculator);
@@ -50,7 +56,7 @@ int main(int argc, char** argv)
     screenStateManager->addFacade(visualFacade);
     screenStateManager->addFacade(inputFacade);
     screenStateManager->addFacade(audioFacade);
-    screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager, advertisingManager));
     screenStateManager->addOrSetScreenState(new UpgradesScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new CreditScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager, new GameLevel()));
@@ -60,6 +66,11 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new PauseScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new HighscoreScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new AdvertisingScreen(screenStateManager, advertisingManager));
+    screenStateManager->addOrSetScreenState(new LoseTransitionScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new WinTransitionScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new DrawTransitionScreen(screenStateManager));
+
     screenStateManager->setActiveScreen<MainMenuScreen>();
 
     //Config

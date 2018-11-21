@@ -25,6 +25,8 @@ private:
     AnimationManager* _animationManager;
     ShootingSystem* _shootingSystem = nullptr;
     StorageSystem* _storage;
+    int playerOne;
+    int playerTwo;
 public:
     explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameLevel* gameLevel);
     ~GameScreen();

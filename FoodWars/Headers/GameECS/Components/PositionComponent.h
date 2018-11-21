@@ -1,5 +1,4 @@
 #include "Component.h"
-
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
 
 class PositionComponent: public Component, public ISerializable {

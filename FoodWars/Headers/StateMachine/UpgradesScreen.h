@@ -6,11 +6,14 @@
 #include "../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
 
 class UpgradesScreen : public IScreen, public IObserver<KeyEvent> {
+private:
+    std::string _previousScreen;
 public:
     explicit UpgradesScreen(std::shared_ptr<ScreenStateManager> context);
     ~UpgradesScreen();
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;
+    void setPreviousScreen(const std::string& screenName);
 };
 
 #endif //PROJECT_SWA_UPGRADESSCREEN_H

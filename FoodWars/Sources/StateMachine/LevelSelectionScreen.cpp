@@ -2,6 +2,10 @@
 
 #include "../../Headers/StateMachine/LevelSelectionScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
+#include "../../Headers/StateMachine/LevelTransitionScreen.h"
+#include "../../Headers/StateMachine/LoseTransitionScreen.h"
+#include "../../Headers/StateMachine/WinTransitionScreen.h"
+#include "../../Headers/StateMachine/DrawTransitionScreen.h"
 
 LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager) : IScreen(context) {
     audioFacade = context->getFacade<AudioFacade>();

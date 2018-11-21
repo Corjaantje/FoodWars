@@ -49,6 +49,8 @@ public:
         _currentState = s;
     }*/
 
+    void setActiveScreen(const std::string& screenName);
+
     template<typename Facade, typename std::enable_if<std::is_base_of<IFacade, Facade>::value>::type* = nullptr>
     void addFacade(Facade* facade) {
         _facades[typeid(Facade).name()] = std::shared_ptr<IFacade>(facade);

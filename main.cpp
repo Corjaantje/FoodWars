@@ -11,6 +11,10 @@
 #include "TonicEngine/Facades/GeneralFacade.h"
 
 #include "FoodWars/Headers/StateMachine/UpgradesScreen.h"
+#include "FoodWars/Headers/StateMachine/LevelTransitionScreen.h"
+#include "FoodWars/Headers/StateMachine/LoseTransitionScreen.h"
+#include "FoodWars/Headers/StateMachine/WinTransitionScreen.h"
+#include "FoodWars/Headers/StateMachine/DrawTransitionScreen.h"
 #include "FoodWars/Headers/StateMachine/PauseScreen.h"
 #include "FoodWars/Headers/StateMachine/HighscoreScreen.h"
 #include "FoodWars/Headers/StateMachine/AdvertisingScreen.h"
@@ -63,6 +67,10 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new PauseScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new HighscoreScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new AdvertisingScreen(screenStateManager, advertisingManager));
+    screenStateManager->addOrSetScreenState(new LoseTransitionScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new WinTransitionScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new DrawTransitionScreen(screenStateManager));
+
     screenStateManager->setActiveScreen<MainMenuScreen>();
 
     //Config

@@ -1,6 +1,4 @@
-#include <utility>
-#include "../../Headers/StateMachine/GameScreen.h"
-#include "../../../TonicEngine/Headers/Input/InputFacade.h"
+#include "../../Headers/GameECS/Components/MoveComponent.h"
 #include "../../Headers/GameECS/Systems/CollisionSystem.h"
 #include "../../Headers/GameECS/Systems/JumpSystem.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
@@ -9,6 +7,9 @@
 #include "../../Headers/GameECS/Systems/AnimationSystem.h"
 #include "../../Headers/GameECS/Components/AnimationComponent.h"
 #include "../../Headers/GameECS/Systems/DamageableSystem.h"
+#include "../../Headers/StateMachine/DrawTransitionScreen.h"
+#include "../../Headers/StateMachine/WinTransitionScreen.h"
+#include "../../Headers/StateMachine/LoseTransitionScreen.h"
 
 GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameLevel* gameLevel) :
     IScreen(context),
@@ -40,6 +41,14 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameL
 
     drawSystem = new DrawSystem {_entityManager, visualFacade, _inputFacade};
     _systems.push_back(drawSystem);
+
+    int count = 0;
+    for (auto const& t : _entityManager->getAllEntitiesWithComponent<TurnComponent>())
+    {
+        if (count == 0) playerOne = t.first;
+        else playerTwo = t.first;
+        count++;
+    }
 }
 
 void GameScreen::addBackground() {
@@ -88,13 +97,16 @@ void GameScreen::update(double deltaTime) {
     std::map<int, std::shared_ptr<TurnComponent>> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
     if(_entitiesWithTurnComponent.size() == 1)
     {
-        //set score
-        //check win/lose
-        _context->setActiveScreen<MainMenuScreen>();
+        if (_entityManager->exists(playerOne)) {
+            _context->setActiveScreen<WinTransitionScreen>();
+        }
+        else {
+            _context->setActiveScreen<LoseTransitionScreen>();
+        }
+        ((std::static_pointer_cast<LevelTransitionScreen>(_context->getCurrentState())->setScore(100)));
     } else if(_entitiesWithTurnComponent.empty()) {
-        //set score
-        //it's a draw!
-        _context->setActiveScreen<MainMenuScreen>();
+        _context->setActiveScreen<DrawTransitionScreen>();
+        ((std::static_pointer_cast<LevelTransitionScreen>(_context->getCurrentState())->setScore(100)));
     }
     _audioFacade->playMusic(_backgroundMusic.c_str());
 

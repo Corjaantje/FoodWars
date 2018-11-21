@@ -27,7 +27,6 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, Entit
     _systems.push_back(_shootingSystem);
     _systems.push_back(new DamageableSystem { _entityManager, *collisionSystem});
     _systems.push_back(collisionSystem);
-
     drawSystem = new DrawSystem {_entityManager, visualFacade, _inputFacade};
     _systems.push_back(drawSystem);
 }

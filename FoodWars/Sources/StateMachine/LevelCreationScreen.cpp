@@ -20,6 +20,12 @@ LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> con
 
 void LevelCreationScreen::initButtons() {
 
+    //save attempt non const lvalue reference cannot bind to a temporary of type
+    SpriteButton* saveButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "settings.png", [this] { relinkAndSave(); }, 50, 50, 0, 100, Colour{0,0,0,0}};
+    saveButton->addToRender(&_renderList);
+    _sprites.push_back(saveButton);
+
+
     // MainMenu
     SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 50, 50, 0, 0, Colour{0,0,0,0}};
     quitButton->addToRender(&_renderList);
@@ -145,7 +151,7 @@ void LevelCreationScreen::update(std::shared_ptr<KeyEvent> event){
 void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
     this->callRender();
     if(this->buildTerrainActive) {
-        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
+        if ((event->getMouseEventType() == MouseEventType::Down || event->getMouseEventType() == MouseEventType::Drag) && event->getMouseClickType() == MouseClickType::Left) {
             _levelBuilder.placeBlock(event->getXPosition(), event->getYPosition());
         }
         if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Right) {
@@ -170,4 +176,18 @@ void LevelCreationScreen::callRender() {
     }
     _renderList._shapes[2].push_back(new ShapeText(610 - selectedSong.size() * 10, 130, selectedSong, 150, selectedSong.size() * 20, 50, Colour(0, 0, 0, 0)));
     visualFacade->render(_renderList);
+}
+
+void LevelCreationScreen::relinkAndSave() {
+    StorageSystem storage;
+    EntityManager ent = _levelBuilder.buildConstructedLevel().getEntityManager();
+    // spawnpoints
+    std::vector<Coordinate> spawns = _levelBuilder.getSpawnPoints();
+    // background image?
+    std::string backgroundImage = _levelBuilder.getCurrentWallpaper();
+    // background music
+    std::string backgroundMusic = _levelBuilder.getSelectedSong();
+
+    storage.assignRelevantEntityManager(ent);
+    storage.saveWorld(backgroundMusic, backgroundImage, spawns);
 }

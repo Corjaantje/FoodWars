@@ -1,6 +1,8 @@
 #include "Component.h"
 
-class PositionComponent : public Component {
+#include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
+
+class PositionComponent: public Component, public ISerializable {
 public:
     int X;
     int Y;
@@ -8,4 +10,5 @@ public:
     PositionComponent(int x, int y);
     PositionComponent& operator+=(const PositionComponent& other);
     PositionComponent& operator--(int);
+    std::vector<std::string> serialize() override;
 };

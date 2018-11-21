@@ -9,10 +9,10 @@ AnimationComponent::AnimationComponent(std::vector<IShape*> animationShapes, dou
 }
 
 AnimationComponent::~AnimationComponent() {
-    for(IShape* shape:_animationShapes)
+    /*for(IShape* shape:_animationShapes)
     {
         delete shape;
-    }
+    }*/
 }
 
 double AnimationComponent::getAnimationInterval() const {

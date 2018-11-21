@@ -14,5 +14,8 @@ public:
     int layer;
     int xPos2, yPos2;
     void render(IRenderer &renderer) const override;
+    int getWidth() const override  { return 0; }
+    int getHeight() const override { return 0; }
+    std::vector<std::string> serialize() override;
 };
 #endif //PROJECT_SWA_SHAPELINE_H

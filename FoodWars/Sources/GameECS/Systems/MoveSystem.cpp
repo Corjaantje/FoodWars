@@ -7,18 +7,22 @@
 #include <cmath>
 
 MoveSystem::~MoveSystem() {
-    delete trapWalkOnCollision;
+    delete autoClimbOnCollision;
 }
 
 MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade, IObservable<CollisionEvent>& collisionEventObservable){
     _entityManager = std::move(entityManager);
     inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
-    trapWalkOnCollision  = new CollisionEventHandlerLamda {
+    autoClimbOnCollision  = new CollisionEventHandlerLamda {
         collisionEventObservable,
-        [entityManager = _entityManager](const CollisionEvent& collisionEvent) {
+        // Staircase walking
+        /*[entityManager = _entityManager](const CollisionEvent& collisionEvent) {
             double angle = collisionEvent.getCollisionAngle();
             return (angle >= 45 && angle <= 135) || (angle >= 225 && angle <= 315);
-        } ,
+        } ,*/
+        [](const CollisionEvent& collisionEvent){
+            return false;
+        },
         [entityManager = _entityManager](const CollisionEvent& collisionEvent) {
             std::shared_ptr<MoveComponent> moveComponent = entityManager->getComponentFromEntity<MoveComponent>(collisionEvent.getEntity());
             std::shared_ptr<BoxCollider> boxCollider = entityManager->getComponentFromEntity<BoxCollider>(collisionEvent.getEntity());

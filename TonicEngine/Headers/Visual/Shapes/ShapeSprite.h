@@ -15,7 +15,12 @@ public:
     int width;
     int height;
     std::string imageURL;
-    int layer;
+
+    int getWidth() const override { return width; }
+    int getHeight() const override { return height; }
+
+
+    std::vector<std::string> serialize() override;
 };
 
 

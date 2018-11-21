@@ -7,15 +7,15 @@ LevelTransitionScreen::LevelTransitionScreen(std::shared_ptr<ScreenStateManager>
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
 
-    _renderList._shapes[1].push_back(createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"Main Menu", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 250, 30, 200, 200));
+    _renderList._shapes[1].push_back(createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 375, 113, 613, 544));
 
     // Upgrades
     _renderList._shapes[1].push_back(createShape<TextButton>(*_inputFacade->getMouseEventObservable(),
-            "Upgrades", [c = _context, this]()
+            "", [c = _context, this]()
             {
                 c->setActiveScreen<UpgradesScreen>();
                 ((std::static_pointer_cast<UpgradesScreen>( c->getCurrentState())->setPreviousScreen(getScreenName())));
-            }, 250, 30, 200, 250));
+            }, 375, 113, 611, 420));
 }
 
 LevelTransitionScreen::~LevelTransitionScreen() = default;

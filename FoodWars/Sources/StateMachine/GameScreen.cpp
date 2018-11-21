@@ -79,13 +79,11 @@ void GameScreen::update(double deltaTime) {
     if(_entitiesWithTurnComponent.size() == 1)
     {
         //set score
-        //check win/lose
         if (_entityManager->exists(playerOne)) _context->setActiveScreen<WinTransitionScreen>();
         else _context->setActiveScreen<LoseTransitionScreen>();
-        
+
     } else if(_entitiesWithTurnComponent.empty()) {
         //set score
-        //it's a draw!
         _context->setActiveScreen<DrawTransitionScreen>();
     }
     _audioFacade->playMusic("nature");

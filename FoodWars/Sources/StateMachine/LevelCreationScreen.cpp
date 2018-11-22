@@ -13,6 +13,9 @@ LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> con
     _levelBuilder.addWallpaperConfig("WallpaperSky.png");
     _levelBuilder.addWallpaperConfig("WallpaperNature.png");
     _levelBuilder.addMusicConfig("wildwest");
+    _levelBuilder.addMusicConfig("nature");
+    _levelBuilder.addMusicConfig("space");
+    _levelBuilder.addMusicConfig("space2");
 
     selectedSong = "none";
     this->initButtons();
@@ -136,7 +139,8 @@ void LevelCreationScreen::initButtons() {
 LevelCreationScreen::~LevelCreationScreen() = default;
 
 void LevelCreationScreen::update(double deltaTime) {
-    audioFacade->playMusic("menu");
+    std::string song = _levelBuilder.getSelectedSong();
+    audioFacade->playMusic(song.c_str());
     _inputFacade->pollEvents();
 }
 
@@ -149,6 +153,8 @@ void LevelCreationScreen::update(std::shared_ptr<KeyEvent> event){
 }
 
 void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
+    std::string song = _levelBuilder.getSelectedSong();
+    audioFacade->playMusic(song.c_str());
     this->callRender();
     if(this->buildTerrainActive) {
         if ((event->getMouseEventType() == MouseEventType::Down || event->getMouseEventType() == MouseEventType::Drag) && event->getMouseClickType() == MouseClickType::Left) {

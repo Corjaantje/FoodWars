@@ -1,31 +1,38 @@
-#pragma once
 #ifndef PROJECT_SWA_GAMESCREEN_H
 #define PROJECT_SWA_GAMESCREEN_H
 
 #include "IScreen.h"
-#include "../../../TonicEngine/Headers/Visual/VisualFacade.h"
-#include "../../../TonicEngine/Headers/Visual/Renderlist.h"
-#include "ScreenStateManager.h"
 #include "../GameECS/Systems/DrawSystem.h"
-#include "../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../GameECS/Systems/MoveSystem.h"
 #include "../GameECS/Systems/TurnSystem.h"
 #include "../GameECS/Systems/GravitySystem.h"
-#include "MainMenuScreen.h"
+#include "../GameECS/Systems/ShootingSystem.h"
+#include "../GameECS/Systems/StorageSystem.h"
+#include "Misc/Coordinate.h"
+#include "Misc/GameLevel.h"
 
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
     std::shared_ptr<EntityManager> _entityManager;
-    std::shared_ptr<VisualFacade> _visualFacade;
-    std::vector<std::shared_ptr<IBaseSystem>> _systems;
+    std::string _wallpaper;
+    std::string _backgroundMusic;
+    std::vector<Coordinate> _spawnPoints;
+
     std::shared_ptr<AudioFacade> _audioFacade;
-    Renderlist _renderList;
+    std::shared_ptr<VisualFacade> _visualFacade;
+    std::vector<IBaseSystem*> _systems;
+    DrawSystem* drawSystem = nullptr;
+    AnimationManager* _animationManager;
+    ShootingSystem* _shootingSystem = nullptr;
+    StorageSystem* _storage;
+    int playerOne;
+    int playerTwo;
 public:
-    explicit GameScreen(std::shared_ptr<ScreenStateManager> context);
+    explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameLevel* gameLevel);
     ~GameScreen();
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;
+    void addBackground();
 };
-
 
 #endif //PROJECT_SWA_GAMESCREEN_H

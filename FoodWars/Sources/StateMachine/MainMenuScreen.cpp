@@ -1,41 +1,90 @@
-//
-// Created by Lucas on 11/10/2018.
-//
-
 #include "../../Headers/StateMachine/MainMenuScreen.h"
+#include "../../Headers/StateMachine/UpgradesScreen.h"
+#include "../../Headers/StateMachine/HelpScreen.h"
+#include "../../Headers/StateMachine/CreditScreen.h"
+#include "../../Headers/StateMachine/HighscoreScreen.h"
+#include "../../Headers/StateMachine/AdvertisingScreen.h"
 
-MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
-    visualFacade = context->getFacade<VisualFacade>();
+
+MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context, const AdvertisingManager& advertisingManager) : IScreen(context), advertisingManager(&advertisingManager) {
     audioFacade = context->getFacade<AudioFacade>();
-    _inputFacade->getMouseEventObservable()->registerObserver(this);
-    _inputFacade->getKeyEventObservable()->registerObserver(this);
+    _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
 
-    _renderList.spriteList.emplace_back(ShapeSprite{640, 480, 0, 0, "../FoodWars/Assets/wallpaper.png"});
-    _renderList.rectangleList.emplace_back(ShapeRectangle{440, 40, 100, 100, Colour { 200, 200, 200, 100}});
-    _renderList.textList.emplace_back(ShapeText(200, 200, "Start Game", 180, 250, 45, Colour(0, 0, 0, 0)));
+    _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
+    _renderList._shapes[1].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenMainMenu.png"));
+    
+    // Level Selection
+    TextButton *levelSelectionButton = new TextButton{*_inputFacade->getMouseEventObservable(), "Select Level",
+                                                      [c = _context]() {
+                                                          c->setActiveScreen<LevelSelectionScreen>();
+                                                          (std::static_pointer_cast<LevelSelectionScreen>(
+                                                                  c->getCurrentState())->generateLevelButtons());
+                                                      }, 370, 110, 615, 300, Colour{255, 255, 255, 0},
+                                                      Colour{255, 255, 255, 0},};
+    levelSelectionButton->addToRender(&_renderList);
+    _sprites.push_back(levelSelectionButton);
+
+    // Level Editor
+    TextButton* levelEditorButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Level Editor", [c = _context]() {  c->setActiveScreen<LevelCreationScreen>(); }, 370, 110, 615, 420, Colour{255,255,255,0}, Colour{255,255,255,0}};
+    levelEditorButton->addToRender(&_renderList);
+    _sprites.push_back(levelEditorButton);
+
+    // Upgrades
+    TextButton* upgradesButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Upgrades", [c = _context]() {  c->setActiveScreen<UpgradesScreen>(); }, 370, 110, 615, 540, Colour{255,255,255,0}, Colour{255,255,255,0}};
+    upgradesButton->addToRender(&_renderList);
+    _sprites.push_back(upgradesButton);
+
+    // Settings
+    SpriteButton* settingsButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<SettingsScreen>(); }, 120, 120, 1335, 10, Colour{0,0,0,0}};
+    settingsButton->addToRender(&_renderList);
+    _sprites.push_back(settingsButton);
+
+    // Help
+    TextButton* helpButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Help", [c = _context]() {  c->setActiveScreen<HelpScreen>(); }, 190, 100, 10, 680, Colour{255,255,255,0}, Colour{255,255,255,0}};
+    helpButton->addToRender(&_renderList);
+    _sprites.push_back(helpButton);
+
+    // Credits
+    TextButton* creditsButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Credits", [c = _context]() {  c->setActiveScreen<CreditScreen>(); }, 190, 100, 10, 790, Colour{255,255,255,0}, Colour{255,255,255,0}};
+    creditsButton->addToRender(&_renderList);
+    _sprites.push_back(creditsButton);
+
+    // Advertisement
+    advertisement = new SpriteButton {*_inputFacade->getMouseEventObservable(), advertisingManager.getCurrentAd(), [c = _context]() {  c->setActiveScreen<AdvertisingScreen>(); }, 400, 150, 300, 750, Colour{255,255,255,0}};
+    advertisement->addToRender(&_renderList);
+    _sprites.push_back(advertisement);
+
+    // Quit
+    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this]() { this->quitGame(); }, 120, 120, 1476, 10, Colour{0,0,0,0}};
+    quitButton->addToRender(&_renderList);
+    _sprites.push_back(quitButton);
+
+    // High Scores
+    SpriteButton* highScoresButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<HighscoreScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}};
+    highScoresButton->addToRender(&_renderList);
+    _sprites.push_back(highScoresButton);
 }
 
 MainMenuScreen::~MainMenuScreen() {
-
+    for (IShape *button: _sprites) {
+        delete button;
+    }
 }
 
 void MainMenuScreen::update(double deltaTime) {
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
-}
-
-void MainMenuScreen::update(std::shared_ptr<MouseEvent> event){
-    if((event->getXPosition() >= 100 && event->getXPosition() <= 540)
-       && (event->getYPosition() >= 200 && event->getYPosition() <= 240))
-    {
-        _context->setActiveScreen<GameScreen>();
-    }
+    advertisement->changeImageURL(advertisingManager->getCurrentAd());
 }
 
 void MainMenuScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
+    if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down)
     {
-        _isClosed = true;
+        _context->setActiveScreen<MainMenuScreen>();
     }
+}
+
+void MainMenuScreen::quitGame(){
+    _isClosed = true;
 }

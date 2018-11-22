@@ -7,7 +7,7 @@ class GeneralFacade : public IFacade {
 public:
     GeneralFacade();
     ~GeneralFacade();
-    void sleep(int millis) const;
+    void sleep(double millis) const;
 };
 
 #endif //PROJECT_SWA_GENERALFACADE_H

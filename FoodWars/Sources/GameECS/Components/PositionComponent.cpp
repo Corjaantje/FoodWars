@@ -1,8 +1,6 @@
 #include "../../../Headers/GameECS/Components/PositionComponent.h"
 
-PositionComponent::PositionComponent() {
-    X = 0;
-    Y = 0;
+PositionComponent::PositionComponent() : X(0), Y(0) {
 }
 
 PositionComponent::PositionComponent(int x, int y) {
@@ -12,15 +10,7 @@ PositionComponent::PositionComponent(int x, int y) {
 
 PositionComponent &PositionComponent::operator+=(const PositionComponent &other) {
     X += other.X;
-    if(X > 20)
-        X = 20;
-    else if(X < -20)
-        X = -20;
     Y += other.Y;
-    if(Y > 20)
-        Y = 20;
-    else if(Y < -20)
-        Y = -20;
     return *this;
 }
 
@@ -34,4 +24,13 @@ PositionComponent &PositionComponent::operator--(int) {
     else if(Y < 0)
         Y++;
     return *this;
+}
+
+std::vector<std::string> PositionComponent::serialize() {
+    std::vector<std::string> data;
+    data.push_back(std::to_string(X));
+    data.push_back(std::to_string(Y));
+
+
+    return data;
 }

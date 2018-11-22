@@ -1,6 +1,7 @@
+#include <cstring>
 #include "../../Headers/Audio/AudioFacade.h"
 
-AudioFacade::AudioFacade() {
+AudioFacade::AudioFacade() : _backgroundMusic(""){
     AudioFacade::init();
 }
 
@@ -39,20 +40,32 @@ void AudioFacade::setEffectVolume(int volume) {
 
 // Plays Music
 void AudioFacade::playMusic(const char* filename) {
-    if (filename != _backgroundMusic)
-    {
-        // Get path with the filename
-        const char *path = getAudio(filename);
 
-        Mix_Music *music;
-        music=Mix_LoadMUS(path);
-        if(!music)
-            _audioPlayer->stopMusic();
-
-        // Play sound with the path
-        _audioPlayer->playMusic(path, -1);
-        _backgroundMusic = filename;
+    // Check if filename is empty or null
+    if(std::string(filename).empty() || filename == nullptr){
+        _audioPlayer->stopMusic();
+        return;
     }
+    // Check if song is already playing
+    if (std::string(filename) == std::string(_backgroundMusic))
+        return;
+
+    // Get path with the filename
+    const char *path = getAudio(filename);
+
+    if(path == nullptr){
+        _audioPlayer->stopMusic();
+        return;
+    }
+    // Create music
+    Mix_Music *music;
+    music=Mix_LoadMUS(path);
+    if(!music)
+        _audioPlayer->stopMusic();
+
+    // Play sound with the path
+    _audioPlayer->playMusic(path, -1);
+    _backgroundMusic = std::string(filename);
 }
 
 // Plays a sound effect
@@ -72,5 +85,7 @@ void AudioFacade::addAudio(const char* key,const char* path){
 // Returns audio path with given key
 const char* AudioFacade::getAudio(const char* audioName) {
     const char* result = _audioMap->find(audioName)->second.c_str();
+    if(result == _audioMap->end()->second.c_str())
+        return nullptr;
     return result;
 }

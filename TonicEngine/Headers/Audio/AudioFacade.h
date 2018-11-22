@@ -5,6 +5,7 @@
 #include "AudioPlayer.h"
 #include "../../Facades/IFacade.h"
 #include <string>
+#include <cstring>
 #include <map>
 
 class AudioFacade : public IFacade {
@@ -21,7 +22,7 @@ public:
 private:
     std::map<std::string, std::string> *_audioMap = nullptr;
     AudioPlayer* _audioPlayer = nullptr;
-    const char* _backgroundMusic = nullptr;
+    std::string _backgroundMusic;
     void init();
     const char* getAudio(const char* audioName);
 };

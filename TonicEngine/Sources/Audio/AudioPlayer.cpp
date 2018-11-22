@@ -57,12 +57,12 @@ void AudioPlayer::setEffectVolume(int volume) {
 
 // Plays Music
 void AudioPlayer::playMusic(const char *path, int amountOfLoops) {
-
     // Load music
     Mix_Music *audio = Mix_LoadMUS(path);
 
     // Play music
     Mix_PlayMusic(audio, amountOfLoops);
+    Mix_ResumeMusic();
 }
 
 void AudioPlayer::stopMusic(){

@@ -9,16 +9,27 @@
 #include "../../../TonicEngine/Facades/IFacade.h"
 #include "../../../TonicEngine/Headers/Visual/VisualFacade.h"
 #include "../../../TonicEngine/Headers/Audio/AudioFacade.h"
-#include "IScreen.h"
+
+class IScreen;
 
 class ScreenStateManager {
 private:
     std::shared_ptr<IScreen> _currentState;
     std::map<std::string, std::shared_ptr<IScreen>> _screenStates;
     std::map<std::string, std::shared_ptr<IFacade>> _facades;
+    std::shared_ptr<WindowResolutionCalculator> _windowResCalc;
+
+    // Modifier for changing the gameplay speed
+    double timeModifier = 1.0;
 public:
     ScreenStateManager();
-    std::shared_ptr<IScreen> getCurrentState();
+    std::shared_ptr<IScreen> getCurrentState() const;
+
+    double getTimeModifier() const;
+
+    void setTimeModifier(double timeModifier);
+
+    void setWindowResolutionCalculator(std::shared_ptr<WindowResolutionCalculator> windowResCalc);
 
     template<typename Screen, typename std::enable_if<std::is_base_of<IScreen, Screen>::value>::type* = nullptr>
     void addOrSetScreenState(Screen* screen){
@@ -38,6 +49,8 @@ public:
         _currentState = s;
     }*/
 
+    void setActiveScreen(const std::string& screenName);
+
     template<typename Facade, typename std::enable_if<std::is_base_of<IFacade, Facade>::value>::type* = nullptr>
     void addFacade(Facade* facade) {
         _facades[typeid(Facade).name()] = std::shared_ptr<IFacade>(facade);
@@ -47,9 +60,13 @@ public:
     std::shared_ptr<Facade> getFacade() {
         std::string facadeName = typeid(Facade).name();
         if(_facades.count(facadeName) > 0){
-            return std::dynamic_pointer_cast<Facade>(_facades[facadeName]);
+            return std::static_pointer_cast<Facade>(_facades[facadeName]);
         }
         return nullptr;
+    }
+
+    std::shared_ptr<WindowResolutionCalculator> getWindowResolutionCalculator() const {
+        return _windowResCalc;
     }
 };
 

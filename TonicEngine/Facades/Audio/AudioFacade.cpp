@@ -1,7 +1,7 @@
 #include <cstring>
 #include "../../Headers/Audio/AudioFacade.h"
 
-AudioFacade::AudioFacade() {
+AudioFacade::AudioFacade() : _backgroundMusic(""){
     AudioFacade::init();
 }
 
@@ -47,10 +47,8 @@ void AudioFacade::playMusic(const char* filename) {
         return;
     }
     // Check if song is already playing
-    if(_backgroundMusic != nullptr){
-        if (std::string(filename) == std::string(_backgroundMusic))
-            return;
-    }
+    if (std::string(filename) == std::string(_backgroundMusic))
+        return;
 
     // Get path with the filename
     const char *path = getAudio(filename);
@@ -67,7 +65,7 @@ void AudioFacade::playMusic(const char* filename) {
 
     // Play sound with the path
     _audioPlayer->playMusic(path, -1);
-    _backgroundMusic = filename;
+    _backgroundMusic = std::string(filename);
 }
 
 // Plays a sound effect

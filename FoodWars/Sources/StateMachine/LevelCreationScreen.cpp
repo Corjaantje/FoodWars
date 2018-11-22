@@ -139,6 +139,8 @@ void LevelCreationScreen::initButtons() {
 LevelCreationScreen::~LevelCreationScreen() = default;
 
 void LevelCreationScreen::update(double deltaTime) {
+    std::string song = _levelBuilder.getSelectedSong();
+    audioFacade->playMusic(song.c_str());
     _inputFacade->pollEvents();
 }
 

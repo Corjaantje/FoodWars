@@ -6,7 +6,10 @@
 #include "../../Headers/StateMachine/AdvertisingScreen.h"
 
 
-MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context, const AdvertisingManager& advertisingManager) : IScreen(context), advertisingManager(&advertisingManager) {
+MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context, const FileManager& fileManager) :
+    IScreen(context),
+    _fileManager(&fileManager) {
+
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
 
@@ -50,9 +53,9 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context, cons
     _sprites.push_back(creditsButton);
 
     // Advertisement
-    advertisement = new SpriteButton {*_inputFacade->getMouseEventObservable(), advertisingManager.getCurrentAd(), [c = _context]() {  c->setActiveScreen<AdvertisingScreen>(); }, 400, 150, 300, 750, Colour{255,255,255,0}};
-    advertisement->addToRender(&_renderList);
-    _sprites.push_back(advertisement);
+    _advertisement = new SpriteButton {*_inputFacade->getMouseEventObservable(), _fileManager->readFileContent("./Assets/Sprites/Advertisements/current.txt"), [c = _context]() {  c->setActiveScreen<AdvertisingScreen>(); }, 400, 150, 300, 750, Colour{255,255,255,0}};
+    _advertisement->addToRender(&_renderList);
+    _sprites.push_back(_advertisement);
 
     // Quit
     SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this]() { this->quitGame(); }, 120, 120, 1476, 10, Colour{0,0,0,0}};
@@ -75,7 +78,7 @@ void MainMenuScreen::update(double deltaTime) {
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
-    advertisement->changeImageURL(advertisingManager->getCurrentAd());
+    _advertisement->changeImageURL(_fileManager->readFileContent("./Assets/Sprites/Advertisements/current.txt"));
 }
 
 void MainMenuScreen::update(std::shared_ptr<KeyEvent> event){

@@ -3,6 +3,8 @@
 #include <dirent.h>
 #include <iostream>
 #include <sys/stat.h>
+#include <fstream>
+
 FileManager::FileManager() = default;
 FileManager::~FileManager() = default;
 
@@ -32,4 +34,26 @@ std::vector<std::string> FileManager::getFiles(const std::string &filePath, cons
         }
     }
     closedir(dir);
+}
+
+std::string FileManager::readFileContent(const std::string &filePath) const {
+    std::ifstream f(filePath);
+    std::string firstLine;
+
+    if (f.good())
+    {
+        getline(f, firstLine);
+    }
+    f.close();
+
+    return firstLine;
+}
+
+void FileManager::writeFileContent(const std::string &filePath, const std::string &content) const {
+    std::ofstream o(filePath);
+    if (o.is_open())
+    {
+        o << content << std::endl;
+    }
+    o.close();
 }

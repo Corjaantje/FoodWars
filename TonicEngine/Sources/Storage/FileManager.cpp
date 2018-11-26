@@ -23,17 +23,19 @@ std::vector<std::string> FileManager::getFiles(const std::string &filePath, cons
             std::string path = std::string(filePath) + "/" + std::string(entry->d_name);
             stat(path.c_str(),&info);
             if(S_ISDIR(info.st_mode)){
-                this->getFiles(path, fileExtension);
-            }
-            else{
+                for(const auto &file: this->getFiles(path, fileExtension)) {
+                    result.push_back(file);
+                }
+            } else{
                 if(path.find(fileExtension) != std::string::npos){
-                    result.emplace_back(entry->d_name);
+                    result.emplace_back(path);
                 }
             }
 
         }
     }
     closedir(dir);
+    return result;
 }
 
 std::string FileManager::readFileContent(const std::string &filePath) const {

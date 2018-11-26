@@ -2,9 +2,14 @@
 
 #include "../../Headers/StateMachine/LevelSelectionScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
-#include "../../../TonicEngine/Headers/Storage/FileManager.h"
 
-LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager) : IScreen(context), _levelManager(levelManager), _currentIndex(0), mouseEventObservable(_inputFacade->getMouseEventObservable().get()) {
+LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager, const FileManager& fileManager ) :
+        IScreen(context),
+        _levelManager(levelManager),
+        mouseEventObservable(_inputFacade->getMouseEventObservable().get()),
+        _currentIndex(0),
+        _fileManager(&fileManager) {
+
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
     _renderList._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenLevelSelection.png"));
@@ -37,15 +42,14 @@ void LevelSelectionScreen::generateLevelButtons() {
     }
     _levelButtons.clear();
     _currentIndex = 0;
-    _levels = FileManager().getFiles("Assets/Levels/", "xml");
+    _levels = _fileManager->getFiles("./Assets/Levels/", "xml");
     std::sort(_levels.begin(), _levels.end());
     for (int i = 0; i < _levels.size(); i++) {
-        int fileNum = std::stoi(_levels[i].substr(5, _levels[i].find('.')));
         TextButton *button = new TextButton{*_inputFacade->getMouseEventObservable(),
-                                            "Level " + std::to_string(fileNum + 1),
-                                            [c = _context, this, fileNum]() {
+                                            "Level " + std::to_string(i + 1),
+                                            [c = _context, this, i]() {
                                                 c->addOrSetScreenState(
-                                                        new GameScreen{c, _levelManager->startLevel(fileNum)});
+                                                        new GameScreen{c, _levelManager->startLevel(i)});
                                                 c->setActiveScreen<GameScreen>();
                                             }, 250, 80, 680, 310 + (i % 3) * 125, Colour(255, 255, 255, 255),
                                             Colour(255, 255, 255, 255)};

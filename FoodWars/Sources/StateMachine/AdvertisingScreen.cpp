@@ -15,7 +15,7 @@ AdvertisingScreen::AdvertisingScreen(std::shared_ptr<ScreenStateManager> context
     _renderList._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenAdvertisements.png"));
 
     std::string filePath = "./Assets/Sprites/Advertisements/";
-    _currentAD = _fileManager->readFileContent(filePath + "current.txt");
+    _currentAD = _fileManager->readFileLines(filePath + "current.txt")[0];
     _advertisements = fileManager.getFiles(filePath, "png");
     if (_currentAD.empty() || _advertisements.empty())
     {

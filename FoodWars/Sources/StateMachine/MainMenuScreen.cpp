@@ -53,7 +53,10 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context, cons
     _sprites.push_back(creditsButton);
 
     // Advertisement
-    _advertisement = new SpriteButton {*_inputFacade->getMouseEventObservable(), _fileManager->readFileContent("./Assets/Sprites/Advertisements/current.txt"), [c = _context]() {  c->setActiveScreen<AdvertisingScreen>(); }, 400, 150, 300, 750, Colour{255,255,255,0}};
+    _advertisement = new SpriteButton{*_inputFacade->getMouseEventObservable(),
+                                      _fileManager->readFileLines("./Assets/Sprites/Advertisements/current.txt")[0],
+                                      [c = _context]() { c->setActiveScreen<AdvertisingScreen>(); }, 400, 150, 300, 750,
+                                      Colour{255, 255, 255, 0}};
     _advertisement->addToRender(&_renderList);
     _sprites.push_back(_advertisement);
 
@@ -78,7 +81,7 @@ void MainMenuScreen::update(double deltaTime) {
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
-    _advertisement->changeImageURL(_fileManager->readFileContent("./Assets/Sprites/Advertisements/current.txt"));
+    _advertisement->changeImageURL(_fileManager->readFileLines("./Assets/Sprites/Advertisements/current.txt")[0]);
 }
 
 void MainMenuScreen::update(std::shared_ptr<KeyEvent> event){

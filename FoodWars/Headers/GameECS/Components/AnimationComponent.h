@@ -7,8 +7,10 @@
 
 class AnimationComponent : public Component{
 public:
+    AnimationComponent();
     explicit AnimationComponent(std::vector<IShape*> animationShapes, double animationInterval);
-    ~AnimationComponent() override;
+
+    ~AnimationComponent();
     double getAnimationInterval() const;
     double getElapsedTime() const;
     int getCurrentShapeIndex() const;

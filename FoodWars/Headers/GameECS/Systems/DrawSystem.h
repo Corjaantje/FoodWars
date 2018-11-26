@@ -11,7 +11,7 @@ class DrawSystem : public IBaseSystem {
 private:
     std::chrono::duration<double> _timeLast;
     std::vector<IShape *> _sprites;
-    std::shared_ptr<EntityManager> _entityManager;
+    EntityManager *_entityManager;
     std::shared_ptr<VisualFacade> _visualFacade;
     std::shared_ptr<InputFacade> _inputFacade;
     Renderlist _renderList;
@@ -23,7 +23,7 @@ private:
 
     bool _showFPS = true;
 public:
-    DrawSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<VisualFacade> visualFacade, std::shared_ptr<InputFacade>);
+    DrawSystem(EntityManager &entityManager, std::shared_ptr<VisualFacade> visualFacade, std::shared_ptr<InputFacade>);
     ~DrawSystem() override;
     void update(double dt) override;
     bool toggleFpsCounter();

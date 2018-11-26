@@ -18,7 +18,7 @@ int* WorldParser::ParseFromXML(tinyxml2::XMLElement elem) {
 }
 
 void WorldParser::ParseToXML() {
-    std::map<int, std::shared_ptr<DrawableComponent>> toSave {_entityManager->getAllEntitiesWithComponent<DrawableComponent>()};
+    std::map<int, DrawableComponent *> toSave{_entityManager->getAllEntitiesWithComponent<DrawableComponent>()};
 
 
     for (auto const& drawComp : toSave)

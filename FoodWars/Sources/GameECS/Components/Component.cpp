@@ -1,3 +1,5 @@
 #include "../../../Headers/GameECS/Components/Component.h"
 
-Component::~Component() {}
+Component::~Component() = default;
+
+Component::Component() = default;

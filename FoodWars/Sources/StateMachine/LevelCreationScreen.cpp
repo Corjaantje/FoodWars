@@ -186,7 +186,7 @@ void LevelCreationScreen::callRender() {
 
 void LevelCreationScreen::relinkAndSave() {
     StorageSystem storage;
-    EntityManager ent = _levelBuilder.buildConstructedLevel().getEntityManager();
+    /*EntityManager ent = _levelBuilder.buildConstructedLevel().getEntityManager();
     // spawnpoints
     std::vector<Coordinate> spawns = _levelBuilder.getSpawnPoints();
     // background image?
@@ -195,5 +195,5 @@ void LevelCreationScreen::relinkAndSave() {
     std::string backgroundMusic = _levelBuilder.getSelectedSong();
 
     storage.assignRelevantEntityManager(ent);
-    storage.saveWorld(backgroundMusic, backgroundImage, spawns);
+    storage.saveWorld(backgroundMusic, backgroundImage, spawns);*/
 }

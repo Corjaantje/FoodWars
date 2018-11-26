@@ -1,10 +1,13 @@
 #include <utility>
 #include "../../../Headers/GameECS/Components/AnimationComponent.h"
 
-AnimationComponent::AnimationComponent(std::vector<IShape*> animationShapes, double animationInterval) {
-    _animationShapes = std::move(animationShapes);
-    _animationInterval = animationInterval;
-    _elapsedTime = 0;
+AnimationComponent::AnimationComponent() : AnimationComponent({}, 1) {
+
+}
+
+AnimationComponent::AnimationComponent(std::vector<IShape *> animationShapes, double animationInterval)
+        : _animationShapes(std::move(animationShapes)), _animationInterval(animationInterval), _elapsedTime(0),
+          _isIdle(false), _isLookingLeft(false) {
     setCurrentShapeIndex(0);
 }
 

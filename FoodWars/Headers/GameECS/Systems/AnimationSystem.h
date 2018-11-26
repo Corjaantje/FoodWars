@@ -1,7 +1,6 @@
 #ifndef PROJECT_SWA_ANIMATIONSYSTEM_H
 #define PROJECT_SWA_ANIMATIONSYSTEM_H
 
-
 #include "IBaseSystem.h"
 #include "../../AnimationManager.h"
 #include "../../../Headers/GameECS/Components/AnimationComponent.h"
@@ -13,10 +12,10 @@
 class AnimationSystem : public IBaseSystem {
 private:
     AnimationManager* _animationManager;
+    EntityManager *_entityManager;
 public:
-    explicit AnimationSystem(std::shared_ptr<EntityManager> entityManager, AnimationManager* animationManager);
+    explicit AnimationSystem(EntityManager &entityManager, AnimationManager *animationManager);
     void update(double deltatime) override;
-    std::shared_ptr<EntityManager>  _entityManager;
 };
 
 

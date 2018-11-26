@@ -1,7 +1,4 @@
 #include "../../../Headers/StateMachine/Misc/LevelBuilder.h"
-#include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
-#include "../../../Headers/GameECS/Components/DrawableComponent.h"
-#include "../../../Headers/GameECS/Components/DamageableComponent.h"
 
 LevelBuilder::LevelBuilder() {
     _entityManager = new EntityManager();
@@ -145,7 +142,7 @@ void LevelBuilder::removeBlock(int x, int y) {
 //}
 
 void LevelBuilder::drawCurrentScene(Renderlist &renderlist) {
-    std::map<int, std::shared_ptr<DrawableComponent>> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
+    std::map<int, DrawableComponent *> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
     renderlist.clearLists();
     for (auto &drawComp : drawComps) {
         drawComp.second->shape->addToRender(&renderlist);

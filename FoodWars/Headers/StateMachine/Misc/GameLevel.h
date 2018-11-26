@@ -1,7 +1,6 @@
 #ifndef PROJECT_SWA_GAMELEVEL_H
 #define PROJECT_SWA_GAMELEVEL_H
 
-
 #include "../../GameECS/Entities/EntityManager.h"
 #include "Coordinate.h"
 
@@ -15,7 +14,7 @@ private:
     std::string _backgroundWallpaper;
     std::vector<Coordinate> _spawnPoints;
 public:
-    void setEntityManager(EntityManager entityManager);
+    void setEntityManager(const EntityManager &entityManager);
     void setBackgroundMusic(std::string backgroundMusic);
     void setBackgroundWallpaper(std::string backgroundWallpaper);
     void setSpawnPoints(std::vector<Coordinate> spawnPoints);

@@ -1,12 +1,6 @@
 #include "../../../Headers/GameECS/Systems/StorageSystem.h"
-#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
-#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
-#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeText.h"
 // For checking # of files in directory
-#include <stdio.h>
-#include <sys/types.h>
 #include <dirent.h>
-#include <sys/stat.h>
 
 StorageSystem::StorageSystem() {
     _reader = new XMLReader();
@@ -22,7 +16,7 @@ StorageSystem::~StorageSystem() {
 template<typename Comp>
 void StorageSystem::addComponentTypeOf(std::string compName, map<int, MyNode> &foundComponents, MyNode &rootNode) {
 
-    std::map<int, std::shared_ptr<DrawableComponent>> components {_entityManager->getAllEntitiesWithComponent<DrawableComponent>()};
+    std::map<int, std::shared_ptr<DrawableComponent>> components{/*_entityManager->getAllEntitiesWithComponent<DrawableComponent>()*/};
     // Can probably move this to a function with a <T> and pass a name for the newDraw?
     // Would just need an array of the kinds of components.
     for (auto const& drawComp : components)
@@ -534,8 +528,8 @@ void StorageSystem::recursiveCrawl(MyNode& piece, EntityManager& _entity, int id
 }
 
 void StorageSystem::parseDrawable(const MyNode& drawableNode, EntityManager& _entity, int identifier) {
-    DrawableComponent *comp = new DrawableComponent();
-    _entity.addComponentToEntity(identifier, comp);
+    /*DrawableComponent *comp = new DrawableComponent();
+    //_entity.addComponentToEntity(identifier, comp);
 
     std::vector<MyNode> childNodes = drawableNode.GetChildren();
     if (childNodes[0].GetName() == "rectangle") {
@@ -574,49 +568,49 @@ void StorageSystem::parseDrawable(const MyNode& drawableNode, EntityManager& _en
                        childNodes[0].GetChildren()[0].GetIntValue(),
                        childNodes[0].GetChildren()[0].GetIntValue()}
                 );
-    }
+    }*/
 }
 
 void StorageSystem::parseGravity(const MyNode& gravityNode, EntityManager& _entity, int identifier) {
-    GravityComponent *comp = new GravityComponent();
-    _entity.addComponentToEntity(identifier, comp);
+    /*GravityComponent *comp = new GravityComponent();
+    _entity.addComponentToEntity(identifier, *comp);
 
     std::vector<MyNode> childNodes = gravityNode.GetChildren();
-    comp->gravityApplied = childNodes[0].GetIntValue();
+    comp->gravityApplied = childNodes[0].GetIntValue();*/
 }
 
 void StorageSystem::parseMove(const MyNode& moveNode, EntityManager& _entity, int identifier) {
-    MoveComponent *comp = new MoveComponent();
-    _entity.addComponentToEntity(identifier, comp);
+    /*MoveComponent *comp = new MoveComponent();
+    _entity.addComponentToEntity(identifier, *comp);
 
     std::vector<MyNode> childNodes = moveNode.GetChildren();
     comp->xVelocity = childNodes[1].GetIntValue();
-    comp->yVelocity = childNodes[0].GetIntValue();
+    comp->yVelocity = childNodes[0].GetIntValue();*/
 }
 
 void StorageSystem::parsePosition(const MyNode& positionNode, EntityManager& _entity, int identifier) {
-        std::vector<MyNode> childNodes = positionNode.GetChildren();
-        PositionComponent *comp = new PositionComponent(childNodes[0].GetIntValue(), childNodes[1].GetIntValue());
-        _entity.addComponentToEntity(identifier, comp);
+    /*std::vector<MyNode> childNodes = positionNode.GetChildren();
+    PositionComponent *comp = new PositionComponent(childNodes[0].GetIntValue(), childNodes[1].GetIntValue());
+    _entity.addComponentToEntity(identifier, *comp);*/
 }
 
-void StorageSystem::parseTurn(const MyNode& turnNode, EntityManager& _entity, int identifier) {
+void StorageSystem::parseTurn(const MyNode &turnNode, EntityManager &_entity, int identifier) {/*
     std::vector<MyNode> childNodes = turnNode.GetChildren();
     TurnComponent *comp = new TurnComponent(childNodes[1].GetIntValue(), childNodes[0].GetIntValue());
-    _entity.addComponentToEntity(identifier, comp);
+    _entity.addComponentToEntity(identifier, *comp);*/
 
 }
 
-void StorageSystem::parseCollideables(const MyNode& collideNode, EntityManager &_entity, int identifier) {
+void StorageSystem::parseCollideables(const MyNode &collideNode, EntityManager &_entity, int identifier) {/*
     std::vector<MyNode> childNodes = collideNode.GetChildren();
     BoxCollider *comp = new BoxCollider(childNodes[1].GetIntValue(), childNodes[0].GetIntValue());
-    _entity.addComponentToEntity(identifier, comp);
+    _entity.addComponentToEntity(identifier, *comp);*/
 }
 
-void StorageSystem::parseDamageable(const MyNode &damageNode, EntityManager &_entity, int identifier) {
+void StorageSystem::parseDamageable(const MyNode &damageNode, EntityManager &_entity, int identifier) {/*
     std::vector<MyNode> childNodes = damageNode.GetChildren();
     DamageableComponent *comp = new DamageableComponent(childNodes[0].GetIntValue());
-    _entity.addComponentToEntity(identifier, comp);
+    _entity.addComponentToEntity(identifier, *comp);*/
 }
 
 int StorageSystem::countFilesInDirectory(std::string targetdir) {
@@ -634,7 +628,7 @@ int StorageSystem::countFilesInDirectory(std::string targetdir) {
     while((entry = readdir(dir)) != nullptr){
         if(entry->d_name[0] != '.'){
             std::string path = std::string(targetdir) + "/" + std::string(entry->d_name);
-            stat(path.c_str(),&info);
+            //stat(path.c_str(),&info);
 
                 if(path.find(".xml") != std::string::npos){
                     int fileNum = std::stoi(std::string(entry->d_name).substr(5, std::string(entry->d_name).length()-9));
@@ -663,13 +657,13 @@ void StorageSystem::saveWorld(std::string bgm, std::string bgimg, std::vector<Co
     std::map<int, int> nodeLocations;
     vector<MyNode*> nodeIDs;
 
-    addDrawables(myDoc, _entityManager->getAllEntitiesWithComponent<DrawableComponent>(), nodeIDs, nodeLocations);
+/*    addDrawables(myDoc, _entityManager->getAllEntitiesWithComponent<DrawableComponent>(), nodeIDs, nodeLocations);
     addGravity(myDoc, _entityManager->getAllEntitiesWithComponent<GravityComponent>(), nodeIDs, nodeLocations);
     addMove(myDoc, _entityManager->getAllEntitiesWithComponent<MoveComponent>(), nodeIDs, nodeLocations);
     addPosition(myDoc, _entityManager->getAllEntitiesWithComponent<PositionComponent>(), nodeIDs, nodeLocations);
     addTurns(myDoc, _entityManager->getAllEntitiesWithComponent<TurnComponent>(), nodeIDs, nodeLocations);
     addCollideables(myDoc, _entityManager->getAllEntitiesWithComponent<BoxCollider>(), nodeIDs, nodeLocations);
-    addDamageable(myDoc, _entityManager->getAllEntitiesWithComponent<DamageableComponent>(), nodeIDs, nodeLocations);
+    addDamageable(myDoc, _entityManager->getAllEntitiesWithComponent<DamageableComponent>(), nodeIDs, nodeLocations);*/
     if (nodeIDs.size() <= 5)
         return;
     for (auto const& point : nodeIDs)
@@ -733,9 +727,9 @@ GameLevel* StorageSystem::loadWorld(EntityManager& toFill, std::string filePath)
     parseSavedInstance(rootNode, toFill);
 
     GameLevel* gameLevel = new GameLevel{};
-    gameLevel->setEntityManager(toFill);
+    /*gameLevel->setEntityManager(toFill);
     gameLevel->setBackgroundMusic(rootNode.GetChildren()[0].GetValue());
-    gameLevel->setBackgroundWallpaper(rootNode.GetChildren()[1].GetValue());
+    gameLevel->setBackgroundWallpaper(rootNode.GetChildren()[1].GetValue());*/
 
     std::vector<Coordinate> spawnPoints;
     for (auto const& spawn : rootNode.GetChildren()[2].GetChildren())

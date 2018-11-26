@@ -1,21 +1,19 @@
 #include "../../../Headers/GameECS/Systems/ShootingSystem.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
-#include "../../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
-#include "../../../Headers/GameECS/Components/DamagingComponent.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeLine.h"
 
-ShootingSystem::ShootingSystem(std::shared_ptr<EntityManager> entityManager,
-                            std::shared_ptr<AudioFacade> audioFacade,
-                            std::shared_ptr<VisualFacade> visualFacade,
-                                std::shared_ptr<InputFacade> inputFacade) :
-                                                _audioFacade(std::move(audioFacade)),
-                                                _entityManager{std::move(entityManager)},
-                                                _visualFacade{std::move(visualFacade)},
-                                                _isShooting{false},
-                                                _projectileFired{false},
-                                                _projectile{0}
+ShootingSystem::ShootingSystem(EntityManager &entityManager,
+                               std::shared_ptr<AudioFacade> audioFacade,
+                               std::shared_ptr<VisualFacade> visualFacade,
+                               std::shared_ptr<InputFacade> inputFacade) :
+        _audioFacade(std::move(audioFacade)),
+        _entityManager{&entityManager},
+        _visualFacade{std::move(visualFacade)},
+        _isShooting{false},
+        _projectileFired{false},
+        _projectile{0}
 {
     inputFacade->getMouseEventObservable()->registerObserver(this);
 }
@@ -78,7 +76,7 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
         }
 
         if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
-            generateProjectile(*currentPlayerPos.get(), *playerSize.get(), deltaX, deltaY);
+            generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY);
             _isShooting = false;
             _projectileFired = true;
             _entityManager->removeEntity(_shootingLine);
@@ -92,7 +90,7 @@ void ShootingSystem::createShootingLine(int fromX, int fromY, int toX, int toY) 
     _shootingLine = _entityManager->createEntity();
     auto d = new DrawableComponent();
     d->shape = new ShapeLine(fromX, fromY, toX, toY, Colour(0, 0, 0, 0));
-    _entityManager->addComponentToEntity(_shootingLine, d);
+    _entityManager->addComponentToEntity(_shootingLine, *d);
 }
 
 void ShootingSystem::toggleShooting() {
@@ -115,15 +113,15 @@ ShootingSystem::generateProjectile(const PositionComponent &playerPositionCompon
     auto drawableComponent = new DrawableComponent;
     drawableComponent->shape = new ShapeSprite(projectileWidth, projectileHeight, posX, posY, "carrot.png");
     const double speedModifier = 2.5;
-    _entityManager->addComponentToEntity(_projectile, drawableComponent);
-    _entityManager->addComponentToEntity(_projectile, new PositionComponent(posX, posY));
-    _entityManager->addComponentToEntity(_projectile, new BoxCollider(projectileWidth, projectileHeight));
-    _entityManager->addComponentToEntity(_projectile, new DamagingComponent(25));
-    _entityManager->addComponentToEntity(_projectile, new DamageableComponent { 10 });
-    _entityManager->addComponentToEntity(_projectile, new GravityComponent(6.5 * speedModifier));
+    _entityManager->addComponentToEntity(_projectile, *drawableComponent);
+    _entityManager->addComponentToEntity<PositionComponent>(_projectile, posX, posY);
+    _entityManager->addComponentToEntity<BoxCollider>(_projectile, projectileWidth, projectileHeight);
+    _entityManager->addComponentToEntity(_projectile, DamagingComponent(25));
+    _entityManager->addComponentToEntity(_projectile, DamageableComponent{10});
+    _entityManager->addComponentToEntity(_projectile, GravityComponent(6.5 * speedModifier));
 
     auto moveComponent = new MoveComponent();
     moveComponent->xVelocity = velocityX * speedModifier;
     moveComponent->yVelocity = velocityY * speedModifier;
-    _entityManager->addComponentToEntity(_projectile, moveComponent);
+    _entityManager->addComponentToEntity(_projectile, *moveComponent);
 }

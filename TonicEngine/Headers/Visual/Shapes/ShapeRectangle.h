@@ -1,7 +1,6 @@
 #ifndef PROJECT_SWA_SHAPERECTANGLE_H
 #define PROJECT_SWA_SHAPERECTANGLE_H
 
-
 #include "../Colour.h"
 #include "IShape.h"
 

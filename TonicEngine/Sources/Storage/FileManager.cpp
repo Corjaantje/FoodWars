@@ -38,17 +38,18 @@ std::vector<std::string> FileManager::getFiles(const std::string &filePath, cons
     return result;
 }
 
-std::string FileManager::readFileContent(const std::string &filePath) const {
+std::vector<std::string> FileManager::readFileLines(const std::string &filePath) const {
     std::ifstream f(filePath);
-    std::string firstLine;
+    std::vector<std::string> lines;
 
-    if (f.good())
-    {
-        getline(f, firstLine);
+    if (f.good()) {
+        for( std::string line; getline( f, line ); ){
+            lines.push_back(line);
+        }
     }
     f.close();
 
-    return firstLine;
+    return lines;
 }
 
 void FileManager::writeFileContent(const std::string &filePath, const std::string &content) const {

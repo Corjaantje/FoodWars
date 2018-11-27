@@ -25,7 +25,7 @@ private:
     void initButtons();
     void callRender();
     void relinkAndSave();
-
+    ShapeText* selectedSongText;
 private:
     LevelBuilder _levelBuilder;
     std::shared_ptr<WindowResolutionCalculator> _windowResCalc;

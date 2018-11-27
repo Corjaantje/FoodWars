@@ -20,28 +20,29 @@ public:
 
     ~LevelBuilder();
 private:
-    EntityManager* _entityManager = nullptr;
+    EntityManager* _entityManager;
     std::vector<EntityMemento*> _mementoList;
     std::map<std::string, int> _CoordinateEntityMap;
     std::vector<Coordinate> _spawnPoints;
+    std::vector<std::unique_ptr<ShapeSprite>> _spawnPointSprites;
     bool _buildCollidable = true;
     bool _buildDamageable = true;
 
     int _shapeDimension = SHAPE_DIMENSION;
 
-    int _colorRed = 0; //Between 0 and 255
-    int _colorGreen = 0; //Between 0 and 255
-    int _colorBlue = 0; //Between 0 and 255
+    int _colorRed; //Between 0 and 255
+    int _colorGreen; //Between 0 and 255
+    int _colorBlue; //Between 0 and 255
 
     std::vector<std::string> _wallpaperList;
-    int _selectedWallpaper = 0;
+    int _selectedWallpaper;
 
     std::vector<std::string> _musicList;
-    int _selectedMusic = 0;
+    int _selectedMusic;
     std::vector<IShape *> _sprites;
 
     template<typename T, typename... Args>
-    IShape *createShape(Args &&... args) {
+    T *createShape(Args &&... args) {
         T *shape = new T(std::forward<Args>(args)...);
         _sprites.push_back(shape);
         return shape;
@@ -81,15 +82,11 @@ public:
     std::string getSelectedSong();
     void drawCurrentScene(Renderlist &renderlist);
 
-    void addWallpaperConfig(std::string music);
-    void addMusicConfig(std::string wallpaper);
-
     GameLevel buildConstructedLevel();
 private:
+    ShapeSprite* wallpaper;
     int roundXCoordToGrid(int x);
     int roundYCoordToGrid(int y);
-
-    void drawAdditionalItems(Renderlist &renderlist);
 };
 
 

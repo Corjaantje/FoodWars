@@ -2,7 +2,7 @@
 #include "../../../Headers/Visual/Renderlist.h"
 
 ShapeLine::ShapeLine(int xPos, int yPos, int xPos2, int yPos2, const Colour& colour)
-        : IShape(xPos, yPos), xPos2 {xPos2}, yPos2 {yPos2}, colour{colour}, layer(1) {
+        : IShape(xPos, yPos, 1), xPos2 {xPos2}, yPos2 {yPos2}, colour{colour} {
 
 }
 

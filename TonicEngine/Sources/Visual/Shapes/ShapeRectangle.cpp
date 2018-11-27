@@ -2,7 +2,7 @@
 #include "../../../Headers/Visual/Renderlist.h"
 
 ShapeRectangle::ShapeRectangle(const int width, const int height, const int xPos, const int yPos, const Colour colour)
-    : IShape(xPos, yPos), width(width), height(height), colour(colour), layer(1) {
+    : IShape(xPos, yPos, 1), width(width), height(height), colour(colour) {
 }
 
 ShapeRectangle::~ShapeRectangle() {

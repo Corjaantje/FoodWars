@@ -9,138 +9,173 @@ LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> con
     _windowResCalc = _context->getWindowResolutionCalculator();
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
 
-    _levelBuilder.addWallpaperConfig("WallpaperCity.png");
-    _levelBuilder.addWallpaperConfig("WallpaperSky.png");
-    _levelBuilder.addWallpaperConfig("WallpaperNature.png");
-    _levelBuilder.addMusicConfig("wildwest");
-    _levelBuilder.addMusicConfig("nature");
-    _levelBuilder.addMusicConfig("space");
-    _levelBuilder.addMusicConfig("space2");
+
 
     selectedSong = "none";
     this->initButtons();
+
+    selectedSongText = createShape<ShapeText>(610 - selectedSong.size() * 10, 130, selectedSong, 150, selectedSong.size() * 20, 50, Colour(0, 0, 0, 0));
 }
 
 void LevelCreationScreen::initButtons() {
 
     //save attempt non const lvalue reference cannot bind to a temporary of type
-    SpriteButton* saveButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "settings.png", [this] { relinkAndSave(); }, 50, 50, 0, 100, Colour{0,0,0,0}};
-    saveButton->addToRender(&_renderList);
-    _sprites.push_back(saveButton);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "settings.png",
+            [this] () {
+                relinkAndSave();
+            },
+            50, 50, 0, 100,
+            Colour{0,0,0,0});
 
-
-    // MainMenu
-    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 50, 50, 0, 0, Colour{0,0,0,0}};
-    quitButton->addToRender(&_renderList);
-    _sprites.push_back(quitButton);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [c = _context]() {
+                c->setActiveScreen<MainMenuScreen>();
+            },
+            50, 50, 0, 0,
+            Colour{0,0,0,0});
 
     //Color Red Increment
-    SpriteButton* RedIncrementButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.incrementColorRed(); }, 50, 50, 1520, 10, Colour{0,0,0,0}};
-    RedIncrementButton->addToRender(&_renderList);
-    _sprites.push_back(RedIncrementButton);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [this]() {
+                _levelBuilder.incrementColorRed();
+            },
+            50, 50, 1520, 10,
+            Colour{0,0,0,0});
 
     //Color Red Decrement
-    SpriteButton* RedDecrementButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.decrementColorRed(); }, 50, 50, 1370, 10, Colour{0,0,0,0}};
-    RedDecrementButton->addToRender(&_renderList);
-    _sprites.push_back(RedDecrementButton);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [this]() {
+                _levelBuilder.decrementColorRed();
+            },
+            50, 50, 1370, 10,
+            Colour{0,0,0,0});
 
     //Color Green Increment
-    SpriteButton* GreenIncrementButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.incrementColorGreen(); }, 50, 50, 1520, 75, Colour{0,0,0,0}};
-    GreenIncrementButton->addToRender(&_renderList);
-    _sprites.push_back(GreenIncrementButton);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [this]() {
+                _levelBuilder.incrementColorGreen();
+            },
+            50, 50, 1520, 75,
+            Colour{0,0,0,0});
 
     //Color Green Decrement
-    SpriteButton* GreenDecrementButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.decrementColorGreen(); }, 50, 50, 1370, 75, Colour{0,0,0,0}};
-    GreenDecrementButton->addToRender(&_renderList);
-    _sprites.push_back(GreenDecrementButton);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [this]() {
+                _levelBuilder.decrementColorGreen();
+            },
+            50, 50, 1370, 75,
+            Colour{0,0,0,0});
 
     //Color Blue Increment
-    SpriteButton* BlueIncrementButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.incrementColorBlue(); }, 50, 50, 1520, 140, Colour{0,0,0,0}};
-    BlueIncrementButton->addToRender(&_renderList);
-    _sprites.push_back(BlueIncrementButton);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [this]() {
+                _levelBuilder.incrementColorBlue();
+            },
+            50, 50, 1520, 140,
+            Colour{0,0,0,0});
 
     //Color Blue Decrement
-    SpriteButton* BlueDecrementButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.decrementColorBlue(); }, 50, 50, 1370, 140, Colour{0,0,0,0}};
-    BlueDecrementButton->addToRender(&_renderList);
-    _sprites.push_back(BlueDecrementButton);
-
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [this]() {
+                _levelBuilder.decrementColorBlue();
+            },
+            50, 50, 1370, 140,
+            Colour{0,0,0,0});
 
     //Wallpaper Next
-    SpriteButton* WallpaperNext = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.setNextWallpaper(); }, 50, 50, 710, 10, Colour{0,0,0,0}};
-    WallpaperNext->addToRender(&_renderList);
-    _sprites.push_back(WallpaperNext);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [this]() {
+                _levelBuilder.setNextWallpaper();
+            },
+            50, 50, 710, 10,
+            Colour{0,0,0,0});
 
     //Wallpaper Previous
-    SpriteButton* WallpaperPrevious = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] { _levelBuilder.setPreviousWallpaper(); }, 50, 50, 460, 10, Colour{0,0,0,0}};
-    WallpaperPrevious->addToRender(&_renderList);
-    _sprites.push_back(WallpaperPrevious);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [this]() {
+                _levelBuilder.setPreviousWallpaper();
+            },
+            50, 50, 460, 10,
+            Colour{0,0,0,0});
 
     //Music Next
-    SpriteButton* MusicNext = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] {
-        _levelBuilder.setNextMusic();
-        selectedSong = _levelBuilder.getSelectedSong();
-        }, 50, 50, 710, 80, Colour{0,0,0,0}};
-    MusicNext->addToRender(&_renderList);
-    _sprites.push_back(MusicNext);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [this]() {
+                _levelBuilder.setNextMusic();
+                selectedSong = _levelBuilder.getSelectedSong();
+            },
+            50, 50, 710, 80,
+            Colour{0,0,0,0});
 
     //Music Previous
-    SpriteButton* MusicPrevious = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this] {
-        _levelBuilder.setPreviousMusic();
-        selectedSong = _levelBuilder.getSelectedSong();
-        }, 50, 50, 460, 80, Colour{0,0,0,0}};
-    MusicPrevious->addToRender(&_renderList);
-    _sprites.push_back(MusicPrevious);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [this]() {
+                _levelBuilder.setPreviousMusic();
+                selectedSong = _levelBuilder.getSelectedSong();
+            },
+            50, 50, 460, 80,
+            Colour{0,0,0,0});
 
-    toggleCollidable = new SpriteButton {*_inputFacade->getMouseEventObservable(), "stateOn.png", [this] {
-        bool state = _levelBuilder.toggleCollidable();
-        if (state) {
-            toggleCollidable->changeImageURL(std::string("stateOn.png"));
-        } else {
-            toggleCollidable->changeImageURL(std::string("stateOff.png"));
-        }
-    }, 50, 50, 1030, 10, Colour{0, 0, 0, 0}};
-    _sprites.push_back(toggleCollidable);
+    //toggleCollidable
+    toggleCollidable = createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "stateOn.png",
+            [this]() {
+                bool state = _levelBuilder.toggleCollidable();
+                if (state) {
+                    toggleCollidable->changeImageURL(std::string("stateOn.png"));
+                } else {
+                    toggleCollidable->changeImageURL(std::string("stateOff.png"));
+                }
+            },
+            50, 50, 1030, 10,
+            Colour{0, 0, 0, 0});
 
-    toggleDamageable = new SpriteButton {*_inputFacade->getMouseEventObservable(), "stateOn.png", [this] {
-        bool state = _levelBuilder.toggleDamageable();
-        if (state) {
-            toggleDamageable->changeImageURL(std::string("stateOn.png"));
-        } else {
-            toggleDamageable->changeImageURL(std::string("stateOff.png"));
-        }
-    }, 50, 50, 1030, 85, Colour{0, 0, 0, 0}};
-    _sprites.push_back(toggleDamageable);
+    //toggleDamageable
+    toggleDamageable = createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "stateOn.png",
+            [this]() {
+                bool state = _levelBuilder.toggleDamageable();
+                if (state) {
+                    toggleDamageable->changeImageURL(std::string("stateOn.png"));
+                } else {
+                    toggleDamageable->changeImageURL(std::string("stateOff.png"));
+                }
+            },
+            50, 50, 1030, 85,
+            Colour{0, 0, 0, 0});
 
-    toggleBuildTerrain = new SpriteButton {*_inputFacade->getMouseEventObservable(), "stateOn.png", [this] {
-        buildTerrainActive = !buildTerrainActive;
-        if (buildTerrainActive) {
-            toggleBuildTerrain->changeImageURL(std::string("stateOn.png"));
-            toggleSetSpawn->changeImageURL(std::string("stateOff.png"));
-        } else {
-            toggleBuildTerrain->changeImageURL(std::string("stateOff.png"));
-            toggleSetSpawn->changeImageURL(std::string("stateOn.png"));
-        }
-    }, 50, 50, 355, 10, Colour{0, 0, 0, 0}};
-    _sprites.push_back(toggleBuildTerrain);
+    //toggleBuildTerrain
+    toggleBuildTerrain = createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "stateOn.png",
+            [this]() {
+                buildTerrainActive = !buildTerrainActive;
+                if (buildTerrainActive) {
+                    toggleBuildTerrain->changeImageURL(std::string("stateOn.png"));
+                    toggleSetSpawn->changeImageURL(std::string("stateOff.png"));
+                } else {
+                    toggleBuildTerrain->changeImageURL(std::string("stateOff.png"));
+                    toggleSetSpawn->changeImageURL(std::string("stateOn.png"));
+                }
+            },
+            50, 50, 355, 10,
+            Colour{0, 0, 0, 0});
 
-    toggleSetSpawn = new SpriteButton {*_inputFacade->getMouseEventObservable(), "stateOff.png", [this] {
-        buildTerrainActive = !buildTerrainActive;
-        if (!buildTerrainActive) {
-            toggleSetSpawn->changeImageURL(std::string("stateOn.png"));
-            toggleBuildTerrain->changeImageURL(std::string("stateOff.png"));
-        } else {
-            toggleSetSpawn->changeImageURL(std::string("stateOff.png"));
-            toggleBuildTerrain->changeImageURL(std::string("stateOn.png"));
-        }
-    }, 50, 50, 355, 75, Colour{0, 0, 0, 0}};
-    _sprites.push_back(toggleSetSpawn);
+    //toggleSetSpawn
+    toggleSetSpawn = createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "stateOff.png",
+            [this]() {
+                buildTerrainActive = !buildTerrainActive;
+                if (!buildTerrainActive) {
+                    toggleSetSpawn->changeImageURL(std::string("stateOn.png"));
+                    toggleBuildTerrain->changeImageURL(std::string("stateOff.png"));
+                } else {
+                    toggleSetSpawn->changeImageURL(std::string("stateOff.png"));
+                    toggleBuildTerrain->changeImageURL(std::string("stateOn.png"));
+                }
+            },
+            50, 50, 355, 75,
+            Colour{0, 0, 0, 0});
 }
 
 LevelCreationScreen::~LevelCreationScreen() = default;
 
 void LevelCreationScreen::update(double deltaTime) {
-    std::string song = _levelBuilder.getSelectedSong();
-    audioFacade->playMusic(song.c_str());
     _inputFacade->pollEvents();
 }
 
@@ -148,14 +183,19 @@ void LevelCreationScreen::update(std::shared_ptr<KeyEvent> event){
     if(event->getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
-        this->callRender();
     }
 }
 
 void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
     std::string song = _levelBuilder.getSelectedSong();
     audioFacade->playMusic(song.c_str());
+
+    selectedSongText->xPos = 610 - selectedSong.size() * 10;
+    selectedSongText->width = selectedSong.size() * 20;
+    selectedSongText->text = selectedSong;
+
     this->callRender();
+
     if(this->buildTerrainActive) {
         if ((event->getMouseEventType() == MouseEventType::Down || event->getMouseEventType() == MouseEventType::Drag) && event->getMouseClickType() == MouseClickType::Left) {
             _levelBuilder.placeBlock(event->getXPosition(), event->getYPosition());
@@ -175,12 +215,10 @@ void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
 }
 
 void LevelCreationScreen::callRender() {
-    _renderList.clearLists();
     _levelBuilder.drawCurrentScene(_renderList);
     for (int i = 0; i < _sprites.size(); i++) {
         _sprites[i]->addToRender(&_renderList);
     }
-    _renderList._shapes[2].push_back(new ShapeText(610 - selectedSong.size() * 10, 130, selectedSong, 150, selectedSong.size() * 20, 50, Colour(0, 0, 0, 0)));
     visualFacade->render(_renderList);
 }
 

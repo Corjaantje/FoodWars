@@ -2,9 +2,14 @@
 
 #include "../../Headers/StateMachine/LevelSelectionScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
-#include "../../../TonicEngine/Headers/Storage/FileManager.h"
 
-LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager) : IScreen(context), _levelManager(levelManager), _currentIndex(0), mouseEventObservable(_inputFacade->getMouseEventObservable().get()) {
+LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager, const FileManager& fileManager ) :
+        IScreen(context),
+        _levelManager(levelManager),
+        mouseEventObservable(_inputFacade->getMouseEventObservable().get()),
+        _currentIndex(0),
+        _fileManager(&fileManager) {
+
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
 
@@ -52,7 +57,7 @@ void LevelSelectionScreen::generateLevelButtons() {
     }
     _levelButtons.clear();
     _currentIndex = 0;
-    _levels = FileManager().getFiles("Assets/Levels/", "xml");
+    _levels = _fileManager->getFiles("./Assets/Levels/", "xml");
     std::sort(_levels.begin(), _levels.end());
     for (int i = 0; i < _levels.size(); i++) {
         TextButton *button = new TextButton{*_inputFacade->getMouseEventObservable(),

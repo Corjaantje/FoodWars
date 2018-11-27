@@ -6,7 +6,10 @@
 #include "../../Headers/StateMachine/AdvertisingScreen.h"
 
 
-MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context, const AdvertisingManager& advertisingManager) : IScreen(context), advertisingManager(&advertisingManager) {
+MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context, const FileManager& fileManager) :
+    IScreen(context),
+    _fileManager(&fileManager) {
+
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
 
@@ -68,7 +71,7 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context, cons
             Colour{255,255,255,0})->addToRender(&_renderList);
 
     // Advertisement
-    advertisement = createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), advertisingManager.getCurrentAd(),
+    advertisement = createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), _fileManager->readFileLines("./Assets/Sprites/Advertisements/current.txt")[0],
             [c = _context]() {
                 c->setActiveScreen<AdvertisingScreen>();
             },
@@ -99,7 +102,7 @@ void MainMenuScreen::update(double deltaTime) {
     visualFacade->render(_renderList);
     audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
-    advertisement->changeImageURL(advertisingManager->getCurrentAd());
+    _advertisement->changeImageURL(_fileManager->readFileLines("./Assets/Sprites/Advertisements/current.txt")[0]);
 }
 
 void MainMenuScreen::update(std::shared_ptr<KeyEvent> event){

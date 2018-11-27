@@ -1,9 +1,11 @@
 #include "../../Headers/StateMachine/AdvertisingScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
-#include "../../../TonicEngine/Headers/Storage/AdvertisingManager.h"
 
 
-AdvertisingScreen::AdvertisingScreen(std::shared_ptr<ScreenStateManager> context, const AdvertisingManager& manager) : IScreen(context), _advertisingManager(&manager)
+AdvertisingScreen::AdvertisingScreen(std::shared_ptr<ScreenStateManager> context, const FileManager& fileManager) :
+        IScreen(context),
+        _fileManager(&fileManager),
+        _currentIndex(0)
 {
     visualFacade = context->getFacade<VisualFacade>();
     audioFacade = context->getFacade<AudioFacade>();
@@ -14,14 +16,14 @@ AdvertisingScreen::AdvertisingScreen(std::shared_ptr<ScreenStateManager> context
     wallpaper->layer = 0;
     wallpaper->addToRender(&_renderList);
 
-    if (_advertisingManager->getAdvertisements().empty())
+    std::string filePath = "./Assets/Sprites/Advertisements/";
+    _currentAD = _fileManager->readFileLines(filePath + "current.txt")[0];
+    _advertisements = fileManager.getFiles(filePath, "png");
+    if (_currentAD.empty() || _advertisements.empty())
     {
         createShape<ShapeText>((1600/2)-200, 550, "No ADs found.", 80, 400, 100, Colour(0,0,0,0))->addToRender(&_renderList);
         return;
     }
-
-    //get index from currentAd
-    currentIndex = 0;
 
     shownAD = createShape<ShapeSprite>(400, 150, (1600/2)-200, (900/2)-90, _advertisingManager->getCurrentAd());
     shownAD->addToRender(&_renderList);
@@ -72,20 +74,19 @@ void AdvertisingScreen::update(std::shared_ptr<KeyEvent> event)
     }
 }
 
-//TODO: get advertisements nog maar 1 keer ophalen.
 void AdvertisingScreen::swapAdvertisement(bool directionNext) {
     if (directionNext) {
-        currentIndex++;
-        if (currentIndex >= _advertisingManager->getAdvertisements().size()) {
-            currentIndex = 0;
+        _currentIndex++;
+        if (_currentIndex >= _advertisements.size()) {
+            _currentIndex = 0;
         }
-        shownAD->imageURL = _advertisingManager->getAdvertisements()[currentIndex];
+        _shownAD->imageURL = _advertisements[_currentIndex];
     } else {
-        currentIndex--;
-        if (currentIndex < 0)
+        _currentIndex--;
+        if (_currentIndex < 0)
         {
-            currentIndex = _advertisingManager->getAdvertisements().size() - 1;
+            _currentIndex = _advertisements.size() - 1;
         }
-        shownAD->imageURL = _advertisingManager->getAdvertisements()[currentIndex];
+        _shownAD->imageURL = _advertisements[_currentIndex];
     }
 }

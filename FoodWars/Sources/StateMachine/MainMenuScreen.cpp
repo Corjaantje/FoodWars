@@ -71,13 +71,13 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context, cons
             Colour{255,255,255,0})->addToRender(&_renderList);
 
     // Advertisement
-    advertisement = createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), _fileManager->readFileLines("./Assets/Sprites/Advertisements/current.txt")[0],
+    _advertisement = createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), _fileManager->readFileLines("./Assets/Sprites/Advertisements/current.txt")[0],
             [c = _context]() {
                 c->setActiveScreen<AdvertisingScreen>();
             },
             400, 150, 300, 750,
             Colour{255,255,255,0});
-    advertisement->addToRender(&_renderList);
+    _advertisement->addToRender(&_renderList);
 
     // Quit
     createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",

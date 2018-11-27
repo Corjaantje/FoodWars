@@ -1,15 +1,15 @@
 #include "../../Headers/StateMachine/LevelCreationScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
-LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
+LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> context, const FileManager& fileManager) :
+                IScreen(context), _levelBuilder{fileManager}
+{
     visualFacade = context->getFacade<VisualFacade>();
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
     _inputFacade->getMouseEventObservable()->registerObserver(this);
     _windowResCalc = _context->getWindowResolutionCalculator();
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
-
-
 
     selectedSong = "none";
     this->initButtons();

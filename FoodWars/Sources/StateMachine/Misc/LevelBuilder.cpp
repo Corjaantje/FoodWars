@@ -2,16 +2,16 @@
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
-#include "../../../../TonicEngine/Headers/Storage/FileManager.h"
 
-LevelBuilder::LevelBuilder() :  _entityManager(new EntityManager),
+LevelBuilder::LevelBuilder(const FileManager& fileManager) :  _entityManager(new EntityManager),
+                                _fileManager(&fileManager),
                                 _selectedMusic(0),
                                 _colorBlue(0),
                                 _colorRed(0),
                                 _colorGreen(0),
                                 _selectedWallpaper(0){
-    _wallpaperList = FileManager().getFiles("./Assets/GameWallpapers/", "png");
-    _musicList = FileManager().getFilesWithoutExtension("./Assets/Audio/", "mp3");
+    _wallpaperList = _fileManager->getFiles("./Assets/GameWallpapers/", "png", true, false);
+    _musicList = _fileManager->getFiles("./Assets/Audio/", "mp3", false, false);
 
     wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, _wallpaperList[_selectedWallpaper]);
     wallpaper->layer = 0;

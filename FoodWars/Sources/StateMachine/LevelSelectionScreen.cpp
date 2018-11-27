@@ -56,8 +56,7 @@ void LevelSelectionScreen::generateLevelButtons() {
         delete button;
     }
     _levelButtons.clear();
-    _currentIndex = 0;
-    _levels = _fileManager->getFiles("./Assets/Levels/", "xml");
+    _levels = _fileManager->getFiles("./Assets/Levels/", "xml", true, false);
     std::sort(_levels.begin(), _levels.end());
     for (int i = 0; i < _levels.size(); i++) {
         TextButton *button = new TextButton{*_inputFacade->getMouseEventObservable(),

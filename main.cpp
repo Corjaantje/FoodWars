@@ -64,7 +64,7 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new CreditScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager, new GameLevel()));
     screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager, levelManager, fileManager));
-    screenStateManager->addOrSetScreenState(new LevelCreationScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new LevelCreationScreen(screenStateManager, fileManager));
     screenStateManager->addOrSetScreenState(new HelpScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new PauseScreen(screenStateManager));

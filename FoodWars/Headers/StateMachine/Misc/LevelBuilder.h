@@ -7,6 +7,7 @@
 #include "../../../../TonicEngine/Headers/Visual/Renderlist.h"
 #include "GameLevel.h"
 #include "../../GameECS/Systems/StorageSystem.h"
+#include "../../../../TonicEngine/Headers/Storage/FileManager.h"
 
 const int SHAPE_DIMENSION = 32;
 //const int MAXIMAL_SHAPE_DIM = 64;
@@ -16,8 +17,7 @@ const int SPAWNPOINT_ID = -1;
 
 class LevelBuilder {
 public:
-    LevelBuilder();
-
+    explicit LevelBuilder(const FileManager& fileManager);
     ~LevelBuilder();
 private:
     EntityManager* _entityManager;
@@ -30,6 +30,7 @@ private:
 
     int _shapeDimension = SHAPE_DIMENSION;
 
+    const FileManager* _fileManager;
     int _colorRed; //Between 0 and 255
     int _colorGreen; //Between 0 and 255
     int _colorBlue; //Between 0 and 255
@@ -40,6 +41,7 @@ private:
     std::vector<std::string> _musicList;
     int _selectedMusic;
     std::vector<IShape *> _sprites;
+    ShapeSprite* wallpaper;
 
     template<typename T, typename... Args>
     T *createShape(Args &&... args) {
@@ -84,7 +86,6 @@ public:
 
     GameLevel buildConstructedLevel();
 private:
-    ShapeSprite* wallpaper;
     int roundXCoordToGrid(int x);
     int roundYCoordToGrid(int y);
 };

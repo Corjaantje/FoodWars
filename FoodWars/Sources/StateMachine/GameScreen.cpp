@@ -31,7 +31,7 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameL
     CollisionSystem* collisionSystem = new CollisionSystem{ _entityManager };
     _systems.push_back(new JumpSystem { _entityManager, _inputFacade, audioFacade, *collisionSystem } );
     _systems.push_back(new MoveSystem { _entityManager, _inputFacade, *collisionSystem });
-    _systems.push_back(new AISystem(_entityManager, *collisionSystem));
+    _systems.push_back(new AISystem(_entityManager, _audioFacade, *collisionSystem));
     _systems.push_back(new GravitySystem { _entityManager, *collisionSystem });
     _systems.push_back(new AnimationSystem(_entityManager, _animationManager));
     TurnSystem* turnSystem = new TurnSystem {_entityManager};

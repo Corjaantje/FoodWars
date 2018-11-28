@@ -116,11 +116,11 @@ void LevelManager::spawnPlayers(){
     entityManager->addComponentToEntity(player, new GravityComponent());
     entityManager->addComponentToEntity(player, animationComponent2);
     entityManager->addComponentToEntity(player, new DamageableComponent);
-    entityManager->addComponentToEntity(player, new PlayerComponent(2));
+    //entityManager->addComponentToEntity(player, new PlayerComponent(2));
 
     //TODO: AI Test
     int difficulty = 1;
-    entityManager->addComponentToEntity(player, new AIComponent{difficulty});
+    entityManager->addComponentToEntity(player, new AIComponent{2, difficulty});
 
     int boundLeft = entityManager->createEntity();
     entityManager->addComponentToEntity(boundLeft, new BoxCollider(900, 900));

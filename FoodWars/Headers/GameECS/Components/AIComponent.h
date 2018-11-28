@@ -1,13 +1,14 @@
 #ifndef PROJECT_SWA_AICOMPONENT_H
 #define PROJECT_SWA_AICOMPONENT_H
 
-#include "Component.h"
+#include "PlayerComponent.h"
 
-class AIComponent : public Component{
+class AIComponent : public PlayerComponent{
 private:
+    //int _playerID;
     int _difficulty;
 public:
-    explicit AIComponent(int difficulty);
+    explicit AIComponent(int playerID, int difficulty);
     int getDifficulty() const;
 };
 

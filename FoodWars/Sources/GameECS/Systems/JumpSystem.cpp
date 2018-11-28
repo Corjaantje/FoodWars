@@ -2,6 +2,7 @@
 #include "../../../Headers/GameECS/Components/JumpComponent.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/MoveComponent.h"
+#include "../../../Headers/GameECS/Components/PlayerComponent.h"
 
 void JumpSystem::update(double dt) {
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<JumpComponent>()) {
@@ -32,11 +33,12 @@ JumpSystem::JumpSystem(const std::shared_ptr<EntityManager> &entityManager,
 
 void JumpSystem::update(std::shared_ptr<KeyEvent> event) {
     if(event->getKeyEventType() == KeyEventType::Down && event->getKey() == KEY::KEY_SPACEBAR) {
-        for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
-            if(iterator.second->isMyTurn()){
+        for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
+            auto turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(iterator.first);
+            if(turnComponent->isMyTurn()){
                 if(!_entityManager->getComponentFromEntity<JumpComponent>(iterator.first)) {
                     _entityManager->addComponentToEntity(iterator.first, new JumpComponent);
-                    iterator.second->lowerEnergy(5);
+                    turnComponent->lowerEnergy(5);
                     _audioFacade->playEffect("jump");
                 }
                 break;

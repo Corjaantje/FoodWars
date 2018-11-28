@@ -26,7 +26,7 @@ int PlayerComponent::getScore() const {
  return _score;
 }
 
-std::string PlayerComponent::getSelectedWeapon() {
+std::string PlayerComponent::getSelectedWeapon() const{
     return _selectedWeapon;
 }
 
@@ -34,6 +34,6 @@ void PlayerComponent::setSelectedWeaponAvailability(int weaponAvail) {
     _selectedWeaponAvailability = weaponAvail;
 }
 
-int PlayerComponent::getSelectedWeaponAvailability() {
+int PlayerComponent::getSelectedWeaponAvailability() const{
     return _selectedWeaponAvailability;
 }

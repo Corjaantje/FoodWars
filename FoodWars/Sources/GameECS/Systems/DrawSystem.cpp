@@ -7,6 +7,7 @@
 #include "../../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../Headers/GameECS/Components/AIComponent.h"
 
 DrawSystem::DrawSystem(std::shared_ptr<EntityManager> entityManager,
                         std::shared_ptr<VisualFacade> visualFacade,
@@ -65,16 +66,23 @@ void DrawSystem::drawNonComponents() {
 void DrawSystem::drawPlayers() {
     _playerUpdateCount++;
     if(_playerUpdateCount > 30){
-        std::map<int, std::shared_ptr<PlayerComponent>> playerComps = _entityManager->getAllEntitiesWithComponent<PlayerComponent>();
+        std::map<int, std::shared_ptr<TurnComponent>> playerComps = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
         for (auto const& x : playerComps)
         {
-            if(x.second->getPlayerID() == 1){
+            auto player = _entityManager->getComponentFromEntity<PlayerComponent>(x.first); // Check for players
+            if(player == nullptr)
+                player = _entityManager->getComponentFromEntity<AIComponent>(x.first); // Check for AI
+            if(player == nullptr) {
+                // Player not found!
+            }
+
+            if(player->getPlayerID() == 1){
                 ShapeSprite* sprite = dynamic_cast<ShapeSprite*>(_entityManager->getComponentFromEntity<DrawableComponent>(x.first)->shape);
                if(sprite != nullptr) {
                    _playerIconOne = sprite->imageURL;
                }
             }
-            if(x.second->getPlayerID() == 2){
+            else if(player->getPlayerID() == 2){
                 ShapeSprite* sprite = dynamic_cast<ShapeSprite*>(_entityManager->getComponentFromEntity<DrawableComponent>(x.first)->shape);
                 if(sprite != nullptr) {
                     _playerIconTwo = sprite->imageURL;
@@ -91,8 +99,16 @@ bool DrawSystem::toggleFpsCounter() {
 
 void DrawSystem::drawPlayerStats() {
 //Draw Turn Timer and HP
-    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
-        if(iterator.second->getPlayerID() == 1) {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+
+        auto player = _entityManager->getComponentFromEntity<PlayerComponent>(iterator.first); // Check for players
+        if(player == nullptr)
+            player = _entityManager->getComponentFromEntity<AIComponent>(iterator.first); // Check for AI
+        if(player == nullptr){
+            // Player not found!
+        }
+
+        if(player->getPlayerID() == 1) {
             int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->GetHealth();
             _renderList._shapes[3].push_back(createShape<ShapeText>(150, 27, std::to_string(hpWidth),180, 40, 25, Colour(255, 255, 255, 0)));
             _renderList._shapes[2].push_back(createShape<ShapeRectangle>(hpWidth*1.5, 25, 150, 27, getConvertedHealthColor(hpWidth)));
@@ -115,13 +131,13 @@ void DrawSystem::drawPlayerStats() {
                 _renderList._shapes[3].push_back(
                         createShape<ShapeText>(800, 45, text, 180, 75, 37, Colour(255, 255, 255, 0)));
             }
-            if(!iterator.second->getSelectedWeapon().empty()){
-                _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 396, 45, iterator.second->getSelectedWeapon()));
+            if(!player->getSelectedWeapon().empty()){
+                _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 396, 45, player->getSelectedWeapon()));
             }
-            _renderList._shapes[3].push_back(createShape<ShapeText>(391, 82, std::to_string(iterator.second->getSelectedWeaponAvailability()),180, 30, 30, Colour(255, 255, 255, 0)));
+            _renderList._shapes[3].push_back(createShape<ShapeText>(391, 82, std::to_string(player->getSelectedWeaponAvailability()),180, 30, 30, Colour(255, 255, 255, 0)));
 
         }
-        if(iterator.second->getPlayerID() == 2){
+        else if(player->getPlayerID() == 2){
             int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->GetHealth();
             _renderList._shapes[3].push_back(createShape<ShapeText>(1300 + 80, 27, std::to_string(hpWidth),180, 40, 25, Colour(255, 255, 255, 0)));
             _renderList._shapes[2].push_back(createShape<ShapeRectangle>(hpWidth*1.3, 25, 1300-hpWidth*1.3 + 130, 27, getConvertedHealthColor(hpWidth)));
@@ -145,10 +161,10 @@ void DrawSystem::drawPlayerStats() {
                 _renderList._shapes[3].push_back(
                         createShape<ShapeText>(800, 45, text, 180, 75, 37, Colour(255, 255, 255, 0)));
             }
-            if(!iterator.second->getSelectedWeapon().empty()){
-                _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 1190, 45, iterator.second->getSelectedWeapon()));
+            if(!player->getSelectedWeapon().empty()){
+                _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 1190, 45, player->getSelectedWeapon()));
             }
-            _renderList._shapes[3].push_back(createShape<ShapeText>(1185, 82, std::to_string(iterator.second->getSelectedWeaponAvailability()), 180, 30, 30, Colour(255, 255, 255, 0)));
+            _renderList._shapes[3].push_back(createShape<ShapeText>(1185, 82, std::to_string(player->getSelectedWeaponAvailability()), 180, 30, 30, Colour(255, 255, 255, 0)));
         }
     }
 }

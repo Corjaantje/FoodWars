@@ -21,7 +21,7 @@ public:
     std::string getSelectedWeapon() const;
     int getSelectedWeaponAvailability() const;
 
-private:
+protected:
     int _playerID;
     int _score;
     std::string _selectedWeapon;

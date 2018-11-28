@@ -1,12 +1,10 @@
 #include <cmath>
 #include "../../../Headers/GameECS/Systems/AISystem.h"
-#include "../../../Headers/GameECS/Components/MoveComponent.h"
-#include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
-#include "../../../Headers/GameECS/Components/TurnComponent.h"
-#include "../../../Headers/GameECS/Components/AIComponent.h"
 
-AISystem::AISystem(std::shared_ptr<EntityManager> entityManager, IObservable<CollisionEvent>& collisionEventObservable){
+AISystem::AISystem(std::shared_ptr<EntityManager> entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable){
     _entityManager = std::move(entityManager);
+    _audioFacade = audioFacade;
+
     autoClimbOnCollision  = new CollisionEventHandlerLamda {
             collisionEventObservable,
             // Staircase walking
@@ -36,25 +34,16 @@ AISystem::~AISystem() {
 
 
 void AISystem::update(double dt) {
-    const int walkingEnergyCostPerSecond = 20;
+
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<AIComponent>()) {
         auto turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(iterator.first);
         auto moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
 
         if (turnComponent->isMyTurn()) {
-            // Check for what to do
-            moveComponent->xVelocity = -100;
-            turnComponent->lowerEnergy(walkingEnergyCostPerSecond * dt);
 
-           /* if (_pressedKey == KEY::KEY_A) {
-                moveComponent->xVelocity = -100;
-                iterator.second->lowerEnergy(walkingEnergyCostPerSecond * dt);
-            }
-            else if (_pressedKey == KEY::KEY_D) {
-                moveComponent->xVelocity = 100;
-                iterator.second->lowerEnergy(walkingEnergyCostPerSecond * dt);
-            }else
-                moveComponent->xVelocity = 0;*/
+            //jump(iterator.first, *turnComponent);
+            //walkRight(*moveComponent, *turnComponent, dt);
+            walkLeft(*moveComponent, *turnComponent, dt);
         } else {
             moveComponent->xVelocity = 0;
         }
@@ -68,8 +57,24 @@ void AISystem::update(double dt) {
             positionComponent->Y += std::round(dt * moveComponent->yVelocity);
         }
     }
-
-    // TODO: Jump
-
 }
+
+void AISystem::jump(int entityId, TurnComponent& turnComponent){
+    if(!_entityManager->getComponentFromEntity<JumpComponent>(entityId)) {
+        _entityManager->addComponentToEntity(entityId, new JumpComponent);
+        turnComponent.lowerEnergy(5);
+        _audioFacade->playEffect("jump");
+    }
+}
+
+void AISystem::walkLeft(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt) {
+    moveComponent.xVelocity = -100;
+    turnComponent.lowerEnergy(walkingEnergyCostPerSecond * dt);
+}
+
+void AISystem::walkRight(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt) {
+    moveComponent.xVelocity = 100;
+    turnComponent.lowerEnergy(walkingEnergyCostPerSecond * dt);
+}
+
 

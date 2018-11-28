@@ -50,8 +50,6 @@ private:
         return shape;
     }
 public:
-    void resetEntityManager();
-
     void incrementColorRed();
     void incrementColorGreen();
     void incrementColorBlue();

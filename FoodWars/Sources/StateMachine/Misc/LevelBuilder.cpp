@@ -1,10 +1,11 @@
 #include "../../../Headers/StateMachine/Misc/LevelBuilder.h"
 
-LevelBuilder::LevelBuilder(const FileManager& fileManager) : _gameLevel(), _entityManager(_gameLevel.getEntityManager()), _selectedMusic(0), _fileManager(&fileManager),
-                                _colorBlue(0),
-                                _colorRed(0),
-                                _colorGreen(0),
-                                _selectedWallpaper(0) {
+LevelBuilder::LevelBuilder(const FileManager &fileManager)
+        : _gameLevel(), _entityManager(_gameLevel.getEntityManager()), _selectedMusic(0), _fileManager(&fileManager),
+          _colorBlue(0),
+          _colorRed(0),
+          _colorGreen(0),
+          _selectedWallpaper(0) {
     _wallpaperList = _fileManager->getFiles("./Assets/GameWallpapers/", "png", true, false);
     _musicList = _fileManager->getFiles("./Assets/Audio/", "mp3", false, false);
 
@@ -19,29 +20,6 @@ LevelBuilder::LevelBuilder(const FileManager& fileManager) : _gameLevel(), _enti
     createShape<ShapeRectangle>(64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255));
 }
 
-void LevelBuilder::resetEntityManager() {
-    //delete _entityManager;
-    for(int i=0; i < _mementoList.size(); i++){
-        delete _mementoList[i];
-    }
-    //_entityManager = new EntityManager();
-}
-
-/*EntityManager *LevelBuilder::getEntityManager() {
-    return _entityManager;
-}*/
-//void LevelBuilder::incrementShapeSize() {
-//    if(_shapeDimension < MAXIMAL_SHAPE_DIM){
-//        _shapeDimension++;
-//    }
-//}
-//
-//void LevelBuilder::decrementShapeSize() {
-//    if(_shapeDimension > SHAPE_DIMENSION){
-//        _shapeDimension--;
-//    }
-//}
-
 void LevelBuilder::incrementColorRed() {
     _colorRed = ((_colorRed + COLOR_INCREMENT) % 255);
 }
@@ -55,19 +33,17 @@ void LevelBuilder::incrementColorBlue() {
 }
 
 void LevelBuilder::decrementColorRed() {
-    if(_colorRed - COLOR_INCREMENT < 0){
+    if (_colorRed - COLOR_INCREMENT < 0) {
         _colorRed = 255 + (_colorRed - COLOR_INCREMENT);
-    }
-    else{
+    } else {
         _colorRed -= COLOR_INCREMENT;
     }
 }
 
 void LevelBuilder::decrementColorGreen() {
-    if(_colorGreen - COLOR_INCREMENT < 0){
+    if (_colorGreen - COLOR_INCREMENT < 0) {
         _colorGreen = 255 + (_colorGreen - COLOR_INCREMENT);
-    }
-    else{
+    } else {
         _colorGreen -= COLOR_INCREMENT;
     }
 }
@@ -83,10 +59,9 @@ bool LevelBuilder::toggleCollidable() {
 }
 
 void LevelBuilder::decrementColorBlue() {
-    if(_colorBlue - COLOR_INCREMENT < 0){
+    if (_colorBlue - COLOR_INCREMENT < 0) {
         _colorBlue = 255 + (_colorBlue - COLOR_INCREMENT);
-    }
-    else{
+    } else {
         _colorBlue -= COLOR_INCREMENT;
     }
 }
@@ -94,30 +69,31 @@ void LevelBuilder::decrementColorBlue() {
 void LevelBuilder::placeBlock(int x, int y) {
     int convertedX = roundXCoordToGrid(x);
     int convertedY = roundYCoordToGrid(y);
-    if(convertedY < BUILDING_LIMIT){
+    if (convertedY < BUILDING_LIMIT) {
         return;
     }
     std::string gridCoord = std::to_string(convertedX) + std::to_string(convertedY);
-    if(_CoordinateEntityMap.count(gridCoord) == 0){
+    if (_CoordinateEntityMap.count(gridCoord) == 0) {
         int entity = _entityManager.createEntity();
         auto momento = new EntityMemento(entity);
         _mementoList.push_back(momento);
 
-        if(_buildCollidable){
+        if (_buildCollidable) {
             _entityManager.addComponentToEntity<BoxCollider>(entity, _shapeDimension, _shapeDimension);
         }
-        if(_buildDamageable) {
+        if (_buildDamageable) {
             //TODO Nog geen damageable component
             _entityManager.addComponentToEntity<DamageableComponent>(entity, 1);
         }
-        _entityManager.addComponentToEntity<DrawableComponent>(entity, std::make_unique<ShapeRectangle>(_shapeDimension,
-                                                                                                        _shapeDimension,
-                                                                                                        convertedX,
-                                                                                                        convertedY,
-                                                                                                        Colour(_colorRed,
-                                                                                                               _colorGreen,
-                                                                                                               _colorBlue,
-                                                                                                               255)));
+        _entityManager.addComponentToEntity<DrawableComponent>(entity,
+                                                               std::make_unique<ShapeRectangle>(_shapeDimension,
+                                                                                                _shapeDimension,
+                                                                                                convertedX,
+                                                                                                convertedY,
+                                                                                                Colour(_colorRed,
+                                                                                                       _colorGreen,
+                                                                                                       _colorBlue,
+                                                                                                       255)));
         _entityManager.addComponentToEntity<PositionComponent>(entity, convertedX, convertedY);
         _CoordinateEntityMap[gridCoord] = entity;
     }
@@ -126,24 +102,24 @@ void LevelBuilder::placeBlock(int x, int y) {
 void LevelBuilder::removeBlock(int x, int y) {
     int convertedX = roundXCoordToGrid(x);
     int convertedY = roundYCoordToGrid(y);
-    if(convertedY < BUILDING_LIMIT){
+    if (convertedY < BUILDING_LIMIT) {
         return;
     }
     std::string gridCoord = std::to_string(convertedX) + std::to_string(convertedY);
-    if(_CoordinateEntityMap.count(gridCoord) != 0){
+    if (_CoordinateEntityMap.count(gridCoord) != 0) {
         int entityId = _CoordinateEntityMap[gridCoord];
-        if(entityId == SPAWNPOINT_ID){
+        if (entityId == SPAWNPOINT_ID) {
             return;
         }
         int it = -1;
         _entityManager.removeEntity(entityId);
-        for(int i=0; i< _mementoList.size(); i++){
-            if(_mementoList[i]->getState() == entityId){
+        for (int i = 0; i < _mementoList.size(); i++) {
+            if (_mementoList[i]->getState() == entityId) {
                 it = i;
             }
         }
-        if(it != -1){
-        _mementoList.erase(_mementoList.begin() + it);
+        if (it != -1) {
+            _mementoList.erase(_mementoList.begin() + it);
         }
         _CoordinateEntityMap.erase(gridCoord);
     }
@@ -182,7 +158,7 @@ int LevelBuilder::roundYCoordToGrid(int y) {
 
 
 void LevelBuilder::setNextWallpaper() {
-    if(_wallpaperList.size() > 1){
+    if (_wallpaperList.size() > 1) {
         int newIndex = (_selectedWallpaper + 1) % _wallpaperList.size();
         _selectedWallpaper = newIndex;
         _gameLevel.setBackgroundWallpaper(_wallpaperList[_selectedWallpaper]);
@@ -191,9 +167,9 @@ void LevelBuilder::setNextWallpaper() {
 }
 
 void LevelBuilder::setPreviousWallpaper() {
-    if(_wallpaperList.size() > 1){
+    if (_wallpaperList.size() > 1) {
         int newIndex = (_selectedWallpaper - 1);
-        if(newIndex < 0){
+        if (newIndex < 0) {
             newIndex = _wallpaperList.size() - 1;
         }
         _selectedWallpaper = newIndex;
@@ -207,7 +183,7 @@ std::string LevelBuilder::getCurrentWallpaper() {
 }
 
 void LevelBuilder::setNextMusic() {
-    if(_musicList.size() > 1){
+    if (_musicList.size() > 1) {
         int newIndex = (_selectedMusic + 1) % _musicList.size();
         _selectedMusic = newIndex;
         _gameLevel.setBackgroundMusic(_musicList[_selectedMusic]);
@@ -215,9 +191,9 @@ void LevelBuilder::setNextMusic() {
 }
 
 void LevelBuilder::setPreviousMusic() {
-    if(_musicList.size() > 1){
+    if (_musicList.size() > 1) {
         int newIndex = (_selectedMusic - 1);
-        if(newIndex < 0){
+        if (newIndex < 0) {
             newIndex = _musicList.size() - 1;
         }
         _selectedMusic = newIndex;
@@ -228,7 +204,7 @@ void LevelBuilder::setPreviousMusic() {
 std::string LevelBuilder::getSelectedSong() const {
     if (_musicList[_selectedMusic].empty()) {
         return "none";
-    } else{
+    } else {
         return _musicList[_selectedMusic];
     }
 }
@@ -236,16 +212,16 @@ std::string LevelBuilder::getSelectedSong() const {
 void LevelBuilder::placeSpawnPoint(int x, int y) {
     int convertedX = roundXCoordToGrid(x);
     int convertedY = roundYCoordToGrid(y);
-    if(convertedY < BUILDING_LIMIT){
+    if (convertedY < BUILDING_LIMIT) {
         return;
     }
     std::string gridCoord = std::to_string(convertedX) + std::to_string(convertedY);
-    if(_CoordinateEntityMap.count(gridCoord) == 0){
+    if (_CoordinateEntityMap.count(gridCoord) == 0) {
         Coordinate coord{};
         coord.setCoordinates(convertedX, convertedY);
         _spawnPoints.push_back(coord);
         _spawnPointSprites.push_back(std::make_unique<ShapeSprite>(SHAPE_DIMENSION, SHAPE_DIMENSION, coord.getXCoord(),
-                                 coord.getYCoord(), "Spawnpoint.png"));
+                                                                   coord.getYCoord(), "Spawnpoint.png"));
         _CoordinateEntityMap[gridCoord] = SPAWNPOINT_ID;
     }
     _gameLevel.setSpawnPoints(_spawnPoints);
@@ -254,17 +230,17 @@ void LevelBuilder::placeSpawnPoint(int x, int y) {
 void LevelBuilder::removeSpawnPoint(int x, int y) {
     int convertedX = roundXCoordToGrid(x);
     int convertedY = roundYCoordToGrid(y);
-    if(convertedY < BUILDING_LIMIT){
+    if (convertedY < BUILDING_LIMIT) {
         return;
     }
     std::string gridCoord = std::to_string(convertedX) + std::to_string(convertedY);
-    if(_CoordinateEntityMap.count(gridCoord) != 0){
+    if (_CoordinateEntityMap.count(gridCoord) != 0) {
         int entityId = _CoordinateEntityMap[gridCoord];
-        if(entityId != SPAWNPOINT_ID){
+        if (entityId != SPAWNPOINT_ID) {
             return;
         }
-        for(int i = 0; i < _spawnPoints.size(); i++){
-            if(_spawnPoints[i].getXCoord() == convertedX && _spawnPoints[i].getYCoord() == convertedY){
+        for (int i = 0; i < _spawnPoints.size(); i++) {
+            if (_spawnPoints[i].getXCoord() == convertedX && _spawnPoints[i].getYCoord() == convertedY) {
                 _spawnPoints.erase(_spawnPoints.begin() + i);
                 _spawnPointSprites.erase(_spawnPointSprites.begin() + i);
                 _CoordinateEntityMap.erase(gridCoord);
@@ -279,14 +255,6 @@ std::vector<Coordinate> LevelBuilder::getSpawnPoints() const {
     return _spawnPoints;
 }
 
-/*GameLevel LevelBuilder::buildConstructedLevel() {
-    GameLevel gameLevel{};
-    gameLevel.setBackgroundWallpaper(_wallpaperList[_selectedWallpaper]);
-    //gameLevel.setEntityManager(*_entityManager);
-    gameLevel.setSpawnPoints(_spawnPoints);
-    gameLevel.setBackgroundMusic(_musicList[_selectedMusic]);
-    return gameLevel;
-}*/
 void LevelBuilder::addMusicConfig(std::string music) {
     _musicList.emplace_back(music);
 }
@@ -302,7 +270,6 @@ LevelBuilder::~LevelBuilder() {
     for (EntityMemento *entityMemento: _mementoList) {
         delete entityMemento;
     }
-    //delete _entityManager;
 }
 
 const GameLevel &LevelBuilder::getConstructedLevel() const {

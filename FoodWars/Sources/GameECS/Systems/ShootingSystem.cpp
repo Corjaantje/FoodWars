@@ -15,6 +15,7 @@ ShootingSystem::ShootingSystem(std::shared_ptr<EntityManager> entityManager,
                                                 _visualFacade{std::move(visualFacade)},
                                                 _isShooting{false},
                                                 _projectileFired{false},
+                                                _lineDrawn{false},
                                                 _projectile{0}
 {
     inputFacade->getMouseEventObservable()->registerObserver(this);
@@ -63,27 +64,42 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
         double toX = playerCenterX + deltaX;
         double toY = playerCenterY + deltaY;
 
-        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
-            createShootingLine(playerCenterX, playerCenterY, toX, toY);
-        }
+        if (!_lineDrawn) {
+            if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
+                createShootingLine(playerCenterX, playerCenterY, toX, toY);
+            }
 
-        if (event->getMouseEventType() == MouseEventType::Drag) {
-            if (!_entityManager->exists(_shootingLine)) createShootingLine(playerCenterX, playerCenterY, toX, toY);
-            auto drawable = _entityManager->getComponentFromEntity<DrawableComponent>(_shootingLine);
-            auto line = static_cast<ShapeLine *>(drawable->shape);
-            line->xPos = playerCenterX;
-            line->yPos = playerCenterY;
-            line->xPos2 = toX;
-            line->yPos2 = toY;
-        }
+            if (event->getMouseEventType() == MouseEventType::Drag) {
+                if (!_entityManager->exists(_shootingLine)) createShootingLine(playerCenterX, playerCenterY, toX, toY);
+                auto drawable = _entityManager->getComponentFromEntity<DrawableComponent>(_shootingLine);
+                auto line = static_cast<ShapeLine *>(drawable->shape);
+                line->xPos = playerCenterX;
+                line->yPos = playerCenterY;
+                line->xPos2 = toX;
+                line->yPos2 = toY;
+            }
 
-        if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
-            generateProjectile(*currentPlayerPos.get(), *playerSize.get(), deltaX, deltaY);
-            _isShooting = false;
-            _projectileFired = true;
-            _entityManager->removeEntity(_shootingLine);
-            _entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->lowerEnergy(20);
-            _audioFacade->playEffect("throwing");
+            if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
+                generateProjectile(*currentPlayerPos.get(), *playerSize.get(), deltaX, deltaY);
+                _lineDrawn = true;
+            }
+        }
+        else {
+
+            if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
+                createPowerBar(20, 50, playerCenterX - 60, playerCenterY - 25);
+            }
+
+            if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
+                generateProjectile(*currentPlayerPos.get(), *playerSize.get(), deltaX, deltaY);
+                _isShooting = false;
+                _projectileFired = true;
+                _lineDrawn = false;
+                _entityManager->removeEntity(_shootingLine);
+                _entityManager->removeEntity(_powerBar);
+                _entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->lowerEnergy(20);
+                _audioFacade->playEffect("throwing");
+            }
         }
     }
 }
@@ -93,6 +109,13 @@ void ShootingSystem::createShootingLine(int fromX, int fromY, int toX, int toY) 
     auto d = new DrawableComponent();
     d->shape = new ShapeLine(fromX, fromY, toX, toY, Colour(0, 0, 0, 0));
     _entityManager->addComponentToEntity(_shootingLine, d);
+}
+
+void ShootingSystem::createPowerBar(int width, int height, int xPos, int yPos) {
+    _powerBar = _entityManager->createEntity();
+    auto d = new DrawableComponent();
+    d->shape = new ShapeRectangle(width, height, xPos, yPos, Colour(0, 0, 0, 0));
+    _entityManager->addComponentToEntity(_powerBar, d);
 }
 
 void ShootingSystem::toggleShooting() {

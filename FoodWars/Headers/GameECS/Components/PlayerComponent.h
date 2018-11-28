@@ -18,8 +18,8 @@ public:
 
     int getPlayerID() const;
     int getScore() const;
-    std::string getSelectedWeapon();
-    int getSelectedWeaponAvailability();
+    std::string getSelectedWeapon() const;
+    int getSelectedWeaponAvailability() const;
 
 private:
     int _playerID;

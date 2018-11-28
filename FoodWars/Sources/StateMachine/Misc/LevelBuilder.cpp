@@ -3,11 +3,25 @@
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 
-LevelBuilder::LevelBuilder() {
-    _entityManager = new EntityManager();
+LevelBuilder::LevelBuilder(const FileManager& fileManager) :  _entityManager(new EntityManager),
+                                _fileManager(&fileManager),
+                                _selectedMusic(0),
+                                _colorBlue(0),
+                                _colorRed(0),
+                                _colorGreen(0),
+                                _selectedWallpaper(0){
+    _wallpaperList = _fileManager->getFiles("./Assets/GameWallpapers/", "png", true, false);
+    _musicList = _fileManager->getFiles("./Assets/Audio/", "mp3", false, false);
 
-    _musicList.emplace_back("");
-    _selectedMusic = 0;
+    wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, _wallpaperList[_selectedWallpaper]);
+    wallpaper->layer = 0;
+
+    int height = 8;
+    int width = 1600;
+    createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenLevelBuilder.png");
+    createShape<ShapeRectangle>(width, height, 0, BUILDING_LIMIT - height, Colour(0, 0, 0, 255));
+    createShape<ShapeRectangle>(width, height, 0, 900 - height, Colour(0, 0, 0, 255));
+    createShape<ShapeRectangle>(64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255));
 }
 
 void LevelBuilder::resetEntityManager() {
@@ -21,17 +35,6 @@ void LevelBuilder::resetEntityManager() {
 EntityManager *LevelBuilder::getEntityManager() {
     return _entityManager;
 }
-//void LevelBuilder::incrementShapeSize() {
-//    if(_shapeDimension < MAXIMAL_SHAPE_DIM){
-//        _shapeDimension++;
-//    }
-//}
-//
-//void LevelBuilder::decrementShapeSize() {
-//    if(_shapeDimension > SHAPE_DIMENSION){
-//        _shapeDimension--;
-//    }
-//}
 
 void LevelBuilder::incrementColorRed() {
     _colorRed = ((_colorRed + COLOR_INCREMENT) % 255);
@@ -137,20 +140,18 @@ void LevelBuilder::removeBlock(int x, int y) {
 
 }
 
-//void LevelBuilder::undoPlaceBlock() {
-//    if(_mementoList.back() != 0){
-//        _entityManager->removeEntity(_mementoList.back()->getState());
-//        _mementoList.pop_back();
-//    }
-//}
-
 void LevelBuilder::drawCurrentScene(Renderlist &renderlist) {
     std::map<int, std::shared_ptr<DrawableComponent>> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
     renderlist.clearLists();
-    for (auto &drawComp : drawComps) {
+    for (const auto &drawComp : drawComps) {
         drawComp.second->shape->addToRender(&renderlist);
     }
-    drawAdditionalItems(renderlist);
+    for (const auto &sprite : _sprites) {
+        sprite->addToRender(&renderlist);
+    }
+    for (const auto &spawnSprite : _spawnPointSprites) {
+        spawnSprite->addToRender(&renderlist);
+    }
 }
 
 int LevelBuilder::roundXCoordToGrid(int x) {
@@ -169,30 +170,12 @@ int LevelBuilder::roundYCoordToGrid(int y) {
     return y - remainder;
 }
 
-void LevelBuilder::drawAdditionalItems(Renderlist &renderlist) {
-    //TODO TEMP FIX TO MAKE A BACKGROUND WORK UNTILL WE HAVE LAYERS.
-    renderlist._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, _wallpaperList[_selectedWallpaper]));
-
-    int height = 8;
-    int width = 1600;
-    renderlist._shapes[2].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenLevelBuilder.png"));
-    renderlist._shapes[1].push_back(
-            createShape<ShapeRectangle>(width, height, 0, BUILDING_LIMIT - height, Colour(0, 0, 0, 255)));
-    renderlist._shapes[1].push_back(createShape<ShapeRectangle>(width, height, 0, 900 - height, Colour(0, 0, 0, 255)));
-    renderlist._shapes[1].push_back(
-            createShape<ShapeRectangle>(64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255)));
-
-    for (auto &_spawnPoint : _spawnPoints) {
-        renderlist._shapes[1].push_back(
-                createShape<ShapeSprite>(SHAPE_DIMENSION, SHAPE_DIMENSION, _spawnPoint.getXCoord(),
-                                         _spawnPoint.getYCoord(), "Spawnpoint.png"));
-    }
-}
 
 void LevelBuilder::setNextWallpaper() {
     if(_wallpaperList.size() > 1){
         int newIndex = (_selectedWallpaper + 1) % _wallpaperList.size();
         _selectedWallpaper = newIndex;
+        wallpaper->imageURL = _wallpaperList[_selectedWallpaper];
     }
 }
 
@@ -203,6 +186,7 @@ void LevelBuilder::setPreviousWallpaper() {
             newIndex = _wallpaperList.size() - 1;
         }
         _selectedWallpaper = newIndex;
+        wallpaper->imageURL = _wallpaperList[_selectedWallpaper];
     }
 }
 
@@ -246,7 +230,9 @@ void LevelBuilder::placeSpawnPoint(int x, int y) {
     if(_CoordinateEntityMap.count(gridCoord) == 0){
         Coordinate coord{};
         coord.setCoordinates(convertedX, convertedY);
-        _spawnPoints.emplace_back(coord);
+        _spawnPoints.push_back(coord);
+        _spawnPointSprites.push_back(std::make_unique<ShapeSprite>(SHAPE_DIMENSION, SHAPE_DIMENSION, coord.getXCoord(),
+                                 coord.getYCoord(), "Spawnpoint.png"));
         _CoordinateEntityMap[gridCoord] = SPAWNPOINT_ID;
     }
 
@@ -264,15 +250,13 @@ void LevelBuilder::removeSpawnPoint(int x, int y) {
         if(entityId != SPAWNPOINT_ID){
             return;
         }
-        int it = -1;
         for(int i = 0; i < _spawnPoints.size(); i++){
             if(_spawnPoints[i].getXCoord() == convertedX && _spawnPoints[i].getYCoord() == convertedY){
-                it = i;
+                _spawnPoints.erase(_spawnPoints.begin() + i);
+                _spawnPointSprites.erase(_spawnPointSprites.begin() + i);
+                _CoordinateEntityMap.erase(gridCoord);
+                return;
             }
-        }
-        if(it != -1){
-            _spawnPoints.erase(_spawnPoints.begin() + it);
-            _CoordinateEntityMap.erase(gridCoord);
         }
     }
 }
@@ -288,13 +272,6 @@ GameLevel LevelBuilder::buildConstructedLevel() {
     gameLevel.setSpawnPoints(_spawnPoints);
     gameLevel.setBackgroundMusic(_musicList[_selectedMusic]);
     return gameLevel;
-}
-void LevelBuilder::addMusicConfig(std::string music) {
-    _musicList.emplace_back(music);
-}
-
-void LevelBuilder::addWallpaperConfig(std::string wallpaper) {
-    _wallpaperList.emplace_back(wallpaper);
 }
 
 LevelBuilder::~LevelBuilder() {

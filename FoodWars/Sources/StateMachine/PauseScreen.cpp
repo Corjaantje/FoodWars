@@ -8,24 +8,30 @@ PauseScreen::PauseScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
 
-    _renderList._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenPause.png"));
+    auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenPause.png");
+    wallpaper->layer = 0;
+    wallpaper->addToRender(&_renderList);
 
     // Spel Hervatten
-    TextButton* resumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 370, 110, 615, 300};
-    resumeButton->addToRender(&_renderList);
-    _sprites.push_back(resumeButton);
+    createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"",
+            [c = _context]() {
+                c->setActiveScreen<GameScreen>();
+            },
+            370, 110, 615, 300)->addToRender(&_renderList);
 
     // Spel Opslaan
-    TextButton* saveButton = new TextButton {*_inputFacade->getMouseEventObservable(),"", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 370, 110, 615, 420};
-    saveButton->addToRender(&_renderList);
-    _sprites.push_back(saveButton);
+    createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"",
+            [c = _context]() {
+                c->setActiveScreen<GameScreen>();
+            },
+            370, 110, 615, 420)->addToRender(&_renderList);
 
     // Terug naar hoofdmenu
-    TextButton* quitButton = new TextButton {*_inputFacade->getMouseEventObservable(),"", [c = _context]() {
-        c->setActiveScreen<MainMenuScreen>();
-    }, 370, 110, 615, 540};
-    quitButton->addToRender(&_renderList);
-    _sprites.push_back(quitButton);
+    createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"",
+            [c = _context]() {
+                c->setActiveScreen<MainMenuScreen>();
+            },
+            370, 110, 615, 540)->addToRender(&_renderList);
 }
 
 PauseScreen::~PauseScreen() = default;

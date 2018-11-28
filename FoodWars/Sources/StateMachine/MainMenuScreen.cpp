@@ -17,65 +17,86 @@ MainMenuScreen::MainMenuScreen(std::shared_ptr<ScreenStateManager> context, cons
     _renderList._shapes[1].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenMainMenu.png"));
     
     // Level Selection
-    TextButton *levelSelectionButton = new TextButton{*_inputFacade->getMouseEventObservable(), "Select Level",
-                                                      [c = _context]() {
-                                                          c->setActiveScreen<LevelSelectionScreen>();
-                                                          (std::static_pointer_cast<LevelSelectionScreen>(
-                                                                  c->getCurrentState())->generateLevelButtons());
-                                                      }, 370, 110, 615, 300, Colour{255, 255, 255, 0},
-                                                      Colour{255, 255, 255, 0},};
-    levelSelectionButton->addToRender(&_renderList);
-    _sprites.push_back(levelSelectionButton);
+    createShape<TextButton>(*_inputFacade->getMouseEventObservable(), "Select Level",
+            [c = _context]() {
+                c->setActiveScreen<LevelSelectionScreen>();
+                (std::static_pointer_cast<LevelSelectionScreen>(c->getCurrentState())->generateLevelButtons());
+            },
+            370, 110, 615, 300,
+            Colour{255, 255, 255, 0},
+            Colour{255, 255, 255, 0})->addToRender(&_renderList);
 
     // Level Editor
-    TextButton* levelEditorButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Level Editor", [c = _context]() {  c->setActiveScreen<LevelCreationScreen>(); }, 370, 110, 615, 420, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    levelEditorButton->addToRender(&_renderList);
-    _sprites.push_back(levelEditorButton);
+    createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"Level Editor",
+            [c = _context]() {
+                c->setActiveScreen<LevelCreationScreen>();
+            },
+            370, 110, 615, 420,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 
     // Upgrades
-    TextButton* upgradesButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Upgrades", [c = _context]() {  c->setActiveScreen<UpgradesScreen>(); }, 370, 110, 615, 540, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    upgradesButton->addToRender(&_renderList);
-    _sprites.push_back(upgradesButton);
+    createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"Upgrades",
+            [c = _context]() {
+                c->setActiveScreen<UpgradesScreen>();
+            },
+            370, 110, 615, 540,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 
     // Settings
-    SpriteButton* settingsButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<SettingsScreen>(); }, 120, 120, 1335, 10, Colour{0,0,0,0}};
-    settingsButton->addToRender(&_renderList);
-    _sprites.push_back(settingsButton);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [c = _context]() {
+                c->setActiveScreen<SettingsScreen>();
+            },
+            120, 120, 1335, 10,
+            Colour{0,0,0,0})->addToRender(&_renderList);
 
     // Help
-    TextButton* helpButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Help", [c = _context]() {  c->setActiveScreen<HelpScreen>(); }, 190, 100, 10, 680, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    helpButton->addToRender(&_renderList);
-    _sprites.push_back(helpButton);
+    createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"Help",
+            [c = _context]() {
+                c->setActiveScreen<HelpScreen>();
+            },
+            190, 100, 10, 680,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 
     // Credits
-    TextButton* creditsButton = new TextButton {*_inputFacade->getMouseEventObservable(),"Credits", [c = _context]() {  c->setActiveScreen<CreditScreen>(); }, 190, 100, 10, 790, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    creditsButton->addToRender(&_renderList);
-    _sprites.push_back(creditsButton);
+    createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"Credits",
+            [c = _context]() {
+                c->setActiveScreen<CreditScreen>();
+            },
+            190, 100, 10, 790,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 
     // Advertisement
-    _advertisement = new SpriteButton{*_inputFacade->getMouseEventObservable(),
-                                      _fileManager->readFileLines("./Assets/Sprites/Advertisements/current.txt")[0],
-                                      [c = _context]() { c->setActiveScreen<AdvertisingScreen>(); }, 400, 150, 300, 750,
-                                      Colour{255, 255, 255, 0}};
+    _advertisement = createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), _fileManager->readFileLines("./Assets/Sprites/Advertisements/current.txt")[0],
+            [c = _context]() {
+                c->setActiveScreen<AdvertisingScreen>();
+            },
+            400, 150, 300, 750,
+            Colour{255,255,255,0});
     _advertisement->addToRender(&_renderList);
-    _sprites.push_back(_advertisement);
 
     // Quit
-    SpriteButton* quitButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [this]() { this->quitGame(); }, 120, 120, 1476, 10, Colour{0,0,0,0}};
-    quitButton->addToRender(&_renderList);
-    _sprites.push_back(quitButton);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [this]() {
+                this->quitGame();
+            },
+            120, 120, 1476, 10,
+            Colour{0,0,0,0})->addToRender(&_renderList);
 
     // High Scores
-    SpriteButton* highScoresButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<HighscoreScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}};
-    highScoresButton->addToRender(&_renderList);
-    _sprites.push_back(highScoresButton);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [c = _context]() {
+                c->setActiveScreen<HighscoreScreen>();
+            },
+            120, 120, 10, 10,
+            Colour{0,0,0,0})->addToRender(&_renderList);
 }
 
-MainMenuScreen::~MainMenuScreen() {
-    for (IShape *button: _sprites) {
-        delete button;
-    }
-}
+MainMenuScreen::~MainMenuScreen() = default;
 
 void MainMenuScreen::update(double deltaTime) {
     visualFacade->render(_renderList);

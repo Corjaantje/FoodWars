@@ -18,7 +18,6 @@ public:
     int width;
     int height;
     Colour colour;
-    int layer;
 
     int getWidth() const  { return width; }
     int getHeight() const { return height; }

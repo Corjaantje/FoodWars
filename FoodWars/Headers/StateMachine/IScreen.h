@@ -24,6 +24,7 @@ public:
                                                            _inputFacade(std::make_shared<InputFacade>()),
                                                            visualFacade(context->getFacade<VisualFacade>()),
                                                            audioFacade(context->getFacade<AudioFacade>()),
+                                                           _renderList(),
                                                            _isClosed(false) {
         _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
         _inputFacade->getWindowEventObservable()->registerObserver(this);
@@ -48,7 +49,7 @@ public:
     }
 
     template<typename T, typename... Args>
-    IShape *createShape(Args &&... args) {
+    T *createShape(Args &&... args) {
         T *shape = new T(std::forward<Args>(args)...);
         _sprites.push_back(shape);
         return shape;

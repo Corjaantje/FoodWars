@@ -4,10 +4,15 @@
 
 
 WinTransitionScreen::WinTransitionScreen(std::shared_ptr<ScreenStateManager> context) : LevelTransitionScreen(std::move(context)) {
-    _renderList._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, "ScreenTransitionVictory.png"});
+    auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenTransitionVictory.png");
+    wallpaper->layer = 0;
+    wallpaper->addToRender(&_renderList);
 
-    // Next Level
-    _renderList._shapes[1].push_back(createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"", [c = _context]() {  c->setActiveScreen<GameScreen>(); }, 375, 111, 613, 298));
+    createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"",
+            [c = _context]() {
+                c->setActiveScreen<GameScreen>();
+            },
+            375, 111, 613, 298)->addToRender(&_renderList);
 }
 
 std::string WinTransitionScreen::getScreenName() const {

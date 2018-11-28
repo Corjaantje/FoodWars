@@ -7,15 +7,19 @@ LevelTransitionScreen::LevelTransitionScreen(std::shared_ptr<ScreenStateManager>
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
 
-    _renderList._shapes[1].push_back(createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 375, 113, 613, 544));
+    createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"",
+            [c = _context]() {
+                c->setActiveScreen<MainMenuScreen>();
+            },
+            375, 113, 613, 544)->addToRender(&_renderList);
 
-    // Upgrades
-    _renderList._shapes[1].push_back(createShape<TextButton>(*_inputFacade->getMouseEventObservable(),
-            "", [c = _context, this]()
+    createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"",
+            [c = _context, this]()
             {
                 c->setActiveScreen<UpgradesScreen>();
                 ((std::static_pointer_cast<UpgradesScreen>( c->getCurrentState())->setPreviousScreen(getScreenName())));
-            }, 375, 113, 611, 420));
+            },
+            375, 113, 611, 420)->addToRender(&_renderList);
 }
 
 LevelTransitionScreen::~LevelTransitionScreen() = default;
@@ -34,7 +38,7 @@ void LevelTransitionScreen::update(std::shared_ptr<KeyEvent> event){
 }
 
 void LevelTransitionScreen::setScore(int score) {
-    _renderList._shapes[1].push_back(new ShapeText{790, 75, std::to_string(score), 12, 95, 50, Colour{0,0,0,0}});
+    createShape<ShapeText>(790, 75, std::to_string(score), 12, 95, 50, Colour{0,0,0,0})->addToRender(&_renderList);
 }
 
 

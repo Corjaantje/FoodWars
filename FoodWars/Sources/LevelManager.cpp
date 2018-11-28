@@ -5,6 +5,7 @@
 #include "../Headers/GameECS/Components/DamageableComponent.h"
 #include "../Headers/GameECS/Components/DamagingComponent.h"
 #include "../Headers/GameECS/Systems/StorageSystem.h"
+#include "../Headers/GameECS/Components/PlayerComponent.h"
 #include "../Headers/GameECS/Components/AIComponent.h"
 
 LevelManager::LevelManager()
@@ -103,6 +104,7 @@ void LevelManager::spawnPlayers(){
     entityManager->addComponentToEntity(player, new GravityComponent());
     entityManager->addComponentToEntity(player, animationComponent);
     entityManager->addComponentToEntity(player, new DamageableComponent);
+    entityManager->addComponentToEntity(player, new PlayerComponent(1));
 
     // Player
     player = entityManager->createEntity();
@@ -114,6 +116,7 @@ void LevelManager::spawnPlayers(){
     entityManager->addComponentToEntity(player, new GravityComponent());
     entityManager->addComponentToEntity(player, animationComponent2);
     entityManager->addComponentToEntity(player, new DamageableComponent);
+    entityManager->addComponentToEntity(player, new PlayerComponent(2));
 
     //TODO: AI Test
     int difficulty = 1;

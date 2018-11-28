@@ -12,10 +12,10 @@ int MouseEvent::getYPosition() const {
     return _yPos;
 }
 
-MouseEventType MouseEvent::getMouseEventType() {
+MouseEventType MouseEvent::getMouseEventType() const {
     return _eventType;
 }
 
-MouseClickType MouseEvent::getMouseClickType() {
+MouseClickType MouseEvent::getMouseClickType() const {
     return _clickType;
 }

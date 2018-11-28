@@ -27,8 +27,8 @@ void UpgradesScreen::update(double deltaTime) {
     _inputFacade->pollEvents();
 }
 
-void UpgradesScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
+void UpgradesScreen::update(const KeyEvent& event){
+    if(event.getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }

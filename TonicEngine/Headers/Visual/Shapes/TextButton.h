@@ -34,7 +34,7 @@ public:
     void setButtonColor(const Colour& colour);
     void setOnClickFunction(const std::function<void()>& onClick);
 
-    void update(std::shared_ptr<MouseEvent> event) override;
+    void update(const MouseEvent& event) override;
     void addToRender(Renderlist* renderlist) override;
 
     void render(IRenderer &renderer) const override;

@@ -8,7 +8,7 @@ public:
     explicit CreditScreen(std::shared_ptr<ScreenStateManager> context);
     ~CreditScreen();
     void update(double deltaTime) override;
-    void update(std::shared_ptr<KeyEvent> event);
+    void update(const KeyEvent& event);
 };
 
 #endif //PROJECT_SWA_CREDITSCREEN_H

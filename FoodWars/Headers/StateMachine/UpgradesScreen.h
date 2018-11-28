@@ -12,7 +12,7 @@ public:
     explicit UpgradesScreen(std::shared_ptr<ScreenStateManager> context);
     ~UpgradesScreen();
     void update(double deltaTime) override;
-    void update(std::shared_ptr<KeyEvent> event) override;
+    void update(const KeyEvent& event) override;
     void setPreviousScreen(const std::string& screenName);
 };
 

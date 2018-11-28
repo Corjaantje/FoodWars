@@ -27,8 +27,8 @@ void CreditScreen::update(double deltaTime) {
     _inputFacade->pollEvents();
 }
 
-void CreditScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down)
+void CreditScreen::update(const KeyEvent& event){
+    if(event.getKey() == KEY::KEY_ESCAPE && event.getKeyEventType() == KeyEventType::Down)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }

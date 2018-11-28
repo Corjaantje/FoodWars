@@ -35,8 +35,8 @@ void HighscoreScreen::update(double deltaTime) {
     _inputFacade->pollEvents();
 }
 
-void HighscoreScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down)
+void HighscoreScreen::update(const KeyEvent& event){
+    if(event.getKey() == KEY::KEY_ESCAPE && event.getKeyEventType() == KeyEventType::Down)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }

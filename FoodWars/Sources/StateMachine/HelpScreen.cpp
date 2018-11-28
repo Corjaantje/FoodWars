@@ -31,8 +31,8 @@ void HelpScreen::update(double deltaTime) {
     _inputFacade->pollEvents();
 }
 
-void HelpScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
+void HelpScreen::update(const KeyEvent& event){
+    if(event.getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }

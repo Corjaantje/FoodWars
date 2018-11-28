@@ -21,7 +21,9 @@ public:
     explicit MainMenuScreen(std::shared_ptr<ScreenStateManager> context, const FileManager& fileManager);
     ~MainMenuScreen();
     void update(double deltaTime) override;
-    void update(std::shared_ptr<KeyEvent> event) override;
+    void update(const KeyEvent& event) override;
+
+    explicit MainMenuScreen(const std::shared_ptr<ScreenStateManager> &context);
 };
 
 #endif //PROJECT_SWA_MAINMENUSCREEN_H

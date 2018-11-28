@@ -18,7 +18,7 @@ public:
     ~IObserver() {
 
     }
-    virtual void update(std::shared_ptr<T> event) = 0;
+    virtual void update(const T& event) = 0;
 };
 
 #endif //PROJECT_SWA_IOBSERVER_H

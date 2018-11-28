@@ -15,7 +15,7 @@ private:
 public:
     JumpSystem(const std::shared_ptr<EntityManager>& entityManager, const std::shared_ptr<InputFacade>& inputFacade, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable);
     void update(double dt) override;
-    void update(std::shared_ptr<KeyEvent> event) override;
+    void update(const KeyEvent& event) override;
     bool canHandle(const CollisionEvent& collisionEvent) override;
     void handleCollisionEvent(const CollisionEvent& collisionEvent) override;
 };

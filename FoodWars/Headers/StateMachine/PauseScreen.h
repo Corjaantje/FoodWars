@@ -9,6 +9,6 @@ public:
     explicit PauseScreen(std::shared_ptr<ScreenStateManager> context);
     ~PauseScreen();
     void update(double deltaTime) override;
-    void update(std::shared_ptr<KeyEvent> event) override;
+    void update(const KeyEvent& event) override;
 };
 #endif //PROJECT_SWA_PAUSESCREEN_H

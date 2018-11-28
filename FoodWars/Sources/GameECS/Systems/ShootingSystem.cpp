@@ -38,7 +38,7 @@ void ShootingSystem::update(double deltaTime) {
     }
 }
 
-void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
+void ShootingSystem::update(const MouseEvent& event) {
     if(_isShooting && !_projectileFired)
     {
         int currentPlayer = 0;
@@ -54,8 +54,8 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
         auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(currentPlayer);
         int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
         int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
-        double deltaX = event->getXPosition() - playerCenterX;
-        double deltaY = event->getYPosition() - playerCenterY;
+        double deltaX = event.getXPosition() - playerCenterX;
+        double deltaY = event.getYPosition() - playerCenterY;
         if (deltaX > 250) deltaX = 250;
         else if (deltaX < -250) deltaX = -250;
         if (deltaY > 250) deltaY = 250;
@@ -63,11 +63,11 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
         double toX = playerCenterX + deltaX;
         double toY = playerCenterY + deltaY;
 
-        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
+        if (event.getMouseEventType() == MouseEventType::Down && event.getMouseClickType() == MouseClickType::Left) {
             createShootingLine(playerCenterX, playerCenterY, toX, toY);
         }
 
-        if (event->getMouseEventType() == MouseEventType::Drag) {
+        if (event.getMouseEventType() == MouseEventType::Drag) {
             if (!_entityManager->exists(_shootingLine)) createShootingLine(playerCenterX, playerCenterY, toX, toY);
             auto drawable = _entityManager->getComponentFromEntity<DrawableComponent>(_shootingLine);
             auto line = static_cast<ShapeLine *>(drawable->shape);
@@ -77,7 +77,7 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
             line->yPos2 = toY;
         }
 
-        if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
+        if (event.getMouseEventType() == MouseEventType::Up && event.getMouseClickType() == MouseClickType::Left) {
             generateProjectile(*currentPlayerPos.get(), *playerSize.get(), deltaX, deltaY);
             _isShooting = false;
             _projectileFired = true;

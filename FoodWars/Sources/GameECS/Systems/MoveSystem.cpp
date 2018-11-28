@@ -66,10 +66,10 @@ void MoveSystem::update(double dt) {
     }
 }
 
-void MoveSystem::update(std::shared_ptr<KeyEvent> event) {
-    if(event->getKeyEventType() == KeyEventType::Up && event->getKey() == _pressedKey) {
+void MoveSystem::update(const KeyEvent& event) {
+    if(event.getKeyEventType() == KeyEventType::Up && event.getKey() == _pressedKey) {
         _pressedKey = KEY::KEY_OTHER;
-    } else if(event->getKeyEventType() == KeyEventType::Down && (event->getKey() == KEY::KEY_A || event->getKey() == KEY::KEY_D)) {
-        _pressedKey = event->getKey();
+    } else if(event.getKeyEventType() == KeyEventType::Down && (event.getKey() == KEY::KEY_A || event.getKey() == KEY::KEY_D)) {
+        _pressedKey = event.getKey();
     }
 }

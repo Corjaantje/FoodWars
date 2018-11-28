@@ -13,7 +13,7 @@ public:
     explicit LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager, const FileManager& fileManager);
     ~LevelSelectionScreen();
     void update(double deltaTime) override;
-    void update(std::shared_ptr<KeyEvent> event) override;
+    void update(const KeyEvent& event) override;
 
     void generateLevelButtons();
 private:

@@ -39,12 +39,12 @@ public:
 
     virtual void update(double deltaTime) = 0;
 
-    void update(std::shared_ptr<WindowEvent> event) override {
-        if (event->GetWindowEventType() == WindowEventType::Quit) {
+    void update(const WindowEvent& event) override {
+        if (event.GetWindowEventType() == WindowEventType::Quit) {
             _isClosed = true;
         }
-        if (event->GetWindowEventType() == WindowEventType::Resize) {
-            visualFacade->setResolution(event->getWidth(), event->getHeight());
+        if (event.GetWindowEventType() == WindowEventType::Resize) {
+            visualFacade->setResolution(event.getWidth(), event.getHeight());
         }
     }
 

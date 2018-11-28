@@ -30,8 +30,8 @@ void LevelTransitionScreen::update(double deltaTime) {
     _inputFacade->pollEvents();
 }
 
-void LevelTransitionScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
+void LevelTransitionScreen::update(const KeyEvent& event){
+    if(event.getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }

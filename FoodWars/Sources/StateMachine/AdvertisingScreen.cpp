@@ -66,9 +66,9 @@ void AdvertisingScreen::update(double deltaTime)
     _inputFacade->pollEvents();
 }
 
-void AdvertisingScreen::update(std::shared_ptr<KeyEvent> event)
+void AdvertisingScreen::update(const KeyEvent& event)
 {
-    if(event->getKey() == KEY::KEY_ESCAPE)
+    if(event.getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }

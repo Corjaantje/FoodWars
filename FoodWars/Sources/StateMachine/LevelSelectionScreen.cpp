@@ -120,8 +120,8 @@ void LevelSelectionScreen::swapLevels(bool directionNext) {
 }
 
 
-void LevelSelectionScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
+void LevelSelectionScreen::update(const KeyEvent& event){
+    if(event.getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }

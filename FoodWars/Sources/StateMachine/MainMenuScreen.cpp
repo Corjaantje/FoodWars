@@ -105,8 +105,8 @@ void MainMenuScreen::update(double deltaTime) {
     _advertisement->changeImageURL(_fileManager->readFileLines("./Assets/Sprites/Advertisements/current.txt")[0]);
 }
 
-void MainMenuScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down)
+void MainMenuScreen::update(const KeyEvent& event){
+    if(event.getKey() == KEY::KEY_ESCAPE && event.getKeyEventType() == KeyEventType::Down)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }
@@ -115,3 +115,4 @@ void MainMenuScreen::update(std::shared_ptr<KeyEvent> event){
 void MainMenuScreen::quitGame(){
     _isClosed = true;
 }
+

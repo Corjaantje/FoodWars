@@ -179,14 +179,14 @@ void LevelCreationScreen::update(double deltaTime) {
     _inputFacade->pollEvents();
 }
 
-void LevelCreationScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
+void LevelCreationScreen::update(const KeyEvent& event){
+    if(event.getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }
 }
 
-void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
+void LevelCreationScreen::update(const MouseEvent& event) {
     std::string song = _levelBuilder.getSelectedSong();
     audioFacade->playMusic(song.c_str());
 
@@ -197,19 +197,19 @@ void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
     this->callRender();
 
     if(this->buildTerrainActive) {
-        if ((event->getMouseEventType() == MouseEventType::Down || event->getMouseEventType() == MouseEventType::Drag) && event->getMouseClickType() == MouseClickType::Left) {
-            _levelBuilder.placeBlock(event->getXPosition(), event->getYPosition());
+        if ((event.getMouseEventType() == MouseEventType::Down || event.getMouseEventType() == MouseEventType::Drag) && event.getMouseClickType() == MouseClickType::Left) {
+            _levelBuilder.placeBlock(event.getXPosition(), event.getYPosition());
         }
-        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Right) {
-            _levelBuilder.removeBlock(event->getXPosition(), event->getYPosition());
+        if (event.getMouseEventType() == MouseEventType::Down && event.getMouseClickType() == MouseClickType::Right) {
+            _levelBuilder.removeBlock(event.getXPosition(), event.getYPosition());
         }
     }
     else{
-        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
-            _levelBuilder.placeSpawnPoint(event->getXPosition(), event->getYPosition());
+        if (event.getMouseEventType() == MouseEventType::Down && event.getMouseClickType() == MouseClickType::Left) {
+            _levelBuilder.placeSpawnPoint(event.getXPosition(), event.getYPosition());
         }
-        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Right) {
-            _levelBuilder.removeSpawnPoint(event->getXPosition(), event->getYPosition());
+        if (event.getMouseEventType() == MouseEventType::Down && event.getMouseClickType() == MouseClickType::Right) {
+            _levelBuilder.removeSpawnPoint(event.getXPosition(), event.getYPosition());
         }
     }
 }

@@ -59,27 +59,27 @@ void GameScreen::addBackground() {
 }
 
 
-void GameScreen::update(std::shared_ptr<KeyEvent> event){
-    if (event->getKeyEventType() == KeyEventType::Down) {
-        if(event->getKey() == KEY::KEY_ESCAPE)
+void GameScreen::update(const KeyEvent& event){
+    if (event.getKeyEventType() == KeyEventType::Down) {
+        if(event.getKey() == KEY::KEY_ESCAPE)
             _context->setActiveScreen<PauseScreen>();
 
         //Adjusting gamespeed
-        if(event->getKey() == KEY::KEY_PAGEUP) {
+        if(event.getKey() == KEY::KEY_PAGEUP) {
             _context->setTimeModifier(2.50);
         }
-        if(event->getKey() == KEY::KEY_PAGEDOWN) {
+        if(event.getKey() == KEY::KEY_PAGEDOWN) {
             _context->setTimeModifier(0.40);
         }
-        if(event->getKey() == KEY::KEY_HOME) {
+        if(event.getKey() == KEY::KEY_HOME) {
             _context->setTimeModifier(1);
         }
 
-        if (event->getKey() == KEY::KEY_G){
+        if (event.getKey() == KEY::KEY_G){
             _shootingSystem->toggleShooting();
         }
         //Toggle Framerate
-        if(event->getKey() == KEY::KEY_F){
+        if(event.getKey() == KEY::KEY_F){
             drawSystem->toggleFpsCounter();
         }
     }

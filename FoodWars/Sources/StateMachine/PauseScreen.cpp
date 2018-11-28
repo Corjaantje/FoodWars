@@ -42,8 +42,8 @@ void PauseScreen::update(double deltaTime) {
     _inputFacade->pollEvents();
 }
 
-void PauseScreen::update(std::shared_ptr<KeyEvent> event) {
-    if(event->getKey() == KEY::KEY_ESCAPE && event->getKeyEventType() == KeyEventType::Down) {
+void PauseScreen::update(const KeyEvent& event) {
+    if(event.getKey() == KEY::KEY_ESCAPE && event.getKeyEventType() == KeyEventType::Down) {
         _context->setActiveScreen<GameScreen>();
     }
 }

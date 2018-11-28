@@ -126,8 +126,8 @@ void SettingsScreen::update(double deltaTime) {
     _inputFacade->pollEvents();
 }
 
-void SettingsScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
+void SettingsScreen::update(const KeyEvent& event){
+    if(event.getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }

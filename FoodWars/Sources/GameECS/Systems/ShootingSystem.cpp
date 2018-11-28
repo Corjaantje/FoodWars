@@ -83,7 +83,7 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
             _projectileFired = true;
             _entityManager->removeEntity(_shootingLine);
             _entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->lowerEnergy(20);
-            _audioFacade->playEffect("jump");
+            _audioFacade->playEffect("throwing");
         }
     }
 }
@@ -120,7 +120,7 @@ ShootingSystem::generateProjectile(const PositionComponent &playerPositionCompon
     _entityManager->addComponentToEntity(_projectile, new BoxCollider(projectileWidth, projectileHeight));
     _entityManager->addComponentToEntity(_projectile, new DamagingComponent(25));
     _entityManager->addComponentToEntity(_projectile, new DamageableComponent { 10 });
-    _entityManager->addComponentToEntity(_projectile, new GravityComponent(6.5 * speedModifier));
+    _entityManager->addComponentToEntity(_projectile, new GravityComponent(6 * speedModifier));
 
     auto moveComponent = new MoveComponent();
     moveComponent->xVelocity = velocityX * speedModifier;

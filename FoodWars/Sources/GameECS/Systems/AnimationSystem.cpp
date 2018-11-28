@@ -56,8 +56,12 @@ void AnimationSystem::update(double deltatime) {
 
             iterator.second->setElapsedTime(0);
         }
-        auto *drawableComponent = _entityManager->getComponentFromEntity<DrawableComponent>(
-                iterator.first);
-        drawableComponent->shape = iterator.second->getCurrentShape();
+        auto *drawableComponent = _entityManager->getComponentFromEntity<DrawableComponent>(iterator.first);
+        auto *shape = dynamic_cast<ShapeSprite *>(iterator.second->getCurrentShape());
+        if (shape) {
+            drawableComponent->setShape(
+                    std::make_unique<ShapeSprite>(shape->getWidth(), shape->getHeight(), shape->xPos, shape->yPos,
+                                                  shape->imageURL, shape->layer));
+        }
     }
 }

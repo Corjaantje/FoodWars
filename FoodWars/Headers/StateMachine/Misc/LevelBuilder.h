@@ -1,7 +1,6 @@
 #ifndef PROJECT_SWA_LEVELBUILDER_H
 #define PROJECT_SWA_LEVELBUILDER_H
 
-
 #include "../../GameECS/Entities/EntityManager.h"
 #include "EntityMemento.h"
 #include "../../../../TonicEngine/Headers/Visual/Renderlist.h"
@@ -17,10 +16,10 @@ const int SPAWNPOINT_ID = -1;
 class LevelBuilder {
 public:
     LevelBuilder();
-
     ~LevelBuilder();
 private:
-    EntityManager* _entityManager = nullptr;
+    GameLevel _gameLevel;
+    EntityManager &_entityManager;
     std::vector<EntityMemento*> _mementoList;
     std::map<std::string, int> _CoordinateEntityMap;
     std::vector<Coordinate> _spawnPoints;
@@ -48,7 +47,7 @@ private:
     }
 public:
     void resetEntityManager();
-    EntityManager* getEntityManager();
+    //EntityManager getEntityManager();
 
 //    void incrementShapeSize();
 //    void decrementShapeSize();
@@ -78,17 +77,19 @@ public:
 
     void setNextMusic();
     void setPreviousMusic();
-    std::string getSelectedSong();
+
+    std::string getSelectedSong() const;
     void drawCurrentScene(Renderlist &renderlist);
 
     void addWallpaperConfig(std::string music);
     void addMusicConfig(std::string wallpaper);
 
-    GameLevel buildConstructedLevel();
+    const GameLevel &getConstructedLevel() const;
+
+    GameLevel &getConstructedLevelNonConst();
 private:
     int roundXCoordToGrid(int x);
     int roundYCoordToGrid(int y);
-
     void drawAdditionalItems(Renderlist &renderlist);
 };
 

@@ -8,6 +8,11 @@ MoveComponent::MoveComponent(double velocity) {
     this->yVelocity = velocity;
 }
 
+MoveComponent::MoveComponent(double xVelocity, double yVelocity) : xVelocity(xVelocity), yVelocity(yVelocity) {
+
+}
+
+
 MoveComponent &MoveComponent::operator+=(const MoveComponent &other) {
     xVelocity += other.xVelocity;
     yVelocity += other.yVelocity;

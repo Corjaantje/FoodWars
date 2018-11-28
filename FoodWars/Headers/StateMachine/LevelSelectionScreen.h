@@ -3,13 +3,14 @@
 
 #include "IScreen.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
-#include "../LevelManager.h"
+#include "../LevelLoader.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 
 
 class LevelSelectionScreen : public IScreen, public IObserver<KeyEvent> {
 public:
-    explicit LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager);
+    explicit LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context,
+                                  std::shared_ptr<LevelLoader> levelManager);
     ~LevelSelectionScreen();
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;
@@ -19,7 +20,7 @@ private:
     std::vector<std::string> _levels;
     std::vector<TextButton*> _levelButtons;
     int _currentIndex;
-    std::shared_ptr<LevelManager> _levelManager;
+    std::shared_ptr<LevelLoader> _levelManager;
     void swapLevels(bool directionNext);
     MouseEventObservable* mouseEventObservable;
 };

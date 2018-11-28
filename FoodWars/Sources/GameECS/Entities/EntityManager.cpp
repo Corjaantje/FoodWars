@@ -26,19 +26,11 @@ void EntityManager::removeEntity(int entityId) {
     }
 }
 
-bool EntityManager::exists(int entityId) {
+bool EntityManager::exists(int entityId) const {
     for (auto &iterator : _componentsByClass) {
-        if (iterator.second.find(entityId) != iterator.second.end())
-        {
+        if (iterator.second.find(entityId) != iterator.second.end()) {
             return true;
         }
-        //return iterator.second.find(entityId)->second != nullptr;
     }
     return false;
-}
-
-
-EntityManager::EntityManager(const EntityManager &other) : _lowestUnassignedEntityId(other._lowestUnassignedEntityId),
-                                                           _componentsByClass() {
-
 }

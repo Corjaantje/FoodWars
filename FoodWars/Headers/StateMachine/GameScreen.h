@@ -13,9 +13,8 @@
 
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
-    std::unique_ptr<EntityManager> _entityManager;
-    std::string _wallpaper;
-    std::string _backgroundMusic;
+    std::unique_ptr<GameLevel> _gameLevel;
+    EntityManager *_entityManager;
 
     std::shared_ptr<AudioFacade> _audioFacade;
     std::shared_ptr<VisualFacade> _visualFacade;
@@ -27,7 +26,7 @@ private:
     int playerOne;
     int playerTwo;
 public:
-    explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameLevel* gameLevel);
+    explicit GameScreen(const std::shared_ptr<ScreenStateManager> &context, std::unique_ptr<GameLevel> &gameLevel);
     ~GameScreen();
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;

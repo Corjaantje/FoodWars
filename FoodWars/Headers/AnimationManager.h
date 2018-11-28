@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <bits/unique_ptr.h>
 #include "../../TonicEngine/Headers/Visual/Shapes/IShape.h"
 #include "../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
 
@@ -12,12 +13,18 @@ private:
 public:
     AnimationManager() = default;
     ~AnimationManager() = default;
-    std::vector<IShape*> moveLeftAnimation(int width, int height, int xPos, int yPos, int team)const;
-    std::vector<IShape*> moveRightAnimation(int width, int height, int xPos, int yPos, int team)const;
-    std::vector<IShape*> lookLeftAnimation(int width, int height, int xPos, int yPos, int team)const;
-    std::vector<IShape*> lookRightAnimation(int width, int height, int xPos, int yPos, int team)const;
-    std::vector<IShape*> jumpLeftAnimation(int width, int height, int xPos, int yPos, int team)const;
-    std::vector<IShape*> jumpRightAnimation(int width, int height, int xPos, int yPos, int team)const;
+
+    std::vector<std::unique_ptr<IShape>> moveLeftAnimation(int width, int height, int xPos, int yPos, int team) const;
+
+    std::vector<std::unique_ptr<IShape>> moveRightAnimation(int width, int height, int xPos, int yPos, int team) const;
+
+    std::vector<std::unique_ptr<IShape>> lookLeftAnimation(int width, int height, int xPos, int yPos, int team) const;
+
+    std::vector<std::unique_ptr<IShape>> lookRightAnimation(int width, int height, int xPos, int yPos, int team) const;
+
+    std::vector<std::unique_ptr<IShape>> jumpLeftAnimation(int width, int height, int xPos, int yPos, int team) const;
+
+    std::vector<std::unique_ptr<IShape>> jumpRightAnimation(int width, int height, int xPos, int yPos, int team) const;
 };
 
 

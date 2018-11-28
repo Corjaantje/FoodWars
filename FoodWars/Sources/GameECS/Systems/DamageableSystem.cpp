@@ -30,7 +30,8 @@ void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent
     auto projectile = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity());
     projectile->Destroy();
     auto target = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity());
-    target->LowerHealth(_entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getEntity())->GetDamage());
+    target->LowerHealth(
+            _entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getEntity())->getDamage());
 
     std::cout << "currentHP: " << target->GetHealth() << std::endl;
 }

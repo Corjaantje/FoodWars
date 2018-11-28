@@ -1,23 +1,20 @@
 #include "../../../Headers/StateMachine/Misc/LevelBuilder.h"
 
-LevelBuilder::LevelBuilder() {
-    _entityManager = new EntityManager();
-
+LevelBuilder::LevelBuilder() : _gameLevel(), _entityManager(_gameLevel.getEntityManager()), _selectedMusic(0) {
     _musicList.emplace_back("");
-    _selectedMusic = 0;
 }
 
 void LevelBuilder::resetEntityManager() {
-    delete _entityManager;
+    //delete _entityManager;
     for(int i=0; i < _mementoList.size(); i++){
         delete _mementoList[i];
     }
-    _entityManager = new EntityManager();
+    //_entityManager = new EntityManager();
 }
 
-EntityManager *LevelBuilder::getEntityManager() {
+/*EntityManager *LevelBuilder::getEntityManager() {
     return _entityManager;
-}
+}*/
 //void LevelBuilder::incrementShapeSize() {
 //    if(_shapeDimension < MAXIMAL_SHAPE_DIM){
 //        _shapeDimension++;
@@ -87,22 +84,26 @@ void LevelBuilder::placeBlock(int x, int y) {
     }
     std::string gridCoord = std::to_string(convertedX) + std::to_string(convertedY);
     if(_CoordinateEntityMap.count(gridCoord) == 0){
-        int entity = _entityManager->createEntity();
+        int entity = _entityManager.createEntity();
         auto momento = new EntityMemento(entity);
         _mementoList.push_back(momento);
 
         if(_buildCollidable){
-            _entityManager->addComponentToEntity(entity, new BoxCollider(_shapeDimension, _shapeDimension));
+            _entityManager.addComponentToEntity<BoxCollider>(entity, _shapeDimension, _shapeDimension);
         }
         if(_buildDamageable) {
             //TODO Nog geen damageable component
-            _entityManager->addComponentToEntity(entity, new DamageableComponent(1));
+            _entityManager.addComponentToEntity<DamageableComponent>(entity, 1);
         }
-        auto* drawComp = new DrawableComponent();
-        drawComp->shape = new ShapeRectangle(_shapeDimension, _shapeDimension, convertedX, convertedY, Colour(_colorRed, _colorGreen, _colorBlue, 255));
-        _entityManager->addComponentToEntity(entity, drawComp);
-
-        _entityManager->addComponentToEntity(entity, new PositionComponent(convertedX, convertedY));
+        _entityManager.addComponentToEntity<DrawableComponent>(entity, std::make_unique<ShapeRectangle>(_shapeDimension,
+                                                                                                        _shapeDimension,
+                                                                                                        convertedX,
+                                                                                                        convertedY,
+                                                                                                        Colour(_colorRed,
+                                                                                                               _colorGreen,
+                                                                                                               _colorBlue,
+                                                                                                               255)));
+        _entityManager.addComponentToEntity<PositionComponent>(entity, convertedX, convertedY);
         _CoordinateEntityMap[gridCoord] = entity;
     }
 }
@@ -120,7 +121,7 @@ void LevelBuilder::removeBlock(int x, int y) {
             return;
         }
         int it = -1;
-        _entityManager->removeEntity(entityId);
+        _entityManager.removeEntity(entityId);
         for(int i=0; i< _mementoList.size(); i++){
             if(_mementoList[i]->getState() == entityId){
                 it = i;
@@ -142,10 +143,10 @@ void LevelBuilder::removeBlock(int x, int y) {
 //}
 
 void LevelBuilder::drawCurrentScene(Renderlist &renderlist) {
-    std::map<int, DrawableComponent *> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
+    std::map<int, DrawableComponent *> drawComps = _entityManager.getAllEntitiesWithComponent<DrawableComponent>();
     renderlist.clearLists();
     for (auto &drawComp : drawComps) {
-        drawComp.second->shape->addToRender(&renderlist);
+        drawComp.second->getShape()->addToRender(&renderlist);
     }
     drawAdditionalItems(renderlist);
 }
@@ -190,6 +191,7 @@ void LevelBuilder::setNextWallpaper() {
     if(_wallpaperList.size() > 1){
         int newIndex = (_selectedWallpaper + 1) % _wallpaperList.size();
         _selectedWallpaper = newIndex;
+        _gameLevel.setBackgroundWallpaper(_wallpaperList[_selectedWallpaper]);
     }
 }
 
@@ -200,6 +202,7 @@ void LevelBuilder::setPreviousWallpaper() {
             newIndex = _wallpaperList.size() - 1;
         }
         _selectedWallpaper = newIndex;
+        _gameLevel.setBackgroundWallpaper(_wallpaperList[_selectedWallpaper]);
     }
 }
 
@@ -211,6 +214,7 @@ void LevelBuilder::setNextMusic() {
     if(_musicList.size() > 1){
         int newIndex = (_selectedMusic + 1) % _musicList.size();
         _selectedMusic = newIndex;
+        _gameLevel.setBackgroundMusic(_musicList[_selectedMusic]);
     }
 }
 
@@ -221,15 +225,15 @@ void LevelBuilder::setPreviousMusic() {
             newIndex = _musicList.size() - 1;
         }
         _selectedMusic = newIndex;
+        _gameLevel.setBackgroundMusic(_musicList[_selectedMusic]);
     }
 }
 
-std::string LevelBuilder::getSelectedSong() {
+std::string LevelBuilder::getSelectedSong() const {
     if (_musicList[_selectedMusic].empty()) {
         return "none";
     } else{
-        std::string song = _musicList[_selectedMusic];
-        return song;
+        return _musicList[_selectedMusic];
     }
 }
 
@@ -246,7 +250,7 @@ void LevelBuilder::placeSpawnPoint(int x, int y) {
         _spawnPoints.emplace_back(coord);
         _CoordinateEntityMap[gridCoord] = SPAWNPOINT_ID;
     }
-
+    _gameLevel.setSpawnPoints(_spawnPoints);
 }
 
 void LevelBuilder::removeSpawnPoint(int x, int y) {
@@ -272,20 +276,21 @@ void LevelBuilder::removeSpawnPoint(int x, int y) {
             _CoordinateEntityMap.erase(gridCoord);
         }
     }
+    _gameLevel.setSpawnPoints(_spawnPoints);
 }
 
 std::vector<Coordinate> LevelBuilder::getSpawnPoints() const {
     return _spawnPoints;
 }
 
-GameLevel LevelBuilder::buildConstructedLevel() {
+/*GameLevel LevelBuilder::buildConstructedLevel() {
     GameLevel gameLevel{};
     gameLevel.setBackgroundWallpaper(_wallpaperList[_selectedWallpaper]);
-    gameLevel.setEntityManager(*_entityManager);
+    //gameLevel.setEntityManager(*_entityManager);
     gameLevel.setSpawnPoints(_spawnPoints);
     gameLevel.setBackgroundMusic(_musicList[_selectedMusic]);
     return gameLevel;
-}
+}*/
 void LevelBuilder::addMusicConfig(std::string music) {
     _musicList.emplace_back(music);
 }
@@ -301,5 +306,15 @@ LevelBuilder::~LevelBuilder() {
     for (EntityMemento *entityMemento: _mementoList) {
         delete entityMemento;
     }
-    delete _entityManager;
+    //delete _entityManager;
+}
+
+const GameLevel &LevelBuilder::getConstructedLevel() const {
+    return _gameLevel;
+}
+
+GameLevel &LevelBuilder::getConstructedLevelNonConst() {
+    std::cerr << "LevelBuilder Line 310: This needs to be const! Which means the saving function must be const."
+              << std::endl;
+    return _gameLevel;
 }

@@ -28,10 +28,10 @@ void DrawSystem::update(double dt) {
     for (const auto &iterator: _entityManager->getAllEntitiesWithComponent<DrawableComponent>()) {
         auto *positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
         if (positionComponent) {
-            iterator.second->shape->xPos = positionComponent->X;
-            iterator.second->shape->yPos = positionComponent->Y;
+            iterator.second->getShape()->xPos = positionComponent->X;
+            iterator.second->getShape()->yPos = positionComponent->Y;
         }
-        iterator.second->shape->addToRender(&_renderList);
+        iterator.second->getShape()->addToRender(&_renderList);
     }
     _visualFacade->render(_renderList);
 }
@@ -92,7 +92,7 @@ void DrawSystem::drawCurrentPlayer() {
         for (auto const &x : turnComps) {
             if (x.second->isMyTurn()) {
                 auto *sprite = dynamic_cast<ShapeSprite *>(_entityManager->getComponentFromEntity<DrawableComponent>(
-                        x.first)->shape);
+                        x.first)->getShape());
                 if (sprite != nullptr) {
                     _playerIcon = sprite->imageURL;
                 }

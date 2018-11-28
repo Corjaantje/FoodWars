@@ -9,15 +9,10 @@
 #include "../../Headers/StateMachine/WinTransitionScreen.h"
 #include "../../Headers/StateMachine/LoseTransitionScreen.h"
 
-GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameLevel* gameLevel) :
-        IScreen(context),
-        _entityManager(nullptr/*std::make_shared<EntityManager>(gameLevel->getEntityManager())*/) {
-    std::string level = gameLevel->getBackgroundWallpaper();
-    _wallpaper = level;
-    addBackground();
-    std::string music = gameLevel->getBackgroundMusic();
-    _backgroundMusic = music;
+GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager> &context, std::unique_ptr<GameLevel> &gameLevel) :
+        IScreen(context), _gameLevel(std::move(gameLevel)), _entityManager(&_gameLevel->getEntityManager()) {
 
+    addBackground();
     _audioFacade = _context->getFacade<AudioFacade>();
     _visualFacade = _context->getFacade<VisualFacade>();
     _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
@@ -47,10 +42,9 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameL
 
 void GameScreen::addBackground() {
     int background = _entityManager->createEntity();
-    auto *comp = new DrawableComponent();
-    comp->shape = new ShapeSprite(1600,900,0,0, _wallpaper);
-    comp->shape->layer = 0;
-    _entityManager->addComponentToEntity(background, comp);
+    _entityManager->addComponentToEntity<DrawableComponent>(background, std::make_unique<ShapeSprite>(1600, 900, 0, 0,
+                                                                                                      _gameLevel->getBackgroundWallpaper(),
+                                                                                                      0));
 }
 
 
@@ -98,7 +92,7 @@ void GameScreen::update(double deltaTime) {
         _context->setActiveScreen<DrawTransitionScreen>();
         ((std::static_pointer_cast<LevelTransitionScreen>(_context->getCurrentState())->setScore(100)));
     }
-    _audioFacade->playMusic(_backgroundMusic.c_str());
+    _audioFacade->playMusic(_gameLevel->getBackgroundMusic().c_str());
 
     _inputFacade->pollEvents();
     for(auto const &iterator : _systems){

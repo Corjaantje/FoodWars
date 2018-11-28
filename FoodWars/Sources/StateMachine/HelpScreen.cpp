@@ -7,17 +7,20 @@ HelpScreen::HelpScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
     _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
 
-    _renderList._shapes[0].push_back(new ShapeSprite{1600, 900, 0, 0, "ScreenHelp.png"});
+    auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenHelp.png");
+    wallpaper->layer = 0;
+    wallpaper->addToRender(&_renderList);
 
-    // Backbutton
-    SpriteButton* backButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 140, 140, 12, 12, Colour{0,0,0,0}};
-    backButton->addToRender(&_renderList);
-    _sprites.push_back(backButton);
+    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+            [c = _context]() {
+                c->setActiveScreen<MainMenuScreen>();
+            },
+            140, 140, 12, 12,
+            Colour{0,0,0,0})->addToRender(&_renderList);
 
-    _renderList._shapes[1].push_back(createShape<ShapeText>(1040, 480, "'A'", 0, 30, 30, Colour(255, 255, 255, 0)));
-    _renderList._shapes[1].push_back(createShape<ShapeText>(1040, 600, "'D'", 0, 30, 30, Colour(255, 255, 255, 0)));
-    _renderList._shapes[1].push_back(
-            createShape<ShapeText>(1040, 720, "'Spacebar'", 0, 10 * 20, 30, Colour(255, 255, 255, 0)));
+    createShape<ShapeText>(1040, 480, "'A'", 0, 30, 30, Colour(255, 255, 255, 0))->addToRender(&_renderList);
+    createShape<ShapeText>(1040, 600, "'D'", 0, 30, 30, Colour(255, 255, 255, 0))->addToRender(&_renderList);
+    createShape<ShapeText>(1040, 720, "'Spacebar'", 0, 10 * 20, 30, Colour(255, 255, 255, 0))->addToRender(&_renderList);
 }
 
 HelpScreen::~HelpScreen() = default;

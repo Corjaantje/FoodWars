@@ -10,7 +10,8 @@
 class LevelSelectionScreen : public IScreen, public IObserver<KeyEvent> {
 public:
     explicit LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context,
-                                  std::shared_ptr<LevelLoader> levelManager);
+                                  std::shared_ptr<LevelLoader> levelManager,
+                                  const FileManager& fileManager);
     ~LevelSelectionScreen();
     void update(double deltaTime) override;
     void update(std::shared_ptr<KeyEvent> event) override;
@@ -23,6 +24,7 @@ private:
     std::shared_ptr<LevelLoader> _levelManager;
     void swapLevels(bool directionNext);
     MouseEventObservable* mouseEventObservable;
+    const FileManager* _fileManager;
 };
 
 #endif //PROJECT_SWA_LEVELSELECTIONSCREEN_H

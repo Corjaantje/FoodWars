@@ -3,7 +3,7 @@
 
 ShapeText::ShapeText(const int x, const int y, std::string string, int fontSize, int width, int height,
                      Colour colour)
-        : IShape(x, y), width(width), height(height), fontSize(fontSize), text(string), colour(colour), layer(3) {};
+        : IShape(x, y, 3), width(width), height(height), fontSize(fontSize), text(string), colour(colour) {}
 
 ShapeText::~ShapeText() {}
 

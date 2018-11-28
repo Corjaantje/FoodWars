@@ -11,7 +11,6 @@ public:
     void addToRender(Renderlist* renderlist) override;
 public:
     Colour colour;
-    int layer;
     int xPos2, yPos2;
     void render(IRenderer &renderer) const override;
     int getWidth() const override  { return 0; }

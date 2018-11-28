@@ -33,6 +33,8 @@ private:
     void drawNonComponents();
     void drawPlayers();
     void drawPlayerStats();
+    Colour getConvertedHealthColor(int health);
+
     template<typename T, typename... Args>
     IShape *createShape(Args &&... args) {
         T *shape = new T(std::forward<Args>(args)...);

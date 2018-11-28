@@ -13,14 +13,19 @@ public:
 public:
     void setPlayerID(int id);
     void setSelectedWeapon(std::string ImageURL);
+    void setSelectedWeaponAvailability(int weaponAvail);
     void addScore(int score);
 
     int getPlayerID() const;
     int getScore() const;
+    std::string getSelectedWeapon();
+    int getSelectedWeaponAvailability();
+
 private:
     int _playerID;
     int _score;
     std::string _selectedWeapon;
+    int _selectedWeaponAvailability;
 };
 
 

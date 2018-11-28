@@ -18,6 +18,7 @@
 #include "FoodWars/Headers/StateMachine/PauseScreen.h"
 #include "FoodWars/Headers/StateMachine/HighscoreScreen.h"
 #include "FoodWars/Headers/StateMachine/AdvertisingScreen.h"
+#include "TonicEngine/Headers/Storage/FileManager.h"
 
 
 int main(int argc, char** argv)
@@ -35,6 +36,7 @@ int main(int argc, char** argv)
     audioFacade->setEffectVolume(10);
 
     GeneralFacade* generalFacade = new GeneralFacade();
+    InputFacade* inputFacade = new InputFacade();
 
     // Music
     audioFacade->addAudio("wildwest", "./Assets/Audio/wildwest.mp3");
@@ -48,25 +50,26 @@ int main(int argc, char** argv)
     audioFacade->addAudio("jump", "./Assets/Audio/jump.wav");
 
     std::shared_ptr<LevelManager> levelManager = std::make_shared<LevelManager>();
-    AdvertisingManager advertisingManager = AdvertisingManager();
+    FileManager fileManager = FileManager();
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
-    InputFacade* inputFacade = new InputFacade();
+
     inputFacade->setWindowResolutionCalculator(windowResolutionCalculator);
+
     screenStateManager->setWindowResolutionCalculator(windowResolutionCalculator);
     screenStateManager->addFacade(visualFacade);
     screenStateManager->addFacade(inputFacade);
     screenStateManager->addFacade(audioFacade);
-    screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager, advertisingManager));
+    screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager, fileManager));
     screenStateManager->addOrSetScreenState(new UpgradesScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new CreditScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager, new GameLevel()));
-    screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager, levelManager));
-    screenStateManager->addOrSetScreenState(new LevelCreationScreen(screenStateManager));
+    screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager, levelManager, fileManager));
+    screenStateManager->addOrSetScreenState(new LevelCreationScreen(screenStateManager, fileManager));
     screenStateManager->addOrSetScreenState(new HelpScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new PauseScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new HighscoreScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new AdvertisingScreen(screenStateManager, advertisingManager));
+    screenStateManager->addOrSetScreenState(new AdvertisingScreen(screenStateManager, fileManager));
     screenStateManager->addOrSetScreenState(new LoseTransitionScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new WinTransitionScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new DrawTransitionScreen(screenStateManager));

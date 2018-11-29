@@ -4,28 +4,6 @@
 AISystem::AISystem(std::shared_ptr<EntityManager> entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable){
     _entityManager = std::move(entityManager);
     _audioFacade = audioFacade;
-
-    autoClimbOnCollision  = new CollisionEventHandlerLamda {
-            collisionEventObservable,
-            // Staircase walking
-            /*[entityManager = _entityManager](const CollisionEvent& collisionEvent) {
-                double angle = collisionEvent.getCollisionAngle();
-                return (angle >= 45 && angle <= 135) || (angle >= 225 && angle <= 315);
-            } ,*/
-            [](const CollisionEvent& collisionEvent){
-                return false;
-            },
-            [entityManager = _entityManager](const CollisionEvent& collisionEvent) {
-                auto moveComponent = entityManager->getComponentFromEntity<MoveComponent>(collisionEvent.getEntity());
-                auto boxCollider = entityManager->getComponentFromEntity<BoxCollider>(collisionEvent.getEntity());
-                auto positionComponent = entityManager->getComponentFromEntity<PositionComponent>(collisionEvent.getEntity());
-                auto otherPositionComponent = entityManager->getComponentFromEntity<PositionComponent>(collisionEvent.getOtherEntity());
-                if(std::abs(positionComponent->Y + boxCollider->height/2) < otherPositionComponent->Y) {
-                    //moveComponent->yVelocity = 0;
-                    positionComponent->Y = otherPositionComponent->Y - boxCollider->height;
-                }
-            }
-    };
 }
 
 AISystem::~AISystem() {
@@ -40,21 +18,17 @@ void AISystem::update(double dt) {
         auto moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
 
         if (turnComponent->isMyTurn()) {
-
             //jump(iterator.first, *turnComponent);
             //walkRight(*moveComponent, *turnComponent, dt);
             walkLeft(*moveComponent, *turnComponent, dt);
+
+            auto positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
+            if(positionComponent) {
+                positionComponent->X += std::round(dt * moveComponent->xVelocity);
+                positionComponent->Y += std::round(dt * moveComponent->yVelocity);
+            }
         } else {
             moveComponent->xVelocity = 0;
-        }
-    }
-
-    for (auto const &iterator: _entityManager->getAllEntitiesWithComponent<MoveComponent>()) {
-        std::shared_ptr<MoveComponent> moveComponent = iterator.second;
-        std::shared_ptr<PositionComponent> positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
-        if(positionComponent) {
-            positionComponent->X += std::round(dt * moveComponent->xVelocity);
-            positionComponent->Y += std::round(dt * moveComponent->yVelocity);
         }
     }
 }

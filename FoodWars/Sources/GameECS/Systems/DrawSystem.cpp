@@ -63,18 +63,20 @@ void DrawSystem::drawNonComponents() {
 
 void DrawSystem::drawPlayers() {
     _playerUpdateCount++;
-    if(_playerUpdateCount > 30){
-        std::map<int, std::shared_ptr<PlayerComponent>> playerComps = _entityManager->getAllEntitiesWithComponent<PlayerComponent>();
+    if (_playerUpdateCount > 30) {
+        std::map<int, PlayerComponent *> playerComps = _entityManager->getAllEntitiesWithComponent<PlayerComponent>();
         for (auto const& x : playerComps)
         {
             if(x.second->getPlayerID() == 1){
-                ShapeSprite* sprite = dynamic_cast<ShapeSprite*>(_entityManager->getComponentFromEntity<DrawableComponent>(x.first)->shape);
+                auto *sprite = dynamic_cast<ShapeSprite *>(_entityManager->getComponentFromEntity<DrawableComponent>(
+                        x.first)->getShape());
                if(sprite != nullptr) {
                    _playerIconOne = sprite->imageURL;
                }
             }
             if(x.second->getPlayerID() == 2){
-                ShapeSprite* sprite = dynamic_cast<ShapeSprite*>(_entityManager->getComponentFromEntity<DrawableComponent>(x.first)->shape);
+                auto *sprite = dynamic_cast<ShapeSprite *>(_entityManager->getComponentFromEntity<DrawableComponent>(
+                        x.first)->getShape());
                 if(sprite != nullptr) {
                     _playerIconTwo = sprite->imageURL;
                 }

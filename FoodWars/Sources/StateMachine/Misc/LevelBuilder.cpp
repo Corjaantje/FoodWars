@@ -156,7 +156,6 @@ int LevelBuilder::roundYCoordToGrid(int y) {
     return y - remainder;
 }
 
-
 void LevelBuilder::setNextWallpaper() {
     if (_wallpaperList.size() > 1) {
         int newIndex = (_selectedWallpaper + 1) % _wallpaperList.size();
@@ -176,10 +175,6 @@ void LevelBuilder::setPreviousWallpaper() {
         _gameLevel.setBackgroundWallpaper(_wallpaperList[_selectedWallpaper]);
         wallpaper->imageURL = _wallpaperList[_selectedWallpaper];
     }
-}
-
-std::string LevelBuilder::getCurrentWallpaper() {
-    return _wallpaperList[_selectedWallpaper];
 }
 
 void LevelBuilder::setNextMusic() {
@@ -249,18 +244,6 @@ void LevelBuilder::removeSpawnPoint(int x, int y) {
         }
     }
     _gameLevel.setSpawnPoints(_spawnPoints);
-}
-
-std::vector<Coordinate> LevelBuilder::getSpawnPoints() const {
-    return _spawnPoints;
-}
-
-void LevelBuilder::addMusicConfig(std::string music) {
-    _musicList.emplace_back(music);
-}
-
-void LevelBuilder::addWallpaperConfig(std::string wallpaper) {
-    _wallpaperList.emplace_back(wallpaper);
 }
 
 LevelBuilder::~LevelBuilder() {

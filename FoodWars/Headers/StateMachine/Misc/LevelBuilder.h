@@ -63,14 +63,12 @@ public:
 
     void placeSpawnPoint(int x, int y);
     void removeSpawnPoint(int x, int y);
-    std::vector<Coordinate> getSpawnPoints() const;
 
     bool toggleCollidable();
     bool toggleDamageable();
 
     void setNextWallpaper();
     void setPreviousWallpaper();
-    std::string getCurrentWallpaper();
 
     void setNextMusic();
     void setPreviousMusic();
@@ -78,16 +76,11 @@ public:
     std::string getSelectedSong() const;
     void drawCurrentScene(Renderlist &renderlist);
 
-    void addWallpaperConfig(std::string music);
-    void addMusicConfig(std::string wallpaper);
-
     const GameLevel &getConstructedLevel() const;
-
     GameLevel &getConstructedLevelNonConst();
 private:
     int roundXCoordToGrid(int x);
     int roundYCoordToGrid(int y);
-    void drawAdditionalItems(Renderlist &renderlist);
 };
 
 

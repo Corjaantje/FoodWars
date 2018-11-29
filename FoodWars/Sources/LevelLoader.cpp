@@ -5,6 +5,7 @@
 #include "../Headers/GameECS/Components/DamageableComponent.h"
 #include "../Headers/GameECS/Systems/StorageSystem.h"
 #include "../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
+#include "../Headers/GameECS/Components/PlayerComponent.h"
 
 LevelLoader::LevelLoader() = default;
 
@@ -59,7 +60,7 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel) {
     entityManager->addComponentToEntity<GravityComponent>(player);
     entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation), 0.1);
     entityManager->addComponentToEntity<DamageableComponent>(player);
-
+    entityManager->addComponentToEntity<PlayerComponent>(player, 1);
     // Player
     player = entityManager->createEntity();
     entityManager->addComponentToEntity<DrawableComponent>(player, std::make_unique<ShapeSprite>(48, 72,
@@ -75,6 +76,7 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel) {
     entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation2), 0.1);
     //entityManager->addComponentToEntity<DrawableComponent>(player, entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation2), 0.1));
     entityManager->addComponentToEntity<DamageableComponent>(player);
+    entityManager->addComponentToEntity<PlayerComponent>(player, 2);
 
     int boundLeft = entityManager->createEntity();
     entityManager->addComponentToEntity<BoxCollider>(boundLeft, 900, 900);

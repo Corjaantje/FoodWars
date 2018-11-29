@@ -12,7 +12,6 @@ MoveComponent::MoveComponent(double xVelocity, double yVelocity) : xVelocity(xVe
 
 }
 
-
 MoveComponent &MoveComponent::operator+=(const MoveComponent &other) {
     xVelocity += other.xVelocity;
     yVelocity += other.yVelocity;
@@ -20,10 +19,9 @@ MoveComponent &MoveComponent::operator+=(const MoveComponent &other) {
 }
 
 std::vector<std::string> MoveComponent::serialize() {
-    std::vector<std::string> data;
+    std::vector<std::string> data{};
     data.push_back(std::to_string(xVelocity));
     data.push_back(std::to_string(yVelocity));
-
     return data;
 }
 

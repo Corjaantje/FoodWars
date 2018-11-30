@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include "../../../Headers/GameECS/Systems/ShootingSystem.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/GravityComponent.h"
@@ -37,6 +38,7 @@ void ShootingSystem::update(double deltaTime) {
             _entityManager->removeEntity(_projectile);
         }
     }
+    _timePassed += deltaTime;
 }
 
 void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
@@ -55,6 +57,10 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
         auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(currentPlayer);
         int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
         int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
+        int powerBarWidth = 20;
+        int powerBarHeight = 50;
+        int powerBarX = playerCenterX - 60;
+        int powerBarY = playerCenterY - 25;
         double deltaX = event->getXPosition() - playerCenterX;
         double deltaY = event->getYPosition() - playerCenterY;
         if (deltaX > 250) deltaX = 250;
@@ -80,14 +86,15 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
             }
 
             if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
-                generateProjectile(*currentPlayerPos.get(), *playerSize.get(), deltaX, deltaY);
+                _timePassed = 0;
+                createPowerBar(powerBarWidth, powerBarHeight, powerBarX, powerBarY);
                 _lineDrawn = true;
             }
         }
         else {
 
             if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
-                createPowerBar(20, 50, playerCenterX - 60, playerCenterY - 25);
+                powerHandler(powerBarWidth, powerBarHeight, powerBarX, powerBarY);
             }
 
             if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
@@ -95,8 +102,9 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
                 _isShooting = false;
                 _projectileFired = true;
                 _lineDrawn = false;
-                _entityManager->removeEntity(_shootingLine);
+                _entityManager->removeEntity(_powerBarBackground);
                 _entityManager->removeEntity(_powerBar);
+                _entityManager->removeEntity(_shootingLine);
                 _entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->lowerEnergy(20);
                 _audioFacade->playEffect("throwing");
             }
@@ -112,10 +120,24 @@ void ShootingSystem::createShootingLine(int fromX, int fromY, int toX, int toY) 
 }
 
 void ShootingSystem::createPowerBar(int width, int height, int xPos, int yPos) {
+    _powerBarBackground = _entityManager->createEntity();
+    auto drawableBar = new DrawableComponent();
+    drawableBar->shape = new ShapeRectangle(width, height, xPos, yPos, Colour(0, 0, 0, 0));
+    _entityManager->addComponentToEntity(_powerBarBackground, drawableBar);
+}
+
+void ShootingSystem::powerHandler(int width, int height, int xPos, int yPos) {
     _powerBar = _entityManager->createEntity();
-    auto d = new DrawableComponent();
-    d->shape = new ShapeRectangle(width, height, xPos, yPos, Colour(0, 0, 0, 0));
-    _entityManager->addComponentToEntity(_powerBar, d);
+    auto drawablePower = new DrawableComponent();
+    // height van 1 tot height - 4;
+    for (int power = 1; power <= height - 4; power++) {
+
+        if(_timePassed > 0.1) {
+            drawablePower->shape = new ShapeRectangle(width - 4, power, xPos + 2, yPos + (height - 2), Colour(255, 0, 0, 0));
+            _entityManager->addComponentToEntity(_powerBar, drawablePower);
+            _timePassed = 0;
+        }
+    }
 }
 
 void ShootingSystem::toggleShooting() {
@@ -123,8 +145,7 @@ void ShootingSystem::toggleShooting() {
         _isShooting = !_isShooting;
 }
 
-void
-ShootingSystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
+void ShootingSystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
                                 double velocityX, double velocityY) {
     _projectile = _entityManager->createEntity();
     int projectileWidth = 11;

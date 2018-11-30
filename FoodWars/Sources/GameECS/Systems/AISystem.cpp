@@ -6,9 +6,7 @@ AISystem::AISystem(std::shared_ptr<EntityManager> entityManager, const std::shar
     _audioFacade = audioFacade;
 }
 
-AISystem::~AISystem() {
-    delete autoClimbOnCollision;
-}
+AISystem::~AISystem() = default;
 
 
 void AISystem::update(double dt) {
@@ -21,7 +19,7 @@ void AISystem::update(double dt) {
             //jump(iterator.first, *turnComponent);
             //walkRight(*moveComponent, *turnComponent, dt);
             walkLeft(*moveComponent, *turnComponent, dt);
-
+            std::cout << "Distance to enemy: " << getDistanceToEnemy(iterator.first) << std::endl;
             auto positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
             if(positionComponent) {
                 positionComponent->X += std::round(dt * moveComponent->xVelocity);
@@ -51,4 +49,26 @@ void AISystem::walkRight(MoveComponent& moveComponent, TurnComponent& turnCompon
     turnComponent.lowerEnergy(walkingEnergyCostPerSecond * dt);
 }
 
+int AISystem::getDistanceToEnemy(int entityId) {
+    auto myPositionComponent = _entityManager->getComponentFromEntity<PositionComponent>(entityId);
+    for(const auto &iterator : _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
+        auto enemyPositionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
+        return calculateDistance(myPositionComponent, enemyPositionComponent);
+    }
+    // Player not found
+    return 0;
+}
+
+// Calculates the manhattan distance between two PositionComponents
+int AISystem::calculateDistance(std::shared_ptr<PositionComponent> posOne, std::shared_ptr<PositionComponent> posTwo) {
+    // TODO: Find middle of enemy
+    return abs(posTwo->X - posOne->X) + abs(posTwo->Y - posOne->Y);
+}
+
+// Counts the amount of blocks positioned between two points
+int AISystem::countObstructingBlocks(std::shared_ptr<PositionComponent> posOne, std::shared_ptr<PositionComponent> posTwo){
+    // TODO: Only check blocks within a certain area
+
+    return 0;
+}
 

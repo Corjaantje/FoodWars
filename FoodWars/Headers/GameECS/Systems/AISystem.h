@@ -19,7 +19,6 @@ class AISystem : public IBaseSystem{
 private:
     std::shared_ptr<EntityManager> _entityManager;
     std::shared_ptr<AudioFacade> _audioFacade;
-    CollisionEventHandlerLamda* autoClimbOnCollision;
     const int walkingEnergyCostPerSecond = 20;
 
     void jump(int entityId, TurnComponent& turnComponent);
@@ -29,6 +28,9 @@ public:
     AISystem(std::shared_ptr<EntityManager> entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable);
     ~AISystem() override;
     void update(double dt) override;
+    int getDistanceToEnemy(int entityId);
+    int calculateDistance(std::shared_ptr<PositionComponent> posOne, std::shared_ptr<PositionComponent> posTwo);
+    int countObstructingBlocks(std::shared_ptr<PositionComponent> posOne, std::shared_ptr<PositionComponent> posTwo);
 };
 
 

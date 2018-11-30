@@ -5,6 +5,7 @@
 #include "../../../Headers/GameECS/Components/DamagingComponent.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeLine.h"
+#include <cmath>
 
 ShootingSystem::ShootingSystem(std::shared_ptr<EntityManager> entityManager,
                             std::shared_ptr<AudioFacade> audioFacade,
@@ -15,7 +16,10 @@ ShootingSystem::ShootingSystem(std::shared_ptr<EntityManager> entityManager,
                                                 _visualFacade{std::move(visualFacade)},
                                                 _isShooting{false},
                                                 _projectileFired{false},
-                                                _projectile{0}
+                                                _projectile{0},
+                                                _timePassed{0},
+                                                _chargeSwitch{1},
+                                                _aiming{false}
 {
     inputFacade->getMouseEventObservable()->registerObserver(this);
 }
@@ -36,6 +40,21 @@ void ShootingSystem::update(double deltaTime) {
             _entityManager->removeEntity(_projectile);
         }
     }
+    if (_aiming)
+    {
+        _timePassed += deltaTime;
+        // Power increases till limit after which it lowers
+        if (fmod(_timePassed, (_chargeSwitch * 2)) <= _chargeSwitch)
+        {
+
+        }
+        if (fmod(_timePassed, (_chargeSwitch * 2)) > _chargeSwitch)
+        {
+
+        }
+
+    }
+
 }
 
 void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
@@ -65,6 +84,10 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
 
         if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
             createShootingLine(playerCenterX, playerCenterY, toX, toY);
+
+
+            _aiming = true;
+            _timePassed = 0;
         }
 
         if (event->getMouseEventType() == MouseEventType::Drag) {
@@ -84,6 +107,8 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
             _entityManager->removeEntity(_shootingLine);
             _entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->lowerEnergy(20);
             _audioFacade->playEffect("jump");
+
+            _aiming = false;
         }
     }
 }

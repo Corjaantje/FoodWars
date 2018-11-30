@@ -31,6 +31,10 @@ private:
     std::shared_ptr<VisualFacade> _visualFacade;
     Renderlist _renderList;
 
+    double _timePassed;
+    int _chargeSwitch; // Decides when the "power" stops increasing and instead gets lowered
+    bool _aiming;
+
     void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
                             double velocityX, double velocityY);
 };

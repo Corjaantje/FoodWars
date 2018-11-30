@@ -9,7 +9,7 @@ private:
     ~PrintMouseInputObserver();
 public:
     PrintMouseInputObserver();
-    void update(std::shared_ptr<MouseEvent> event);
+    void update(MouseEvent& event);
 };
 
 #endif //PROJECT_SWA_PRINTMOUSEINPUTOBSERVER_H

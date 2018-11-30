@@ -6,7 +6,7 @@
 
 class WinTransitionScreen : public LevelTransitionScreen{
 public:
-    explicit WinTransitionScreen(std::shared_ptr<ScreenStateManager> context);
+    explicit WinTransitionScreen(ScreenStateManager& context);
     std::string getScreenName() const override;
 };
 

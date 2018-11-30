@@ -13,7 +13,7 @@ private:
     std::shared_ptr<EntityManager> _entityManager;
     CollisionEventHandlerLamda* autoClimbOnCollision;
 public:
-    MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade, IObservable<CollisionEvent>& collisionEventObservable);
+    MoveSystem(std::shared_ptr<EntityManager> entityManager, InputFacade& inputFacade, IObservable<CollisionEvent>& collisionEventObservable);
     ~MoveSystem() override;
     void update(double dt) override;
     void update(const KeyEvent& event) override;

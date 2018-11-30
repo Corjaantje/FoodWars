@@ -3,12 +3,12 @@
 #include "../../Headers/StateMachine/GameScreen.h"
 
 
-WinTransitionScreen::WinTransitionScreen(std::shared_ptr<ScreenStateManager> context) : LevelTransitionScreen(std::move(context)) {
+WinTransitionScreen::WinTransitionScreen(ScreenStateManager& context) : LevelTransitionScreen(context) {
     auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenTransitionVictory.png");
     wallpaper->layer = 0;
     wallpaper->addToRender(&_renderList);
 
-    createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"",
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"",
             [c = _context]() {
                 c->setActiveScreen<GameScreen>();
             },

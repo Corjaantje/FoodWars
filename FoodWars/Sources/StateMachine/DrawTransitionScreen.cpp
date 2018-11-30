@@ -2,12 +2,12 @@
 #include "../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 #include "../../Headers/StateMachine/GameScreen.h"
 
-DrawTransitionScreen::DrawTransitionScreen(std::shared_ptr<ScreenStateManager> context) : LevelTransitionScreen(std::move(context)) {
+DrawTransitionScreen::DrawTransitionScreen(ScreenStateManager& context) : LevelTransitionScreen(context) {
     auto wallpaper = createShape<ShapeSprite>(640, 480, 0, 0, "ScreenTransitionDraw.png");
     wallpaper->layer = 0;
     wallpaper->addToRender(&_renderList);
 
-    createShape<TextButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(), "",
             [c = _context]() {
                 c->setActiveScreen<GameScreen>();
             },

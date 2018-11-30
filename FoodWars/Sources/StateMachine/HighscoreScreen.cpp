@@ -1,18 +1,12 @@
 #include "../../Headers/StateMachine/HighscoreScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
-HighscoreScreen::HighscoreScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
-    visualFacade = context->getFacade<VisualFacade>();
-    audioFacade = context->getFacade<AudioFacade>();
-    _storageFacade = context->getFacade<StorageFacade>();
-    _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
-    _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
-
+HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context) {
     auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenHighscore.png");
     wallpaper->layer = 0;
     wallpaper->addToRender(&_renderList);
 
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [c = _context]() {
                 c->setActiveScreen<MainMenuScreen>();
             },
@@ -30,8 +24,8 @@ HighscoreScreen::HighscoreScreen(std::shared_ptr<ScreenStateManager> context) : 
 HighscoreScreen::~HighscoreScreen() = default;
 
 void HighscoreScreen::update(double deltaTime) {
-    visualFacade->render(_renderList);
-    audioFacade->playMusic("menu");
+    _visualFacade->render(_renderList);
+    _audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
 }
 

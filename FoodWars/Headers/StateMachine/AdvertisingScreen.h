@@ -7,8 +7,7 @@
 
 class AdvertisingScreen : public IScreen, public IObserver<KeyEvent> {
 public:
-    explicit AdvertisingScreen(std::shared_ptr<ScreenStateManager> context, const FileManager& manager);
-    ~AdvertisingScreen();
+    AdvertisingScreen(ScreenStateManager& context);
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;
 private:
@@ -17,7 +16,7 @@ private:
     std::vector<std::string> _advertisements;
     void swapAdvertisement(bool directionNext);
     int _currentIndex;
-    const FileManager* _fileManager;
+    const FileManager _fileManager;
 };
 
 #endif //PROJECT_SWA_ADVERTISINGSCREEN_H

@@ -13,8 +13,7 @@
 class ShootingSystem : public IBaseSystem, public IObserver<MouseEvent>
 {
 public:
-    explicit ShootingSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<AudioFacade> audioFacade, std::shared_ptr<VisualFacade> visualFacade, std::shared_ptr<InputFacade> inputFacade);
-    ~ShootingSystem() override;
+    ShootingSystem(std::shared_ptr<EntityManager> entityManager, AudioFacade& audioFacade, VisualFacade& visualFacade, InputFacade& inputFacade);
 
     void update(double deltaTime) override;
     void update(const MouseEvent& event) override;
@@ -26,9 +25,10 @@ private:
     bool _projectileFired;
     int _projectile;
     int _shootingLine;
-    std::shared_ptr<AudioFacade> _audioFacade;
+
     std::shared_ptr<EntityManager> _entityManager;
-    std::shared_ptr<VisualFacade> _visualFacade;
+    AudioFacade* _audioFacade;
+    VisualFacade* _visualFacade;
     Renderlist _renderList;
 
     void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,

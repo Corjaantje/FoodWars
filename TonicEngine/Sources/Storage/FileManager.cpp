@@ -4,12 +4,13 @@
 #include <iostream>
 #include <sys/stat.h>
 #include <fstream>
+#include <algorithm>
 
 FileManager::FileManager() = default;
 FileManager::~FileManager() = default;
 
 std::vector<std::string> FileManager::getFiles(const std::string &filePath,
-                                  const std::string &fileExtension,
+                                  const std::vector<std::string>& fileExtension,
                                   bool includeExtension,
                                   bool includeSubFolders) const {
     DIR *dir;
@@ -30,7 +31,7 @@ std::vector<std::string> FileManager::getFiles(const std::string &filePath,
                     result.push_back(file);
                 }
             else{
-                if(path.find(fileExtension) != std::string::npos){
+                if(std::find(fileExtension.begin(), fileExtension.end(), path.substr(path.find_last_of('.')+1,path.size())) != fileExtension.end()){
                     std::string file = entry->d_name;
                     if (!includeExtension) file = file.substr(0, file.find_last_of('.'));
                     if (includeSubFolders) file = path;

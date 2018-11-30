@@ -9,7 +9,7 @@ private:
     ~PrintWindowObserver();
 public:
     PrintWindowObserver();
-    void update(std::shared_ptr<WindowEvent> event);
+    void update(WindowEvent& event);
 };
 
 #endif //PROJECT_SWA_PRINTWINDOWOBSERVER_H

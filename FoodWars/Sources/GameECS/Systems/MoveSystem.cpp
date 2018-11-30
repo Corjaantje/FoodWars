@@ -10,9 +10,9 @@ MoveSystem::~MoveSystem() {
     delete autoClimbOnCollision;
 }
 
-MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<InputFacade> inputFacade, IObservable<CollisionEvent>& collisionEventObservable){
-    _entityManager = std::move(entityManager);
-    inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
+MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, InputFacade& inputFacade, IObservable<CollisionEvent>& collisionEventObservable) :
+    _entityManager{entityManager} {
+    inputFacade.getKeyEventObservable().registerKeyEventObserver(this);
     autoClimbOnCollision  = new CollisionEventHandlerLamda {
         collisionEventObservable,
         // Staircase walking

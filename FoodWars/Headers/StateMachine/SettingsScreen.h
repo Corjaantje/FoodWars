@@ -6,7 +6,7 @@
 
 class SettingsScreen : public IScreen, public IObserver<KeyEvent> {
 public:
-    explicit SettingsScreen(std::shared_ptr<ScreenStateManager> context);
+    explicit SettingsScreen(ScreenStateManager& context);
     ~SettingsScreen();
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;

@@ -6,7 +6,7 @@
 
 class PauseScreen : public IScreen, public IObserver<KeyEvent> {
 public:
-    explicit PauseScreen(std::shared_ptr<ScreenStateManager> context);
+    explicit PauseScreen(ScreenStateManager& context);
     ~PauseScreen();
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;

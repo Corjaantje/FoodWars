@@ -3,6 +3,16 @@
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/MoveComponent.h"
 
+JumpSystem::JumpSystem(std::shared_ptr<EntityManager> entityManager, AudioFacade& audioFacade,
+                        InputFacade& inputFacade,
+                       IObservable<CollisionEvent>& collisionEventObservable) :
+                       CollisionEventHandler(collisionEventObservable),
+                       _entityManager(entityManager),
+                       _audioFacade{&audioFacade}
+{
+    inputFacade.getKeyEventObservable().registerKeyEventObserver(this);
+}
+
 void JumpSystem::update(double dt) {
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<JumpComponent>()) {
         if(!iterator.second) {
@@ -18,16 +28,6 @@ void JumpSystem::update(double dt) {
         moveComponent->yVelocity -= accelerationChange;
         iterator.second->setAcceleration(iterator.second->getAcceleration() - accelerationChange);
     }
-}
-
-JumpSystem::JumpSystem(const std::shared_ptr<EntityManager> &entityManager,
-                       const std::shared_ptr<InputFacade> &inputFacade,
-                       const std::shared_ptr<AudioFacade>& audioFacade,
-                       IObservable<CollisionEvent> &collisionEventObservable) :
-                       CollisionEventHandler(collisionEventObservable),
-                       _entityManager(entityManager) {
-    _audioFacade = audioFacade;
-    inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
 }
 
 void JumpSystem::update(const KeyEvent& event) {

@@ -8,14 +8,14 @@ InputFacade::InputFacade() {
 
 InputFacade::~InputFacade() = default;
 
-void InputFacade::setWindowResolutionCalculator(std::shared_ptr<WindowResolutionCalculator> windowResCalc) {
-    _windowResCalc = windowResCalc;
+void InputFacade::setWindowResolutionCalculator(const WindowResolutionCalculator& windowResCalc) {
+    _windowResCalc = &windowResCalc;
 }
 
 void InputFacade::init() {
-    _keyEventObservable = std::make_shared<KeyEventObservable>();
-    _mouseEventObservable = std::make_shared<MouseEventObservable>();
-    _windowEventObservable = std::make_shared<WindowEventObservable>();
+    _keyEventObservable = KeyEventObservable();
+    _mouseEventObservable = MouseEventObservable();
+    _windowEventObservable = WindowEventObservable();
 }
 
 // Polls the key input events
@@ -36,12 +36,12 @@ void InputFacade::pollEvents() {
                     MouseEvent mouseEvent = MouseEvent(
                             _windowResCalc->getConvertedxPosClick(event.motion.x),
                             _windowResCalc->getConvertedyPosClick(event.motion.y), MouseEventType::Down, MouseClickType::Left);
-                    _mouseEventObservable.get()->notify(mouseEvent);
+                    _mouseEventObservable.notify(mouseEvent);
                 } else if (event.button.button == SDL_BUTTON_RIGHT) {
                     MouseEvent mouseEvent = MouseEvent(
                             _windowResCalc->getConvertedxPosClick(event.motion.x),
                             _windowResCalc->getConvertedyPosClick(event.motion.y), MouseEventType::Down, MouseClickType::Right);
-                    _mouseEventObservable.get()->notify(mouseEvent);
+                    _mouseEventObservable.notify(mouseEvent);
                 }
                 break;
             }
@@ -50,7 +50,7 @@ void InputFacade::pollEvents() {
                     MouseEvent mouseEvent = MouseEvent(
                             _windowResCalc->getConvertedxPosClick(event.motion.x),
                             _windowResCalc->getConvertedyPosClick(event.motion.y), MouseEventType::Drag, MouseClickType::Left);
-                    _mouseEventObservable.get()->notify(mouseEvent);
+                    _mouseEventObservable.notify(mouseEvent);
                 }
                 break;
             }
@@ -59,25 +59,25 @@ void InputFacade::pollEvents() {
                     MouseEvent mouseEvent = MouseEvent(
                             _windowResCalc->getConvertedxPosClick(event.motion.x),
                             _windowResCalc->getConvertedyPosClick(event.motion.y), MouseEventType::Up, MouseClickType::Left);
-                    _mouseEventObservable.get()->notify(mouseEvent);
+                    _mouseEventObservable.notify(mouseEvent);
                 } else if (event.button.button == SDL_BUTTON_RIGHT) {
                     MouseEvent mouseEvent = MouseEvent(
                             _windowResCalc->getConvertedxPosClick(event.motion.x),
                             _windowResCalc->getConvertedyPosClick(event.motion.y), MouseEventType::Up, MouseClickType::Right);
-                    _mouseEventObservable.get()->notify(mouseEvent);
+                    _mouseEventObservable.notify(mouseEvent);
                 }
                 break;
             }
             case SDL_QUIT: { // When the window is closed
                 WindowEvent windowQuitEvent = WindowEvent(0,0,WindowEventType::Quit);
-                _windowEventObservable.get()->notify(windowQuitEvent);
+                _windowEventObservable.notify(windowQuitEvent);
                 break;
             }
             case SDL_WINDOWEVENT:
                 switch (event.window.event) {
                     case SDL_WINDOWEVENT_RESIZED: { // When the window is resized
                         WindowEvent windowResizeEvent = WindowEvent(event.window.data1, event.window.data2, WindowEventType::Resize);
-                        _windowEventObservable.get()->notify(windowResizeEvent);
+                        _windowEventObservable.notify(windowResizeEvent);
                         break;
                     }
                     default:
@@ -87,19 +87,31 @@ void InputFacade::pollEvents() {
                 break;
         }
     }
-    _keyEventObservable->update();
+    _keyEventObservable.update();
 }
 
-std::shared_ptr<KeyEventObservable> InputFacade::getKeyEventObservable() {
+const KeyEventObservable& InputFacade::getKeyEventObservable() const {
     return _keyEventObservable;
 }
 
-std::shared_ptr<MouseEventObservable> InputFacade::getMouseEventObservable() {
+const MouseEventObservable& InputFacade::getMouseEventObservable() const {
     return _mouseEventObservable;
 }
 
-std::shared_ptr<WindowEventObservable> InputFacade::getWindowEventObservable() {
+const WindowEventObservable& InputFacade::getWindowEventObservable() const {
     return _windowEventObservable;
+}
+
+WindowEventObservable& InputFacade::getWindowEventObservable() {
+    return _windowEventObservable;
+}
+
+MouseEventObservable& InputFacade::getMouseEventObservable() {
+    return _mouseEventObservable;
+}
+
+KeyEventObservable& InputFacade::getKeyEventObservable() {
+    return _keyEventObservable;
 }
 
 int InputFacade::eventFilter(const SDL_Event *event) {

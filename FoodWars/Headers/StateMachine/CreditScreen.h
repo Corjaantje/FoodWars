@@ -5,8 +5,7 @@
 
 class CreditScreen : public IScreen, public IObserver<KeyEvent> {
 public:
-    explicit CreditScreen(std::shared_ptr<ScreenStateManager> context);
-    ~CreditScreen();
+    explicit CreditScreen(ScreenStateManager& context);
     void update(double deltaTime) override;
     void update(const KeyEvent& event);
 };

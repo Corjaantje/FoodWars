@@ -5,7 +5,7 @@
 
 class HelpScreen : public IScreen, public IObserver<KeyEvent> {
 public:
-    explicit HelpScreen(std::shared_ptr<ScreenStateManager> context);
+    explicit HelpScreen(ScreenStateManager& context);
     ~HelpScreen();
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;

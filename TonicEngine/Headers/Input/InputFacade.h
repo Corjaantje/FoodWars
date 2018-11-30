@@ -21,21 +21,24 @@
 
 class InputFacade : public IFacade {
 private:
-    std::shared_ptr<KeyEventObservable> _keyEventObservable;
-    std::shared_ptr<MouseEventObservable> _mouseEventObservable;
-    std::shared_ptr<WindowEventObservable> _windowEventObservable;
+    KeyEventObservable _keyEventObservable;
+    MouseEventObservable _mouseEventObservable;
+    WindowEventObservable _windowEventObservable;
     int eventFilter(const SDL_Event* event);
     std::map<SDL_Keycode, KEY> _keycodeMap;
-    std::shared_ptr<WindowResolutionCalculator> _windowResCalc;
+    const WindowResolutionCalculator* _windowResCalc;
     void init();
 public:
     InputFacade();
     ~InputFacade();
 
-    std::shared_ptr<KeyEventObservable> getKeyEventObservable();
-    std::shared_ptr<MouseEventObservable> getMouseEventObservable();
-    std::shared_ptr<WindowEventObservable> getWindowEventObservable();
-    void setWindowResolutionCalculator(std::shared_ptr<WindowResolutionCalculator> windowResCalc);
+    const KeyEventObservable& getKeyEventObservable() const;
+    const MouseEventObservable& getMouseEventObservable() const;
+    const WindowEventObservable& getWindowEventObservable() const;
+    KeyEventObservable& getKeyEventObservable();
+    MouseEventObservable& getMouseEventObservable();
+    WindowEventObservable& getWindowEventObservable();
+    void setWindowResolutionCalculator(const WindowResolutionCalculator& windowResCalc);
     void pollEvents();
 };
 

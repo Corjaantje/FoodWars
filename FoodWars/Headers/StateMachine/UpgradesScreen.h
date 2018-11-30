@@ -9,7 +9,7 @@ class UpgradesScreen : public IScreen, public IObserver<KeyEvent> {
 private:
     std::string _previousScreen;
 public:
-    explicit UpgradesScreen(std::shared_ptr<ScreenStateManager> context);
+    explicit UpgradesScreen(ScreenStateManager& context);
     ~UpgradesScreen();
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;

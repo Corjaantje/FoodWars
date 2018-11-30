@@ -8,8 +8,7 @@
 
 class LevelCreationScreen : public IScreen, public IObserver<KeyEvent>, public IObserver<MouseEvent> {
 public:
-    explicit LevelCreationScreen(std::shared_ptr<ScreenStateManager> context, const FileManager& fileManager);
-    ~LevelCreationScreen();
+    LevelCreationScreen(ScreenStateManager& context);
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;
     void update(const MouseEvent& event) override;
@@ -26,9 +25,8 @@ private:
     void callRender();
     void relinkAndSave();
     ShapeText* selectedSongText;
-private:
     LevelBuilder _levelBuilder;
-    std::shared_ptr<WindowResolutionCalculator> _windowResCalc;
+    const FileManager* _fileManager;
 };
 
 #endif //PROJECT_SWA_LEVELEDITORSCREEN_H

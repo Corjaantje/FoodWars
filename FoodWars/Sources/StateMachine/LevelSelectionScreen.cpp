@@ -3,47 +3,32 @@
 #include "../../Headers/StateMachine/LevelSelectionScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
-LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager, const FileManager& fileManager ) :
+LevelSelectionScreen::LevelSelectionScreen(ScreenStateManager& context) :
         IScreen(context),
-        _levelManager(levelManager),
-        mouseEventObservable(_inputFacade->getMouseEventObservable().get()),
-        _currentIndex(0),
-        _fileManager(&fileManager) {
-
-    audioFacade = context->getFacade<AudioFacade>();
-    _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
-
+        mouseEventObservable(&_inputFacade->getMouseEventObservable()),
+        _currentIndex(0) {
     auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenLevelSelection.png");
     wallpaper->layer = 0;
     wallpaper->addToRender(&_renderList);
 
     // MainMenu
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [c = _context]() {
                 c->setActiveScreen<MainMenuScreen>();
             },
             120, 120, 10, 10,
             Colour{0,0,0,0})->addToRender(&_renderList);
 
-    // Highscore
-    //TODO ADD HIGHSCORE SCREEN BUTTON
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
-            [c = _context]() {
-                c->setActiveScreen<MainMenuScreen>();
-            },
-            120, 120, 150, 10,
-            Colour{0,0,0,0})->addToRender(&_renderList);
-
     generateLevelButtons();
 
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [this]() {
                 swapLevels(false);
             },
             60, 60, 535, 444,
             Colour{0,0,0,0})->addToRender(&_renderList);
 
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [this]() {
                 swapLevels(true);
             },
@@ -56,15 +41,13 @@ void LevelSelectionScreen::generateLevelButtons() {
         delete button;
     }
     _levelButtons.clear();
-    _levels = _fileManager->getFiles("./Assets/Levels/", "xml", true, false);
+    _levels = FileManager().getFiles("./Assets/Levels/", {"xml"}, true, false);
     std::sort(_levels.begin(), _levels.end());
     for (int i = 0; i < _levels.size(); i++) {
-        TextButton *button = new TextButton{*_inputFacade->getMouseEventObservable(),
+        TextButton *button = new TextButton{_inputFacade->getMouseEventObservable(),
                                             "Level " + std::to_string(i + 1),
                                             [c = _context, this, i]() {
-                                                c->addOrSetScreenState(
-                                                        new GameScreen{c, _levelManager->startLevel(i)});
-                                                c->setActiveScreen<GameScreen>();
+                                                c->setActiveScreen(std::make_unique<GameScreen>(*c, _levelManager->startLevel(i)));
                                             }, 250, 80, 680, 310 + (i % 3) * 125, Colour(255, 255, 255, 255),
                                             Colour(255, 255, 255, 255)};
         _levelButtons.push_back(button);
@@ -72,7 +55,7 @@ void LevelSelectionScreen::generateLevelButtons() {
     }
     //1, 2
     for (int i = _levels.size() % 3; i <= 3; i++) {
-        TextButton *button = new TextButton{*_inputFacade->getMouseEventObservable(), "",
+        TextButton *button = new TextButton{_inputFacade->getMouseEventObservable(), "",
                                             []() {}, 250, 80, 680, 310 + i * 125, Colour(255, 255, 255, 255),
                                             Colour(255, 255, 255, 255)};
         _levelButtons.push_back(button);
@@ -87,7 +70,7 @@ LevelSelectionScreen::~LevelSelectionScreen() {
 };
 
 void LevelSelectionScreen::update(double deltaTime) {
-    audioFacade->playMusic("menu");
+    _audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
     _renderList.clearLists();
 
@@ -104,7 +87,7 @@ void LevelSelectionScreen::update(double deltaTime) {
         iterator->addToRender(&_renderList);
     }
 
-    visualFacade->render(_renderList);
+    _visualFacade->render(_renderList);
 }
 
 void LevelSelectionScreen::swapLevels(bool directionNext) {

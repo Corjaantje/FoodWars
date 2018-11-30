@@ -3,6 +3,7 @@
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Components/MoveComponent.h"
 #include <math.h>
+#include <cstdlib>
 
 CollisionSystem::CollisionSystem(std::shared_ptr<EntityManager> entityManager) : _entityManager(std::move(entityManager)) {
 

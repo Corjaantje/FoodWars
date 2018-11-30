@@ -7,31 +7,37 @@
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../../../TonicEngine/Headers/Visual/VisualFacade.h"
 #include "../../../TonicEngine/Headers/Audio/AudioFacade.h"
+#include "../../../TonicEngine/Headers/Storage/StorageFacade.h"
 #include "ScreenStateManager.h"
 
 class IScreen : IObserver<WindowEvent> {
 protected:
-    std::shared_ptr<InputFacade> _inputFacade;
-    std::shared_ptr<VisualFacade> visualFacade;
-    std::shared_ptr<AudioFacade> audioFacade;
+    std::unique_ptr<InputFacade> _inputFacade;
+    VisualFacade* _visualFacade;
+    AudioFacade* _audioFacade;
+    StorageFacade* _storageFacade;
     Renderlist _renderList;
-    std::shared_ptr<ScreenStateManager> _context;
+    LevelManager* _levelManager;
+    ScreenStateManager* _context;
     bool _isClosed;
     std::vector<IShape *> _sprites;
 public:
 
-    explicit IScreen(const std::shared_ptr<ScreenStateManager> &context) : _context(context),
-                                                           _inputFacade(std::make_shared<InputFacade>()),
-                                                           visualFacade(context->getFacade<VisualFacade>()),
-                                                           audioFacade(context->getFacade<AudioFacade>()),
+    explicit IScreen(ScreenStateManager &context) : _context(&context),
+                                                           _inputFacade(std::make_unique<InputFacade>()),
+                                                           _visualFacade(context.getFacade<VisualFacade>()),
+                                                           _audioFacade(context.getFacade<AudioFacade>()),
+                                                           _storageFacade(context.getFacade<StorageFacade>()),
                                                            _renderList(),
-                                                           _isClosed(false) {
-        _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
-        _inputFacade->getWindowEventObservable()->registerObserver(this);
+                                                           _isClosed(false),
+                                                           _levelManager(&context.getLevelManager())
+    {
+        _inputFacade->setWindowResolutionCalculator(context.getWindowResolutionCalculator());
+        _inputFacade->getWindowEventObservable().registerObserver(this);
     }
 
     ~IScreen() {
-        _inputFacade->getWindowEventObservable()->unregisterObserver(this);
+        _inputFacade->getWindowEventObservable().unregisterObserver(this);
         for (IShape *shape: _sprites) {
             delete shape;
         }
@@ -44,7 +50,7 @@ public:
             _isClosed = true;
         }
         if (event.GetWindowEventType() == WindowEventType::Resize) {
-            visualFacade->setResolution(event.getWidth(), event.getHeight());
+            _visualFacade->setResolution(event.getWidth(), event.getHeight());
         }
     }
 

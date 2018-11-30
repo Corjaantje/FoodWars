@@ -5,10 +5,8 @@
 #include "../../../TonicEngine/Headers/Storage/StorageFacade.h"
 
 class HighscoreScreen : public IScreen, public IObserver<KeyEvent> {
-private:
-    std::shared_ptr<StorageFacade> _storageFacade;
 public:
-    explicit HighscoreScreen(std::shared_ptr<ScreenStateManager> context);
+    explicit HighscoreScreen(ScreenStateManager& context);
     ~HighscoreScreen();
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;

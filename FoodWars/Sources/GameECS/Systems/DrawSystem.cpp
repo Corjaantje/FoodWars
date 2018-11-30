@@ -7,12 +7,11 @@
 #include "../../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 
-DrawSystem::DrawSystem(std::shared_ptr<EntityManager> entityManager,
-                        std::shared_ptr<VisualFacade> visualFacade,
-                        std::shared_ptr<InputFacade> inputFacade) : _inputFacade {std::move(inputFacade)} {
-    _entityManager = std::move(entityManager);
-    _visualFacade = std::move(visualFacade);
-    _timeLast = std::chrono::steady_clock::now().time_since_epoch();
+DrawSystem::DrawSystem(std::shared_ptr<EntityManager> entityManager, VisualFacade& visualFacade) :
+    _entityManager {entityManager},
+    _visualFacade {&visualFacade},
+    _timeLast {std::chrono::steady_clock::now().time_since_epoch()}
+{
 }
 
 DrawSystem::~DrawSystem() = default;

@@ -15,15 +15,12 @@ class MainMenuScreen : public IScreen, public IObserver<KeyEvent> {
 private:
     void quitGame();
     SpriteButton* _advertisement;
-    const FileManager* _fileManager;
-    std::string _currentAD;
+    const FileManager _fileManager;
 public:
-    explicit MainMenuScreen(std::shared_ptr<ScreenStateManager> context, const FileManager& fileManager);
+    explicit MainMenuScreen(ScreenStateManager& context);
     ~MainMenuScreen();
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;
-
-    explicit MainMenuScreen(const std::shared_ptr<ScreenStateManager> &context);
 };
 
 #endif //PROJECT_SWA_MAINMENUSCREEN_H

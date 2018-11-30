@@ -10,10 +10,9 @@
 class JumpSystem : public IBaseSystem, public IObserver<KeyEvent>, public CollisionEventHandler  {
 private:
     std::shared_ptr<EntityManager> _entityManager;
-    std::shared_ptr<AudioFacade> _audioFacade;
-    bool _jumpPressed;
+    AudioFacade* _audioFacade;
 public:
-    JumpSystem(const std::shared_ptr<EntityManager>& entityManager, const std::shared_ptr<InputFacade>& inputFacade, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable);
+    JumpSystem(std::shared_ptr<EntityManager> entityManager, AudioFacade& audioFacade, InputFacade& inputFacade, IObservable<CollisionEvent>& collisionEventObservable);
     void update(double dt) override;
     void update(const KeyEvent& event) override;
     bool canHandle(const CollisionEvent& collisionEvent) override;

@@ -7,20 +7,18 @@
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeLine.h"
 
 ShootingSystem::ShootingSystem(std::shared_ptr<EntityManager> entityManager,
-                            std::shared_ptr<AudioFacade> audioFacade,
-                            std::shared_ptr<VisualFacade> visualFacade,
-                                std::shared_ptr<InputFacade> inputFacade) :
-                                                _audioFacade(std::move(audioFacade)),
+                            AudioFacade& audioFacade,
+                            VisualFacade& visualFacade,
+                            InputFacade& inputFacade) :
+                                                _audioFacade(&audioFacade),
                                                 _entityManager{std::move(entityManager)},
-                                                _visualFacade{std::move(visualFacade)},
+                                                _visualFacade{&visualFacade},
                                                 _isShooting{false},
                                                 _projectileFired{false},
                                                 _projectile{0}
 {
-    inputFacade->getMouseEventObservable()->registerObserver(this);
+    inputFacade.getMouseEventObservable().registerObserver(this);
 }
-
-ShootingSystem::~ShootingSystem() = default;
 
 void ShootingSystem::update(double deltaTime) {
     if (!_entityManager->exists(_projectile)) _projectileFired = false;

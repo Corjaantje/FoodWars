@@ -63,10 +63,10 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
         int powerBarY = playerCenterY - 25;
         double deltaX = event->getXPosition() - playerCenterX;
         double deltaY = event->getYPosition() - playerCenterY;
-        if (deltaX > 250) deltaX = 250;
-        else if (deltaX < -250) deltaX = -250;
-        if (deltaY > 250) deltaY = 250;
-        else if (deltaY < -250) deltaY = -250;
+        if (deltaX > 100) deltaX = 100;
+        else if (deltaX < -100) deltaX = -100;
+        if (deltaY > 100) deltaY = 100;
+        else if (deltaY < -100) deltaY = -100;
         double toX = playerCenterX + deltaX;
         double toY = playerCenterY + deltaY;
 
@@ -129,10 +129,10 @@ void ShootingSystem::createPowerBar(int width, int height, int xPos, int yPos) {
 void ShootingSystem::powerHandler(int width, int height, int xPos, int yPos) {
     _powerBar = _entityManager->createEntity();
     auto drawablePower = new DrawableComponent();
-    // height van 1 tot height - 4;
-    for (int power = 1; power <= height - 4; power++) {
 
-        if(_timePassed > 0.1) {
+    // height van 1 tot height - 4;
+    for (double power = 1; power <= height - 4; power++) {
+        if(_timePassed >= 0.1) {
             drawablePower->shape = new ShapeRectangle(width - 4, power, xPos + 2, yPos + (height - 2), Colour(255, 0, 0, 0));
             _entityManager->addComponentToEntity(_powerBar, drawablePower);
             _timePassed = 0;

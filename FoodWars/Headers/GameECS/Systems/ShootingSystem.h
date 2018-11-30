@@ -32,7 +32,9 @@ private:
     int _shootingLine;
     int _powerBarBackground;
     int _powerBar;
+    int _chargeSwitched;
     double _timePassed;
+
     std::shared_ptr<AudioFacade> _audioFacade;
     std::shared_ptr<EntityManager> _entityManager;
     std::shared_ptr<VisualFacade> _visualFacade;

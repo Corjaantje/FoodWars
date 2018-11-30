@@ -3,13 +3,21 @@
 #include "../../../Headers/Visual/Shapes/ShapeSprite.h"
 #include "../../../Headers/Visual/Renderlist.h"
 
-ShapeSprite::ShapeSprite(int width, int height, int xPos, int yPos, std::string imageURL) : IShape(xPos, yPos, 2), width(width), height(height), imageURL(
-    std::move(imageURL)) {
+ShapeSprite::ShapeSprite(int width, int height, int xPos, int yPos, const std::string &imageURL) : ShapeSprite(width,
+                                                                                                               height,
+                                                                                                               xPos,
+                                                                                                               yPos,
+                                                                                                               imageURL,
+                                                                                                               2) {
 }
 
-ShapeSprite::~ShapeSprite() {
+ShapeSprite::ShapeSprite(int width, int height, int xPos, int yPos, const std::string &imageURL, int layer) : IShape(
+        xPos, yPos, layer), width(width), height(height), imageURL(imageURL) {
 
 }
+
+ShapeSprite::~ShapeSprite() = default;
+
 void ShapeSprite::addToRender(Renderlist *renderlist) {
     renderlist->_shapes[layer].push_back(this);
 }

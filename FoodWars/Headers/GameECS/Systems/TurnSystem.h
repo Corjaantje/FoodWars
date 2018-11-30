@@ -9,14 +9,12 @@
 #include "../Components/TurnComponent.h"
 
 class TurnSystem : public IBaseSystem {
-
-
 private:
+    int _defaultTimePerTurn;
     int _timePerTurn;
-    int _defaultTimePerTurn = 30;
-    std::shared_ptr<EntityManager> _entityManager;
+    EntityManager *_entityManager;
 public:
-    TurnSystem(std::shared_ptr<EntityManager> entityManager);
+    TurnSystem(EntityManager &entityManager);
     ~TurnSystem() override;
     void update(double deltaTime) override;
 };

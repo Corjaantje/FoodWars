@@ -20,11 +20,10 @@ public:
 
     }
 
-    virtual ~IShape(){};
+    ~IShape() override = default;
     virtual void addToRender(Renderlist* renderlist){};
     virtual int getWidth() const = 0;
     virtual int getHeight() const = 0;
-    //void setLayer(int layer);
 };
 
 #endif //PROJECT_SWA_ISHAPE_H

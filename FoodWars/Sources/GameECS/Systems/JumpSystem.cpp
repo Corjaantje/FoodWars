@@ -9,9 +9,9 @@ void JumpSystem::update(double dt) {
             _entityManager->removeComponentFromEntity<JumpComponent>(iterator.first);
             continue;
         }
-        std::shared_ptr<MoveComponent> moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
+        auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
         if(!moveComponent) {
-            _entityManager->addComponentToEntity(iterator.first, new MoveComponent);
+            _entityManager->addComponentToEntity<MoveComponent>(iterator.first);
             moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
         }
         double accelerationChange = iterator.second->getAcceleration() * dt * 15;
@@ -20,13 +20,13 @@ void JumpSystem::update(double dt) {
     }
 }
 
-JumpSystem::JumpSystem(const std::shared_ptr<EntityManager> &entityManager,
+JumpSystem::JumpSystem(EntityManager &entityManager,
                        const std::shared_ptr<InputFacade> &inputFacade,
                        const std::shared_ptr<AudioFacade>& audioFacade,
                        IObservable<CollisionEvent> &collisionEventObservable) :
-                       CollisionEventHandler(collisionEventObservable),
-                       _entityManager(entityManager) {
-    _audioFacade = audioFacade;
+        CollisionEventHandler(collisionEventObservable),
+        _entityManager(&entityManager),
+        _audioFacade{audioFacade} {
     inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
 }
 
@@ -35,7 +35,8 @@ void JumpSystem::update(std::shared_ptr<KeyEvent> event) {
         for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
             if(iterator.second->isMyTurn()){
                 if(!_entityManager->getComponentFromEntity<JumpComponent>(iterator.first)) {
-                    _entityManager->addComponentToEntity(iterator.first, new JumpComponent);
+                    _entityManager->addComponentToEntity<JumpComponent>(
+                            iterator.first); // warning: this probably gives error!
                     iterator.second->lowerEnergy(5);
                     _audioFacade->playEffect("jump");
                 }

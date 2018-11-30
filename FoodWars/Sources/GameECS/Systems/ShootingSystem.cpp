@@ -100,11 +100,13 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
             }
 
             if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
+
+                // Calculating the relative power for X and Y movement
                 double reCountX = std::abs(event->getXPosition() - playerCenterX) / std::abs(event->getYPosition() - playerCenterY);
                 double reCountY = std::abs(event->getYPosition() - playerCenterY) / std::abs(event->getXPosition() - playerCenterX);
                 double xPowerMod = 1 / (reCountY + 1);
                 double yPowerMod = 1 / (reCountX + 1);
-                std::string showMe = "whatchagot";
+
 
                 generateProjectile(*currentPlayerPos.get(), *playerSize.get(), deltaX, deltaY);
                 _isShooting = false;

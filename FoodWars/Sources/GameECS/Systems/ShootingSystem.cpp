@@ -6,6 +6,7 @@
 #include "../../../Headers/GameECS/Components/DamagingComponent.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeLine.h"
+#include <cmath>
 
 ShootingSystem::ShootingSystem(std::shared_ptr<EntityManager> entityManager,
                             std::shared_ptr<AudioFacade> audioFacade,
@@ -17,7 +18,8 @@ ShootingSystem::ShootingSystem(std::shared_ptr<EntityManager> entityManager,
                                                 _isShooting{false},
                                                 _projectileFired{false},
                                                 _lineDrawn{false},
-                                                _projectile{0}
+                                                _projectile{0},
+                                                _timePassed{0}
 {
     inputFacade->getMouseEventObservable()->registerObserver(this);
 }
@@ -65,7 +67,7 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
         double deltaY = event->getYPosition() - playerCenterY;
         if (deltaX > 100) deltaX = 100;
         else if (deltaX < -100) deltaX = -100;
-        if (deltaY > 100) deltaY = 100;
+        if (deltaY > 100) deltaY = playerCenterY + 100;
         else if (deltaY < -100) deltaY = -100;
         double toX = playerCenterX + deltaX;
         double toY = playerCenterY + deltaY;
@@ -73,7 +75,7 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
         if (!_lineDrawn) {
             if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
                 createShootingLine(playerCenterX, playerCenterY, toX, toY);
-            }
+        }
 
             if (event->getMouseEventType() == MouseEventType::Drag) {
                 if (!_entityManager->exists(_shootingLine)) createShootingLine(playerCenterX, playerCenterY, toX, toY);
@@ -98,6 +100,12 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
             }
 
             if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
+                double reCountX = std::abs(event->getXPosition() - playerCenterX) / std::abs(event->getYPosition() - playerCenterY);
+                double reCountY = std::abs(event->getYPosition() - playerCenterY) / std::abs(event->getXPosition() - playerCenterX);
+                double xPowerMod = 1 / (reCountY + 1);
+                double yPowerMod = 1 / (reCountX + 1);
+                std::string showMe = "whatchagot";
+
                 generateProjectile(*currentPlayerPos.get(), *playerSize.get(), deltaX, deltaY);
                 _isShooting = false;
                 _projectileFired = true;

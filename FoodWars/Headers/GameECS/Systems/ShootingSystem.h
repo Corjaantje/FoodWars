@@ -32,7 +32,6 @@ private:
     int _shootingLine;
     int _powerBarBackground;
     int _powerBar;
-    int _chargeSwitched;
     double _timePassed;
 
     std::shared_ptr<AudioFacade> _audioFacade;

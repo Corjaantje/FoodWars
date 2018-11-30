@@ -75,7 +75,7 @@ void GameScreen::update(std::shared_ptr<KeyEvent> event){
             _context->setTimeModifier(1);
         }
 
-        if (event->getKey() == KEY::KEY_G){
+        if (event->getKey() == KEY::KEY_S){
             _shootingSystem->toggleShooting();
         }
         //Toggle Framerate

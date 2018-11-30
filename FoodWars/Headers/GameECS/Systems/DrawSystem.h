@@ -18,7 +18,8 @@ private:
     int _updateCallCount;
     std::string _fpsString;
 
-    std::string _playerIcon;
+    std::string _playerIconOne;
+    std::string _playerIconTwo;
     int _playerUpdateCount = 0;
 
     bool _showFPS = true;
@@ -30,7 +31,9 @@ public:
 
 private:
     void drawNonComponents();
-    void drawCurrentPlayer();
+    void drawPlayers();
+    void drawPlayerStats();
+    Colour getConvertedHealthColor(int health);
 
     template<typename T, typename... Args>
     IShape *createShape(Args &&... args) {

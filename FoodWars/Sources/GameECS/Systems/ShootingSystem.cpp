@@ -75,7 +75,7 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
         if (!_lineDrawn) {
             if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
                 createShootingLine(playerCenterX, playerCenterY, toX, toY);
-        }
+            }
 
             if (event->getMouseEventType() == MouseEventType::Drag) {
                 if (!_entityManager->exists(_shootingLine)) createShootingLine(playerCenterX, playerCenterY, toX, toY);
@@ -106,7 +106,6 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
                 double reCountY = std::abs(event->getYPosition() - playerCenterY) / std::abs(event->getXPosition() - playerCenterX);
                 double xPowerMod = 1 / (reCountY + 1);
                 double yPowerMod = 1 / (reCountX + 1);
-
 
                 generateProjectile(*currentPlayerPos.get(), *playerSize.get(), deltaX, deltaY);
                 _isShooting = false;

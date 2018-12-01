@@ -6,9 +6,9 @@
 
 class GravitySystem : public IBaseSystem, public CollisionEventHandler {
 private:
-    std::shared_ptr<EntityManager> _entityManager;
+    EntityManager *_entityManager;
 public:
-    GravitySystem(std::shared_ptr<EntityManager> entityManager, IObservable<CollisionEvent>& collisionEventObservable);
+    GravitySystem(EntityManager &entityManager, IObservable<CollisionEvent> &collisionEventObservable);
     ~GravitySystem() override;
     bool canHandle(const CollisionEvent& collisionEvent) override;
     void handleCollisionEvent(const CollisionEvent& collisionEvent) override;

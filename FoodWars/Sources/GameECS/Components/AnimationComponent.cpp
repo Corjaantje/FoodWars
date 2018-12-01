@@ -1,19 +1,18 @@
 #include <utility>
 #include "../../../Headers/GameECS/Components/AnimationComponent.h"
 
-AnimationComponent::AnimationComponent(std::vector<IShape*> animationShapes, double animationInterval) {
-    _animationShapes = std::move(animationShapes);
-    _animationInterval = animationInterval;
-    _elapsedTime = 0;
+AnimationComponent::AnimationComponent() : AnimationComponent({}, 1) {
+
+}
+
+AnimationComponent::AnimationComponent(std::vector<std::unique_ptr<IShape>> animationShapes, double animationInterval)
+        : _animationShapes(std::move(animationShapes)),
+          _animationInterval(animationInterval), _elapsedTime(0),
+          _isIdle(false), _isLookingLeft(false) {
     setCurrentShapeIndex(0);
 }
 
-AnimationComponent::~AnimationComponent() {
-    /*for(IShape* shape:_animationShapes)
-    {
-        delete shape;
-    }*/
-}
+AnimationComponent::~AnimationComponent() = default;
 
 double AnimationComponent::getAnimationInterval() const {
     return _animationInterval;
@@ -31,11 +30,7 @@ int AnimationComponent::getNumberOfAnimationShapes() const {
     return _animationShapes.size();
 }
 
-void AnimationComponent::setAnimationShapes(std::vector<IShape*> animationShapes) {
-    for(IShape* shape:_animationShapes)
-    {
-        delete shape;
-    }
+void AnimationComponent::setAnimationShapes(std::vector<std::unique_ptr<IShape>> animationShapes) {
     _animationShapes = std::move(animationShapes);
     _elapsedTime = 0;
     setCurrentShapeIndex(0);
@@ -51,7 +46,7 @@ void AnimationComponent::setElapsedTime(double elapsedTime) {
 
 void AnimationComponent::setCurrentShapeIndex(int currentShapeIndex) {
     _currentShapeIndex = currentShapeIndex;
-    _currentShape = _animationShapes[currentShapeIndex];
+    _currentShape = _animationShapes[currentShapeIndex].get();
 }
 
 IShape *AnimationComponent::getCurrentShape() const {

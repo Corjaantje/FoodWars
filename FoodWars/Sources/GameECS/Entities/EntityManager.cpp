@@ -1,7 +1,7 @@
 #include "../../../Headers/GameECS/Entities/EntityManager.h"
 
-EntityManager::EntityManager() {
-    _lowestUnassignedEntityId = -1;
+EntityManager::EntityManager() : _componentsByClass(), _lowestUnassignedEntityId(-1) {
+
 }
 
 EntityManager::~EntityManager() = default;
@@ -26,13 +26,11 @@ void EntityManager::removeEntity(int entityId) {
     }
 }
 
-bool EntityManager::exists(int entityId) {
+bool EntityManager::exists(int entityId) const {
     for (auto &iterator : _componentsByClass) {
-        if (iterator.second.find(entityId) != iterator.second.end())
-        {
+        if (iterator.second.find(entityId) != iterator.second.end()) {
             return true;
         }
-        //return iterator.second.find(entityId)->second != nullptr;
     }
     return false;
 }

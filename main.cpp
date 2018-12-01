@@ -20,9 +20,7 @@
 #include "FoodWars/Headers/StateMachine/AdvertisingScreen.h"
 #include "TonicEngine/Headers/Storage/FileManager.h"
 
-
-int main(int argc, char** argv)
-{
+int main(int argc, char **argv) {
     std::shared_ptr<WindowResolutionCalculator> windowResolutionCalculator =  std::make_shared<WindowResolutionCalculator>();
     VisualFacade* visualFacade = new VisualFacade(windowResolutionCalculator);
 
@@ -50,7 +48,7 @@ int main(int argc, char** argv)
     audioFacade->addAudio("jump", "./Assets/Audio/jump.wav");
     audioFacade->addAudio("throwing", "./Assets/Audio/throwing.wav");
 
-    std::shared_ptr<LevelManager> levelManager = std::make_shared<LevelManager>();
+    std::shared_ptr<LevelLoader> levelManager = std::make_shared<LevelLoader>();
     FileManager fileManager = FileManager();
     std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
 
@@ -63,7 +61,7 @@ int main(int argc, char** argv)
     screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager, fileManager));
     screenStateManager->addOrSetScreenState(new UpgradesScreen(screenStateManager));
     screenStateManager->addOrSetScreenState(new CreditScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager, new GameLevel()));
+    //screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager, std::make_unique<GameLevel>()));
     screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager, levelManager, fileManager));
     screenStateManager->addOrSetScreenState(new LevelCreationScreen(screenStateManager, fileManager));
     screenStateManager->addOrSetScreenState(new HelpScreen(screenStateManager));

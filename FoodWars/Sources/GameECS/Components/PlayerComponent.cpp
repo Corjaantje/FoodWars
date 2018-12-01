@@ -2,6 +2,10 @@
 
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 
+PlayerComponent::PlayerComponent() : PlayerComponent(0) {
+
+}
+
 PlayerComponent::PlayerComponent(int id) : _playerID(id), _score(0), _selectedWeapon("carrot.png"), _selectedWeaponAvailability(5) {
 
 }

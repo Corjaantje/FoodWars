@@ -10,7 +10,7 @@ public:
     Weapon(std::string imageUrl, int ammo);
     ~Weapon() = default;
 public:
-    void setAmmo();
+    void lowerAmmo();
 
     int getAmmo() const;
     std::string getImage() const;

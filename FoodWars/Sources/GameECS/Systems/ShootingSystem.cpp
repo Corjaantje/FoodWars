@@ -78,7 +78,7 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
         double deltaY = event->getYPosition() - playerCenterY;
         if (deltaX > 100) deltaX = 100;
         else if (deltaX < -100) deltaX = -100;
-        if (deltaY > 100) deltaY = playerCenterY + 100;
+        if (deltaY > 100) deltaY = 100;
         else if (deltaY < -100) deltaY = -100;
         double toX = playerCenterX + deltaX;
         double toY = playerCenterY + deltaY;
@@ -198,5 +198,5 @@ void ShootingSystem::generateProjectile(const PositionComponent &playerPositionC
     _entityManager->addComponentToEntity<GravityComponent>(_projectile, 6 * speedModifier);
     _entityManager->addComponentToEntity<MoveComponent>(_projectile, velocityX * speedModifier,
                                                         velocityY * speedModifier);
-    selectedWeapon->setAmmo();
+    selectedWeapon->lowerAmmo();
 }

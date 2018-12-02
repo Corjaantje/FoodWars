@@ -1,9 +1,10 @@
 #include "../../../Headers/GameECS/Systems/DamageableSystem.h"
 #include "../../../Headers/GameECS/Components/DamagingComponent.h"
 
-DamageableSystem::DamageableSystem(EntityManager &entityManager,
+DamageableSystem::DamageableSystem(EntityManager &entityManager, AudioFacade& audioFacade,
                                    IObservable<CollisionEvent>& collisionEventObservable) :
         _entityManager{&entityManager},
+        _audioFacade{&audioFacade},
         CollisionEventHandler(collisionEventObservable) {
 }
 
@@ -32,6 +33,7 @@ void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent
     auto target = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity());
     target->lowerHealth(
             _entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getEntity())->getDamage());
+    _audioFacade->playEffect("damage");
 
     std::cout << "currentHP: " << target->getHealth() << std::endl;
 }

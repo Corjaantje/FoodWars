@@ -47,6 +47,7 @@ int main(int argc, char **argv) {
     audioFacade->addAudio("oof", "./Assets/Audio/oof.wav");
     audioFacade->addAudio("jump", "./Assets/Audio/jump.wav");
     audioFacade->addAudio("throwing", "./Assets/Audio/throwing.wav");
+    audioFacade->addAudio("damage", "./Assets/Audio/damage.wav");
 
     std::shared_ptr<LevelLoader> levelManager = std::make_shared<LevelLoader>();
     FileManager fileManager = FileManager();

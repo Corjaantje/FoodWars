@@ -14,6 +14,6 @@ std::string Weapon::getImage() const {
     return _imageUrl;
 }
 
-void Weapon::setAmmo() {
+void Weapon::lowerAmmo() {
     _ammo--;
 }

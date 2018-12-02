@@ -27,7 +27,7 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager> &context, std::
 
     _shootingSystem = new ShootingSystem{*_entityManager, audioFacade, visualFacade, _inputFacade};
     _systems.push_back(std::unique_ptr<ShootingSystem>(_shootingSystem));
-    _systems.push_back(std::make_unique<DamageableSystem>(*_entityManager, *collisionSystem));
+    _systems.push_back(std::make_unique<DamageableSystem>(*_entityManager, *audioFacade, *collisionSystem));
     _systems.push_back(std::unique_ptr<CollisionSystem>(collisionSystem));
     drawSystem = new DrawSystem{*_entityManager, visualFacade, _inputFacade};
     _systems.push_back(std::unique_ptr<DrawSystem>(drawSystem));

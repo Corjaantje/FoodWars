@@ -23,17 +23,23 @@ public:
     void toggleShooting();
 
     void createShootingLine(int fromX, int fromY, int toX, int toY);
-    void createPowerBar(int width, int height, int xPos, int yPos);
-    void powerHandler(int width, int height, int xPos, int yPos);
+    void createPowerBar();
+    void powerHandler();
 private:
     bool _isShooting;
     bool _projectileFired;
     bool _lineDrawn;
+    bool _mouseDown;
     int _projectile;
+    int _powerBarX;
+    int _powerBarY;
+    int _power;
+    int _powerBarWidth;
+    int _maxPower;
+    double _timePassed;
     int _shootingLine;
     int _powerBarBackground;
     int _powerBar;
-    double _timePassed;
 
     std::shared_ptr<AudioFacade> _audioFacade;
     EntityManager *_entityManager;

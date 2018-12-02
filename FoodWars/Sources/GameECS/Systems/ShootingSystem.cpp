@@ -21,7 +21,13 @@ ShootingSystem::ShootingSystem(EntityManager &entityManager,
         _projectileFired{false},
         _projectile{0},
         _lineDrawn{false},
-        _timePassed{0}
+        _timePassed{0},
+        _mouseDown{false},
+        _powerBarX(0),
+        _powerBarY(0),
+        _power(0),
+        _powerBarWidth(20),
+        _maxPower(50)
 {
     inputFacade->getMouseEventObservable()->registerObserver(this);
 }
@@ -42,6 +48,14 @@ void ShootingSystem::update(double deltaTime) {
         }
     }
     _timePassed += deltaTime;
+
+    if (_mouseDown) {
+        if(_timePassed >= 0.05) {
+            powerHandler();
+
+            _timePassed = 0;
+        }
+    }
 }
 
 void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
@@ -58,10 +72,8 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
         auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(currentPlayer);
         int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
         int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
-        int powerBarWidth = 20;
-        int powerBarHeight = 50;
-        int powerBarX = playerCenterX - 60;
-        int powerBarY = playerCenterY - 25;
+        _powerBarX = playerCenterX - 60;
+        _powerBarY = playerCenterY - 25;
         double deltaX = event->getXPosition() - playerCenterX;
         double deltaY = event->getYPosition() - playerCenterY;
         if (deltaX > 100) deltaX = 100;
@@ -89,18 +101,21 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
                 }
 
                 if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
-                    _timePassed = 0;
-                    createPowerBar(powerBarWidth, powerBarHeight, powerBarX, powerBarY);
+                    //_timePassed = 0;
+                    createPowerBar();
                     _lineDrawn = true;
                 }
             }
             else {
 
                 if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
-                    powerHandler(powerBarWidth, powerBarHeight, powerBarX, powerBarY);
+                    _powerBar = _entityManager->createEntity();
+                    _mouseDown = true;
                 }
 
                 if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
+                    _mouseDown = false;
+                    _power = 0;
 
                     // Calculating the relative power for X and Y movement
                     double reCountX = std::abs(event->getXPosition() - playerCenterX) / std::abs(event->getYPosition() - playerCenterY);
@@ -130,24 +145,27 @@ void ShootingSystem::createShootingLine(int fromX, int fromY, int toX, int toY) 
                                                                                         Colour(0, 0, 0, 0)));
 }
 
-void ShootingSystem::createPowerBar(int width, int height, int xPos, int yPos) {
+void ShootingSystem::createPowerBar() {
     _powerBarBackground = _entityManager->createEntity();
     _entityManager->addComponentToEntity<DrawableComponent>(_powerBarBackground,
-                                                            std::make_unique<ShapeRectangle>(width, height, xPos, yPos,
+                                                            std::make_unique<ShapeRectangle>(_powerBarWidth, _maxPower, _powerBarX, _powerBarY,
                                                                     Colour(0, 0, 0, 0)));
 }
 
-void ShootingSystem::powerHandler(int width, int height, int xPos, int yPos) {
-    _powerBar = _entityManager->createEntity();
+void ShootingSystem::powerHandler() {
+    int width = _powerBarWidth - 4;
+    int height = _power * -1;
+    int xPos = _powerBarX + 2;
+    int yPos = _powerBarY + (_maxPower - 2);
 
     // height van 1 tot height - 4;
-    for (double power = 1; power <= height - 4; power++) {
-        if(_timePassed >= 0.1) {
-            _entityManager->addComponentToEntity<DrawableComponent>(_powerBar,
-                                                                    std::make_unique<ShapeRectangle>(width - 4, power, xPos + 2, yPos + (height - 2),
-                                                                            Colour(255, 0, 0, 0)));
-            _timePassed = 0;
-        }
+    if (_power < _maxPower) {
+        _entityManager->addComponentToEntity<DrawableComponent>(_powerBar,
+                                                                std::make_unique<ShapeRectangle>(width, height, xPos, yPos,
+                                                                                                 Colour(255, 0, 0, 0)));
+        _power++;
+    } else {
+        _power = 0;
     }
 }
 

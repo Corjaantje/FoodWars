@@ -11,7 +11,7 @@ DamageableSystem::~DamageableSystem() = default;
 
 void DamageableSystem::update(double deltaTime) {
     for (auto x : _entityManager->getAllEntitiesWithComponent<DamageableComponent>()) {
-        if(!x.second->IsAlive())
+        if(!x.second->isAlive())
         {
             _entityManager->removeEntity(x.first);
         }
@@ -28,10 +28,10 @@ bool DamageableSystem::canHandle(const CollisionEvent &collisionEvent) {
 void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent)
 {
     auto projectile = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity());
-    projectile->Destroy();
+    projectile->destroy();
     auto target = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity());
-    target->LowerHealth(
+    target->lowerHealth(
             _entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getEntity())->getDamage());
 
-    std::cout << "currentHP: " << target->GetHealth() << std::endl;
+    std::cout << "currentHP: " << target->getHealth() << std::endl;
 }

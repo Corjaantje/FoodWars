@@ -101,7 +101,7 @@ void DrawSystem::drawPlayerStats() {
 //Draw Turn Timer and HP
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
         if(iterator.second->getPlayerID() == 1) {
-            int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->GetHealth();
+            int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->getHealth();
             _renderList._shapes[3].push_back(createShape<ShapeText>(150, 27, std::to_string(hpWidth),180, 40, 25, Colour(255, 255, 255, 0)));
             _renderList._shapes[2].push_back(createShape<ShapeRectangle>(hpWidth*1.5, 25, 150, 27, getConvertedHealthColor(hpWidth)));
 
@@ -130,7 +130,7 @@ void DrawSystem::drawPlayerStats() {
 
         }
         if(iterator.second->getPlayerID() == 2){
-            int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->GetHealth();
+            int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->getHealth();
             _renderList._shapes[3].push_back(createShape<ShapeText>(1300 + 80, 27, std::to_string(hpWidth),180, 40, 25, Colour(255, 255, 255, 0)));
             _renderList._shapes[2].push_back(createShape<ShapeRectangle>(hpWidth*1.3, 25, 1300-hpWidth*1.3 + 130, 27, getConvertedHealthColor(hpWidth)));
 

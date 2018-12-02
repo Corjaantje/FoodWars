@@ -7,6 +7,7 @@
 #include <cmath>
 #include "../../../Headers/GameECS/Components/DamagingComponent.h"
 #include "../../../Headers/GameECS/Components/GravityComponent.h"
+#include "../../../Headers/GameECS/Components/PlayerComponent.h"
 
 
 ShootingSystem::ShootingSystem(EntityManager &entityManager,
@@ -69,51 +70,54 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
         else if (deltaY < -100) deltaY = -100;
         double toX = playerCenterX + deltaX;
         double toY = playerCenterY + deltaY;
+        Weapon* selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(currentPlayer)->getSelectedWeapon();
 
-        if (!_lineDrawn) {
-            if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
-                createShootingLine(playerCenterX, playerCenterY, toX, toY);
+        if (selectedWeapon->getAmmo() > 0) {
+            if (!_lineDrawn) {
+                if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
+                    createShootingLine(playerCenterX, playerCenterY, toX, toY);
+                }
+
+                if (event->getMouseEventType() == MouseEventType::Drag) {
+                    if (!_entityManager->exists(_shootingLine)) createShootingLine(playerCenterX, playerCenterY, toX, toY);
+                    auto drawable = _entityManager->getComponentFromEntity<DrawableComponent>(_shootingLine);
+                    auto line = static_cast<ShapeLine *>(drawable->getShape());
+                    line->xPos = playerCenterX;
+                    line->yPos = playerCenterY;
+                    line->xPos2 = toX;
+                    line->yPos2 = toY;
+                }
+
+                if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
+                    _timePassed = 0;
+                    createPowerBar(powerBarWidth, powerBarHeight, powerBarX, powerBarY);
+                    _lineDrawn = true;
+                }
             }
+            else {
 
-            if (event->getMouseEventType() == MouseEventType::Drag) {
-                if (!_entityManager->exists(_shootingLine)) createShootingLine(playerCenterX, playerCenterY, toX, toY);
-                auto drawable = _entityManager->getComponentFromEntity<DrawableComponent>(_shootingLine);
-                auto line = static_cast<ShapeLine *>(drawable->getShape());
-                line->xPos = playerCenterX;
-                line->yPos = playerCenterY;
-                line->xPos2 = toX;
-                line->yPos2 = toY;
-            }
+                if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
+                    powerHandler(powerBarWidth, powerBarHeight, powerBarX, powerBarY);
+                }
 
-            if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
-                _timePassed = 0;
-                createPowerBar(powerBarWidth, powerBarHeight, powerBarX, powerBarY);
-                _lineDrawn = true;
-            }
-        }
-        else {
+                if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
 
-            if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
-                powerHandler(powerBarWidth, powerBarHeight, powerBarX, powerBarY);
-            }
+                    // Calculating the relative power for X and Y movement
+                    double reCountX = std::abs(event->getXPosition() - playerCenterX) / std::abs(event->getYPosition() - playerCenterY);
+                    double reCountY = std::abs(event->getYPosition() - playerCenterY) / std::abs(event->getXPosition() - playerCenterX);
+                    double xPowerMod = 1 / (reCountY + 1);
+                    double yPowerMod = 1 / (reCountX + 1);
 
-            if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
-
-                // Calculating the relative power for X and Y movement
-                double reCountX = std::abs(event->getXPosition() - playerCenterX) / std::abs(event->getYPosition() - playerCenterY);
-                double reCountY = std::abs(event->getYPosition() - playerCenterY) / std::abs(event->getXPosition() - playerCenterX);
-                double xPowerMod = 1 / (reCountY + 1);
-                double yPowerMod = 1 / (reCountX + 1);
-
-                generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY);
-                _isShooting = false;
-                _projectileFired = true;
-                _lineDrawn = false;
-                _entityManager->removeEntity(_powerBarBackground);
-                _entityManager->removeEntity(_powerBar);
-                _entityManager->removeEntity(_shootingLine);
-                _entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->lowerEnergy(20);
-                _audioFacade->playEffect("throwing");
+                    generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY, selectedWeapon);
+                    _isShooting = false;
+                    _projectileFired = true;
+                    _lineDrawn = false;
+                    _entityManager->removeEntity(_powerBarBackground);
+                    _entityManager->removeEntity(_powerBar);
+                    _entityManager->removeEntity(_shootingLine);
+                    _entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->lowerEnergy(20);
+                    _audioFacade->playEffect("throwing");
+                }
             }
         }
     }
@@ -153,7 +157,7 @@ void ShootingSystem::toggleShooting() {
 }
 
 void ShootingSystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
-                                double velocityX, double velocityY) {
+                                double velocityX, double velocityY, Weapon* selectedWeapon) {
     _projectile = _entityManager->createEntity();
     int projectileWidth = 11;
     int projectileHeight = 32;
@@ -168,7 +172,7 @@ void ShootingSystem::generateProjectile(const PositionComponent &playerPositionC
     _entityManager->addComponentToEntity<DrawableComponent>(_projectile, std::make_unique<ShapeSprite>(projectileWidth,
                                                                                                        projectileHeight,
                                                                                                        posX, posY,
-                                                                                                       "carrot.png"));
+                                                                                                       selectedWeapon->getImage()));
     _entityManager->addComponentToEntity<PositionComponent>(_projectile, posX, posY);
     _entityManager->addComponentToEntity<BoxCollider>(_projectile, projectileWidth, projectileHeight);
     _entityManager->addComponentToEntity<DamagingComponent>(_projectile, 25);
@@ -176,4 +180,5 @@ void ShootingSystem::generateProjectile(const PositionComponent &playerPositionC
     _entityManager->addComponentToEntity<GravityComponent>(_projectile, 6 * speedModifier);
     _entityManager->addComponentToEntity<MoveComponent>(_projectile, velocityX * speedModifier,
                                                         velocityY * speedModifier);
+    selectedWeapon->setAmmo();
 }

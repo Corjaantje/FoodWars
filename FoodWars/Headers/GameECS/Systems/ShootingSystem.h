@@ -10,6 +10,7 @@
 #include "../../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../../../../TonicEngine/Headers/Audio/AudioFacade.h"
 #include "../Components/Collider/BoxCollider.h"
+#include "../../StateMachine/Misc/Weapon.h"
 
 class ShootingSystem : public IBaseSystem, public IObserver<MouseEvent> {
 public:
@@ -40,7 +41,7 @@ private:
     Renderlist _renderList;
 
     void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
-                            double velocityX, double velocityY);
+                            double velocityX, double velocityY, Weapon* selectedWeapon);
 };
 
 #endif //PROJECT_SWA_SHOOTSYSTEM_H

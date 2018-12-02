@@ -1,13 +1,18 @@
 #include "../../../Headers/StateMachine/Misc/WeaponSelection.h"
 
-WeaponSelection::WeaponSelection() : _entityManager(new EntityManager) {
-    /*std::map<int, PlayerComponent *> playerComps = _entityManager.getAllEntitiesWithComponent<PlayerComponent>();
-    renderlist.clearLists();
-    for (const auto &drawComp : drawComps) {
-        drawComp.second->getShape()->addToRender(&renderlist);
-    }*/
+WeaponSelection::WeaponSelection(EntityManager &entityManager) : _entityManager(&entityManager) {
+
 }
 
-WeaponSelection::~WeaponSelection() {
-
+void WeaponSelection::newSelectedWeapon(int playerId, std::string selection) {
+    std::map<int, PlayerComponent *> playerComps = _entityManager->getAllEntitiesWithComponent<PlayerComponent>();
+    for (auto const &playerComp : playerComps) {
+        if (playerComp.second->getPlayerID() == playerId) {
+            if (selection == "previous") {
+                playerComp.second->setSelectedWeapon("previous");
+            } else if (selection == "next") {
+                playerComp.second->setSelectedWeapon("next");
+            }
+        }
+    }
 }

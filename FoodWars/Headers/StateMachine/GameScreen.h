@@ -10,7 +10,6 @@
 #include "../GameECS/Systems/StorageSystem.h"
 #include "Misc/Coordinate.h"
 #include "Misc/GameLevel.h"
-#include "Misc/WeaponSelection.h"
 
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
@@ -26,7 +25,6 @@ private:
     StorageSystem* _storage;
     int playerOne;
     int playerTwo;
-    WeaponSelection _weaponSelection;
 public:
     explicit GameScreen(const std::shared_ptr<ScreenStateManager> &context, std::unique_ptr<GameLevel> &gameLevel);
     ~GameScreen();

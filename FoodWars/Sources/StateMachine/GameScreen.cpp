@@ -47,7 +47,6 @@ void GameScreen::addBackground() {
                                                                                                       0));
 }
 
-
 void GameScreen::update(std::shared_ptr<KeyEvent> event){
     if (event->getKeyEventType() == KeyEventType::Down) {
         if(event->getKey() == KEY::KEY_ESCAPE)

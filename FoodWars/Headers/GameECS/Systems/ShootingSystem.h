@@ -10,10 +10,9 @@
 #include "../../../../TonicEngine/Headers/Audio/AudioFacade.h"
 #include "../Components/Collider/BoxCollider.h"
 
-class ShootingSystem : public IBaseSystem, public IObserver<MouseEvent>
-{
+class ShootingSystem : public IBaseSystem, public IObserver<MouseEvent> {
 public:
-    ShootingSystem(std::shared_ptr<EntityManager> entityManager, AudioFacade& audioFacade, VisualFacade& visualFacade, InputFacade& inputFacade);
+    ShootingSystem(EntityManager &entityManager, AudioFacade& audioFacade, VisualFacade& visualFacade, InputFacade& inputFacade);
 
     void update(double deltaTime) override;
     void update(const MouseEvent& event) override;
@@ -25,10 +24,9 @@ private:
     bool _projectileFired;
     int _projectile;
     int _shootingLine;
-
-    std::shared_ptr<EntityManager> _entityManager;
     AudioFacade* _audioFacade;
     VisualFacade* _visualFacade;
+    EntityManager *_entityManager;
     Renderlist _renderList;
 
     void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,

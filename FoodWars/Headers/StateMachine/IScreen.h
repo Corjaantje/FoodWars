@@ -17,13 +17,13 @@ protected:
     AudioFacade* _audioFacade;
     StorageFacade* _storageFacade;
     Renderlist _renderList;
-    LevelManager* _levelManager;
+    LevelLoader* _levelManager;
     ScreenStateManager* _context;
     bool _isClosed;
     std::vector<IShape *> _sprites;
 public:
 
-    explicit IScreen(ScreenStateManager &context) : _context(&context),
+    IScreen(ScreenStateManager &context) : _context(&context),
                                                            _inputFacade(std::make_unique<InputFacade>()),
                                                            _visualFacade(context.getFacade<VisualFacade>()),
                                                            _audioFacade(context.getFacade<AudioFacade>()),

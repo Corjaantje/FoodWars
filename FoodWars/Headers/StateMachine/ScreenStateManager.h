@@ -9,7 +9,7 @@
 #include "../../../TonicEngine/Facades/IFacade.h"
 #include "../../../TonicEngine/Headers/Visual/VisualFacade.h"
 #include "../../../TonicEngine/Headers/Audio/AudioFacade.h"
-#include "../LevelManager.h"
+#include "../LevelLoader.h"
 
 class IScreen;
 
@@ -19,7 +19,7 @@ private:
     std::map<std::string, IFacade*> _facades;
     std::map<std::string, std::unique_ptr<IScreen>> _screenStates;
 
-    LevelManager* _levelManager;
+    LevelLoader* _levelManager;
     const WindowResolutionCalculator* _windowResCalc;
     double timeModifier = 1.0;
 public:
@@ -29,10 +29,10 @@ public:
     IScreen& getCurrentState() const;
     double getTimeModifier() const;
     const WindowResolutionCalculator& getWindowResolutionCalculator() const;
-    LevelManager& getLevelManager() const;
+    LevelLoader& getLevelManager() const;
 
     void setTimeModifier(double timeModifier);
-    void setLevelManager(LevelManager& levelManager);
+    void setLevelManager(LevelLoader& levelManager);
     void setWindowResolutionCalculator(const WindowResolutionCalculator& windowResCalc);
 
     template<typename Screen, typename std::enable_if<std::is_base_of<IScreen, Screen>::value>::type * = nullptr>

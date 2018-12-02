@@ -7,6 +7,7 @@ LevelSelectionScreen::LevelSelectionScreen(ScreenStateManager& context) :
         IScreen(context),
         mouseEventObservable(&_inputFacade->getMouseEventObservable()),
         _currentIndex(0) {
+    _inputFacade->getKeyEventObservable().IObservable<KeyEvent>::registerObserver(this);
     auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenLevelSelection.png");
     wallpaper->layer = 0;
     wallpaper->addToRender(&_renderList);
@@ -47,7 +48,9 @@ void LevelSelectionScreen::generateLevelButtons() {
         TextButton *button = new TextButton{_inputFacade->getMouseEventObservable(),
                                             "Level " + std::to_string(i + 1),
                                             [c = _context, this, i]() {
-                                                c->setActiveScreen(std::make_unique<GameScreen>(*c, _levelManager->startLevel(i)));
+                                                std::unique_ptr<GameLevel> gameLevel = std::make_unique<GameLevel>();
+                                                _levelManager->loadLevel(i, *gameLevel);
+                                                c->setActiveScreen(std::make_unique<GameScreen>(*c, gameLevel));
                                             }, 250, 80, 680, 310 + (i % 3) * 125, Colour(255, 255, 255, 255),
                                             Colour(255, 255, 255, 255)};
         _levelButtons.push_back(button);
@@ -67,7 +70,7 @@ LevelSelectionScreen::~LevelSelectionScreen() {
     for(const TextButton* levelButton: _levelButtons) {
         delete levelButton;
     }
-};
+}
 
 void LevelSelectionScreen::update(double deltaTime) {
     _audioFacade->playMusic("menu");
@@ -78,12 +81,12 @@ void LevelSelectionScreen::update(double deltaTime) {
         mouseEventObservable->unregisterObserver(_levelButton);
     }
 
-    for(int i = _currentIndex; i < _currentIndex + 3; i++) {
+    for (int i = _currentIndex; i < _currentIndex + 3; i++) {
         _levelButtons[i]->addToRender(&_renderList);
         mouseEventObservable->registerObserver(_levelButtons[i]);
     }
 
-    for(const auto &iterator: _sprites) {
+    for (const auto &iterator: _sprites) {
         iterator->addToRender(&_renderList);
     }
 
@@ -91,13 +94,13 @@ void LevelSelectionScreen::update(double deltaTime) {
 }
 
 void LevelSelectionScreen::swapLevels(bool directionNext) {
-    if(directionNext) {
+    if (directionNext) {
         _currentIndex += 3;
-        if(_currentIndex >= _levelButtons.size() - 3)
+        if (_currentIndex >= _levelButtons.size() - 3)
             _currentIndex = 0;
     } else {
         _currentIndex -= 3;
-        if(_currentIndex < 0)
+        if (_currentIndex < 0)
             _currentIndex = _levelButtons.size() - 4;
     }
 }

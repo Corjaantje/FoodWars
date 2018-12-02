@@ -5,25 +5,26 @@
 #include <math.h>
 #include <cstdlib>
 
-CollisionSystem::CollisionSystem(std::shared_ptr<EntityManager> entityManager) : _entityManager(std::move(entityManager)) {
+CollisionSystem::CollisionSystem(EntityManager &entityManager) : _entityManager(&entityManager) {
 
 }
 
 void CollisionSystem::update(double dt) {
-    std::map<int, std::shared_ptr<BoxCollider>> entitiesWithCollider = _entityManager->getAllEntitiesWithComponent<BoxCollider>();
+    std::map<int, BoxCollider *> entitiesWithCollider = _entityManager->getAllEntitiesWithComponent<BoxCollider>();
 
     for(auto const &iterator: _entityManager->getAllEntitiesWithComponent<MoveComponent>()) {
         int entity = iterator.first;
-        std::shared_ptr<BoxCollider> collider = entitiesWithCollider[entity];
+        BoxCollider *collider = entitiesWithCollider[entity];
         if(!collider) continue;
-        std::shared_ptr<MoveComponent> moveComponent = iterator.second;
-        std::shared_ptr<PositionComponent> positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(entity);
+        MoveComponent *moveComponent = iterator.second;
+        PositionComponent *positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(entity);
         if(positionComponent && (std::abs(moveComponent->xVelocity) > 0 || std::abs(moveComponent->yVelocity) > 0)) {
             for (auto const &collideAbleIterator : entitiesWithCollider) {
                 int otherEntity = collideAbleIterator.first;
                 if (otherEntity == entity) continue;
-                std::shared_ptr<BoxCollider> otherCollider = collideAbleIterator.second;
-                std::shared_ptr<PositionComponent> otherPosition = _entityManager->getComponentFromEntity<PositionComponent>(otherEntity);
+                BoxCollider *otherCollider = collideAbleIterator.second;
+                PositionComponent *otherPosition = _entityManager->getComponentFromEntity<PositionComponent>(
+                        otherEntity);
                 if (positionComponent) {
                     bool collisionOccured = positionComponent->X < otherPosition->X + otherCollider->width &&
                                   positionComponent->X + collider->width > otherPosition->X &&

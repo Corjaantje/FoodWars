@@ -2,15 +2,14 @@
 #define PROJECT_SWA_LEVELSELECTIONSCREEN_H
 
 #include "IScreen.h"
-#include "../LevelManager.h"
-#include "../../../TonicEngine/Headers/Storage/FileManager.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
+#include "../LevelLoader.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
-
+#include "../../../TonicEngine/Headers/Storage/FileManager.h"
 
 class LevelSelectionScreen : public IScreen, public IObserver<KeyEvent> {
 public:
-    LevelSelectionScreen(ScreenStateManager& context);
+    explicit LevelSelectionScreen(ScreenStateManager& context);
     ~LevelSelectionScreen();
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;

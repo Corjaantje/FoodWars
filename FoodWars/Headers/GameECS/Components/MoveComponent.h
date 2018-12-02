@@ -11,6 +11,8 @@ public:
     double yVelocity;
     MoveComponent();
     explicit MoveComponent(double velocity);
+
+    MoveComponent(double xVelocity, double yVelocity);
     MoveComponent& operator+=(const MoveComponent& other);
     ~MoveComponent() override;
     std::vector<std::string> serialize() override;

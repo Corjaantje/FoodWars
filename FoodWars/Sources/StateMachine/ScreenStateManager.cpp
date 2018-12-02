@@ -32,10 +32,10 @@ double ScreenStateManager::getTimeModifier() const {
     return timeModifier;
 }
 
-LevelManager& ScreenStateManager::getLevelManager() const {
+LevelLoader& ScreenStateManager::getLevelManager() const {
     return *_levelManager;
 }
 
-void ScreenStateManager::setLevelManager(LevelManager &levelManager) {
+void ScreenStateManager::setLevelManager(LevelLoader &levelManager) {
     _levelManager = &levelManager;
 }

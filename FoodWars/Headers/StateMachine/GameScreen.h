@@ -13,17 +13,16 @@
 
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
-    std::shared_ptr<EntityManager> _entityManager;
-    std::string _backgroundMusic;
-    std::vector<Coordinate> _spawnPoints;
-    std::vector<IBaseSystem*> _systems;
-    DrawSystem* drawSystem;
+    std::unique_ptr<GameLevel> _gameLevel;
+    EntityManager *_entityManager;
+    std::vector<std::unique_ptr<IBaseSystem>> _systems;
+    DrawSystem* drawSystem = nullptr;
     AnimationManager* _animationManager;
     ShootingSystem* _shootingSystem;
     int playerOne;
     int playerTwo;
 public:
-    GameScreen(ScreenStateManager& context, GameLevel* gameLevel);
+    GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &gameLevel);
     ~GameScreen();
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;

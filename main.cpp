@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     AudioFacade audioFacade{};
     GeneralFacade generalFacade{};
 
-    LevelManager levelManager{};
+    LevelLoader levelManager{};
     FileManager fileManager{};
     ScreenStateManager screenStateManager{};
 

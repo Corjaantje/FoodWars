@@ -10,8 +10,10 @@ MoveSystem::~MoveSystem() {
     delete autoClimbOnCollision;
 }
 
-MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, InputFacade& inputFacade, IObservable<CollisionEvent>& collisionEventObservable) :
-    _entityManager{entityManager} {
+MoveSystem::MoveSystem(EntityManager &entityManager, InputFacade& inputFacade,
+                       IObservable<CollisionEvent> &collisionEventObservable) :
+        _entityManager{&entityManager},
+        _pressedKey{KEY::KEY_OTHER} {
     inputFacade.getKeyEventObservable().registerKeyEventObserver(this);
     autoClimbOnCollision  = new CollisionEventHandlerLamda {
         collisionEventObservable,
@@ -24,10 +26,12 @@ MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, InputFacade
             return false;
         },
         [entityManager = _entityManager](const CollisionEvent& collisionEvent) {
-            std::shared_ptr<MoveComponent> moveComponent = entityManager->getComponentFromEntity<MoveComponent>(collisionEvent.getEntity());
-            std::shared_ptr<BoxCollider> boxCollider = entityManager->getComponentFromEntity<BoxCollider>(collisionEvent.getEntity());
-            std::shared_ptr<PositionComponent> positionComponent = entityManager->getComponentFromEntity<PositionComponent>(collisionEvent.getEntity());
-            std::shared_ptr<PositionComponent> otherPositionComponent = entityManager->getComponentFromEntity<PositionComponent>(collisionEvent.getOtherEntity());
+            auto *moveComponent = entityManager->getComponentFromEntity<MoveComponent>(collisionEvent.getEntity());
+            auto *boxCollider = entityManager->getComponentFromEntity<BoxCollider>(collisionEvent.getEntity());
+            auto *positionComponent = entityManager->getComponentFromEntity<PositionComponent>(
+                    collisionEvent.getEntity());
+            auto *otherPositionComponent = entityManager->getComponentFromEntity<PositionComponent>(
+                    collisionEvent.getOtherEntity());
             if(std::abs(positionComponent->Y + boxCollider->height/2) < otherPositionComponent->Y) {
                 //moveComponent->yVelocity = 0;
                 positionComponent->Y = otherPositionComponent->Y - boxCollider->height;
@@ -39,7 +43,7 @@ MoveSystem::MoveSystem(std::shared_ptr<EntityManager> entityManager, InputFacade
 void MoveSystem::update(double dt) {
     const int walkingEnergyCostPerSecond = 20;
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
-        std::shared_ptr<MoveComponent> moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
+        auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
 
         if (iterator.second->isMyTurn()) {
             if (_pressedKey == KEY::KEY_A) {
@@ -57,8 +61,8 @@ void MoveSystem::update(double dt) {
     }
 
     for (auto const &iterator: _entityManager->getAllEntitiesWithComponent<MoveComponent>()) {
-        std::shared_ptr<MoveComponent> moveComponent = iterator.second;
-        std::shared_ptr<PositionComponent> positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
+        auto *moveComponent = iterator.second;
+        auto *positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
         if(positionComponent) {
             positionComponent->X += std::round(dt * moveComponent->xVelocity);
             positionComponent->Y += std::round(dt * moveComponent->yVelocity);

@@ -5,14 +5,11 @@
 #include "../Components/DamageableComponent.h"
 #include "../Events/CollisionEventHandler.h"
 
-class DamageableSystem : public IBaseSystem, CollisionEventHandler
-{
+class DamageableSystem : public IBaseSystem, CollisionEventHandler {
 private:
-    std::shared_ptr<EntityManager> _entityManager;
-    std::map<int, std::shared_ptr<DamageableComponent>> _damageableComponents;
-
+    EntityManager *_entityManager;
 public:
-    DamageableSystem(std::shared_ptr<EntityManager> entityManager, IObservable<CollisionEvent>& collisionEventObservable);
+    DamageableSystem(EntityManager &entityManager, IObservable<CollisionEvent> &collisionEventObservable);
     ~DamageableSystem() override;
 
     bool canHandle(const CollisionEvent& collisionEvent) override;

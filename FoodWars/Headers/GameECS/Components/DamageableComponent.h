@@ -9,6 +9,7 @@ class DamageableComponent: public Component, ISerializable {
 public:
     DamageableComponent();
     DamageableComponent(int health);
+    DamageableComponent(int health, int resist);
     ~DamageableComponent() override;
     const int getHealth();
     const int getResistance();

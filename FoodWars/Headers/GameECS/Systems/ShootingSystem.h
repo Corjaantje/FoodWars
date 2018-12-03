@@ -38,6 +38,7 @@ private:
     int _shootingLine;
     int _powerBarBackground;
     int _powerBar;
+    bool _risingPower;
 
     AudioFacade* _audioFacade;
     VisualFacade* _visualFacade;

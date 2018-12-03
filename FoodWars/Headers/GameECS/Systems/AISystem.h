@@ -24,6 +24,7 @@ private:
     void jump(int entityId, TurnComponent& turnComponent);
     void walkLeft(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);
     void walkRight(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);
+    bool checkCollision(int entityId);
 public:
     AISystem(EntityManager &entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable);
     ~AISystem() override;

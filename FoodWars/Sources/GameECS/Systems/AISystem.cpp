@@ -18,6 +18,10 @@ void AISystem::update(double dt) {
             //jump(iterator.first, *turnComponent);
             //walkRight(*moveComponent, *turnComponent, dt);
             walkLeft(*moveComponent, *turnComponent, dt);
+            if(moveComponent->xVelocity >= 0)
+            {
+                walkRight(*moveComponent, *turnComponent, dt);
+            }
             std::cout << "Distance to enemy: " << getDistanceToEnemy(iterator.first) << std::endl;
             if(getDistanceToEnemy(iterator.first) < 800)
             {
@@ -70,12 +74,13 @@ int AISystem::calculateDistance(int entityOne, int entityTwo) {
     auto boxColliderOne = _entityManager->getComponentFromEntity<BoxCollider>(entityOne);
     auto boxColliderTwo = _entityManager->getComponentFromEntity<BoxCollider>(entityTwo);
 
-    return abs((positionComponentOne->X + boxColliderOne->width) - (positionComponentTwo->X + boxColliderTwo->width)) + abs((positionComponentOne->Y + boxColliderOne->height) - (positionComponentTwo->Y + boxColliderTwo->height));
+    countObstructingBlocks(positionComponentOne, positionComponentTwo);
+    return 0; //abs((positionComponentOne->X + boxColliderOne->width) - (positionComponentTwo->X + boxColliderTwo->width)) + abs((positionComponentOne->Y + boxColliderOne->height) - (positionComponentTwo->Y + boxColliderTwo->height));
 }
 
-// Counts the amount of blocks positioned between two points
+// List of entities between two points
 int AISystem::countObstructingBlocks(PositionComponent* posOne, PositionComponent* posTwo){
-    // TODO: Only check blocks within a certain area
+    std::vector<int> obstructingBlocks;
     for(const auto& iterator: _entityManager->getAllEntitiesWithComponent<BoxCollider>())
     {
         auto positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
@@ -85,10 +90,18 @@ int AISystem::countObstructingBlocks(PositionComponent* posOne, PositionComponen
         || (positionComponent->X <= posOne->X && positionComponent->X >= posTwo->X && positionComponent->Y >= posOne->Y && positionComponent->Y <= posTwo->Y) // two is bottom left of one
         || (positionComponent->X <= posOne->X && positionComponent->X >= posTwo->X && positionComponent->Y <= posOne->Y && positionComponent->Y >= posTwo->Y)) // two is top left of one
         {
-            
+            obstructingBlocks.push_back(iterator.first);
         }
     }
+    // print entity Id's
+    /*for(int i : obstructingBlocks){
+        std::cout << "entityId: " << i << std::endl;
+    }*/
 
     return 0;
 }
 
+bool AISystem::checkCollision(int entityId){
+
+    return false;
+}

@@ -12,7 +12,6 @@ private:
     std::chrono::duration<double> _timeLast;
     std::vector<IShape *> _sprites;
     VisualFacade* _visualFacade;
-    InputFacade* _inputFacade;
     EntityManager *_entityManager;
     Renderlist _renderList;
     int _updateCallCount;
@@ -24,7 +23,7 @@ private:
 
     bool _showFPS = true;
 public:
-    DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade, InputFacade& inputFacade);
+    DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade);
     ~DrawSystem() override;
     void update(double dt) override;
     bool toggleFpsCounter();

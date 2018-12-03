@@ -8,10 +8,9 @@
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 
-DrawSystem::DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade, InputFacade& inputFacade) :
+DrawSystem::DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade) :
        _entityManager{&entityManager},
        _visualFacade{&visualFacade},
-       _inputFacade{&inputFacade},
        _updateCallCount{0},
        _timeLast {std::chrono::steady_clock::now().time_since_epoch()} 
 {

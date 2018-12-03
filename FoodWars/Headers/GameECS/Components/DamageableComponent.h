@@ -10,13 +10,16 @@ public:
     DamageableComponent();
     DamageableComponent(int health);
     ~DamageableComponent() override;
-    const int GetHealth();
-    void LowerHealth(int value);
-    void IncreaseHealth(int value);
-    void Destroy();
-    const bool IsAlive();
+    const int getHealth();
+    const int getResistance();
+    void lowerHealth(int value);
+    void increaseHealth(int value);
+    void setResistance(int value);
+    void destroy();
+    const bool isAlive();
     std::vector<std::string> serialize() override;
 private:
     int _health; // 0 - 100
+    int _resistance;
 };
 #endif //PROJECT_SWA_DAMAGEABLECOMPONENT_H

@@ -2,27 +2,35 @@
 
 DamageableComponent::DamageableComponent(int health) : _health{health} {}
 
-DamageableComponent::DamageableComponent() : _health{100} {}
+DamageableComponent::DamageableComponent() : _health{100}, _resistance{0} {}
 
-const bool DamageableComponent::IsAlive() {
+const bool DamageableComponent::isAlive() {
     return _health > 0;
 }
 
-const int DamageableComponent::GetHealth() {
+const int DamageableComponent::getHealth() {
     return _health;
 }
 
-void DamageableComponent::LowerHealth(int value) {
+const int DamageableComponent::getResistance() {
+    return _resistance;
+}
+
+void DamageableComponent::lowerHealth(int value) {
     if ((_health - value) < 0)
         _health = 0;
     else _health -= value;
 }
 
-void DamageableComponent::IncreaseHealth(int value) {
+void DamageableComponent::increaseHealth(int value) {
     _health += value;
 }
 
-void DamageableComponent::Destroy() {
+void DamageableComponent::setResistance(int value) {
+    _resistance = value;
+}
+
+void DamageableComponent::destroy() {
     _health = 0;
 }
 

@@ -2,6 +2,7 @@
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
 HelpScreen::HelpScreen(ScreenStateManager& context) : IScreen(context) {
+    _inputFacade->getKeyEventObservable().registerKeyEventObserver(this);
     auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenHelp.png");
     wallpaper->layer = 0;
     wallpaper->addToRender(&_renderList);

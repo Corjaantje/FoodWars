@@ -7,6 +7,7 @@ AdvertisingScreen::AdvertisingScreen(ScreenStateManager& context) :
         _fileManager(FileManager{}),
         _currentIndex(0)
 {
+    _inputFacade->getKeyEventObservable().registerKeyEventObserver(this);
     auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenAdvertisements.png");
     wallpaper->layer = 0;
     wallpaper->addToRender(&_renderList);

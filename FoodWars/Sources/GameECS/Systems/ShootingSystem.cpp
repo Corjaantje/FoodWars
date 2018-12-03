@@ -68,23 +68,24 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
                 break;
             }
         }
-        auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(currentPlayer);
-        auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(currentPlayer);
-        int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
-        int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
-        _powerBarX = playerCenterX - 60;
-        _powerBarY = playerCenterY - 25;
-        double deltaX = event->getXPosition() - playerCenterX;
-        double deltaY = event->getYPosition() - playerCenterY;
-        if (deltaX > 100) deltaX = 100;
-        else if (deltaX < -100) deltaX = -100;
-        if (deltaY > 100) deltaY = 100;
-        else if (deltaY < -100) deltaY = -100;
-        double toX = playerCenterX + deltaX;
-        double toY = playerCenterY + deltaY;
         Weapon* selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(currentPlayer)->getSelectedWeapon();
 
-        if (selectedWeapon->getAmmo() > 0) {
+        if (_entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->getEnergy() >= 20 && selectedWeapon->getAmmo() > 0) {
+            auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(currentPlayer);
+            auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(currentPlayer);
+            int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
+            int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
+            _powerBarX = playerCenterX - 60;
+            _powerBarY = playerCenterY - 25;
+            double deltaX = event->getXPosition() - playerCenterX;
+            double deltaY = event->getYPosition() - playerCenterY;
+            if (deltaX > 100) deltaX = 100;
+            else if (deltaX < -100) deltaX = -100;
+            if (deltaY > 100) deltaY = 100;
+            else if (deltaY < -100) deltaY = -100;
+            double toX = playerCenterX + deltaX;
+            double toY = playerCenterY + deltaY;
+
             if (!_lineDrawn) {
                 if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
                     createShootingLine(playerCenterX, playerCenterY, toX, toY);

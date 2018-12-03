@@ -1,14 +1,13 @@
 #ifndef PROJECT_SWA_PLAYERCOMPONENT_H
 #define PROJECT_SWA_PLAYERCOMPONENT_H
 
-
 #include <vector>
 #include <string>
 #include "Component.h"
 
 class PlayerComponent : public Component {
 public:
-    PlayerComponent() = default;
+    PlayerComponent();
     explicit PlayerComponent(int id);
 public:
     void setPlayerID(int id);

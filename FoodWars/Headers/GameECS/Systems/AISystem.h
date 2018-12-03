@@ -17,20 +17,22 @@
 
 class AISystem : public IBaseSystem{
 private:
-    std::shared_ptr<EntityManager> _entityManager;
+    EntityManager* _entityManager;
+    std::vector<int>* _collidableEntities = nullptr;
     std::shared_ptr<AudioFacade> _audioFacade;
     const int walkingEnergyCostPerSecond = 20;
 
     void jump(int entityId, TurnComponent& turnComponent);
     void walkLeft(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);
     void walkRight(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);
+    void getAllCollidableEntities();
 public:
-    AISystem(std::shared_ptr<EntityManager> entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable);
+    AISystem(EntityManager &entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable);
     ~AISystem() override;
     void update(double dt) override;
     int getDistanceToEnemy(int entityId);
-    int calculateDistance(std::shared_ptr<PositionComponent> posOne, std::shared_ptr<PositionComponent> posTwo);
-    int countObstructingBlocks(std::shared_ptr<PositionComponent> posOne, std::shared_ptr<PositionComponent> posTwo);
+    int calculateDistance(int entityOne, int entityTwo);
+    int countObstructingBlocks(PositionComponent* posOne, PositionComponent* posTwo);
 };
 
 

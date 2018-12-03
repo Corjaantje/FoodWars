@@ -4,48 +4,47 @@
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/PositionComponent.h"
-#include "../../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 #include "../../../Headers/GameECS/Components/AIComponent.h"
 
-DrawSystem::DrawSystem(std::shared_ptr<EntityManager> entityManager,
-                        std::shared_ptr<VisualFacade> visualFacade,
-                        std::shared_ptr<InputFacade> inputFacade) : _inputFacade {std::move(inputFacade)} {
-    _entityManager = std::move(entityManager);
-    _visualFacade = std::move(visualFacade);
-    _timeLast = std::chrono::steady_clock::now().time_since_epoch();
+DrawSystem::DrawSystem(EntityManager &entityManager,
+                       std::shared_ptr<VisualFacade> visualFacade,
+                       std::shared_ptr<InputFacade> inputFacade) : _inputFacade{std::move(inputFacade)},
+                                                                   _entityManager{&entityManager},
+                                                                   _visualFacade{std::move(visualFacade)},
+                                                                   _updateCallCount{0},
+                                                                   _timeLast{
+                                                                           std::chrono::steady_clock::now().time_since_epoch()} {
 }
 
 DrawSystem::~DrawSystem() = default;
 
 void DrawSystem::update(double dt) {
-    std::map<int, std::shared_ptr<DrawableComponent>> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
+    std::map<int, DrawableComponent *> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
     _renderList._shapes.clear();
     _updateCallCount++;
     drawNonComponents();
     drawPlayers();
     //Draw Components
-    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<DrawableComponent>()) {
-        std::shared_ptr<PositionComponent> positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
-        if(positionComponent) {
-            // todo: scale to match current resolution
-            iterator.second->shape->xPos = positionComponent->X;
-            iterator.second->shape->yPos = positionComponent->Y;
+    for (const auto &iterator: _entityManager->getAllEntitiesWithComponent<DrawableComponent>()) {
+        auto *positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
+        if (positionComponent) {
+            iterator.second->getShape()->xPos = positionComponent->X;
+            iterator.second->getShape()->yPos = positionComponent->Y;
         }
-        iterator.second->shape->addToRender(&_renderList);
+        iterator.second->getShape()->addToRender(&_renderList);
     }
     _visualFacade->render(_renderList);
 }
 
 void DrawSystem::drawNonComponents() {
-
     _renderList._shapes[2].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenGameSmallUI.png"));
 
     if(!_playerIconOne.empty()) {
         _renderList._shapes[3].push_back(createShape<ShapeSprite>(36, 54, 47, 40, _playerIconOne));
     }
-    if(!_playerIconOne.empty()) {
+    if(!_playerIconTwo.empty()) {
         _renderList._shapes[3].push_back(createShape<ShapeSprite>(36, 54, 1515, 40, _playerIconTwo));
     }
     //Framerate
@@ -56,7 +55,7 @@ void DrawSystem::drawNonComponents() {
         _timeLast = std::chrono::steady_clock::now().time_since_epoch();
         _updateCallCount = 0;
     }
-    if(_showFPS) {
+    if (_showFPS) {
         _renderList._shapes[3].push_back(
                 createShape<ShapeText>(27, 155, _fpsString, 180, 75, 37, Colour(255, 255, 255, 0)));
     }
@@ -65,8 +64,8 @@ void DrawSystem::drawNonComponents() {
 
 void DrawSystem::drawPlayers() {
     _playerUpdateCount++;
-    if(_playerUpdateCount > 30){
-        std::map<int, std::shared_ptr<TurnComponent>> playerComps = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
+    if (_playerUpdateCount > 30) {
+        std::map<int, PlayerComponent *> playerComps = _entityManager->getAllEntitiesWithComponent<PlayerComponent>();
         for (auto const& x : playerComps)
         {
             auto player = _entityManager->getComponentFromEntity<PlayerComponent>(x.first); // Check for players
@@ -75,15 +74,16 @@ void DrawSystem::drawPlayers() {
             if(player == nullptr) {
                 // Player not found!
             }
-
-            if(player->getPlayerID() == 1){
-                ShapeSprite* sprite = dynamic_cast<ShapeSprite*>(_entityManager->getComponentFromEntity<DrawableComponent>(x.first)->shape);
+            if(x.second->getPlayerID() == 1){
+                auto *sprite = dynamic_cast<ShapeSprite *>(_entityManager->getComponentFromEntity<DrawableComponent>(
+                        x.first)->getShape());
                if(sprite != nullptr) {
                    _playerIconOne = sprite->imageURL;
                }
             }
-            else if(player->getPlayerID() == 2){
-                ShapeSprite* sprite = dynamic_cast<ShapeSprite*>(_entityManager->getComponentFromEntity<DrawableComponent>(x.first)->shape);
+            if(x.second->getPlayerID() == 2){
+                auto *sprite = dynamic_cast<ShapeSprite *>(_entityManager->getComponentFromEntity<DrawableComponent>(
+                        x.first)->getShape());
                 if(sprite != nullptr) {
                     _playerIconTwo = sprite->imageURL;
                 }

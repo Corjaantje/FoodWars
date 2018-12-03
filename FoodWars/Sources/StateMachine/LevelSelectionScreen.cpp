@@ -3,13 +3,12 @@
 #include "../../Headers/StateMachine/LevelSelectionScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
-LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelManager> levelManager, const FileManager& fileManager ) :
+LevelSelectionScreen::LevelSelectionScreen(std::shared_ptr<ScreenStateManager> context, std::shared_ptr<LevelLoader> levelManager, const FileManager& fileManager) :
         IScreen(context),
         _levelManager(levelManager),
-        mouseEventObservable(_inputFacade->getMouseEventObservable().get()),
         _currentIndex(0),
+        mouseEventObservable(_inputFacade->getMouseEventObservable().get()),
         _fileManager(&fileManager) {
-
     audioFacade = context->getFacade<AudioFacade>();
     _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
 
@@ -62,8 +61,9 @@ void LevelSelectionScreen::generateLevelButtons() {
         TextButton *button = new TextButton{*_inputFacade->getMouseEventObservable(),
                                             "Level " + std::to_string(i + 1),
                                             [c = _context, this, i]() {
-                                                c->addOrSetScreenState(
-                                                        new GameScreen{c, _levelManager->startLevel(i)});
+                                                std::unique_ptr<GameLevel> gameLevel = std::make_unique<GameLevel>();
+                                                _levelManager->loadLevel(i, *gameLevel);
+                                                c->addOrSetScreenState(new GameScreen{c, gameLevel});
                                                 c->setActiveScreen<GameScreen>();
                                             }, 250, 80, 680, 310 + (i % 3) * 125, Colour(255, 255, 255, 255),
                                             Colour(255, 255, 255, 255)};
@@ -84,7 +84,7 @@ LevelSelectionScreen::~LevelSelectionScreen() {
     for(const TextButton* levelButton: _levelButtons) {
         delete levelButton;
     }
-};
+}
 
 void LevelSelectionScreen::update(double deltaTime) {
     audioFacade->playMusic("menu");
@@ -95,12 +95,12 @@ void LevelSelectionScreen::update(double deltaTime) {
         mouseEventObservable->unregisterObserver(_levelButton);
     }
 
-    for(int i = _currentIndex; i < _currentIndex + 3; i++) {
+    for (int i = _currentIndex; i < _currentIndex + 3; i++) {
         _levelButtons[i]->addToRender(&_renderList);
         mouseEventObservable->registerObserver(_levelButtons[i]);
     }
 
-    for(const auto &iterator: _sprites) {
+    for (const auto &iterator: _sprites) {
         iterator->addToRender(&_renderList);
     }
 
@@ -108,21 +108,20 @@ void LevelSelectionScreen::update(double deltaTime) {
 }
 
 void LevelSelectionScreen::swapLevels(bool directionNext) {
-    if(directionNext) {
+    if (directionNext) {
         _currentIndex += 3;
-        if(_currentIndex >= _levelButtons.size() - 3)
+        if (_currentIndex >= _levelButtons.size() - 3)
             _currentIndex = 0;
     } else {
         _currentIndex -= 3;
-        if(_currentIndex < 0)
+        if (_currentIndex < 0)
             _currentIndex = _levelButtons.size() - 4;
     }
 }
 
 
-void LevelSelectionScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
-    {
+void LevelSelectionScreen::update(std::shared_ptr<KeyEvent> event) {
+    if (event->getKey() == KEY::KEY_ESCAPE) {
         _context->setActiveScreen<MainMenuScreen>();
     }
 }

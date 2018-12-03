@@ -8,19 +8,16 @@
 //    setTurnTime(_defaultTimePerTurn);
 //}
 
-TurnSystem::TurnSystem(std::shared_ptr<EntityManager> entityManager){
-    _entityManager = entityManager;
-    _timePerTurn = _defaultTimePerTurn;
+TurnSystem::TurnSystem(EntityManager &entityManager) : _entityManager(&entityManager), _defaultTimePerTurn(30),
+                                                       _timePerTurn(_defaultTimePerTurn) {
 }
 
-TurnSystem::~TurnSystem() {
-
-}
+TurnSystem::~TurnSystem() = default;
 
 // Lower remaining time of 'active' TurnComponent
 // If remainingTime <= 0, end turn.
 void TurnSystem::update(double deltaTime) {
-    std::map<int, std::shared_ptr<TurnComponent>> turnComponents = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
+    std::map<int, TurnComponent *> turnComponents = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
     for(const auto &iterator: turnComponents) {
         if(iterator.second->isMyTurn()) {
             iterator.second->lowerRemainingTime(deltaTime);

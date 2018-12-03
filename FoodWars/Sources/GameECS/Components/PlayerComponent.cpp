@@ -2,6 +2,10 @@
 
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 
+PlayerComponent::PlayerComponent() : PlayerComponent(0) {
+
+}
+
 PlayerComponent::PlayerComponent(int id) : _playerID(id), _score(0), _selectedWeapon("carrot.png"), _selectedWeaponAvailability(5) {
 
 }
@@ -26,7 +30,7 @@ int PlayerComponent::getScore() const {
  return _score;
 }
 
-std::string PlayerComponent::getSelectedWeapon() const{
+std::string PlayerComponent::getSelectedWeapon() const {
     return _selectedWeapon;
 }
 
@@ -34,6 +38,6 @@ void PlayerComponent::setSelectedWeaponAvailability(int weaponAvail) {
     _selectedWeaponAvailability = weaponAvail;
 }
 
-int PlayerComponent::getSelectedWeaponAvailability() const{
+int PlayerComponent::getSelectedWeaponAvailability() const {
     return _selectedWeaponAvailability;
 }

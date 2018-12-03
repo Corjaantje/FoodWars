@@ -1,8 +1,7 @@
 #include <cmath>
 #include "../../../Headers/GameECS/Systems/AISystem.h"
 
-AISystem::AISystem(std::shared_ptr<EntityManager> entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable){
-    _entityManager = std::move(entityManager);
+AISystem::AISystem(EntityManager &entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable) : _entityManager(&entityManager){
     _audioFacade = audioFacade;
 }
 
@@ -33,7 +32,7 @@ void AISystem::update(double dt) {
 
 void AISystem::jump(int entityId, TurnComponent& turnComponent){
     if(!_entityManager->getComponentFromEntity<JumpComponent>(entityId)) {
-        _entityManager->addComponentToEntity(entityId, new JumpComponent);
+        _entityManager->addComponentToEntity<JumpComponent>(entityId);
         turnComponent.lowerEnergy(5);
         _audioFacade->playEffect("jump");
     }
@@ -49,25 +48,40 @@ void AISystem::walkRight(MoveComponent& moveComponent, TurnComponent& turnCompon
     turnComponent.lowerEnergy(walkingEnergyCostPerSecond * dt);
 }
 
+void AISystem::getAllCollidableEntities(){
+    delete _collidableEntities;
+    //_collidableEntities = nullptr;
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<BoxCollider>()){
+        _collidableEntities->push_back(iterator.first);
+    }
+
+}
+
 int AISystem::getDistanceToEnemy(int entityId) {
-    auto myPositionComponent = _entityManager->getComponentFromEntity<PositionComponent>(entityId);
     for(const auto &iterator : _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
-        auto enemyPositionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
-        return calculateDistance(myPositionComponent, enemyPositionComponent);
+        return calculateDistance(entityId, iterator.first);
     }
     // Player not found
     return 0;
 }
 
-// Calculates the manhattan distance between two PositionComponents
-int AISystem::calculateDistance(std::shared_ptr<PositionComponent> posOne, std::shared_ptr<PositionComponent> posTwo) {
-    // TODO: Find middle of enemy
-    return abs(posTwo->X - posOne->X) + abs(posTwo->Y - posOne->Y);
+// Calculates the manhattan distance between the centers two entities
+int AISystem::calculateDistance(int entityOne, int entityTwo) {
+    auto positionComponentOne = _entityManager->getComponentFromEntity<PositionComponent>(entityOne);
+    auto positionComponentTwo = _entityManager->getComponentFromEntity<PositionComponent>(entityTwo);
+
+    auto boxColliderOne = _entityManager->getComponentFromEntity<BoxCollider>(entityOne);
+    auto boxColliderTwo = _entityManager->getComponentFromEntity<BoxCollider>(entityTwo);
+
+    return abs((positionComponentOne->X + boxColliderOne->width) - (positionComponentTwo->X + boxColliderTwo->width)) + abs((positionComponentOne->Y + boxColliderOne->height) - (positionComponentTwo->Y + boxColliderTwo->height));
 }
 
 // Counts the amount of blocks positioned between two points
-int AISystem::countObstructingBlocks(std::shared_ptr<PositionComponent> posOne, std::shared_ptr<PositionComponent> posTwo){
+int AISystem::countObstructingBlocks(PositionComponent* posOne, PositionComponent* posTwo){
     // TODO: Only check blocks within a certain area
+
+    // Refresh list of collidableEntities
+    getAllCollidableEntities();
 
     return 0;
 }

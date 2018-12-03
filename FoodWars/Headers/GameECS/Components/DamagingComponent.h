@@ -7,10 +7,13 @@ class DamagingComponent : public Component {
 
 public:
     DamagingComponent();
-    DamagingComponent(int damage);
+
+    explicit DamagingComponent(int damage);
     ~DamagingComponent() override;
-    const int GetDamage();
-    void SetDamage(int damage);
+
+    int getDamage();
+
+    void setDamage(int damage);
 private:
     int _damage;
 };

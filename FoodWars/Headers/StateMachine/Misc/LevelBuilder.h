@@ -42,6 +42,7 @@ private:
     int _selectedMusic;
     std::vector<IShape *> _sprites;
     ShapeSprite* wallpaper;
+    ShapeRectangle previewColor;
 
     template<typename T, typename... Args>
     T *createShape(Args &&... args) {

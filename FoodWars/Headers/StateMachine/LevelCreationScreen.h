@@ -13,6 +13,7 @@ public:
     void update(const KeyEvent& event) override;
     void update(const MouseEvent& event) override;
 
+    ShapeRectangle* previewCollor = nullptr;
     SpriteButton* toggleCollidable = nullptr;
     SpriteButton* toggleDamageable = nullptr;
 

@@ -33,7 +33,7 @@ private:
     int _projectile;
     int _powerBarX;
     int _powerBarY;
-    int _power;
+    double _power;
     int _powerBarWidth;
     int _maxPower;
     double _timePassed;
@@ -45,6 +45,8 @@ private:
     EntityManager *_entityManager;
     std::shared_ptr<VisualFacade> _visualFacade;
     Renderlist _renderList;
+
+    void resetShooting();
 
     void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
                             double velocityX, double velocityY, Weapon* selectedWeapon);

@@ -101,7 +101,6 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
                 }
 
                 if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
-                    //_timePassed = 0;
                     createPowerBar();
                     _lineDrawn = true;
                 }
@@ -115,7 +114,6 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
 
                 if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
                     _mouseDown = false;
-                    _power = 0;
 
                     // Calculating the relative power for X and Y movement
                     double reCountX = std::abs(event->getXPosition() - playerCenterX) / std::abs(event->getYPosition() - playerCenterY);
@@ -158,7 +156,6 @@ void ShootingSystem::powerHandler() {
     int xPos = _powerBarX + 2;
     int yPos = _powerBarY + (_maxPower - 2);
 
-    // height van 1 tot height - 4;
     if (_power < _maxPower) {
         _entityManager->addComponentToEntity<DrawableComponent>(_powerBar,
                                                                 std::make_unique<ShapeRectangle>(width, height, xPos, yPos,
@@ -172,6 +169,18 @@ void ShootingSystem::powerHandler() {
 void ShootingSystem::toggleShooting() {
     if (!_projectileFired)
         _isShooting = !_isShooting;
+        if (!_isShooting)
+            resetShooting();
+}
+
+void ShootingSystem::resetShooting() {
+    _projectileFired = true;
+    _lineDrawn = false;
+    _mouseDown = false;
+    _power = 0;
+    _entityManager->removeEntity(_powerBarBackground);
+    _entityManager->removeEntity(_powerBar);
+    _entityManager->removeEntity(_shootingLine);
 }
 
 void ShootingSystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
@@ -196,7 +205,8 @@ void ShootingSystem::generateProjectile(const PositionComponent &playerPositionC
     _entityManager->addComponentToEntity<DamagingComponent>(_projectile, 25);
     _entityManager->addComponentToEntity<DamageableComponent>(_projectile, 10);
     _entityManager->addComponentToEntity<GravityComponent>(_projectile, 6 * speedModifier);
-    _entityManager->addComponentToEntity<MoveComponent>(_projectile, velocityX * speedModifier,
-                                                        velocityY * speedModifier);
+    _entityManager->addComponentToEntity<MoveComponent>(_projectile, (_power / 10) * velocityX * speedModifier,
+                                                        (_power / 10) * velocityY * speedModifier);
     selectedWeapon->lowerAmmo();
+    _power = 0;
 }

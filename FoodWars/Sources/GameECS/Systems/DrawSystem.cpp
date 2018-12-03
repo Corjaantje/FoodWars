@@ -7,12 +7,20 @@
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 
-DrawSystem::DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade) : 
+DrawSystem::DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade, InputFacade& inputFacade) :
        _entityManager{&entityManager},
        _visualFacade{&visualFacade},
+       _inputFacade(&inputFacade),
        _updateCallCount{0},
-       _timeLast {std::chrono::steady_clock::now().time_since_epoch()} 
+       _timeLast {std::chrono::steady_clock::now().time_since_epoch()},
+       _weaponSelection(entityManager)
 {
+    // weapon selection for player 1
+    drawWeaponSelection(340, 1, "previous");
+    drawWeaponSelection(442, 1, "next");
+    // weapon selection for player 2
+    drawWeaponSelection(1134, 2, "previous");
+    drawWeaponSelection(1236, 2, "next");
 }
 
 DrawSystem::~DrawSystem() = default;
@@ -92,7 +100,7 @@ void DrawSystem::drawPlayerStats() {
 //Draw Turn Timer and HP
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
         if(iterator.second->getPlayerID() == 1) {
-            int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->GetHealth();
+            int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->getHealth();
             _renderList._shapes[3].push_back(createShape<ShapeText>(150, 27, std::to_string(hpWidth),180, 40, 25, Colour(255, 255, 255, 0)));
             _renderList._shapes[2].push_back(createShape<ShapeRectangle>(hpWidth*1.5, 25, 150, 27, getConvertedHealthColor(hpWidth)));
 
@@ -114,14 +122,14 @@ void DrawSystem::drawPlayerStats() {
                 _renderList._shapes[3].push_back(
                         createShape<ShapeText>(800, 45, text, 180, 75, 37, Colour(255, 255, 255, 0)));
             }
-            if(!iterator.second->getSelectedWeapon().empty()){
-                _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 396, 45, iterator.second->getSelectedWeapon()));
+            if(iterator.second->getSelectedWeapon() != nullptr){
+                _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 396, 45, iterator.second->getSelectedWeapon()->getImage()));
             }
             _renderList._shapes[3].push_back(createShape<ShapeText>(391, 82, std::to_string(iterator.second->getSelectedWeaponAvailability()),180, 30, 30, Colour(255, 255, 255, 0)));
 
         }
         if(iterator.second->getPlayerID() == 2){
-            int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->GetHealth();
+            int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->getHealth();
             _renderList._shapes[3].push_back(createShape<ShapeText>(1300 + 80, 27, std::to_string(hpWidth),180, 40, 25, Colour(255, 255, 255, 0)));
             _renderList._shapes[2].push_back(createShape<ShapeRectangle>(hpWidth*1.3, 25, 1300-hpWidth*1.3 + 130, 27, getConvertedHealthColor(hpWidth)));
 
@@ -144,8 +152,8 @@ void DrawSystem::drawPlayerStats() {
                 _renderList._shapes[3].push_back(
                         createShape<ShapeText>(800, 45, text, 180, 75, 37, Colour(255, 255, 255, 0)));
             }
-            if(!iterator.second->getSelectedWeapon().empty()){
-                _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 1190, 45, iterator.second->getSelectedWeapon()));
+            if(iterator.second->getSelectedWeapon() != nullptr){
+                _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 1190, 45, iterator.second->getSelectedWeapon()->getImage()));
             }
             _renderList._shapes[3].push_back(createShape<ShapeText>(1185, 82, std::to_string(iterator.second->getSelectedWeaponAvailability()), 180, 30, 30, Colour(255, 255, 255, 0)));
         }
@@ -154,4 +162,14 @@ void DrawSystem::drawPlayerStats() {
 
 Colour DrawSystem::getConvertedHealthColor(int health) {
     return Colour(255-(health*2), 0+(health*2), 55, 0);
+}
+
+void DrawSystem::drawWeaponSelection(int x, int playerId, std::string selection) {
+    _renderList._shapes[3].push_back(
+            createShape<SpriteButton>(_inputFacade->getMouseEventObservable(),"carrot.png",
+                                      [this, playerId, selection]() {
+                                            _weaponSelection.newSelectedWeapon(playerId, selection);
+                                      },
+                                      27, 27, x, 45,
+                                      Colour{0,0,0,0}));
 }

@@ -6,12 +6,39 @@ PlayerComponent::PlayerComponent() : PlayerComponent(0) {
 
 }
 
-PlayerComponent::PlayerComponent(int id) : _playerID(id), _score(0), _selectedWeapon("carrot.png"), _selectedWeaponAvailability(5) {
+PlayerComponent::PlayerComponent(int id) : _playerID(id), _score(0), _selectedWeaponAvailability(5) {
+    createWeapon<Weapon>("carrot.png", 5);
+    createWeapon<Weapon>("ham.png", 5);
+    createWeapon<Weapon>("candycane.png", 5);
 
+    _selectedWeapon = _weapons[0];
 }
 
-void PlayerComponent::setSelectedWeapon(std::string ImageURL) {
-    _selectedWeapon = std::move(ImageURL);
+void PlayerComponent::setSelectedWeapon(std::string selectionType) {
+    if (selectionType == "next") {
+        for (int i = 0; i < _weapons.size(); i++) {
+            if (_selectedWeapon == _weapons[i]) {
+                if ((i + 1) < _weapons.size()) {
+                    _selectedWeapon = _weapons[i + 1];
+                } else {
+                    _selectedWeapon = _weapons[0];
+                }
+                break;
+            }
+        }
+    }
+    else if (selectionType == "previous") {
+        for (int i = 0; i < _weapons.size(); i++) {
+            if (_selectedWeapon == _weapons[i]) {
+                if ((i - 1) >= 0) {
+                    _selectedWeapon = _weapons[i - 1];
+                } else {
+                    _selectedWeapon = _weapons[_weapons.size() - 1];
+                }
+                break;
+            }
+        }
+    }
 }
 
 void PlayerComponent::setPlayerID(int id) {
@@ -30,7 +57,7 @@ int PlayerComponent::getScore() const {
  return _score;
 }
 
-std::string PlayerComponent::getSelectedWeapon() const {
+Weapon* PlayerComponent::getSelectedWeapon() const {
     return _selectedWeapon;
 }
 
@@ -39,5 +66,5 @@ void PlayerComponent::setSelectedWeaponAvailability(int weaponAvail) {
 }
 
 int PlayerComponent::getSelectedWeaponAvailability() const {
-    return _selectedWeaponAvailability;
+    return _selectedWeapon->getAmmo();
 }

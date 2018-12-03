@@ -24,9 +24,9 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
 
     _shootingSystem = new ShootingSystem{*_entityManager, *_audioFacade, *_visualFacade, *_inputFacade};
     _systems.push_back(std::unique_ptr<ShootingSystem>(_shootingSystem));
-    _systems.push_back(std::make_unique<DamageableSystem>(*_entityManager, *collisionSystem));
+    _systems.push_back(std::make_unique<DamageableSystem>(*_entityManager, *_audioFacade, *collisionSystem));
     _systems.push_back(std::unique_ptr<CollisionSystem>(collisionSystem));
-    drawSystem = new DrawSystem{*_entityManager, *_visualFacade};
+    drawSystem = new DrawSystem{*_entityManager, *_visualFacade, *_inputFacade};
     _systems.push_back(std::unique_ptr<DrawSystem>(drawSystem));
 
     int count = 0;
@@ -54,7 +54,7 @@ void GameScreen::update(const KeyEvent& event){
             _context->setTimeModifier(1);
         }
 
-        if (event.getKey() == KEY::KEY_G){
+        if (event.getKey() == KEY::KEY_S){
             _shootingSystem->toggleShooting();
         }
         //Toggle Framerate

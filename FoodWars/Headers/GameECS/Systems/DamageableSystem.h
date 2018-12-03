@@ -4,12 +4,14 @@
 #include "IBaseSystem.h"
 #include "../Components/DamageableComponent.h"
 #include "../Events/CollisionEventHandler.h"
+#include "../../../../TonicEngine/Headers/Audio/AudioFacade.h"
 
 class DamageableSystem : public IBaseSystem, CollisionEventHandler {
 private:
     EntityManager *_entityManager;
+    AudioFacade* _audioFacade;
 public:
-    DamageableSystem(EntityManager &entityManager, IObservable<CollisionEvent> &collisionEventObservable);
+    DamageableSystem(EntityManager &entityManager, AudioFacade& audioFacade, IObservable<CollisionEvent> &collisionEventObservable);
     ~DamageableSystem() override;
 
     bool canHandle(const CollisionEvent& collisionEvent) override;

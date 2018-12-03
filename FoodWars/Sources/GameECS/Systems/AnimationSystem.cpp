@@ -1,7 +1,8 @@
 #include "../../../Headers/GameECS/Systems/AnimationSystem.h"
 
-AnimationSystem::AnimationSystem(EntityManager &entityManager, AnimationManager *animationManager)
-        : _entityManager(&entityManager), _animationManager(animationManager) {
+AnimationSystem::AnimationSystem(EntityManager &entityManager)
+        : _entityManager(&entityManager), _animationManager(AnimationManager{})
+{
 }
 
 void AnimationSystem::update(double deltatime) {
@@ -18,25 +19,25 @@ void AnimationSystem::update(double deltatime) {
         if (moveComponent->xVelocity < 0 &&
             (!animationComponent->getIsLookingLeft() || animationComponent->getIsIdle())) { // Left
             animationComponent->setAnimationShapes(
-                    _animationManager->moveLeftAnimation(boxCollider->width, boxCollider->height, positionComponent->X,
+                    _animationManager.moveLeftAnimation(boxCollider->width, boxCollider->height, positionComponent->X,
                                                          positionComponent->Y, team));
             animationComponent->setIsLookingLeft(true);
             animationComponent->setIsIdle(false);
         } else if (moveComponent->xVelocity > 0 &&
                    (animationComponent->getIsLookingLeft() || animationComponent->getIsIdle())) { // Right
             animationComponent->setAnimationShapes(
-                    _animationManager->moveRightAnimation(boxCollider->width, boxCollider->height, positionComponent->X,
+                    _animationManager.moveRightAnimation(boxCollider->width, boxCollider->height, positionComponent->X,
                                                           positionComponent->Y, team));
             animationComponent->setIsLookingLeft(false);
             animationComponent->setIsIdle(false);
         } else if (moveComponent->xVelocity == 0 && !animationComponent->getIsIdle()) { // Standing still
             if (animationComponent->getIsLookingLeft())
                 animationComponent->setAnimationShapes(
-                        _animationManager->lookLeftAnimation(boxCollider->width, boxCollider->height,
+                        _animationManager.lookLeftAnimation(boxCollider->width, boxCollider->height,
                                                              positionComponent->X, positionComponent->Y, team));
             else
                 animationComponent->setAnimationShapes(
-                        _animationManager->lookRightAnimation(boxCollider->width, boxCollider->height,
+                        _animationManager.lookRightAnimation(boxCollider->width, boxCollider->height,
                                                               positionComponent->X, positionComponent->Y, team));
             animationComponent->setIsIdle(true);
         }

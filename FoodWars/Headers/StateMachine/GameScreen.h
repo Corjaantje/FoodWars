@@ -17,7 +17,7 @@ private:
     EntityManager *_entityManager;
     std::vector<std::unique_ptr<IBaseSystem>> _systems;
     DrawSystem* drawSystem = nullptr;
-    AnimationManager* _animationManager;
+    AnimationManager _animationManager;
     ShootingSystem* _shootingSystem;
     int playerOne;
     int playerTwo;

@@ -11,10 +11,10 @@
 
 class AnimationSystem : public IBaseSystem {
 private:
-    AnimationManager* _animationManager;
+    AnimationManager _animationManager;
     EntityManager *_entityManager;
 public:
-    explicit AnimationSystem(EntityManager &entityManager, AnimationManager *animationManager);
+    explicit AnimationSystem(EntityManager &entityManager);
     void update(double deltatime) override;
 };
 

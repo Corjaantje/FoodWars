@@ -15,12 +15,11 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
     _entityManager->addComponentToEntity<DrawableComponent>(background, std::make_unique<ShapeSprite>(1600,900,0,0, _gameLevel->getBackgroundWallpaper(), 0));
     _inputFacade->getKeyEventObservable().registerKeyEventObserver(this);
 
-    _animationManager = new AnimationManager{};
     auto collisionSystem = new CollisionSystem{*_entityManager};
     _systems.push_back(std::make_unique<JumpSystem>(*_entityManager, *_audioFacade, *_inputFacade, *collisionSystem));
     _systems.push_back(std::make_unique<MoveSystem>(*_entityManager, *_inputFacade, *collisionSystem));
     _systems.push_back(std::make_unique<GravitySystem>(*_entityManager, *collisionSystem));
-    _systems.push_back(std::make_unique<AnimationSystem>(*_entityManager, _animationManager));
+    _systems.push_back(std::make_unique<AnimationSystem>(*_entityManager));
     _systems.push_back(std::make_unique<TurnSystem>(*_entityManager));
 
     _shootingSystem = new ShootingSystem{*_entityManager, *_audioFacade, *_visualFacade, *_inputFacade};
@@ -65,9 +64,7 @@ void GameScreen::update(const KeyEvent& event){
     }
 }
 
-GameScreen::~GameScreen() {
-    delete _animationManager;
-};
+GameScreen::~GameScreen() = default;
 
 void GameScreen::update(double deltaTime) {
     std::map<int, TurnComponent *> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();

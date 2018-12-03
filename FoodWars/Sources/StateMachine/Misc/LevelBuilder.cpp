@@ -10,7 +10,8 @@ LevelBuilder::LevelBuilder() : _gameLevel(), _entityManager(_gameLevel.getEntity
 
     _wallpaperList = _fileManager.getFiles("./Assets/GameWallpapers/", {"png"}, true, false);
     _musicList = _fileManager.getFiles("./Assets/Audio/", {"mp3"}, false, false);
-
+    
+    _gameLevel.setBackgroundWallpaper(_wallpaperList[_selectedWallpaper]);
     wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, _wallpaperList[_selectedWallpaper]);
     wallpaper->layer = 0;
 

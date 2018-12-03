@@ -6,10 +6,12 @@
 #include "../../../Headers/GameECS/Components/PositionComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 
-DrawSystem::DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade) : 
+DrawSystem::DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade, InputFacade& inputFacade) :
        _entityManager{&entityManager},
        _visualFacade{&visualFacade},
+       _inputFacade{&inputFacade},
        _updateCallCount{0},
        _timeLast {std::chrono::steady_clock::now().time_since_epoch()} 
 {
@@ -154,4 +156,8 @@ void DrawSystem::drawPlayerStats() {
 
 Colour DrawSystem::getConvertedHealthColor(int health) {
     return Colour(255-(health*2), 0+(health*2), 55, 0);
+}
+
+void DrawSystem::addShape(IShape *shape) {
+    _sprites.push_back(shape);
 }

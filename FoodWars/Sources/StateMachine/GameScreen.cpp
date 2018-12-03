@@ -20,15 +20,20 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
     _systems.push_back(std::make_unique<MoveSystem>(*_entityManager, *_inputFacade, *collisionSystem));
     _systems.push_back(std::make_unique<GravitySystem>(*_entityManager, *collisionSystem));
     _systems.push_back(std::make_unique<AnimationSystem>(*_entityManager));
-    _systems.push_back(std::make_unique<TurnSystem>(*_entityManager));
-
+    auto turnSystem = new TurnSystem(*_entityManager);
+    _systems.push_back(std::unique_ptr<TurnSystem>(turnSystem));
     _shootingSystem = new ShootingSystem{*_entityManager, *_audioFacade, *_visualFacade, *_inputFacade};
     _systems.push_back(std::unique_ptr<ShootingSystem>(_shootingSystem));
     _systems.push_back(std::make_unique<DamageableSystem>(*_entityManager, *collisionSystem));
     _systems.push_back(std::unique_ptr<CollisionSystem>(collisionSystem));
-    drawSystem = new DrawSystem{*_entityManager, *_visualFacade};
+    drawSystem = new DrawSystem{*_entityManager, *_visualFacade, *_inputFacade};
     _systems.push_back(std::unique_ptr<DrawSystem>(drawSystem));
 
+    drawSystem->addShape(createShape<TextButton>(_inputFacade->getMouseEventObservable(),"Next", [&turnSystem]()
+                                                 {
+                                                    turnSystem->switchTurn();
+                                                 },
+                                                 110, 50, 1600-120, 230, Colour(255,255,255,0), Colour(255,255,255,0)));
     int count = 0;
     for (auto const &t : _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         if (count == 0) playerOne = t.first;

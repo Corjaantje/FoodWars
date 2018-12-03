@@ -22,9 +22,11 @@ private:
     SpriteButton* togglePlayerTwoBot = nullptr;
     ShapeSprite* _leftPreview = nullptr;
     ShapeSprite* _rightPreview = nullptr;
+    ShapeText* _selectedDifficulty = nullptr;
 
-    unordered_map<FACTION, string> _previewMapLeft;
-    unordered_map<FACTION, string> _previewMapRight;
+    unordered_map<Faction, string> _previewMapLeft;
+    unordered_map<Faction, string> _previewMapRight;
+    unordered_map<Difficulty , string> _difficultyMap;
 };
 
 

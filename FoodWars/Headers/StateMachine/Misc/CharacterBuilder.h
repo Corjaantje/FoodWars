@@ -13,13 +13,17 @@ public:
     bool getIsBot() const;
     const void setIsBot(const bool state);
 
-    FACTION getFaction() const;
-    const void setFaction(const FACTION faction);
+    Faction getFaction() const;
+    const void setFaction(Faction faction);
+
+    Difficulty getDifficulty() const;
+    void increaseDifficulty();
+    void decreaseDifficulty();
 private:
     bool _isBot = false;
-    DIFFICULTY _botDifficulty = DIFFICULTY::EASY;
+    Difficulty _botDifficulty = Difficulty::EASY;
 
-    FACTION _faction = FACTION::WHITE;
+    Faction _faction = Faction::WHITE;
 };
 
 

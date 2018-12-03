@@ -4,14 +4,32 @@ bool CharacterBuilder::getIsBot() const {
     return _isBot;
 }
 
-const void CharacterBuilder::setIsBot(const bool state) {
+const void CharacterBuilder::setIsBot(bool state) {
     _isBot = state;
 }
 
-FACTION CharacterBuilder::getFaction() const {
+Faction CharacterBuilder::getFaction() const {
     return _faction;
 }
 
-const void CharacterBuilder::setFaction(const FACTION faction) {
+const void CharacterBuilder::setFaction(Faction faction) {
     _faction = faction;
+}
+
+Difficulty CharacterBuilder::getDifficulty() const {
+    return _botDifficulty;
+}
+
+void CharacterBuilder::increaseDifficulty() {
+    _botDifficulty = static_cast<Difficulty>((_botDifficulty + 1) % (3));
+}
+
+void CharacterBuilder::decreaseDifficulty() {
+    if(_botDifficulty - 1 < 0){
+        _botDifficulty = static_cast<Difficulty>(3);
+    }
+    else{
+        _botDifficulty = static_cast<Difficulty>(_botDifficulty - 1);
+
+    }
 }

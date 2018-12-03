@@ -1,7 +1,7 @@
 #ifndef PROJECT_SWA_DIFFICULTYENUM_H
 #define PROJECT_SWA_DIFFICULTYENUM_H
 
-enum DIFFICULTY{
+enum Difficulty{
     EASY,
     MEDIUM,
     HARD

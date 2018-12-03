@@ -9,10 +9,14 @@ CharacterSelectionScreen::CharacterSelectionScreen(ScreenStateManager &context, 
     wallpaper->addToRender(&_renderList);
 
     _selectedLevelIterator = levelIterator;
-    initButtons();
     initImages();
+    initButtons();
 //    _gamelevel = std::make_unique<GameLevel>();
 //    _levelManager->loadLevel(levelIterator, *_gamelevel);
+
+    _selectedDifficulty =  createShape<ShapeText>(1300, 135, _difficultyMap[_playerTwoBuilder.getDifficulty()], _difficultyMap[_playerTwoBuilder.getDifficulty()].length()*20, 160, 40, Colour(0, 0, 0, 0));
+    _selectedDifficulty->addToRender(&_renderList);
+
 }
 
 void CharacterSelectionScreen::initButtons() {
@@ -27,7 +31,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player One - White
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerOneBuilder.setFaction(FACTION::WHITE);
+                                  _playerOneBuilder.setFaction(Faction::WHITE);
                               },
                               120, 120, 30, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -36,7 +40,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player One - Red
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerOneBuilder.setFaction(FACTION::RED);
+                                  _playerOneBuilder.setFaction(Faction::RED);
                               },
                               120, 120, 180, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -44,7 +48,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player One - Green
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerOneBuilder.setFaction(FACTION::GREEN);
+                                  _playerOneBuilder.setFaction(Faction::GREEN);
                               },
                               120, 120, 320, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -52,7 +56,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player One - Yellow
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerOneBuilder.setFaction(FACTION::YELLOW);
+                                  _playerOneBuilder.setFaction(Faction::YELLOW);
                               },
                               120, 120, 460, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -60,7 +64,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player One - Random
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerOneBuilder.setFaction(FACTION::RANDOM);
+                                  _playerOneBuilder.setFaction(Faction::RANDOM);
                               },
                               120, 120, 240, 750,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -69,7 +73,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - White
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerTwoBuilder.setFaction(FACTION::WHITE);
+                                  _playerTwoBuilder.setFaction(Faction::WHITE);
                               },
                               120, 120, 1440, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -78,7 +82,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - Red
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerTwoBuilder.setFaction(FACTION::RED);
+                                  _playerTwoBuilder.setFaction(Faction::RED);
                               },
                               120, 120, 1300, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -86,7 +90,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - Green
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerTwoBuilder.setFaction(FACTION::GREEN);
+                                  _playerTwoBuilder.setFaction(Faction::GREEN);
                               },
                               120, 120, 1160, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -94,7 +98,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - Yellow
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerTwoBuilder.setFaction(FACTION::YELLOW);
+                                  _playerTwoBuilder.setFaction(Faction::YELLOW);
                               },
                               120, 120, 1020, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -102,7 +106,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - Random
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerTwoBuilder.setFaction(FACTION::RANDOM);
+                                  _playerTwoBuilder.setFaction(Faction::RANDOM);
                               },
                               120, 120, 1240, 750,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -111,7 +115,8 @@ void CharacterSelectionScreen::initButtons() {
     // Difficulty Lower
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _context->setActiveScreen(std::make_unique<LevelSelectionScreen>(*_context));
+                                  _playerTwoBuilder.decreaseDifficulty();
+                                  _selectedDifficulty->text = _difficultyMap[_playerTwoBuilder.getDifficulty()];
                               },
                               50, 50, 1190, 125,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -119,7 +124,8 @@ void CharacterSelectionScreen::initButtons() {
     // Difficulty Higher
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _context->setActiveScreen(std::make_unique<LevelSelectionScreen>(*_context));
+                                  _playerTwoBuilder.increaseDifficulty();
+                                  _selectedDifficulty->text = _difficultyMap[_playerTwoBuilder.getDifficulty()];
                               },
                               50, 50, 1510, 125,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -146,21 +152,25 @@ void CharacterSelectionScreen::initButtons() {
                                                  },
                                                  50, 50, 1515, 10,
                                                  Colour{0, 0, 0, 0});
-    togglePlayerTwoBot->addToRender(&_renderList);;
+    togglePlayerTwoBot->addToRender(&_renderList);
 }
 
 void CharacterSelectionScreen::initImages() {
-    _previewMapLeft[FACTION::WHITE] = "PlayerW_R0.png";
-    _previewMapLeft[FACTION::RED] = "PlayerR_R0.png";
-    _previewMapLeft[FACTION::GREEN] = "PlayerG_R0.png";
-    _previewMapLeft[FACTION::YELLOW] = "PlayerY_R0.png";
-    _previewMapLeft[FACTION::RANDOM] = "RandomCharacter.png";
+    _previewMapLeft[Faction::WHITE] = "PlayerW_R0.png";
+    _previewMapLeft[Faction::RED] = "PlayerR_R0.png";
+    _previewMapLeft[Faction::GREEN] = "PlayerG_R0.png";
+    _previewMapLeft[Faction::YELLOW] = "PlayerY_R0.png";
+    _previewMapLeft[Faction::RANDOM] = "RandomCharacter.png";
 
-    _previewMapRight[FACTION::WHITE] = "PlayerW_L0.png";
-    _previewMapRight[FACTION::RED] = "PlayerR_L0.png";
-    _previewMapRight[FACTION::GREEN] = "PlayerG_L0.png";
-    _previewMapRight[FACTION::YELLOW] = "PlayerY_L0.png";
-    _previewMapRight[FACTION::RANDOM] = "RandomCharacter.png";
+    _previewMapRight[Faction::WHITE] = "PlayerW_L0.png";
+    _previewMapRight[Faction::RED] = "PlayerR_L0.png";
+    _previewMapRight[Faction::GREEN] = "PlayerG_L0.png";
+    _previewMapRight[Faction::YELLOW] = "PlayerY_L0.png";
+    _previewMapRight[Faction::RANDOM] = "RandomCharacter.png";
+
+    _difficultyMap[Difficulty::EASY] = "Easy";
+    _difficultyMap[Difficulty::MEDIUM] = "Medium";
+    _difficultyMap[Difficulty::HARD] = "Hard";
 
     _leftPreview = createShape<ShapeSprite>(48*2.5, 72*2.5, 240, 270, _previewMapLeft[_playerOneBuilder.getFaction()]);
     _leftPreview->addToRender(&_renderList);

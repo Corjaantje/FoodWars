@@ -1,7 +1,7 @@
 #ifndef PROJECT_SWA_FACTIONENUM_H
 #define PROJECT_SWA_FACTIONENUM_H
 
-enum FACTION{
+enum Faction{
     WHITE,
     RED,
     GREEN,

@@ -11,6 +11,6 @@ int WindowEvent::getHeight() const {
     return _height;
 }
 
-WindowEventType WindowEvent::GetWindowEventType() {
+WindowEventType WindowEvent::GetWindowEventType() const {
   return _eventType;
 }

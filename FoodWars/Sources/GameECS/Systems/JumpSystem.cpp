@@ -3,6 +3,16 @@
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/MoveComponent.h"
 
+JumpSystem::JumpSystem(EntityManager &entityManager, AudioFacade& audioFacade,
+                        InputFacade& inputFacade,
+                       IObservable<CollisionEvent>& collisionEventObservable) :
+                       CollisionEventHandler(collisionEventObservable),
+                       _entityManager(&entityManager),
+                       _audioFacade{&audioFacade}
+{
+    inputFacade.getKeyEventObservable().registerKeyEventObserver(this);
+}
+
 void JumpSystem::update(double dt) {
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<JumpComponent>()) {
         if(!iterator.second) {
@@ -20,18 +30,8 @@ void JumpSystem::update(double dt) {
     }
 }
 
-JumpSystem::JumpSystem(EntityManager &entityManager,
-                       const std::shared_ptr<InputFacade> &inputFacade,
-                       const std::shared_ptr<AudioFacade>& audioFacade,
-                       IObservable<CollisionEvent> &collisionEventObservable) :
-        CollisionEventHandler(collisionEventObservable),
-        _entityManager(&entityManager),
-        _audioFacade{audioFacade} {
-    inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
-}
-
-void JumpSystem::update(std::shared_ptr<KeyEvent> event) {
-    if(event->getKeyEventType() == KeyEventType::Down && event->getKey() == KEY::KEY_SPACEBAR) {
+void JumpSystem::update(const KeyEvent& event) {
+    if(event.getKeyEventType() == KeyEventType::Down && event.getKey() == KEY::KEY_SPACEBAR) {
         for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
             if(iterator.second->isMyTurn()){
                 if(!_entityManager->getComponentFromEntity<JumpComponent>(iterator.first)) {

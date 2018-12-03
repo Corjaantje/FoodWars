@@ -24,8 +24,8 @@ public:
     MouseEvent(int x, int y, MouseEventType eventType, MouseClickType clickType);
     int getXPosition() const;
     int getYPosition() const;
-    MouseEventType getMouseEventType();
-    MouseClickType getMouseClickType();
+    MouseEventType getMouseEventType() const ;
+    MouseClickType getMouseClickType() const;
 };
 
 #endif //PROJECT_SWA_MOUSEEVENT_H

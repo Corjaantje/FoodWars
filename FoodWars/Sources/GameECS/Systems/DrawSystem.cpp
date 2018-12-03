@@ -7,14 +7,12 @@
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 
-DrawSystem::DrawSystem(EntityManager &entityManager,
-                       std::shared_ptr<VisualFacade> visualFacade,
-                       std::shared_ptr<InputFacade> inputFacade) : _inputFacade{std::move(inputFacade)},
-                                                                   _entityManager{&entityManager},
-                                                                   _visualFacade{std::move(visualFacade)},
-                                                                   _updateCallCount{0},
-                                                                   _timeLast{
-                                                                           std::chrono::steady_clock::now().time_since_epoch()} {
+DrawSystem::DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade) : 
+       _entityManager{&entityManager},
+       _visualFacade{&visualFacade},
+       _updateCallCount{0},
+       _timeLast {std::chrono::steady_clock::now().time_since_epoch()} 
+{
 }
 
 DrawSystem::~DrawSystem() = default;

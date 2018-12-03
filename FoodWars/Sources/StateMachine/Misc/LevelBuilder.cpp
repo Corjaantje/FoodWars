@@ -1,14 +1,17 @@
 #include "../../../Headers/StateMachine/Misc/LevelBuilder.h"
 
-LevelBuilder::LevelBuilder(const FileManager &fileManager)
-        : _gameLevel(), _entityManager(_gameLevel.getEntityManager()), _selectedMusic(0), _fileManager(&fileManager),
+LevelBuilder::LevelBuilder() : _gameLevel(), _entityManager(_gameLevel.getEntityManager()), _selectedMusic(0),
           _colorBlue(0),
           _colorRed(0),
           _colorGreen(0),
-          _selectedWallpaper(0) {
-    _wallpaperList = _fileManager->getFiles("./Assets/GameWallpapers/", "png", true, false);
-    _musicList = _fileManager->getFiles("./Assets/Audio/", "mp3", false, false);
+          _selectedWallpaper(0),
+          _fileManager(FileManager{}),
+          previewColor(ShapeRectangle(64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255))){
 
+    _wallpaperList = _fileManager.getFiles("./Assets/GameWallpapers/", {"png"}, true, false);
+    _musicList = _fileManager.getFiles("./Assets/Audio/", {"mp3"}, false, false);
+    
+    _gameLevel.setBackgroundWallpaper(_wallpaperList[_selectedWallpaper]);
     wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, _wallpaperList[_selectedWallpaper]);
     wallpaper->layer = 0;
 
@@ -17,7 +20,6 @@ LevelBuilder::LevelBuilder(const FileManager &fileManager)
     createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenLevelBuilder.png");
     createShape<ShapeRectangle>(width, height, 0, BUILDING_LIMIT - height, Colour(0, 0, 0, 255));
     createShape<ShapeRectangle>(width, height, 0, 900 - height, Colour(0, 0, 0, 255));
-    createShape<ShapeRectangle>(64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255));
 }
 
 void LevelBuilder::incrementColorRed() {
@@ -129,6 +131,8 @@ void LevelBuilder::removeBlock(int x, int y) {
 void LevelBuilder::drawCurrentScene(Renderlist &renderlist) {
     std::map<int, DrawableComponent *> drawComps = _entityManager.getAllEntitiesWithComponent<DrawableComponent>();
     renderlist.clearLists();
+    previewColor.colour = Colour(_colorRed, _colorGreen, _colorBlue, 0);
+    previewColor.addToRender(&renderlist);
     for (const auto &drawComp : drawComps) {
         drawComp.second->getShape()->addToRender(&renderlist);
     }

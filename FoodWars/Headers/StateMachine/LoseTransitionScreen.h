@@ -6,7 +6,7 @@
 
 class LoseTransitionScreen : public LevelTransitionScreen {
 public:
-    explicit LoseTransitionScreen(std::shared_ptr<ScreenStateManager> context);
+    explicit LoseTransitionScreen(ScreenStateManager& context);
     std::string getScreenName() const override;
 };
 

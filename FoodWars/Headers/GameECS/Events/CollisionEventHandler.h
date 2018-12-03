@@ -11,7 +11,7 @@ public:
     CollisionEventHandler(IObservable<CollisionEvent>& collisionEventObservable);
     virtual void handleCollisionEvent(const CollisionEvent& collisionEvent) = 0;
     virtual bool canHandle(const CollisionEvent& collisionEvent) = 0;
-    void update(std::shared_ptr<CollisionEvent> collisionEvent) final;
+    void update(const CollisionEvent& collisionEvent) final;
 };
 
 #endif //PROJECT_SWA_COLLISIONEVENTHANDLER_H

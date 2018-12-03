@@ -10,7 +10,7 @@ private:
 public:
     WindowClosedObserver();
     ~WindowClosedObserver();
-    void update(std::shared_ptr<WindowEvent> event);
+    void update(WindowEvent& event);
     bool isWindowClosed() const;
 };
 

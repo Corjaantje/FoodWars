@@ -1,17 +1,13 @@
 #include "../../Headers/StateMachine/HelpScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
-HelpScreen::HelpScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
-    visualFacade = context->getFacade<VisualFacade>();
-    audioFacade = context->getFacade<AudioFacade>();
-    _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
-    _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
-
+HelpScreen::HelpScreen(ScreenStateManager& context) : IScreen(context) {
+    _inputFacade->getKeyEventObservable().registerKeyEventObserver(this);
     auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenHelp.png");
     wallpaper->layer = 0;
     wallpaper->addToRender(&_renderList);
 
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [c = _context]() {
                 c->setActiveScreen<MainMenuScreen>();
             },
@@ -26,13 +22,13 @@ HelpScreen::HelpScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(co
 HelpScreen::~HelpScreen() = default;
 
 void HelpScreen::update(double deltaTime) {
-    visualFacade->render(_renderList);
-    audioFacade->playMusic("menu");
+    _visualFacade->render(_renderList);
+    _audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
 }
 
-void HelpScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
+void HelpScreen::update(const KeyEvent& event){
+    if(event.getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }

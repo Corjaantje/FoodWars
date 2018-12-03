@@ -22,8 +22,7 @@ public:
     WindowEvent(int width, int height, WindowEventType windowEventType);
     int getWidth() const;
     int getHeight() const;
-    bool quitRequest() const;
-    WindowEventType GetWindowEventType();
+    WindowEventType GetWindowEventType() const;
 };
 
 #endif //PROJECT_SWA_WINDOWEVENT_H

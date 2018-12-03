@@ -34,7 +34,7 @@ public:
         _observers.erase(std::remove(_observers.begin(), _observers.end(), iObserver), _observers.end());
     }
 
-    void notify(std::shared_ptr<T> event) const {
+    void notify(const T& event) const {
         for(auto& observer: _observers){
             observer->update(event);
         }

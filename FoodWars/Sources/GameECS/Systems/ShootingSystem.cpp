@@ -11,12 +11,12 @@
 
 
 ShootingSystem::ShootingSystem(EntityManager &entityManager,
-                               std::shared_ptr<AudioFacade> audioFacade,
-                               std::shared_ptr<VisualFacade> visualFacade,
-                               std::shared_ptr<InputFacade> inputFacade) :
-        _audioFacade(std::move(audioFacade)),
+                               AudioFacade& audioFacade,
+                               VisualFacade& visualFacade,
+                               InputFacade& inputFacade) :
+        _audioFacade(&audioFacade),
         _entityManager{&entityManager},
-        _visualFacade{std::move(visualFacade)},
+        _visualFacade{&visualFacade},
         _isShooting{false},
         _projectileFired{false},
         _projectile{0},
@@ -29,10 +29,8 @@ ShootingSystem::ShootingSystem(EntityManager &entityManager,
         _powerBarWidth(20),
         _maxPower(50)
 {
-    inputFacade->getMouseEventObservable()->registerObserver(this);
+    inputFacade.getMouseEventObservable().registerObserver(this);
 }
-
-ShootingSystem::~ShootingSystem() = default;
 
 void ShootingSystem::update(double deltaTime) {
     if (!_entityManager->exists(_projectile)) _projectileFired = false;
@@ -58,8 +56,9 @@ void ShootingSystem::update(double deltaTime) {
     }
 }
 
-void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
-    if (_isShooting && !_projectileFired) {
+void ShootingSystem::update(const MouseEvent& event) {
+    if(_isShooting && !_projectileFired)
+    {
         int currentPlayer = 0;
         auto turnComponents = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
         for (auto const &x : turnComponents) {
@@ -77,8 +76,8 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
             int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
             _powerBarX = playerCenterX - 60;
             _powerBarY = playerCenterY - 25;
-            double deltaX = event->getXPosition() - playerCenterX;
-            double deltaY = event->getYPosition() - playerCenterY;
+            double deltaX = event.getXPosition() - playerCenterX;
+            double deltaY = event.getYPosition() - playerCenterY;
             if (deltaX > 100) deltaX = 100;
             else if (deltaX < -100) deltaX = -100;
             if (deltaY > 100) deltaY = 100;
@@ -87,11 +86,11 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
             double toY = playerCenterY + deltaY;
 
             if (!_lineDrawn) {
-                if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
+                if (event.getMouseEventType() == MouseEventType::Down && event.getMouseClickType() == MouseClickType::Left) {
                     createShootingLine(playerCenterX, playerCenterY, toX, toY);
                 }
 
-                if (event->getMouseEventType() == MouseEventType::Drag) {
+                if (event.getMouseEventType() == MouseEventType::Drag) {
                     if (!_entityManager->exists(_shootingLine)) createShootingLine(playerCenterX, playerCenterY, toX, toY);
                     auto drawable = _entityManager->getComponentFromEntity<DrawableComponent>(_shootingLine);
                     auto line = static_cast<ShapeLine *>(drawable->getShape());
@@ -101,24 +100,23 @@ void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
                     line->yPos2 = toY;
                 }
 
-                if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
+                if (event.getMouseEventType() == MouseEventType::Up && event.getMouseClickType() == MouseClickType::Left) {
                     createPowerBar();
                     _lineDrawn = true;
                 }
             }
             else {
-
-                if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
+                if (event.getMouseEventType() == MouseEventType::Down && event.getMouseClickType() == MouseClickType::Left) {
                     _powerBar = _entityManager->createEntity();
                     _mouseDown = true;
                 }
 
-                if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
+                if (event.getMouseEventType() == MouseEventType::Up && event.getMouseClickType() == MouseClickType::Left) {
                     _mouseDown = false;
 
                     // Calculating the relative power for X and Y movement
-                    double reCountX = std::abs(event->getXPosition() - playerCenterX) / std::abs(event->getYPosition() - playerCenterY);
-                    double reCountY = std::abs(event->getYPosition() - playerCenterY) / std::abs(event->getXPosition() - playerCenterX);
+                    double reCountX = std::abs(event.getXPosition() - playerCenterX) / std::abs(event.getYPosition() - playerCenterY);
+                    double reCountY = std::abs(event.getYPosition() - playerCenterY) / std::abs(event.getXPosition() - playerCenterX);
                     double xPowerMod = 1 / (reCountY + 1);
                     double yPowerMod = 1 / (reCountX + 1);
 

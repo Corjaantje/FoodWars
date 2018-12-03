@@ -38,7 +38,7 @@ private:
 public:
     KeyEvent(KEY pressedKey, KeyEventType eventType);
     KEY getKey() const;
-    KeyEventType getKeyEventType();
+    KeyEventType getKeyEventType() const;
 };
 
 #endif //PROJECT_SWA_KEYEVENT_H

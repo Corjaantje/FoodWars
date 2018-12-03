@@ -9,27 +9,24 @@
 #include "../../Headers/StateMachine/WinTransitionScreen.h"
 #include "../../Headers/StateMachine/LoseTransitionScreen.h"
 
-GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager> &context, std::unique_ptr<GameLevel> &gameLevel) :
+GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &gameLevel) :
         IScreen(context), _gameLevel(std::move(gameLevel)), _entityManager(&_gameLevel->getEntityManager()) {
+    int background = _entityManager->createEntity();
+    _entityManager->addComponentToEntity<DrawableComponent>(background, std::make_unique<ShapeSprite>(1600,900,0,0, _gameLevel->getBackgroundWallpaper(), 0));
+    _inputFacade->getKeyEventObservable().registerKeyEventObserver(this);
 
-    addBackground();
-    _audioFacade = _context->getFacade<AudioFacade>();
-    _visualFacade = _context->getFacade<VisualFacade>();
-    _inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
-
-    _animationManager = new AnimationManager{};
     auto collisionSystem = new CollisionSystem{*_entityManager};
-    _systems.push_back(std::make_unique<JumpSystem>(*_entityManager, _inputFacade, audioFacade, *collisionSystem));
-    _systems.push_back(std::make_unique<MoveSystem>(*_entityManager, _inputFacade, *collisionSystem));
+    _systems.push_back(std::make_unique<JumpSystem>(*_entityManager, *_audioFacade, *_inputFacade, *collisionSystem));
+    _systems.push_back(std::make_unique<MoveSystem>(*_entityManager, *_inputFacade, *collisionSystem));
     _systems.push_back(std::make_unique<GravitySystem>(*_entityManager, *collisionSystem));
-    _systems.push_back(std::make_unique<AnimationSystem>(*_entityManager, _animationManager));
+    _systems.push_back(std::make_unique<AnimationSystem>(*_entityManager));
     _systems.push_back(std::make_unique<TurnSystem>(*_entityManager));
 
-    _shootingSystem = new ShootingSystem{*_entityManager, audioFacade, visualFacade, _inputFacade};
+    _shootingSystem = new ShootingSystem{*_entityManager, *_audioFacade, *_visualFacade, *_inputFacade};
     _systems.push_back(std::unique_ptr<ShootingSystem>(_shootingSystem));
-    _systems.push_back(std::make_unique<DamageableSystem>(*_entityManager, *audioFacade, *collisionSystem));
+    _systems.push_back(std::make_unique<DamageableSystem>(*_entityManager, *_audioFacade, *collisionSystem));
     _systems.push_back(std::unique_ptr<CollisionSystem>(collisionSystem));
-    drawSystem = new DrawSystem{*_entityManager, visualFacade, _inputFacade};
+    drawSystem = new DrawSystem{*_entityManager, *_visualFacade, *_inputFacade};
     _systems.push_back(std::unique_ptr<DrawSystem>(drawSystem));
 
     int count = 0;
@@ -40,59 +37,51 @@ GameScreen::GameScreen(const std::shared_ptr<ScreenStateManager> &context, std::
     }
 }
 
-void GameScreen::addBackground() {
-    int background = _entityManager->createEntity();
-    _entityManager->addComponentToEntity<DrawableComponent>(background, std::make_unique<ShapeSprite>(1600, 900, 0, 0,
-                                                                                                      _gameLevel->getBackgroundWallpaper(),
-                                                                                                      0));
-}
-
-void GameScreen::update(std::shared_ptr<KeyEvent> event){
-    if (event->getKeyEventType() == KeyEventType::Down) {
-        if(event->getKey() == KEY::KEY_ESCAPE)
-            _context->setActiveScreen<PauseScreen>();
+void GameScreen::update(const KeyEvent& event){
+    if (event.getKeyEventType() == KeyEventType::Down) {
+        if(event.getKey() == KEY::KEY_ESCAPE){
+            _context->createOrSetActiveScreen<PauseScreen>();
+        }
 
         //Adjusting gamespeed
-        if(event->getKey() == KEY::KEY_PAGEUP) {
+        if(event.getKey() == KEY::KEY_PAGEUP) {
             _context->setTimeModifier(2.50);
         }
-        if(event->getKey() == KEY::KEY_PAGEDOWN) {
+        if(event.getKey() == KEY::KEY_PAGEDOWN) {
             _context->setTimeModifier(0.40);
         }
-        if(event->getKey() == KEY::KEY_HOME) {
+        if(event.getKey() == KEY::KEY_HOME) {
             _context->setTimeModifier(1);
         }
 
-        if (event->getKey() == KEY::KEY_S){
+        if (event.getKey() == KEY::KEY_S){
             _shootingSystem->toggleShooting();
         }
         //Toggle Framerate
-        if(event->getKey() == KEY::KEY_F){
+        if(event.getKey() == KEY::KEY_F){
             drawSystem->toggleFpsCounter();
         }
     }
 }
 
-GameScreen::~GameScreen() {
-    delete _animationManager;
-};
+GameScreen::~GameScreen() = default;
 
 void GameScreen::update(double deltaTime) {
     std::map<int, TurnComponent *> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
     if(_entitiesWithTurnComponent.size() == 1)
     {
         if (_entityManager->exists(playerOne)) {
-            _context->setActiveScreen<WinTransitionScreen>();
-        } else {
-            _context->setActiveScreen<LoseTransitionScreen>();
+            _context->setActiveScreen(std::make_unique<WinTransitionScreen>(*_context));
         }
-        ((std::static_pointer_cast<LevelTransitionScreen>(_context->getCurrentState())->setScore(100)));
+        else {
+            _context->setActiveScreen(std::make_unique<LoseTransitionScreen>(*_context));
+        }
+        //((std::static_pointer_cast<LevelTransitionScreen>(_context->getCurrentState())->setScore(100)));
     } else if(_entitiesWithTurnComponent.empty()) {
-        _context->setActiveScreen<DrawTransitionScreen>();
-        ((std::static_pointer_cast<LevelTransitionScreen>(_context->getCurrentState())->setScore(100)));
+        _context->setActiveScreen(std::make_unique<DrawTransitionScreen>(*_context));
+        //((std::static_pointer_cast<LevelTransitionScreen>(_context->getCurrentState())->setScore(100)));
     }
     _audioFacade->playMusic(_gameLevel->getBackgroundMusic().c_str());
-
     _inputFacade->pollEvents();
     for(auto const &iterator : _systems){
         iterator->update(deltaTime * _context->getTimeModifier());

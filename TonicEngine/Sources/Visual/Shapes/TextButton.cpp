@@ -39,9 +39,9 @@ void TextButton::addToRender(Renderlist *renderlist) {
     shapeText.addToRender(renderlist);
 }
 
-void TextButton::update(std::shared_ptr<MouseEvent> event) {
-    if((event->getXPosition() >= xPos && event->getXPosition() <= xPos + width)
-       && (event->getYPosition() >= yPos && event->getYPosition() <= yPos + height) && event->getMouseEventType() == MouseEventType::Down)
+void TextButton::update(const MouseEvent& event) {
+    if((event.getXPosition() >= xPos && event.getXPosition() <= xPos + width)
+       && (event.getYPosition() >= yPos && event.getYPosition() <= yPos + height) && event.getMouseEventType() == MouseEventType::Down)
         _onClickFunction();
 }
 

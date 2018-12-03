@@ -26,21 +26,25 @@ void KeyEventObservable::update() {
     for(auto const &iterator: _keycodeMap) {
         if(keyBoardState[iterator.first]) { // key is pressed
             if(!_pressedKeys.at(iterator.second)) { // key is not pressed
-                IObservable<KeyEvent>::notify(std::make_shared<KeyEvent>(iterator.second, KeyEventType::Down));
+                KeyEvent event = KeyEvent(iterator.second, KeyEventType::Down);
+                IObservable<KeyEvent>::notify(event);
                 _pressedKeys[iterator.second] = true;
                 pressedKeysChanged = true;
             }
 
         } else { // key is not pressed
             if(_pressedKeys.at(iterator.second)) {
-                IObservable<KeyEvent>::notify(std::make_shared<KeyEvent>(iterator.second, KeyEventType::Up));
+                KeyEvent event = KeyEvent(iterator.second, KeyEventType::Up);
+                IObservable<KeyEvent>::notify(event);
                 _pressedKeys[iterator.second] = false;
                 pressedKeysChanged = true;
             }
         }
     }
-    if(pressedKeysChanged)
-        IObservable<std::map<KEY, bool>>::notify(std::make_shared<std::map<KEY, bool>>(_pressedKeys));
+    if(pressedKeysChanged) {
+        auto map = std::map<KEY, bool>(_pressedKeys);
+        IObservable<std::map<KEY, bool>>::notify(map);
+    }
 }
 
 void KeyEventObservable::registerKeyEventObserver(IObserver<KeyEvent> *observer) {

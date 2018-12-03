@@ -1,7 +1,7 @@
 #ifndef PROJECT_SWA_DRAWABLECOMPONENT_H
 #define PROJECT_SWA_DRAWABLECOMPONENT_H
 
-#include <bits/unique_ptr.h>
+#include <memory>
 #include "Component.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/IShape.h"
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"

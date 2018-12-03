@@ -7,15 +7,14 @@
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 
-DrawSystem::DrawSystem(EntityManager &entityManager,
-                       std::shared_ptr<VisualFacade> visualFacade,
-                       std::shared_ptr<InputFacade> inputFacade) : _inputFacade{std::move(inputFacade)},
-                                                                   _entityManager{&entityManager},
-                                                                   _visualFacade{std::move(visualFacade)},
-                                                                   _updateCallCount{0},
-                                                                   _timeLast{
-                                                                           std::chrono::steady_clock::now().time_since_epoch()},
-                                                                   _weaponSelection(entityManager){
+DrawSystem::DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade, InputFacade& inputFacade) :
+       _entityManager{&entityManager},
+       _visualFacade{&visualFacade},
+       _inputFacade(&inputFacade),
+       _updateCallCount{0},
+       _timeLast {std::chrono::steady_clock::now().time_since_epoch()},
+       _weaponSelection(entityManager)
+{
     // weapon selection for player 1
     drawWeaponSelection(340, 1, "previous");
     drawWeaponSelection(442, 1, "next");
@@ -167,7 +166,7 @@ Colour DrawSystem::getConvertedHealthColor(int health) {
 
 void DrawSystem::drawWeaponSelection(int x, int playerId, std::string selection) {
     _renderList._shapes[3].push_back(
-            createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(),"carrot.png",
+            createShape<SpriteButton>(_inputFacade->getMouseEventObservable(),"carrot.png",
                                       [this, playerId, selection]() {
                                             _weaponSelection.newSelectedWeapon(playerId, selection);
                                       },

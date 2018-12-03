@@ -2,22 +2,18 @@
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 #include "../../Headers/StateMachine/UpgradesScreen.h"
 
-LevelTransitionScreen::LevelTransitionScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
-    visualFacade = context->getFacade<VisualFacade>();
-    audioFacade = context->getFacade<AudioFacade>();
-    _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
-
-    createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"",
+LevelTransitionScreen::LevelTransitionScreen(ScreenStateManager& context) : IScreen(context) {
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"",
             [c = _context]() {
                 c->setActiveScreen<MainMenuScreen>();
             },
             375, 113, 613, 544)->addToRender(&_renderList);
 
-    createShape<TextButton>(*_inputFacade->getMouseEventObservable(),"",
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"",
             [c = _context, this]()
             {
-                c->setActiveScreen<UpgradesScreen>();
-                ((std::static_pointer_cast<UpgradesScreen>( c->getCurrentState())->setPreviousScreen(getScreenName())));
+                //c->setActiveScreen<UpgradesScreen>();
+                //((std::static_pointer_cast<UpgradesScreen>( c->getCurrentState())->setPreviousScreen(getScreenName())));
             },
             375, 113, 611, 420)->addToRender(&_renderList);
 }
@@ -25,13 +21,13 @@ LevelTransitionScreen::LevelTransitionScreen(std::shared_ptr<ScreenStateManager>
 LevelTransitionScreen::~LevelTransitionScreen() = default;
 
 void LevelTransitionScreen::update(double deltaTime) {
-    visualFacade->render(_renderList);
-    audioFacade->playMusic("menu");
+    _visualFacade->render(_renderList);
+    _audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
 }
 
-void LevelTransitionScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
+void LevelTransitionScreen::update(const KeyEvent& event){
+    if(event.getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }

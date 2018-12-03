@@ -6,10 +6,10 @@
 
 class LevelTransitionScreen : public IScreen, public IObserver<KeyEvent> {
 public:
-    explicit LevelTransitionScreen(std::shared_ptr<ScreenStateManager> context);
+    explicit LevelTransitionScreen(ScreenStateManager& context);
     ~LevelTransitionScreen();
     void update(double deltaTime) override;
-    void update(std::shared_ptr<KeyEvent> event) override;
+    void update(const KeyEvent& event) override;
     virtual std::string getScreenName() const = 0;
     void setScore(int score);
 };

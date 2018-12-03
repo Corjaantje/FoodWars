@@ -12,7 +12,7 @@
 GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &gameLevel) :
         IScreen(context), _gameLevel(std::move(gameLevel)), _entityManager(&_gameLevel->getEntityManager()) {
     int background = _entityManager->createEntity();
-    _entityManager->addComponentToEntity<DrawableComponent>(background, std::make_unique<ShapeSprite>(1600,900,0,0, gameLevel->getBackgroundWallpaper()));
+    _entityManager->addComponentToEntity<DrawableComponent>(background, std::make_unique<ShapeSprite>(1600,900,0,0, _gameLevel->getBackgroundWallpaper(), 0));
     _inputFacade->getKeyEventObservable().registerKeyEventObserver(this);
 
     _animationManager = new AnimationManager{};

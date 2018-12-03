@@ -18,14 +18,12 @@
 class AISystem : public IBaseSystem{
 private:
     EntityManager* _entityManager;
-    std::vector<int>* _collidableEntities = nullptr;
     std::shared_ptr<AudioFacade> _audioFacade;
     const int walkingEnergyCostPerSecond = 20;
 
     void jump(int entityId, TurnComponent& turnComponent);
     void walkLeft(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);
     void walkRight(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);
-    void getAllCollidableEntities();
 public:
     AISystem(EntityManager &entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable);
     ~AISystem() override;

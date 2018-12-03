@@ -96,8 +96,7 @@ void ShootingSystem::toggleShooting() {
         _isShooting = !_isShooting;
 }
 
-void
-ShootingSystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
+void ShootingSystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
                                    double velocityX, double velocityY) {
     _projectile = _entityManager->createEntity();
     int projectileWidth = 11;

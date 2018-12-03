@@ -19,6 +19,12 @@ void AISystem::update(double dt) {
             //walkRight(*moveComponent, *turnComponent, dt);
             walkLeft(*moveComponent, *turnComponent, dt);
             std::cout << "Distance to enemy: " << getDistanceToEnemy(iterator.first) << std::endl;
+            if(getDistanceToEnemy(iterator.first) < 800)
+            {
+                // TODO: Shoot towards enemy
+
+
+            }
             auto positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
             if(positionComponent) {
                 positionComponent->X += std::round(dt * moveComponent->xVelocity);
@@ -48,15 +54,6 @@ void AISystem::walkRight(MoveComponent& moveComponent, TurnComponent& turnCompon
     turnComponent.lowerEnergy(walkingEnergyCostPerSecond * dt);
 }
 
-void AISystem::getAllCollidableEntities(){
-    delete _collidableEntities;
-    //_collidableEntities = nullptr;
-    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<BoxCollider>()){
-        _collidableEntities->push_back(iterator.first);
-    }
-
-}
-
 int AISystem::getDistanceToEnemy(int entityId) {
     for(const auto &iterator : _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
         return calculateDistance(entityId, iterator.first);
@@ -79,9 +76,18 @@ int AISystem::calculateDistance(int entityOne, int entityTwo) {
 // Counts the amount of blocks positioned between two points
 int AISystem::countObstructingBlocks(PositionComponent* posOne, PositionComponent* posTwo){
     // TODO: Only check blocks within a certain area
-
-    // Refresh list of collidableEntities
-    getAllCollidableEntities();
+    for(const auto& iterator: _entityManager->getAllEntitiesWithComponent<BoxCollider>())
+    {
+        auto positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
+        // get all items between two points
+        if((positionComponent->X >= posOne->X && positionComponent->X <= posTwo->X && positionComponent->Y >= posOne->Y && positionComponent->Y <= posTwo->Y) // two is bottom right of one
+        || (positionComponent->X >= posOne->X && positionComponent->X <= posTwo->X && positionComponent->Y <= posOne->Y && positionComponent->Y >= posTwo->Y) // two is top right of one
+        || (positionComponent->X <= posOne->X && positionComponent->X >= posTwo->X && positionComponent->Y >= posOne->Y && positionComponent->Y <= posTwo->Y) // two is bottom left of one
+        || (positionComponent->X <= posOne->X && positionComponent->X >= posTwo->X && positionComponent->Y <= posOne->Y && positionComponent->Y >= posTwo->Y)) // two is top left of one
+        {
+            
+        }
+    }
 
     return 0;
 }

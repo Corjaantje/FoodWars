@@ -224,8 +224,8 @@ void ShootingSystem::generateProjectile(const PositionComponent &playerPositionC
     _entityManager->addComponentToEntity<DamagingComponent>(_projectile, 25);
     _entityManager->addComponentToEntity<DamageableComponent>(_projectile, 10);
     _entityManager->addComponentToEntity<GravityComponent>(_projectile, 6 * speedModifier);
-    _entityManager->addComponentToEntity<MoveComponent>(_projectile, (_power / 10) * velocityX * speedModifier,
-                                                        (_power / 10) * velocityY * speedModifier);
+    _entityManager->addComponentToEntity<MoveComponent>(_projectile, (_power / 20) * velocityX * speedModifier,
+                                                        (_power / 20) * velocityY * speedModifier);
     selectedWeapon->lowerAmmo();
     _power = 0;
 }

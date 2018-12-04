@@ -1,7 +1,10 @@
 #include <cmath>
 #include "../../../Headers/GameECS/Systems/AISystem.h"
+#include "../../../Headers/AI/ScavengeState.h"
+#include "../../../Headers/AI/IdleState.h"
 
-AISystem::AISystem(EntityManager &entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable) : _entityManager(&entityManager){
+AISystem::AISystem(EntityManager &entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable)
+                    : _entityManager(&entityManager), CollisionEventHandler(collisionEventObservable){
     _audioFacade = audioFacade;
 }
 
@@ -14,11 +17,26 @@ void AISystem::update(double dt) {
         auto turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(iterator.first);
         auto moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
 
-        if (turnComponent->isMyTurn()) {
+        if (!turnComponent->isMyTurn()) {
+            iterator.second->setCurrentState(std::make_unique<IdleState>());
+            iterator.second->update(dt);
+            continue;
+        }
+        else {
+            // TODO: Choose a state
+            iterator.second->setCurrentState(std::make_unique<ScavengeState>());
+            iterator.second->update(dt);
+        }
             //jump(iterator.first, *turnComponent);
             //walkRight(*moveComponent, *turnComponent, dt);
-            walkLeft(*moveComponent, *turnComponent, dt);
-            if(moveComponent->xVelocity >= 0)
+            //walkLeft(*moveComponent, *turnComponent, dt);
+
+
+
+
+
+
+            /*if(moveComponent->xVelocity >= 0)
             {
                 walkRight(*moveComponent, *turnComponent, dt);
             }
@@ -36,7 +54,7 @@ void AISystem::update(double dt) {
             }
         } else {
             moveComponent->xVelocity = 0;
-        }
+        }*/
     }
 }
 
@@ -101,7 +119,13 @@ int AISystem::countObstructingBlocks(PositionComponent* posOne, PositionComponen
     return 0;
 }
 
-bool AISystem::checkCollision(int entityId){
+bool AISystem::canHandle(const CollisionEvent &collisionEvent) {
+    // met AIcomponent?
+    // zonder damagingcomponent
 
     return false;
+}
+
+void AISystem::handleCollisionEvent(const CollisionEvent &collisionEvent) {
+    // what to do now
 }

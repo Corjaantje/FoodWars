@@ -24,8 +24,14 @@ void AISystem::update(double dt) {
         }
         else {
             // TODO: Choose a state
+
+            // Scavenge
             iterator.second->setCurrentState(std::make_unique<ScavengeState>());
             iterator.second->update(dt);
+
+            // Attack
+
+            // Flee
         }
             //jump(iterator.first, *turnComponent);
             //walkRight(*moveComponent, *turnComponent, dt);

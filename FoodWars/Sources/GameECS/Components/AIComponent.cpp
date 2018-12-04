@@ -10,10 +10,8 @@ int AIComponent::getDifficulty() const {
 
 void AIComponent::setCurrentState(std::unique_ptr<State> state) {
     if(_currentState) _currentState->exit();
-
-        state->enter();
-        _currentState = std::move(state);
-
+    state->enter();
+    _currentState = std::move(state);
 }
 
 void AIComponent::update(double dt) {

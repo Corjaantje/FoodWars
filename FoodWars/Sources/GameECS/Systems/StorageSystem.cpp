@@ -574,15 +574,7 @@ void StorageSystem::parseCollideables(const MyNode &collideNode, EntityManager &
 
 void StorageSystem::parseDamageable(const MyNode &damageNode, EntityManager &_entity, int identifier) {
     std::vector<MyNode> childNodes = damageNode.GetChildren();
-    if (childNodes.size() > 1)
-    {
-        _entity.addComponentToEntity<DamageableComponent>(identifier, childNodes[0].GetIntValue(), childNodes[1].GetIntValue());
-    } else
-    {
-        // support for old maps without a resistance
-        _entity.addComponentToEntity<DamageableComponent>(identifier, childNodes[0].GetIntValue());
-    }
-
+    _entity.addComponentToEntity<DamageableComponent>(identifier, childNodes[0].GetIntValue(), childNodes[1].GetIntValue());
 }
 
 int StorageSystem::countFilesInDirectory(std::string targetdir) {

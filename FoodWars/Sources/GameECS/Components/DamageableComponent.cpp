@@ -1,3 +1,4 @@
+#include <cmath>
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 
 DamageableComponent::DamageableComponent(int health) : _health{health}, _resistance{0} {}
@@ -19,9 +20,10 @@ const int DamageableComponent::getResistance() {
 }
 
 void DamageableComponent::lowerHealth(int value) {
-    if ((_health - value) < 0)
+    double toDamage = std::lround((double)value * ((double)1-(_resistance/100)));
+    if ((_health - toDamage) < 0)
         _health = 0;
-    else _health -= value;
+    else _health -= toDamage;
 }
 
 void DamageableComponent::increaseHealth(int value) {

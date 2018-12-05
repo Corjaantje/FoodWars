@@ -20,10 +20,9 @@ const int DamageableComponent::getResistance() {
 }
 
 void DamageableComponent::lowerHealth(int value) {
-    double toDamage = std::lround((double)value * ((double)1-(_resistance/100)));
-    if ((_health - toDamage) < 0)
+    if ((_health - value) < 0)
         _health = 0;
-    else _health -= toDamage;
+    else _health -= value;
 }
 
 void DamageableComponent::increaseHealth(int value) {

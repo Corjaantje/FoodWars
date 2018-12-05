@@ -1,4 +1,3 @@
-#include <cmath>
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 
 DamageableComponent::DamageableComponent(int health) : _health{health}, _resistance{0} {}

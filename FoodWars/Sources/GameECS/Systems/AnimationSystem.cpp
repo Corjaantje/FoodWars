@@ -1,4 +1,5 @@
 #include "../../../Headers/GameECS/Systems/AnimationSystem.h"
+#include "../../../Headers/GameECS/Components/PlayerComponent.h"
 
 AnimationSystem::AnimationSystem(EntityManager &entityManager)
         : _entityManager(&entityManager), _animationManager(AnimationManager{})
@@ -7,9 +8,9 @@ AnimationSystem::AnimationSystem(EntityManager &entityManager)
 
 void AnimationSystem::update(double deltatime) {
     //TODO: Replace team by teamcomponent
-    int team = 0;
     // Edit player animations based on movement
     for (const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        Faction team = _entityManager->getComponentFromEntity<PlayerComponent>(iterator.first)->getFaction();
         auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
         auto *positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
         auto *boxCollider = _entityManager->getComponentFromEntity<BoxCollider>(iterator.first);
@@ -41,8 +42,6 @@ void AnimationSystem::update(double deltatime) {
                                                               positionComponent->X, positionComponent->Y, team));
             animationComponent->setIsIdle(true);
         }
-        // give p2 a different colour
-        team++;
     }
 
     // Get all animating entities

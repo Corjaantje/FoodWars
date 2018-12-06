@@ -2,12 +2,14 @@
 
 #include "../../Headers/StateMachine/LevelSelectionScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
+#include "../../Headers/StateMachine/CharacterSelectionScreen.h"
 
 LevelSelectionScreen::LevelSelectionScreen(ScreenStateManager& context) :
         IScreen(context),
         mouseEventObservable(&_inputFacade->getMouseEventObservable()),
         _currentIndex(0) {
-    _inputFacade->getKeyEventObservable().IObservable<KeyEvent>::registerObserver(this);
+    keyEventObservable = &_inputFacade->getKeyEventObservable();
+    keyEventObservable->IObservable<KeyEvent>::registerObserver(this);
     auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenLevelSelection.png");
     wallpaper->layer = 0;
     wallpaper->addToRender(&_renderList);
@@ -46,11 +48,10 @@ void LevelSelectionScreen::generateLevelButtons() {
     std::sort(_levels.begin(), _levels.end());
     for (int i = 0; i < _levels.size(); i++) {
         TextButton *button = new TextButton{_inputFacade->getMouseEventObservable(),
-                                            "Level " + std::to_string(i + 1),
+                                            "Level " + std::to_string(i+1),
                                             [c = _context, this, i]() {
-                                                std::unique_ptr<GameLevel> gameLevel = std::make_unique<GameLevel>();
-                                                _levelManager->loadLevel(i, *gameLevel);
-                                                c->setActiveScreen(std::make_unique<GameScreen>(*c, gameLevel));
+                                                keyEventObservable->IObservable<KeyEvent>::unregisterObserver(this);
+                                                c->setActiveScreen(std::make_unique<CharacterSelectionScreen>(*c, i+1));
                                             }, 250, 80, 680, 310 + (i % 3) * 125, Colour(255, 255, 255, 255),
                                             Colour(255, 255, 255, 255)};
         _levelButtons.push_back(button);

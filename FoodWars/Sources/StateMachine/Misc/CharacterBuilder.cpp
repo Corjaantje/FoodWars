@@ -26,7 +26,7 @@ void CharacterBuilder::increaseDifficulty() {
 
 void CharacterBuilder::decreaseDifficulty() {
     if(_botDifficulty - 1 < 0){
-        _botDifficulty = static_cast<Difficulty>(3);
+        _botDifficulty = static_cast<Difficulty>(2);
     }
     else{
         _botDifficulty = static_cast<Difficulty>(_botDifficulty - 1);

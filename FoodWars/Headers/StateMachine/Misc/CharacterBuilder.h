@@ -23,7 +23,7 @@ private:
     bool _isBot = false;
     Difficulty _botDifficulty = Difficulty::EASY;
 
-    Faction _faction = Faction::WHITE;
+    Faction _faction = Faction::RANDOM;
 };
 
 

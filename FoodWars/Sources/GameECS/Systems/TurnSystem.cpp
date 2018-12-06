@@ -1,7 +1,3 @@
-//
-// Created by pietb on 11-Oct-18.
-//
-
 #include "../../../Headers/GameECS/Systems/TurnSystem.h"
 
 //TurnSystem::TurnSystem() {
@@ -9,7 +5,8 @@
 //}
 
 TurnSystem::TurnSystem(EntityManager &entityManager) : _entityManager(&entityManager), _defaultTimePerTurn(30),
-                                                       _timePerTurn(_defaultTimePerTurn) {
+                                                       _timePerTurn(_defaultTimePerTurn), _powerupManager(PowerupManager{}) {
+    _powerupManager.spawnPowerups(_entityManager);
 }
 
 TurnSystem::~TurnSystem() = default;
@@ -28,6 +25,7 @@ void TurnSystem::update(double deltaTime) {
                         it2.second->switchTurn(true);
                         it2.second->setRemainingTime((float) _timePerTurn);
                         it2.second->setEnergy(100);
+                        _powerupManager.spawnPowerups(_entityManager);
                         break;
                     }
                 }

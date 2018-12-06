@@ -1,3 +1,6 @@
+#ifndef PROJECT_SWA_POSITIONCOMPONENT_H
+#define PROJECT_SWA_POSITIONCOMPONENT_H
+
 #include "Component.h"
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
 
@@ -11,3 +14,5 @@ public:
     PositionComponent& operator--(int);
     std::vector<std::string> serialize() override;
 };
+
+#endif //PROJECT_SWA_POSITIONCOMPONENT_H

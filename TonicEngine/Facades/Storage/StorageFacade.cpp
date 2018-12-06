@@ -39,7 +39,7 @@ std::vector<std::vector<std::string>> StorageFacade::getHighscoresAndLevels() {
 
     for (auto const& lvl : highscoreFile->GetRoot().GetChildren())
     {
-        std::vector<std::string> toFill {lvl.GetValue(),
+        std::vector<std::string> toFill {lvl.GetName(),
                                          (lvl.GetChildren()[0].GetValue() != "") ? lvl.GetChildren()[0].GetValue() : 0};
         vLevels.push_back(toFill);
     }

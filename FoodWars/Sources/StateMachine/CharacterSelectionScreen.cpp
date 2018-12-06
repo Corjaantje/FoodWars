@@ -134,6 +134,9 @@ void CharacterSelectionScreen::initButtons() {
     // Start Game
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
+                                  createShape<ShapeText>(650, 480, "Loading Level...", 0, 340, 45, Colour(255, 255, 255, 0))->addToRender(&_renderList);
+                                  //Force an update to render the loading level.
+                                  this->update(0);
                                   std::unique_ptr<GameLevel> gameLevel = std::make_unique<GameLevel>();
                                   _levelManager->loadLevel(_selectedLevelIterator, *gameLevel, _playerOneBuilder, _playerTwoBuilder);
                                   _context->setActiveScreen(std::make_unique<GameScreen>(*_context, gameLevel));

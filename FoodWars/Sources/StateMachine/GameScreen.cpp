@@ -8,7 +8,6 @@
 #include "../../Headers/StateMachine/DrawTransitionScreen.h"
 #include "../../Headers/StateMachine/WinTransitionScreen.h"
 #include "../../Headers/StateMachine/LoseTransitionScreen.h"
-#include "../../../TonicEngine/Headers/Visual/FlashingColour.h"
 
 GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &gameLevel) :
         IScreen(context), _gameLevel(std::move(gameLevel)), _entityManager(&_gameLevel->getEntityManager()) {

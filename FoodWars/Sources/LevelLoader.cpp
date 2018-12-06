@@ -33,6 +33,8 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne,
         randomNum2 = rand() % spawnPoints.size();
     }
     Coordinate spawnPoint2 = spawnPoints[randomNum2];
+
+    //Turn RANDOM into a legit faction
     if(playerOne.getFaction() == Faction::RANDOM){
         playerOne.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
     }

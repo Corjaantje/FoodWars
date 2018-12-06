@@ -46,15 +46,14 @@ void CharacterBuilder::decreaseDifficulty() {
 void CharacterBuilder::buildCharacterEntity(GameLevel &gameLevel, int playerID, int spawnX, int spawnY,
                                             bool startTurn) {
     std::vector<std::unique_ptr<IShape>> spawnAnimation;
-    spawnAnimation.push_back(
-            std::make_unique<ShapeSprite>(48, 72, spawnX, spawnY, "PlayerW_R0.png"));
+    spawnAnimation.push_back(std::make_unique<ShapeSprite>(48, 72, spawnX, spawnY, ""));
 
     EntityManager *entityManager = &gameLevel.getEntityManager();
     int player = entityManager->createEntity();
     entityManager->addComponentToEntity<DrawableComponent>(player, std::make_unique<ShapeSprite>(48, 72,
                                                                                                  spawnX,
                                                                                                  spawnY,
-                                                                                                 "PlayerW_R0.png"));
+                                                                                                 ""));
     entityManager->addComponentToEntity<BoxCollider>(player, 48, 72);
     entityManager->addComponentToEntity<PositionComponent>(player, spawnX, spawnY);
     auto &turnComponent = entityManager->addComponentToEntity<TurnComponent>(player);

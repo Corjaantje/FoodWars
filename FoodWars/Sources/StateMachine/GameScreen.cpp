@@ -8,6 +8,7 @@
 #include "../../Headers/StateMachine/DrawTransitionScreen.h"
 #include "../../Headers/StateMachine/WinTransitionScreen.h"
 #include "../../Headers/StateMachine/LoseTransitionScreen.h"
+#include "../../../TonicEngine/Headers/Visual/FlashingColour.h"
 
 GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &gameLevel) :
         IScreen(context), _gameLevel(std::move(gameLevel)), _entityManager(&_gameLevel->getEntityManager()) {
@@ -28,11 +29,17 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
     _systems.push_back(std::unique_ptr<CollisionSystem>(collisionSystem));
     drawSystem = new DrawSystem{*_entityManager, *_visualFacade, *_inputFacade};
     _systems.push_back(std::unique_ptr<DrawSystem>(drawSystem));
-    drawSystem->addShape(createShape<TextButton>(_inputFacade->getMouseEventObservable(),"Next", [turnSystem]()
-                                                 {
-                                                     turnSystem->switchTurn();
-                                                 },
-                                                 110, 50, 1600-120, 230, Colour(255,255,255,0), Colour(255,255,255,0)));
+    nextButton = createShape<FlashingTextButton>(_inputFacade->getMouseEventObservable(),"Next", [turnSystem, this]()
+                                         {
+                                             turnSystem->switchTurn();
+                                             nextButton->setFlashing(false);
+                                             nextButton->setTextColor(Colour(255,255,255,0));
+                                         },
+                                         110, 40, 800-30, 135, Colour(0,0,0,0), Colour(0,0,0,0));
+    nextButton->setFlashColours({{Colour(255,255,255,0)}, Colour(255,0,0,0)});
+    nextButton->setInterval(0.5);
+    nextButton->setFlashing(false);
+    drawSystem->addShape(nextButton);
     int count = 0;
     for (auto const &t : _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         if (count == 0) playerOne = t.first;
@@ -72,6 +79,17 @@ GameScreen::~GameScreen() = default;
 
 void GameScreen::update(double deltaTime) {
     std::map<int, TurnComponent *> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
+    if (!nextButton->getFlashing()){
+        for ( auto const& turn : _entitiesWithTurnComponent)
+        {
+            if (turn.second->isMyTurn() && turn.second->getEnergy() <= 1)
+            {
+                nextButton->setFlashing(true);
+                break;
+            }
+        }
+    }
+
     if(_entitiesWithTurnComponent.size() == 1)
     {
         if (_entityManager->exists(playerOne)) {

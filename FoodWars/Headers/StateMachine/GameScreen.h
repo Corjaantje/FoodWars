@@ -10,6 +10,7 @@
 #include "../GameECS/Systems/StorageSystem.h"
 #include "Misc/Coordinate.h"
 #include "Misc/GameLevel.h"
+#include "../../../TonicEngine/Headers/Visual/Shapes/FlashingTextButton.h"
 
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
@@ -17,8 +18,8 @@ private:
     EntityManager *_entityManager;
     std::vector<std::unique_ptr<IBaseSystem>> _systems;
     DrawSystem* drawSystem = nullptr;
-    AnimationManager _animationManager;
     ShootingSystem* _shootingSystem;
+    FlashingTextButton* nextButton;
     int playerOne;
     int playerTwo;
 public:

@@ -75,7 +75,11 @@ void ShootingSystem::update(const MouseEvent& event) {
             auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(currentPlayer);
             int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
             int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
-            _powerBarX = playerCenterX - 60;
+            if (!_entityManager->getComponentFromEntity<AnimationComponent>(currentPlayer)->getIsLookingLeft()) {
+                _powerBarX = playerCenterX - 55;
+            } else {
+                _powerBarX = playerCenterX + 35;
+            }
             _powerBarY = playerCenterY - 25;
             double deltaX = event.getXPosition() - playerCenterX;
             double deltaY = event.getYPosition() - playerCenterY;
@@ -162,7 +166,7 @@ void ShootingSystem::createPowerBar() {
 void ShootingSystem::powerHandler() {
     int width = _powerBarWidth - 4;
     int height = _power * -1;
-    int xPos = _powerBarX + 2;
+    int xPos = _powerBarX;
     int yPos = _powerBarY + (_maxPower);
 
     if (!_risingPower) {

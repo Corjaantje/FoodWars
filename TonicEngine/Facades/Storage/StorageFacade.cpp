@@ -22,7 +22,7 @@ StorageFacade::~StorageFacade() {
 // Retrieve highscore
 string StorageFacade::getHighscore(int level) {
 
-    std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile("Assets/highscore.xml");
+    std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile("Assets/Highscore.xml");
     if (highscoreFile != nullptr) {
         string score = highscoreFile->GetRoot().GetChildren()[level].GetChildren()[0].GetValue();
 
@@ -31,6 +31,20 @@ string StorageFacade::getHighscore(int level) {
         }
     }
     return "0";
+}
+
+std::vector<std::vector<std::string>> StorageFacade::getHighscoresAndLevels() {
+    std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile("Assets/Highscore.xml");
+    std::vector<std::vector<std::string>> vLevels;
+
+    for (auto const& lvl : highscoreFile->GetRoot().GetChildren())
+    {
+        std::vector<std::string> toFill {lvl.GetValue(),
+                                         (lvl.GetChildren()[0].GetValue() != "") ? lvl.GetChildren()[0].GetValue() : 0};
+        vLevels.push_back(toFill);
+    }
+
+    return vLevels;
 }
 
 // To allow switching between desired files.

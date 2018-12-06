@@ -14,6 +14,8 @@ HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context)
             140, 140, 12, 12,
             Colour{0,0,0,0})->addToRender(&_renderList);
 
+
+    _levelScores = _storageFacade->getHighscoresAndLevels();
     createShape<ShapeText>(560, 350, "Level 1: ", 0, 200, 85, Colour(255, 255, 255, 0))->addToRender(&_renderList);
     createShape<ShapeText>(560, 510, "Level 2: ", 0, 200, 85, Colour(255, 255, 255, 0))->addToRender(&_renderList);
     createShape<ShapeText>(560, 670, "Level 3: ", 0, 200, 85, Colour(255, 255, 255, 0))->addToRender(&_renderList);
@@ -23,6 +25,14 @@ HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context)
 }
 
 HighscoreScreen::~HighscoreScreen() = default;
+
+
+
+void HighscoreScreen::placeShape(int xpos, int ypos, std::string text, int width, int height, Colour colour) {
+    ShapeText* shape = createShape<ShapeText>(xpos, ypos, text, 0, width, height, colour);
+    _visualScores.push_back(shape);
+    shape->addToRender(&_renderList);
+}
 
 void HighscoreScreen::update(double deltaTime) {
     _visualFacade->render(_renderList);
@@ -35,4 +45,16 @@ void HighscoreScreen::update(const KeyEvent& event){
     {
         _context->setActiveScreen<MainMenuScreen>();
     }
+}
+
+void HighscoreScreen::generateScoreText() {
+    for (const ShapeText *text : _visualScores) {
+        delete text;
+    }
+    _levelScores = _storageFacade->getHighscoresAndLevels();
+    for (auto const& lvlData : _levelScores)
+    {
+
+    }
+
 }

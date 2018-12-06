@@ -30,6 +30,8 @@ public:
 
     string getHighscore(int level);
 
+    std::vector<std::vector<std::string>> getHighscoresAndLevels();
+
     // Placeholders for loading. Will end up using factories to return usable objects.
     void getAudioComponents();
     void getLevels();

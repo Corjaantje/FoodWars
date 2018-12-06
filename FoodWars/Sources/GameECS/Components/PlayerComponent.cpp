@@ -2,11 +2,11 @@
 
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 
-PlayerComponent::PlayerComponent() : PlayerComponent(0) {
+PlayerComponent::PlayerComponent() : PlayerComponent(0, Faction::WHITE) {
 
 }
 
-PlayerComponent::PlayerComponent(int id) : _playerID(id), _score(0), _selectedWeaponAvailability(5) {
+PlayerComponent::PlayerComponent(int id, Faction faction) : _playerID(id), _score(0), _selectedWeaponAvailability(5), _faction(faction) {
     createWeapon<Weapon>("carrot.png", 5);
     createWeapon<Weapon>("ham.png", 5);
     createWeapon<Weapon>("candycane.png", 5);
@@ -67,4 +67,12 @@ void PlayerComponent::setSelectedWeaponAvailability(int weaponAvail) {
 
 int PlayerComponent::getSelectedWeaponAvailability() const {
     return _selectedWeapon->getAmmo();
+}
+
+void PlayerComponent::setFaction(Faction faction) {
+    _faction = faction;
+}
+
+Faction PlayerComponent::getFaction() const {
+    return _faction;
 }

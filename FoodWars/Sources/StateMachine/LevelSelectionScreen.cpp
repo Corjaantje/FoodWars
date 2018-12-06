@@ -97,7 +97,7 @@ void LevelSelectionScreen::update(double deltaTime) {
 void LevelSelectionScreen::swapLevels(bool directionNext) {
     if (directionNext) {
         _currentIndex += 3;
-        if (_currentIndex >= _levelButtons.size() - )
+        if (_currentIndex >= _levelButtons.size() - 3)
             _currentIndex = 0;
     } else {
         _currentIndex -= 3;

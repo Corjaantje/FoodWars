@@ -74,6 +74,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - White
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
+                                if(!_playerTwoBuilder.getIsBot())
                                   setFactionColor(_playerTwoBuilder, Faction::WHITE);
                               },
                               120, 120, 1440, 625,
@@ -83,7 +84,8 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - Red
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  setFactionColor(_playerTwoBuilder, Faction::RED);
+                                  if(!_playerTwoBuilder.getIsBot())
+                                      setFactionColor(_playerTwoBuilder, Faction::RED);
                               },
                               120, 120, 1300, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -91,7 +93,8 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - Green
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  setFactionColor(_playerTwoBuilder, Faction::GREEN);
+                                  if(!_playerTwoBuilder.getIsBot())
+                                      setFactionColor(_playerTwoBuilder, Faction::GREEN);
                               },
                               120, 120, 1160, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -99,7 +102,8 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - Yellow
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  setFactionColor(_playerTwoBuilder, Faction::YELLOW);
+                                  if(!_playerTwoBuilder.getIsBot())
+                                      setFactionColor(_playerTwoBuilder, Faction::YELLOW);
                               },
                               120, 120, 1020, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -107,7 +111,8 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - Random
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  setFactionColor(_playerTwoBuilder, Faction::RANDOM);
+                                  if(!_playerTwoBuilder.getIsBot())
+                                      setFactionColor(_playerTwoBuilder, Faction::RANDOM);
                               },
                               120, 120, 1240, 750,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -144,12 +149,13 @@ void CharacterSelectionScreen::initButtons() {
                               450, 120, 540, 350,
                               Colour{0,0,0,0})->addToRender(&_renderList);
 
-    //toggleCollidable
+    //Toggle AI
     togglePlayerTwoBot = createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "stateOff.png",
                                                  [this]() {
                                                      bool state = _playerTwoBuilder.getIsBot();
                                                      if (!state) {
                                                          _playerTwoBuilder.setIsBot(true);
+                                                         _playerTwoBuilder.setFaction(Faction::RANDOM);
                                                          togglePlayerTwoBot->changeImageURL(std::string("stateOn.png"));
                                                      } else {
                                                          _playerTwoBuilder.setIsBot(false);

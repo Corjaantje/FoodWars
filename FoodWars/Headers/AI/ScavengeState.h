@@ -2,10 +2,15 @@
 #define PROJECT_SWA_SCAVENGE_H
 
 #include "State.h"
+#include "../GameECS/Components/MoveComponent.h"
+#include "../GameECS/Components/TurnComponent.h"
 
 class ScavengeState : public State {
+private:
+    MoveComponent* _moveComponent;
+    TurnComponent* _turnComponent;
 public:
-    ScavengeState() = default;
+    ScavengeState(MoveComponent* moveComponent, TurnComponent* turnComponent);
     ~ScavengeState() override = default;
 
     void enter() override;

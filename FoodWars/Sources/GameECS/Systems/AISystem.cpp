@@ -26,7 +26,7 @@ void AISystem::update(double dt) {
             // TODO: Choose a state
 
             // Scavenge
-            iterator.second->setCurrentState(std::make_unique<ScavengeState>());
+            iterator.second->setCurrentState(std::make_unique<ScavengeState>(*turnComponent, *moveComponent));
             iterator.second->update(dt);
 
             // Attack

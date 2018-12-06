@@ -16,6 +16,7 @@ private:
 public:
     TurnSystem(EntityManager &entityManager);
     ~TurnSystem() override;
+    void switchTurn();
     void update(double deltaTime) override;
 };
 

@@ -11,6 +11,14 @@ public:
     int green;
     int blue;
     int alpha;
+
+    virtual int getRed();
+
+    virtual int getGreen();
+
+    virtual int getBlue();
+
+    virtual int getAlpha();
 };
 
 

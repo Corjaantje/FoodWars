@@ -6,6 +6,7 @@
 #include "../../../Headers/GameECS/Components/PositionComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 
 DrawSystem::DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade, InputFacade& inputFacade) :
        _entityManager{&entityManager},
@@ -31,6 +32,9 @@ void DrawSystem::update(double dt) {
     _updateCallCount++;
     drawNonComponents();
     drawPlayers();
+    for (const auto& shape : _shapes )
+        shape->addToRender(&_renderList);
+
     //Draw Components
     for (const auto &iterator: _entityManager->getAllEntitiesWithComponent<DrawableComponent>()) {
         auto *positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
@@ -113,14 +117,17 @@ void DrawSystem::drawPlayerStats() {
             _renderList._shapes[2].push_back(createShape<ShapeRectangle>(energy*1.5, 25, 150, 69, Colour(0, 191, 255, 0)));
             if(turnComp->isMyTurn()){
                 double time = turnComp->getRemainingTime();
-                std::string text;
+                std::string text = std::to_string(time).substr(0, 4);
+                Colour timeColour = Colour (255,255,255,0);
                 if (time < 10) {
                     text = std::to_string(time).substr(0, 3);
-                } else {
-                    text = std::to_string(time).substr(0, 4);
+                    timeColour = Colour(255,165,0,0);
                 }
-                _renderList._shapes[3].push_back(
-                        createShape<ShapeText>(800, 45, text, 180, 75, 37, Colour(255, 255, 255, 0)));
+                if (time < 5) {
+                    text = std::to_string(time).substr(0, 3);
+                    timeColour = Colour(255, 0,0,0);
+                }
+                _renderList._shapes[3].push_back(createShape<ShapeText>(800, 45, text, 180, 75, 37, timeColour));
             }
             if(iterator.second->getSelectedWeapon() != nullptr){
                 _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 396, 45, iterator.second->getSelectedWeapon()->getImage()));
@@ -143,14 +150,16 @@ void DrawSystem::drawPlayerStats() {
 
             if(turnComp->isMyTurn()){
                 double time = turnComp->getRemainingTime();
-                std::string text;
+                std::string text = std::to_string(time).substr(0, 4);
+                Colour timeColour = Colour (255,255,255,0);
                 if (time < 10) {
                     text = std::to_string(time).substr(0, 3);
-                } else {
-                    text = std::to_string(time).substr(0, 4);
+                    timeColour = Colour(255,165,0,0);
+                } if (time < 5) {
+                    text = std::to_string(time).substr(0, 3);
+                    timeColour = Colour(255, 0,0,0);
                 }
-                _renderList._shapes[3].push_back(
-                        createShape<ShapeText>(800, 45, text, 180, 75, 37, Colour(255, 255, 255, 0)));
+                _renderList._shapes[3].push_back(createShape<ShapeText>(800, 45, text, 180, 75, 37, timeColour));
             }
             if(iterator.second->getSelectedWeapon() != nullptr){
                 _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 1190, 45, iterator.second->getSelectedWeapon()->getImage()));
@@ -172,4 +181,8 @@ void DrawSystem::drawWeaponSelection(int x, int playerId, std::string selection)
                                       },
                                       27, 27, x, 45,
                                       Colour{0,0,0,0}));
+}
+
+void DrawSystem::addShape(IShape *shape) {
+    _shapes.push_back(shape);
 }

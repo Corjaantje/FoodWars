@@ -37,6 +37,9 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne,
     //Turn RANDOM into a legit faction
     if(playerOne.getFaction() == Faction::RANDOM){
         playerOne.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
+        while(playerOne.getFaction() == playerTwo.getFaction()){
+            playerOne.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
+        }
     }
     if(playerTwo.getFaction() == Faction::RANDOM){
         playerTwo.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));

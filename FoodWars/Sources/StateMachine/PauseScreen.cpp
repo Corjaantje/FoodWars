@@ -15,19 +15,12 @@ PauseScreen::PauseScreen(ScreenStateManager& context) : IScreen(context) {
             },
             370, 110, 615, 300)->addToRender(&_renderList);
 
-    // Spel Opslaan
-    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"",
-            [c = _context]() {
-                c->setActiveScreen<GameScreen>();
-            },
-            370, 110, 615, 420)->addToRender(&_renderList);
-
     // Terug naar hoofdmenu
     createShape<TextButton>(_inputFacade->getMouseEventObservable(),"",
             [c = _context]() {
                 c->setActiveScreen<MainMenuScreen>();
             },
-            370, 110, 615, 540)->addToRender(&_renderList);
+            370, 110, 615, 420)->addToRender(&_renderList);
 }
 
 PauseScreen::~PauseScreen() = default;

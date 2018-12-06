@@ -11,19 +11,19 @@ LevelLoader::LevelLoader() = default;
 
 LevelLoader::~LevelLoader() = default;
 
-GameLevel *LevelLoader::loadLevel(int level, GameLevel &gameLevel) {
+GameLevel *LevelLoader::loadLevel(int level, GameLevel &gameLevel, CharacterBuilder playerOne, CharacterBuilder playerTwo) {
     StorageSystem storage{};
     std::string levelXML = "Assets/Levels/Level" + std::to_string(level) + ".xml";
     storage.loadWorld(gameLevel, levelXML);
     if (gameLevel.getSpawnPoints().empty()) {
         return nullptr;
     }
-    spawnPlayers(gameLevel);
+    spawnPlayers(gameLevel,playerOne, playerTwo);
     // Return gameLevel
     return &gameLevel;
 }
 
-void LevelLoader::spawnPlayers(GameLevel &gameLevel) {
+void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne, CharacterBuilder playerTwo) {
     std::vector<Coordinate> spawnPoints = gameLevel.getSpawnPoints();
     EntityManager *entityManager = &gameLevel.getEntityManager();
     int randomNum = rand() % spawnPoints.size();
@@ -34,49 +34,22 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel) {
     }
     Coordinate spawnPoint2 = spawnPoints[randomNum2];
 
-    // Spawn Location and animation interval
-    std::vector<std::unique_ptr<IShape>> spawnAnimation;
-    //TODO: replace png depending on teamcomponent
-    spawnAnimation.push_back(
-            std::make_unique<ShapeSprite>(48, 72, spawnPoint1.getXCoord(), spawnPoint1.getYCoord(), "PlayerW_R0.png"));
+    //Turn RANDOM into a legit faction
+    if(playerOne.getFaction() == Faction::RANDOM){
+        playerOne.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
+        while(playerOne.getFaction() == playerTwo.getFaction()){
+            playerOne.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
+        }
+    }
+    if(playerTwo.getFaction() == Faction::RANDOM){
+        playerTwo.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
+        while(playerTwo.getFaction() == playerOne.getFaction()){
+            playerTwo.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
+        }
+    }
 
-    std::vector<std::unique_ptr<IShape>> spawnAnimation2;
-    spawnAnimation2.push_back(
-            std::make_unique<ShapeSprite>(48, 72, spawnPoint2.getXCoord(), spawnPoint2.getYCoord(), "PlayerG_R0.png"));
-    //AnimationComponent animationComponent2{std::move(spawnAnimation2), 0.1};
-
-    // Player
-    int player = entityManager->createEntity();
-    entityManager->addComponentToEntity<DrawableComponent>(player, std::make_unique<ShapeSprite>(48, 72,
-                                                                                                 spawnPoint1.getXCoord(),
-                                                                                                 spawnPoint1.getYCoord(),
-                                                                                                 "PlayerW_R0.png"));
-    entityManager->addComponentToEntity<BoxCollider>(player, 48, 72);
-    entityManager->addComponentToEntity<PositionComponent>(player, spawnPoint1.getXCoord(), spawnPoint1.getYCoord());
-    auto &turnComponent = entityManager->addComponentToEntity<TurnComponent>(player);
-    turnComponent.switchTurn(true);
-    turnComponent.setRemainingTime(30);
-    entityManager->addComponentToEntity<MoveComponent>(player);
-    entityManager->addComponentToEntity<GravityComponent>(player);
-    entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation), 0.1);
-    entityManager->addComponentToEntity<DamageableComponent>(player);
-    entityManager->addComponentToEntity<PlayerComponent>(player, 1);
-    // Player
-    player = entityManager->createEntity();
-    entityManager->addComponentToEntity<DrawableComponent>(player, std::make_unique<ShapeSprite>(48, 72,
-                                                                                                 spawnPoint2.getXCoord(),
-                                                                                                 spawnPoint2.getYCoord(),
-                                                                                                 "PlayerG_R0.png"));
-    //entityManager->addComponentToEntity<DrawableComponent>(player, std::make_unique<ShapeSprite>(48, 72, spawnPoint2.getXCoord(), spawnPoint2.getYCoord(), "PlayerG_R0.png"));
-    entityManager->addComponentToEntity<BoxCollider>(player, 48, 72);
-    entityManager->addComponentToEntity<PositionComponent>(player, spawnPoint2.getXCoord(), spawnPoint2.getYCoord());
-    entityManager->addComponentToEntity<TurnComponent>(player);
-    entityManager->addComponentToEntity<MoveComponent>(player);
-    entityManager->addComponentToEntity<GravityComponent>(player);
-    entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation2), 0.1);
-    //entityManager->addComponentToEntity<DrawableComponent>(player, entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation2), 0.1));
-    entityManager->addComponentToEntity<DamageableComponent>(player);
-    entityManager->addComponentToEntity<PlayerComponent>(player, 2);
+    playerOne.buildCharacterEntity(gameLevel, 1, spawnPoint1.getXCoord(), spawnPoint1.getYCoord(), true);
+    playerTwo.buildCharacterEntity(gameLevel, 2, spawnPoint2.getXCoord(), spawnPoint2.getYCoord(), false);
 
     int boundLeft = entityManager->createEntity();
     entityManager->addComponentToEntity<BoxCollider>(boundLeft, 900, 900);

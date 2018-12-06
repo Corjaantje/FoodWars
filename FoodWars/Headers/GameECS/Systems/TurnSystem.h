@@ -17,6 +17,10 @@ public:
     TurnSystem(EntityManager &entityManager);
     ~TurnSystem() override;
     void switchTurn();
+    void resetCurrentTime();
+    void resetCurrentEnergy();
+    int getCurrentPlayerID() const;
+    double getCurrentPlayerEnergy() const;
     void update(double deltaTime) override;
 };
 

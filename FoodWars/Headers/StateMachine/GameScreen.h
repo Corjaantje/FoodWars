@@ -8,6 +8,7 @@
 #include "../GameECS/Systems/GravitySystem.h"
 #include "../GameECS/Systems/ShootingSystem.h"
 #include "../GameECS/Systems/StorageSystem.h"
+#include "../GameECS/Systems/PowerupSystem.h"
 #include "Misc/Coordinate.h"
 #include "Misc/GameLevel.h"
 
@@ -19,6 +20,7 @@ private:
     DrawSystem* drawSystem = nullptr;
     AnimationManager _animationManager;
     ShootingSystem* _shootingSystem;
+    PowerupSystem* _powerupSystem = nullptr;
     int playerOne;
     int playerTwo;
 public:

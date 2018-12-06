@@ -21,6 +21,8 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
     _systems.push_back(std::make_unique<GravitySystem>(*_entityManager, *collisionSystem));
     _systems.push_back(std::make_unique<AnimationSystem>(*_entityManager));
     _systems.push_back(std::make_unique<TurnSystem>(*_entityManager));
+    _powerupSystem = new PowerupSystem{*_entityManager};
+    _systems.push_back(std::unique_ptr<PowerupSystem>(_powerupSystem));
 
     _shootingSystem = new ShootingSystem{*_entityManager, *_audioFacade, *_visualFacade, *_inputFacade};
     _systems.push_back(std::unique_ptr<ShootingSystem>(_shootingSystem));

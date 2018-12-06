@@ -6,11 +6,8 @@
 #include "../GameECS/Components/TurnComponent.h"
 
 class ScavengeState : public State {
-private:
-    MoveComponent* _moveComponent;
-    TurnComponent* _turnComponent;
 public:
-    ScavengeState(MoveComponent* moveComponent, TurnComponent* turnComponent);
+    ScavengeState(EntityManager* entityManager, std::shared_ptr<AudioFacade> audioFacade, int entityId);
     ~ScavengeState() override = default;
 
     void enter() override;

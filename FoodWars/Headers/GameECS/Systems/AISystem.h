@@ -19,7 +19,6 @@ class AISystem : public IBaseSystem, public CollisionEventHandler{
 private:
     EntityManager* _entityManager;
     std::shared_ptr<AudioFacade> _audioFacade;
-    const int walkingEnergyCostPerSecond = 20;
 
     void jump(int entityId, TurnComponent& turnComponent);
     void walkLeft(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);

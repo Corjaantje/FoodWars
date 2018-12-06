@@ -18,20 +18,23 @@ void AISystem::update(double dt) {
         auto moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
 
         if (!turnComponent->isMyTurn()) {
-            iterator.second->setCurrentState(std::make_unique<IdleState>());
+            iterator.second->setCurrentState(std::make_unique<IdleState>(_entityManager, _audioFacade, iterator.first));
             iterator.second->update(dt);
-            continue;
         }
         else {
             // TODO: Choose a state
 
+
             // Scavenge
-            iterator.second->setCurrentState(std::make_unique<ScavengeState>(*turnComponent, *moveComponent));
+            // TODO: Check for nearby items
+            iterator.second->setCurrentState(std::make_unique<ScavengeState>(_entityManager, _audioFacade, iterator.first));
             iterator.second->update(dt);
 
             // Attack
+            // TODO: if stronger than enemy
 
             // Flee
+            // TODO: if weaker than enemy
         }
             //jump(iterator.first, *turnComponent);
             //walkRight(*moveComponent, *turnComponent, dt);
@@ -64,23 +67,7 @@ void AISystem::update(double dt) {
     }
 }
 
-void AISystem::jump(int entityId, TurnComponent& turnComponent){
-    if(!_entityManager->getComponentFromEntity<JumpComponent>(entityId)) {
-        _entityManager->addComponentToEntity<JumpComponent>(entityId);
-        turnComponent.lowerEnergy(5);
-        _audioFacade->playEffect("jump");
-    }
-}
 
-void AISystem::walkLeft(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt) {
-    moveComponent.xVelocity = -100;
-    turnComponent.lowerEnergy(walkingEnergyCostPerSecond * dt);
-}
-
-void AISystem::walkRight(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt) {
-    moveComponent.xVelocity = 100;
-    turnComponent.lowerEnergy(walkingEnergyCostPerSecond * dt);
-}
 
 int AISystem::getDistanceToEnemy(int entityId) {
     for(const auto &iterator : _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {

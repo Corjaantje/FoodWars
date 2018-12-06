@@ -5,7 +5,7 @@
 
 class AttackState : public State {
 public:
-    AttackState() = default;
+    AttackState(EntityManager* entityManager, std::shared_ptr<AudioFacade> audioFacade, int entityId);
 
     ~AttackState() override = default;
 

@@ -1,7 +1,9 @@
+#include <utility>
+
 #include "../../Headers/AI/ScavengeState.h"
 #include <iostream>
 
-ScavengeState::ScavengeState(MoveComponent* moveComponent, TurnComponent* turnComponent) : _moveComponent(moveComponent), _turnComponent(turnComponent) {
+ScavengeState::ScavengeState(EntityManager* entityManager, std::shared_ptr<AudioFacade> audioFacade, int entityId) : State(entityManager, std::move(audioFacade), entityId) {
 
 }
 
@@ -11,7 +13,9 @@ void ScavengeState::enter(){
 
 void ScavengeState::execute(double dt) {
     std::cout << "Executing scavenge state" << std::endl;
-    walkRight(_moveComponent, _turnComponent, dt);
+    auto moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(_entityId);
+    auto turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(_entityId);
+    walkRight(*moveComponent, *turnComponent, dt);
 }
 
 void ScavengeState::exit() {

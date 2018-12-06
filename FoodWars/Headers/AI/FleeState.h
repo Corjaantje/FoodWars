@@ -6,7 +6,7 @@
 
 class FleeState : public State {
 public:
-    FleeState() = default;
+    FleeState(EntityManager* entityManager, std::shared_ptr<AudioFacade> audioFacade, int entityId);
 
     ~FleeState() override = default;
 

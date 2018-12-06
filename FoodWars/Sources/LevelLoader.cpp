@@ -35,50 +35,14 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne,
     Coordinate spawnPoint2 = spawnPoints[randomNum2];
 
     // Spawn Location and animation interval
-    std::vector<std::unique_ptr<IShape>> spawnAnimation;
-    //TODO: replace png depending on teamcomponent
-    spawnAnimation.push_back(
-            std::make_unique<ShapeSprite>(48, 72, spawnPoint1.getXCoord(), spawnPoint1.getYCoord(), "PlayerW_R0.png"));
+
 
     std::vector<std::unique_ptr<IShape>> spawnAnimation2;
     spawnAnimation2.push_back(
             std::make_unique<ShapeSprite>(48, 72, spawnPoint2.getXCoord(), spawnPoint2.getYCoord(), "PlayerG_R0.png"));
-    //AnimationComponent animationComponent2{std::move(spawnAnimation2), 0.1};
 
-    playerOne.buildCharacterEntity(entityManager);
-    playerTwo.buildCharacterEntity(entityManager);
-    // Player
-    int player = entityManager->createEntity();
-    entityManager->addComponentToEntity<DrawableComponent>(player, std::make_unique<ShapeSprite>(48, 72,
-                                                                                                 spawnPoint1.getXCoord(),
-                                                                                                 spawnPoint1.getYCoord(),
-                                                                                                 "PlayerW_R0.png"));
-    entityManager->addComponentToEntity<BoxCollider>(player, 48, 72);
-    entityManager->addComponentToEntity<PositionComponent>(player, spawnPoint1.getXCoord(), spawnPoint1.getYCoord());
-    auto &turnComponent = entityManager->addComponentToEntity<TurnComponent>(player);
-    turnComponent.switchTurn(true);
-    turnComponent.setRemainingTime(30);
-    entityManager->addComponentToEntity<MoveComponent>(player);
-    entityManager->addComponentToEntity<GravityComponent>(player);
-    entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation), 0.1);
-    entityManager->addComponentToEntity<DamageableComponent>(player);
-    entityManager->addComponentToEntity<PlayerComponent>(player, 1);
-    // Player
-    player = entityManager->createEntity();
-    entityManager->addComponentToEntity<DrawableComponent>(player, std::make_unique<ShapeSprite>(48, 72,
-                                                                                                 spawnPoint2.getXCoord(),
-                                                                                                 spawnPoint2.getYCoord(),
-                                                                                                 "PlayerG_R0.png"));
-    //entityManager->addComponentToEntity<DrawableComponent>(player, std::make_unique<ShapeSprite>(48, 72, spawnPoint2.getXCoord(), spawnPoint2.getYCoord(), "PlayerG_R0.png"));
-    entityManager->addComponentToEntity<BoxCollider>(player, 48, 72);
-    entityManager->addComponentToEntity<PositionComponent>(player, spawnPoint2.getXCoord(), spawnPoint2.getYCoord());
-    entityManager->addComponentToEntity<TurnComponent>(player);
-    entityManager->addComponentToEntity<MoveComponent>(player);
-    entityManager->addComponentToEntity<GravityComponent>(player);
-    entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation2), 0.1);
-    //entityManager->addComponentToEntity<DrawableComponent>(player, entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation2), 0.1));
-    entityManager->addComponentToEntity<DamageableComponent>(player);
-    entityManager->addComponentToEntity<PlayerComponent>(player, 2);
+    playerOne.buildCharacterEntity(gameLevel, 1, spawnPoint1.getXCoord(), spawnPoint1.getYCoord(), true);
+    playerTwo.buildCharacterEntity(gameLevel, 2, spawnPoint2.getXCoord(), spawnPoint2.getYCoord(), false);
 
     int boundLeft = entityManager->createEntity();
     entityManager->addComponentToEntity<BoxCollider>(boundLeft, 900, 900);

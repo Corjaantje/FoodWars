@@ -1,4 +1,13 @@
 #include "../../../Headers/StateMachine/Misc/CharacterBuilder.h"
+#include "../../../Headers/GameECS/Components/DrawableComponent.h"
+#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
+#include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
+#include "../../../Headers/GameECS/Components/TurnComponent.h"
+#include "../../../Headers/GameECS/Components/GravityComponent.h"
+#include "../../../Headers/GameECS/Components/MoveComponent.h"
+#include "../../../Headers/GameECS/Components/AnimationComponent.h"
+#include "../../../Headers/GameECS/Components/DamageableComponent.h"
+#include "../../../Headers/GameECS/Components/PlayerComponent.h"
 
 bool CharacterBuilder::getIsBot() const {
     return _isBot;
@@ -31,5 +40,36 @@ void CharacterBuilder::decreaseDifficulty() {
     else{
         _botDifficulty = static_cast<Difficulty>(_botDifficulty - 1);
 
+    }
+}
+
+void CharacterBuilder::buildCharacterEntity(GameLevel &gameLevel, int playerID, int spawnX, int spawnY,
+                                            bool startTurn) {
+    std::vector<std::unique_ptr<IShape>> spawnAnimation;
+    spawnAnimation.push_back(
+            std::make_unique<ShapeSprite>(48, 72, spawnX, spawnY, "PlayerW_R0.png"));
+
+    EntityManager *entityManager = &gameLevel.getEntityManager();
+    int player = entityManager->createEntity();
+    entityManager->addComponentToEntity<DrawableComponent>(player, std::make_unique<ShapeSprite>(48, 72,
+                                                                                                 spawnX,
+                                                                                                 spawnY,
+                                                                                                 "PlayerW_R0.png"));
+    entityManager->addComponentToEntity<BoxCollider>(player, 48, 72);
+    entityManager->addComponentToEntity<PositionComponent>(player, spawnX, spawnY);
+    auto &turnComponent = entityManager->addComponentToEntity<TurnComponent>(player);
+    entityManager->addComponentToEntity<MoveComponent>(player);
+    entityManager->addComponentToEntity<GravityComponent>(player);
+    entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation), 0.1);
+    entityManager->addComponentToEntity<DamageableComponent>(player);
+    if(startTurn){
+        turnComponent.switchTurn(true);
+        turnComponent.setRemainingTime(30);
+    }
+    if(getIsBot()){
+        //TODO Add an AI component;
+    }
+    else{
+        entityManager->addComponentToEntity<PlayerComponent>(player, playerID);
     }
 }

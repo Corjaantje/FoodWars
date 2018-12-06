@@ -1,6 +1,7 @@
 #include "../../Headers/StateMachine/CharacterSelectionScreen.h"
 #include "../../Headers/StateMachine/LevelSelectionScreen.h"
 #include "../../Headers/StateMachine/LevelCreationScreen.h"
+#include "../../Headers/StateMachine/GameScreen.h"
 
 CharacterSelectionScreen::CharacterSelectionScreen(ScreenStateManager &context, int levelIterator ) : IScreen(context) {
     _inputFacade->getKeyEventObservable().IObservable<KeyEvent>::registerObserver(this);
@@ -31,7 +32,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player One - White
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerOneBuilder.setFaction(Faction::WHITE);
+                                    setFactionColor(_playerOneBuilder, Faction::WHITE);
                               },
                               120, 120, 30, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -40,7 +41,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player One - Red
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerOneBuilder.setFaction(Faction::RED);
+                                  setFactionColor(_playerOneBuilder, Faction::RED);
                               },
                               120, 120, 180, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -48,7 +49,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player One - Green
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerOneBuilder.setFaction(Faction::GREEN);
+                                  setFactionColor(_playerOneBuilder, Faction::GREEN);
                               },
                               120, 120, 320, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -56,7 +57,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player One - Yellow
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerOneBuilder.setFaction(Faction::YELLOW);
+                                  setFactionColor(_playerOneBuilder, Faction::YELLOW);
                               },
                               120, 120, 460, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -64,7 +65,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player One - Random
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerOneBuilder.setFaction(Faction::RANDOM);
+                                  setFactionColor(_playerOneBuilder, Faction::RANDOM);
                               },
                               120, 120, 240, 750,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -73,7 +74,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - White
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerTwoBuilder.setFaction(Faction::WHITE);
+                                  setFactionColor(_playerTwoBuilder, Faction::WHITE);
                               },
                               120, 120, 1440, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -82,7 +83,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - Red
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerTwoBuilder.setFaction(Faction::RED);
+                                  setFactionColor(_playerTwoBuilder, Faction::RED);
                               },
                               120, 120, 1300, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -90,7 +91,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - Green
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerTwoBuilder.setFaction(Faction::GREEN);
+                                  setFactionColor(_playerTwoBuilder, Faction::GREEN);
                               },
                               120, 120, 1160, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -98,7 +99,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - Yellow
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerTwoBuilder.setFaction(Faction::YELLOW);
+                                  setFactionColor(_playerTwoBuilder, Faction::YELLOW);
                               },
                               120, 120, 1020, 625,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -106,7 +107,7 @@ void CharacterSelectionScreen::initButtons() {
     // Player Two - Random
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _playerTwoBuilder.setFaction(Faction::RANDOM);
+                                  setFactionColor(_playerTwoBuilder, Faction::RANDOM);
                               },
                               120, 120, 1240, 750,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -133,7 +134,9 @@ void CharacterSelectionScreen::initButtons() {
     // Start Game
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
-                                  _context->setActiveScreen(std::make_unique<LevelSelectionScreen>(*_context));
+                                  std::unique_ptr<GameLevel> gameLevel = std::make_unique<GameLevel>();
+                                  _levelManager->loadLevel(_selectedLevelIterator, *gameLevel, _playerOneBuilder, _playerTwoBuilder);
+                                  _context->setActiveScreen(std::make_unique<GameScreen>(*_context, gameLevel));
                               },
                               450, 120, 540, 350,
                               Colour{0,0,0,0})->addToRender(&_renderList);
@@ -197,4 +200,16 @@ void CharacterSelectionScreen::update(double deltaTime) {
     _leftPreview->imageURL = _previewMapLeft[_playerOneBuilder.getFaction()];
     _rightPreview->imageURL = _previewMapRight[_playerTwoBuilder.getFaction()];
     _visualFacade->render(_renderList);
+}
+
+void CharacterSelectionScreen::setFactionColor(CharacterBuilder &builder, Faction faction) {
+    if(faction == Faction::RANDOM){
+        builder.setFaction(faction);
+    }
+    else if(_playerOneBuilder.getFaction() != faction && _playerTwoBuilder.getFaction() != faction){
+        builder.setFaction(faction);
+    }
+    else{
+        _audioFacade->playEffect("negative");
+    }
 }

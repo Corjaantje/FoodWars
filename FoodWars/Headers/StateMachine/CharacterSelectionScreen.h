@@ -15,6 +15,7 @@ public:
 private:
     void initButtons();
     void initImages();
+    void setFactionColor(CharacterBuilder &builder, Faction faction);
 private:
     int _selectedLevelIterator;
     CharacterBuilder _playerOneBuilder;

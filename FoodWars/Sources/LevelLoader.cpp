@@ -11,19 +11,19 @@ LevelLoader::LevelLoader() = default;
 
 LevelLoader::~LevelLoader() = default;
 
-GameLevel *LevelLoader::loadLevel(int level, GameLevel &gameLevel) {
+GameLevel *LevelLoader::loadLevel(int level, GameLevel &gameLevel, CharacterBuilder playerOne, CharacterBuilder playerTwo) {
     StorageSystem storage{};
     std::string levelXML = "Assets/Levels/Level" + std::to_string(level) + ".xml";
     storage.loadWorld(gameLevel, levelXML);
     if (gameLevel.getSpawnPoints().empty()) {
         return nullptr;
     }
-    spawnPlayers(gameLevel);
+    spawnPlayers(gameLevel,playerOne, playerTwo);
     // Return gameLevel
     return &gameLevel;
 }
 
-void LevelLoader::spawnPlayers(GameLevel &gameLevel) {
+void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne, CharacterBuilder playerTwo) {
     std::vector<Coordinate> spawnPoints = gameLevel.getSpawnPoints();
     EntityManager *entityManager = &gameLevel.getEntityManager();
     int randomNum = rand() % spawnPoints.size();
@@ -45,6 +45,8 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel) {
             std::make_unique<ShapeSprite>(48, 72, spawnPoint2.getXCoord(), spawnPoint2.getYCoord(), "PlayerG_R0.png"));
     //AnimationComponent animationComponent2{std::move(spawnAnimation2), 0.1};
 
+    playerOne.buildCharacterEntity(entityManager);
+    playerTwo.buildCharacterEntity(entityManager);
     // Player
     int player = entityManager->createEntity();
     entityManager->addComponentToEntity<DrawableComponent>(player, std::make_unique<ShapeSprite>(48, 72,

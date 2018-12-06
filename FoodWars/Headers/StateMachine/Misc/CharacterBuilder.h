@@ -4,6 +4,7 @@
 
 #include "DifficultyEnum.h"
 #include "FactionEnum.h"
+#include "../../GameECS/Entities/EntityManager.h"
 
 class CharacterBuilder {
 public:
@@ -11,7 +12,7 @@ public:
     ~CharacterBuilder() = default;
 public:
     bool getIsBot() const;
-    const void setIsBot(const bool state);
+    const void setIsBot(bool state);
 
     Faction getFaction() const;
     const void setFaction(Faction faction);
@@ -19,6 +20,8 @@ public:
     Difficulty getDifficulty() const;
     void increaseDifficulty();
     void decreaseDifficulty();
+
+    void buildCharacterEntity(EntityManager* entityManager);
 private:
     bool _isBot = false;
     Difficulty _botDifficulty = Difficulty::EASY;

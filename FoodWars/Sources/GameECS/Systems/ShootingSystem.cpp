@@ -83,10 +83,15 @@ void ShootingSystem::update(const MouseEvent& event) {
             _powerBarY = playerCenterY - 25;
             double deltaX = event.getXPosition() - playerCenterX;
             double deltaY = event.getYPosition() - playerCenterY;
-            if (deltaX > 100) deltaX = 100;
-            else if (deltaX < -100) deltaX = -100;
-            if (deltaY > 100) deltaY = 100;
-            else if (deltaY < -100) deltaY = -100;
+
+            // shooting in a circle
+            double totalLength = sqrt( deltaX*deltaX + deltaY*deltaY );
+            double length = totalLength > 150?150 : totalLength;
+            double scale = length / totalLength;
+
+            deltaX *= scale;
+            deltaY *= scale;
+
             double toX = playerCenterX + deltaX;
             double toY = playerCenterY + deltaY;
 
@@ -121,14 +126,6 @@ void ShootingSystem::update(const MouseEvent& event) {
                 if (event.getMouseEventType() == MouseEventType::Up &&
                     event.getMouseClickType() == MouseClickType::Left) {
                     _mouseDown = false;
-
-                    // Calculating the relative power for X and Y movement
-                    double reCountX = std::abs(event.getXPosition() - playerCenterX) /
-                                      std::abs(event.getYPosition() - playerCenterY);
-                    double reCountY = std::abs(event.getYPosition() - playerCenterY) /
-                                      std::abs(event.getXPosition() - playerCenterX);
-                    double xPowerMod = 1 / (reCountY + 1);
-                    double yPowerMod = 1 / (reCountX + 1);
 
                     generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY, selectedWeapon);
                     _isShooting = false;

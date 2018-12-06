@@ -19,10 +19,6 @@ public:
     void update(double deltaTime) override;
     void update(const MouseEvent& event) override;
     void toggleShooting();
-
-    void createShootingLine(int fromX, int fromY, int toX, int toY);
-    void createPowerBar();
-    void powerHandler();
 private:
     bool _isShooting;
     bool _projectileFired;
@@ -46,7 +42,9 @@ private:
     Renderlist _renderList;
 
     void resetShooting();
-
+    void createShootingLine(int fromX, int fromY, int toX, int toY);
+    void createPowerBar();
+    void powerHandler();
     void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
                             double velocityX, double velocityY, Weapon* selectedWeapon);
 };

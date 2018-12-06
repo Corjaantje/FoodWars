@@ -46,10 +46,10 @@ void LevelSelectionScreen::generateLevelButtons() {
     std::sort(_levels.begin(), _levels.end());
     for (int i = 0; i < _levels.size(); i++) {
         TextButton *button = new TextButton{_inputFacade->getMouseEventObservable(),
-                                            "Level " + std::to_string(i + 1),
+                                            "Level " + std::to_string(i+1),
                                             [c = _context, this, i]() {
                                                 std::unique_ptr<GameLevel> gameLevel = std::make_unique<GameLevel>();
-                                                _levelManager->loadLevel(i, *gameLevel);
+                                                _levelManager->loadLevel(i+1, *gameLevel);
                                                 c->setActiveScreen(std::make_unique<GameScreen>(*c, gameLevel));
                                             }, 250, 80, 680, 310 + (i % 3) * 125, Colour(255, 255, 255, 255),
                                             Colour(255, 255, 255, 255)};

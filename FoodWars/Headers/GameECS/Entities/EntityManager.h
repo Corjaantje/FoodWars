@@ -24,7 +24,7 @@ public:
 
     int createEntity();
 
-    int createEntity(Component components[], int size);
+    //int createEntity(Component components[], int size);
 
     /*template<typename Comp>
     void addComponentToEntity(int entity, const Comp& component) {

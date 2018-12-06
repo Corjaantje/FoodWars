@@ -4,12 +4,13 @@
 #include "Component.h"
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
 
-class GravityComponent : public Component, public ISerializable {
+class GravityComponent : public Component {
 public:
     double gravityApplied;
     GravityComponent();
-    std::vector<std::string> serialize() override;
     explicit GravityComponent(double gravity);
+
+    void accept(SerializationVisitor &visitor) override;
 };
 
 #endif //PROJECT_SWA_GRAVITYCOMPONENT_H

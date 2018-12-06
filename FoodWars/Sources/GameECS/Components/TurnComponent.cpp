@@ -46,13 +46,6 @@ void TurnComponent::lowerEnergy(double delta) {
     _energy -= delta;
 }
 
-std::vector<std::string> TurnComponent::serialize() {
-    std::vector<std::string> data;
-    data.push_back(std::to_string(_energy));
-    data.push_back(std::to_string(_myTurn));
-    return data;
-}
-
 double TurnComponent::getEnergy() const {
     return _energy;
 }
@@ -60,15 +53,15 @@ double TurnComponent::getEnergy() const {
 void TurnComponent::setEnergy(double energy) {
     _energy = energy;
 }
-   
 
 void TurnComponent::setEnergy(int energy) {
     _energy = energy;
-    //if (_energy > _maxEnergy) {_energy = _maxEnergy;}
 }
 
-void TurnComponent::setMaxEnergy(int energy) {
-    //_maxEnergy = energy;
+void TurnComponent::accept(SerializationVisitor &visitor) {
+    visitor.visit("energy", _energy);
+    visitor.visit("remainingTime", _remainingTime);
+    visitor.visit("myTurn", _myTurn);
 }
 
 

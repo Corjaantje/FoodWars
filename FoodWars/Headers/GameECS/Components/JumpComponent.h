@@ -8,9 +8,12 @@ private:
     double _jumpAcceleration;
 public:
     JumpComponent();
-    JumpComponent(double acceleration);
+
+    explicit JumpComponent(double acceleration);
     double getAcceleration() const;
     void setAcceleration(double acceleration);
+
+    void accept(SerializationVisitor &visitor) override;
 };
 
 #endif //PROJECT_SWA_JUMPCOMPONENT_H

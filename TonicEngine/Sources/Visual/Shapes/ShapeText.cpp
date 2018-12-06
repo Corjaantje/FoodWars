@@ -20,6 +20,15 @@ void ShapeText::render(IRenderer &renderer) const {
     renderer.renderText(*this);
 }
 
+void ShapeText::accept(SerializationVisitor &visitor) {
+    IShape::accept(visitor);
+    visitor.visit("text", text);
+    visitor.visit("fontSize", fontSize);
+    visitor.visit("width", width);
+    visitor.visit("height", height);
+    visitor.visit("colour", colour);
+}
+
 std::vector<std::string> ShapeText::serialize() {
     std::vector<std::string> data;
     data.emplace_back("text");

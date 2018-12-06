@@ -68,3 +68,11 @@ bool AnimationComponent::getIsIdle() const {
 void AnimationComponent::setIsIdle(bool isIdle) {
     _isIdle = isIdle;
 }
+
+void AnimationComponent::accept(SerializationVisitor &visitor) {
+    visitor.visit("isLookingLeft", _isLookingLeft);
+    visitor.visit("isIdle", _isIdle);
+    visitor.visit("animationInterval", _animationInterval);
+    visitor.visit("elapsedTime", _elapsedTime);
+    visitor.visit("currentShapeIndex", _currentShapeIndex);
+}

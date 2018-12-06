@@ -2,20 +2,21 @@
 #define PROJECT_SWA_WEAPON_H
 
 #include <string>
-#include "../../GameECS/Entities/EntityManager.h"
+#include "../../../../TonicEngine/Headers/Storage/SerializationReceiver.h"
 
-
-class Weapon {
+class Weapon : public SerializationReceiver {
 public:
-    Weapon(std::string imageUrl, int ammo);
+    Weapon(const std::string &imageUrl, int ammo);
     ~Weapon() = default;
 public:
     void lowerAmmo();
 
     int getAmmo() const;
     std::string getImage() const;
+
+    void accept(SerializationVisitor &visitor) override;
+
 private:
-    EntityManager _entityManager;
     std::string _imageUrl;
     int _ammo;
 };

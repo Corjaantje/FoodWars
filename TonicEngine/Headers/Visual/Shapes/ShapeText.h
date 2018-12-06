@@ -21,7 +21,8 @@ public:
 
     int getWidth() const  { return width; }
     int getHeight() const { return height; }
-    std::vector<std::string> serialize() override;
+
+    void accept(SerializationVisitor &visitor) override;
 };
 
 

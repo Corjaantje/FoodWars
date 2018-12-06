@@ -30,6 +30,7 @@ public:
     void setIsLookingLeft(bool isLookingLeft);
     void setIsIdle(bool isIdle);
 
+    void accept(SerializationVisitor &visitor) override;
 private:
     std::vector<std::unique_ptr<IShape>> _animationShapes;
     bool _isLookingLeft;

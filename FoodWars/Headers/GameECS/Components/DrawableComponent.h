@@ -6,19 +6,20 @@
 #include "../../../../TonicEngine/Headers/Visual/Shapes/IShape.h"
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
 
-class DrawableComponent: public Component, public ISerializable {
+class DrawableComponent : public Component {
 private:
     std::unique_ptr<IShape> _shape;
 public:
     explicit DrawableComponent(std::unique_ptr<IShape> shape);
     ~DrawableComponent() override;
-    std::vector<std::string> serialize() override;
 
     void setShape(IShape *shape);
 
     void setShape(std::unique_ptr<IShape> shape);
 
     virtual IShape *getShape() const;
+
+    void accept(SerializationVisitor &visitor) override;
 };
 
 

@@ -9,3 +9,7 @@ DamagingComponent::~DamagingComponent() = default;
 int DamagingComponent::getDamage() { return _damage; }
 
 void DamagingComponent::setDamage(int damage) { _damage = damage; }
+
+void DamagingComponent::accept(SerializationVisitor &visitor) {
+    visitor.visit("damage", _damage);
+}

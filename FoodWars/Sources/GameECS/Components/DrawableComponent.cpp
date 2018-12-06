@@ -5,14 +5,8 @@ DrawableComponent::DrawableComponent(std::unique_ptr<IShape> shape) : _shape(std
 
 }
 
-DrawableComponent::~DrawableComponent() = default;
+DrawableComponent::~DrawableComponent() = default; // warning!
 
-std::vector<std::string> DrawableComponent::serialize() {
-    std::vector<std::string> data{_shape->serialize()};
-    // If there are future additions to the things that need to be saved, append them.
-    // If placed at the start then more code would  need to be changed.
-    return data;
-}
 
 void DrawableComponent::setShape(IShape *shape) {
     _shape = std::unique_ptr<IShape>(shape);
@@ -24,4 +18,8 @@ IShape *DrawableComponent::getShape() const {
 
 void DrawableComponent::setShape(std::unique_ptr<IShape> shape) {
     _shape = std::move(shape);
+}
+
+void DrawableComponent::accept(SerializationVisitor &visitor) {
+    visitor.visit("shape", *_shape);
 }

@@ -14,6 +14,8 @@ public:
     int getDamage();
 
     void setDamage(int damage);
+
+    void accept(SerializationVisitor &visitor) override;
 private:
     int _damage;
 };

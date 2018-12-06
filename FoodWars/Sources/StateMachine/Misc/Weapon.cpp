@@ -2,7 +2,7 @@
 
 #include "../../../Headers/StateMachine/Misc/Weapon.h"
 
-Weapon::Weapon(std::string imageUrl, int ammo) : _imageUrl(std::move(imageUrl)), _ammo(ammo), _entityManager() {
+Weapon::Weapon(const std::string &imageUrl, int ammo) : _imageUrl(imageUrl), _ammo(ammo) {
 
 }
 
@@ -16,4 +16,9 @@ std::string Weapon::getImage() const {
 
 void Weapon::lowerAmmo() {
     _ammo--;
+}
+
+void Weapon::accept(SerializationVisitor &visitor) {
+    visitor.visit("ammo", _ammo);
+    visitor.visit("image", _imageUrl);
 }

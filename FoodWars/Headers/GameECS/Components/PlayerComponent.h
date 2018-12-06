@@ -1,6 +1,7 @@
 #ifndef PROJECT_SWA_PLAYERCOMPONENT_H
 #define PROJECT_SWA_PLAYERCOMPONENT_H
 
+#include <memory>
 #include <vector>
 #include <string>
 #include "Component.h"
@@ -12,8 +13,8 @@ public:
     explicit PlayerComponent(int id);
 public:
     void setPlayerID(int id);
-    void setSelectedWeapon(std::string selectionType);
-    void setSelectedWeaponAvailability(int weaponAvail);
+
+    void setSelectedWeapon(const std::string &selectionType);
     void addScore(int score);
 
     int getPlayerID() const;
@@ -21,18 +22,18 @@ public:
     Weapon* getSelectedWeapon() const;
     int getSelectedWeaponAvailability() const;
 
+    void accept(SerializationVisitor &visitor) override;
 private:
     int _playerID;
     int _score;
-    int _selectedWeaponAvailability;
-    std::vector<Weapon*> _weapons{};
-    Weapon* _selectedWeapon;
+    int _selectedWeaponIndex;
+    std::vector<std::unique_ptr<Weapon>> _weapons{};
 
     template<typename T, typename... Args>
     Weapon *createWeapon(Args &&... args) {
-        T *weapon = new T(std::forward<Args>(args)...);
-        _weapons.push_back(weapon);
-        return weapon;
+        std::unique_ptr<T> weapon = std::make_unique<T>(std::forward<Args>(args)...);
+        _weapons.push_back(std::move(weapon));
+        return weapon.get();
     }
 };
 

@@ -4,13 +4,14 @@
 #include "ICollideableComponent.h"
 #include "../../../../../TonicEngine/Headers/Storage/ISerializable.h"
 
-class BoxCollider: public ICollideableComponent, public ISerializable {
+class BoxCollider : public ICollideableComponent {
 public:
     int width;
     int height;
     BoxCollider();
     BoxCollider(int width, int height);
     ~BoxCollider() override;
-    std::vector<std::string> serialize() override;
+
+    void accept(SerializationVisitor &visitor) override;
 };
 #endif //PROJECT_SWA_BOXCOLLIDER_H

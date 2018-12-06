@@ -15,3 +15,7 @@ double JumpComponent::getAcceleration() const {
 void JumpComponent::setAcceleration(double acceleration) {
     _jumpAcceleration = acceleration;
 }
+
+void JumpComponent::accept(SerializationVisitor &visitor) {
+    visitor.visit("jumpAcceleratation", _jumpAcceleration);
+}

@@ -4,11 +4,12 @@
 #include "Component.h"
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
 
-class DamageableComponent: public Component, ISerializable {
+class DamageableComponent : public Component {
 
 public:
     DamageableComponent();
-    DamageableComponent(int health);
+
+    explicit DamageableComponent(int health);
     ~DamageableComponent() override;
     const int getHealth();
     const int getResistance();
@@ -16,8 +17,10 @@ public:
     void increaseHealth(int value);
     void setResistance(int value);
     void destroy();
-    const bool isAlive();
-    std::vector<std::string> serialize() override;
+
+    bool isAlive();
+
+    void accept(SerializationVisitor &visitor) override;
 private:
     int _health; // 0 - 100
     int _resistance;

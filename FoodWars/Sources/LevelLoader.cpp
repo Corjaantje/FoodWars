@@ -33,13 +33,15 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne,
         randomNum2 = rand() % spawnPoints.size();
     }
     Coordinate spawnPoint2 = spawnPoints[randomNum2];
-
-    // Spawn Location and animation interval
-
-
-    std::vector<std::unique_ptr<IShape>> spawnAnimation2;
-    spawnAnimation2.push_back(
-            std::make_unique<ShapeSprite>(48, 72, spawnPoint2.getXCoord(), spawnPoint2.getYCoord(), "PlayerG_R0.png"));
+    if(playerOne.getFaction() == Faction::RANDOM){
+        playerOne.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
+    }
+    if(playerTwo.getFaction() == Faction::RANDOM){
+        playerTwo.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
+        while(playerTwo.getFaction() == playerOne.getFaction()){
+            playerTwo.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
+        }
+    }
 
     playerOne.buildCharacterEntity(gameLevel, 1, spawnPoint1.getXCoord(), spawnPoint1.getYCoord(), true);
     playerTwo.buildCharacterEntity(gameLevel, 2, spawnPoint2.getXCoord(), spawnPoint2.getYCoord(), false);

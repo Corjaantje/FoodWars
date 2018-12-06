@@ -70,6 +70,6 @@ void CharacterBuilder::buildCharacterEntity(GameLevel &gameLevel, int playerID, 
         //TODO Add an AI component;
     }
     else{
-        entityManager->addComponentToEntity<PlayerComponent>(player, playerID);
+        entityManager->addComponentToEntity<PlayerComponent>(player, playerID, getFaction());
     }
 }

@@ -5,21 +5,24 @@
 #include <string>
 #include "Component.h"
 #include "../../../Headers/StateMachine/Misc/Weapon.h"
+#include "../../StateMachine/Misc/FactionEnum.h"
 
 class PlayerComponent : public Component {
 public:
     PlayerComponent();
-    explicit PlayerComponent(int id);
+    explicit PlayerComponent(int id, Faction faction);
 public:
     void setPlayerID(int id);
     void setSelectedWeapon(std::string selectionType);
     void setSelectedWeaponAvailability(int weaponAvail);
     void addScore(int score);
+    void setFaction(Faction faction);
 
     int getPlayerID() const;
     int getScore() const;
     Weapon* getSelectedWeapon() const;
     int getSelectedWeaponAvailability() const;
+    Faction getFaction() const;
 
 private:
     int _playerID;
@@ -27,6 +30,7 @@ private:
     int _selectedWeaponAvailability;
     std::vector<Weapon*> _weapons{};
     Weapon* _selectedWeapon;
+    Faction _faction;
 
     template<typename T, typename... Args>
     Weapon *createWeapon(Args &&... args) {

@@ -4,6 +4,7 @@
 #include "StateMachine/Misc/GameLevel.h"
 #include "StateMachine/Misc/CharacterBuilder.h"
 
+const std::string DEFAULT_XMLPATH = "./Assets/Levels/";
 class LevelLoader {
 private:
     void spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne, CharacterBuilder playerTwo);

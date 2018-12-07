@@ -81,18 +81,18 @@ void LevelLoader::replayLastLevel(GameLevel &gameLevel) {
 
 void LevelLoader::playNextLevel(GameLevel &gamelevel) {
     std::string newLevelString;
-    std::vector<string> levels = FileManager().getFiles("./Assets/Levels/", {"xml"}, true, false);
+    std::vector<string> levels = FileManager().getFiles(DEFAULT_XMLPATH, {"xml"}, true, false);
     bool loaded = false;
     for(int i=0; i < levels.size(); i++){
         if(!loaded) {
             //If there is another level around this one
-            if ("./Assets/Levels/" + levels[i] == _lastPlayedLevelPath && i != levels.size() - 1) {
-                loadLevel("./Assets/Levels/" + levels[i + 1], gamelevel, _lastPlayedCharacterOne,
+            if (DEFAULT_XMLPATH + levels[i] == _lastPlayedLevelPath && i != levels.size() - 1) {
+                loadLevel(DEFAULT_XMLPATH + levels[i + 1], gamelevel, _lastPlayedCharacterOne,
                           _lastPlayedCharacterTwo);
                 loaded = true;
                 //No level next? Wrap around.
-            } else if ("./Assets/Levels/" + levels[i] == _lastPlayedLevelPath) {
-                loadLevel("./Assets/Levels/" + levels[0], gamelevel, _lastPlayedCharacterOne, _lastPlayedCharacterTwo);
+            } else if (DEFAULT_XMLPATH + levels[i] == _lastPlayedLevelPath) {
+                loadLevel(DEFAULT_XMLPATH + levels[0], gamelevel, _lastPlayedCharacterOne, _lastPlayedCharacterTwo);
                 loaded = true;
             }
         }

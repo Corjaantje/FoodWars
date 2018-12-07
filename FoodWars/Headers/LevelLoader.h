@@ -15,6 +15,7 @@ public:
     GameLevel *loadLevel(std::string levelPath, GameLevel &gameLevel, CharacterBuilder playerOne, CharacterBuilder playerTwo);
 
     void replayLastLevel(GameLevel &gameLevel);
+    void playNextLevel(GameLevel &gamelevel);
 private:
     std::string _lastPlayedLevelPath;
     CharacterBuilder _lastPlayedCharacterOne;

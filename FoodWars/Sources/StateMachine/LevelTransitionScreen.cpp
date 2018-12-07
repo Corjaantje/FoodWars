@@ -43,7 +43,9 @@ void LevelTransitionScreen::initButtons() {
         // Next Level
         createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                                   [this]() {
-
+                                      std::unique_ptr<GameLevel> gameLevel = std::make_unique<GameLevel>();
+                                      _levelManager->playNextLevel(*gameLevel);
+                                      _context->setActiveScreen(std::make_unique<GameScreen>(*_context, gameLevel));
                                   },
                                   400, 120, 600, 490,
                                   Colour{0,0,0,0})->addToRender(&_renderList);

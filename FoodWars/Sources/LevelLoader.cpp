@@ -8,6 +8,7 @@
 #include "../Headers/GameECS/Systems/StorageSystem.h"
 #include "../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
 #include "../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../TonicEngine/Headers/Storage/FileManager.h"
 
 LevelLoader::LevelLoader() = default;
 
@@ -76,4 +77,23 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne,
 
 void LevelLoader::replayLastLevel(GameLevel &gameLevel) {
     this->loadLevel(_lastPlayedLevelPath, gameLevel, _lastPlayedCharacterOne, _lastPlayedCharacterTwo);
+}
+
+void LevelLoader::playNextLevel(GameLevel &gamelevel) {
+    std::string newLevelString;
+    std::vector<string> levels = FileManager().getFiles("./Assets/Levels/", {"xml"}, true, false);
+    bool loaded = false;
+    for(int i=0; i < levels.size(); i++){
+        //If there is another level around this one
+        if(!loaded) {
+            if ("./Assets/Levels/" + levels[i] == _lastPlayedLevelPath && i != levels.size() - 1) {
+                loadLevel("./Assets/Levels/" + levels[i + 1], gamelevel, _lastPlayedCharacterOne,
+                          _lastPlayedCharacterTwo);
+                loaded = true;
+            } else if ("./Assets/Levels/" + levels[i] == _lastPlayedLevelPath) {
+                loadLevel("./Assets/Levels/" + levels[0], gamelevel, _lastPlayedCharacterOne, _lastPlayedCharacterTwo);
+                loaded = true;
+            }
+        }
+    }
 }

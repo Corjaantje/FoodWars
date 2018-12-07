@@ -8,6 +8,8 @@ const int XPOSRIGHT = 800;
 const int YPOSTOP[] {350, 510, 670};
 const int YPOSMID = 510;
 const int YPOSBOT = 670;
+const int XPOSOPTIONS[] {680, 940};
+const int YPOSOPTIONS[] {310, 435, 560};
 
 class HighscoreScreen : public IScreen, public IObserver<KeyEvent> {
 public:

@@ -11,17 +11,18 @@
 #include "Misc/Coordinate.h"
 #include "Misc/GameLevel.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/FlashingTextButton.h"
+#include <unordered_map>
 
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
     std::unique_ptr<GameLevel> _gameLevel;
     EntityManager *_entityManager;
     std::vector<std::unique_ptr<IBaseSystem>> _systems;
-    DrawSystem* drawSystem = nullptr;
-    ShootingSystem* _shootingSystem;
+    TurnSystem* _turnSystem;
     FlashingTextButton* nextButton;
     int playerOne;
     int playerTwo;
+    std::unordered_map<KEY, std::function<void()>> _keyMap;
 public:
     GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &gameLevel);
     ~GameScreen();

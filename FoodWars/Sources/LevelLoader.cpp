@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "../Headers/LevelLoader.h"
 #include "../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 #include "../Headers/GameECS/Components/MoveComponent.h"
@@ -11,17 +13,16 @@ LevelLoader::LevelLoader() = default;
 
 LevelLoader::~LevelLoader() = default;
 
-GameLevel *LevelLoader::loadLevel(int level, GameLevel &gameLevel, CharacterBuilder playerOne, CharacterBuilder playerTwo) {
+GameLevel *LevelLoader::loadLevel(std::string levelPath, GameLevel &gameLevel, CharacterBuilder playerOne, CharacterBuilder playerTwo) {
     StorageSystem storage{};
-    std::string levelXML = "Assets/Levels/Level" + std::to_string(level) + ".xml";
-    storage.loadWorld(gameLevel, levelXML);
+    storage.loadWorld(gameLevel, levelPath);
     if (gameLevel.getSpawnPoints().empty()) {
         return nullptr;
     }
     spawnPlayers(gameLevel,playerOne, playerTwo);
 
     //Set stats for selected levels
-    _lastPlayedLevel = level;
+    _lastPlayedLevelPath = levelPath;
     _lastPlayedCharacterOne = playerOne;
     _lastPlayedCharacterTwo = playerTwo;
 
@@ -74,5 +75,5 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne,
 }
 
 void LevelLoader::replayLastLevel(GameLevel &gameLevel) {
-    this->loadLevel(_lastPlayedLevel, gameLevel, _lastPlayedCharacterOne, _lastPlayedCharacterTwo);
+    this->loadLevel(_lastPlayedLevelPath, gameLevel, _lastPlayedCharacterOne, _lastPlayedCharacterTwo);
 }

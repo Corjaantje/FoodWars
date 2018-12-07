@@ -1,40 +1,58 @@
 #include "../../Headers/StateMachine/LevelTransitionScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
-#include "../../Headers/StateMachine/UpgradesScreen.h"
 
-LevelTransitionScreen::LevelTransitionScreen(ScreenStateManager& context) : IScreen(context) {
-    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"",
-            [c = _context]() {
-                c->setActiveScreen<MainMenuScreen>();
-            },
-            375, 113, 613, 544)->addToRender(&_renderList);
-
-    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"",
-            [c = _context, this]()
-            {
-                //c->setActiveScreen<UpgradesScreen>();
-                //((std::static_pointer_cast<UpgradesScreen>( c->getCurrentState())->setPreviousScreen(getScreenName())));
-            },
-            375, 113, 611, 420)->addToRender(&_renderList);
+LevelTransitionScreen::LevelTransitionScreen(ScreenStateManager &context, bool playerOneLost, bool playerTwoLost, int scorePlayerOne, int scorePlayerTwo) : IScreen(context),
+        mouseEventObservable(&_inputFacade->getMouseEventObservable()) {
+        keyEventObservable = &_inputFacade->getKeyEventObservable();
+        keyEventObservable->IObservable<KeyEvent>::registerObserver(this);
+        setWallpaper(playerOneLost, playerTwoLost);
 }
 
-LevelTransitionScreen::~LevelTransitionScreen() = default;
+void LevelTransitionScreen::setWallpaper(bool playerOneLost, bool playerTwoLost) {
+        std::string wallpaperString = "ScreenBlank.png";
+        if(playerOneLost && playerTwoLost){
+                wallpaperString = "ScreenTransitionDraw.png";
+        }
+        else if(playerOneLost){
+                wallpaperString = "ScreenTransitionLossVic.png";
+        }
+        else if(playerTwoLost){
+                wallpaperString = "ScreenTransitionVicLoss.png";
+        }
+        auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, wallpaperString);
+        wallpaper->layer = 0;
+        wallpaper->addToRender(&_renderList);
+}
 
-void LevelTransitionScreen::update(double deltaTime) {
-    _visualFacade->render(_renderList);
-    _audioFacade->playMusic("menu");
-    _inputFacade->pollEvents();
+LevelTransitionScreen::~LevelTransitionScreen() {
+
+}
+
+void LevelTransitionScreen::initButtons() {
+        // Retry Level
+        createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "settings.png",
+                                  [this]() {
+
+                                  },
+                                  120, 120, 1020, 625,
+                                  Colour{0,0,0,0})->addToRender(&_renderList);
 }
 
 void LevelTransitionScreen::update(const KeyEvent& event){
-    if(event.getKey() == KEY::KEY_ESCAPE)
-    {
-        _context->setActiveScreen<MainMenuScreen>();
-    }
+        if(event.getKey() == KEY::KEY_ESCAPE)
+        {
+                _context->setActiveScreen<MainMenuScreen>();
+        }
 }
 
-void LevelTransitionScreen::setScore(int score) {
-    createShape<ShapeText>(790, 75, std::to_string(score), 12, 95, 50, Colour{0,0,0,0})->addToRender(&_renderList);
+void LevelTransitionScreen::update(double deltaTime) {
+        _audioFacade->playMusic("menu");
+        _inputFacade->pollEvents();
+        _renderList.clearLists();
+
+        for (const auto &iterator: _sprites) {
+            iterator->addToRender(&_renderList);
+        }
+
+        _visualFacade->render(_renderList);
 }
-
-

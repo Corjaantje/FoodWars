@@ -19,7 +19,6 @@ private:
 
     int _currentIndex;
     std::vector<std::vector<std::string>> _levelScores;
-    std::vector<std::string> _highScores;
     MouseEventObservable* mouseEventObservable;
     std::vector<ShapeText*> _visualScores;
 };

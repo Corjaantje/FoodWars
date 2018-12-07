@@ -14,5 +14,10 @@ public:
 
     GameLevel *loadLevel(int level, GameLevel &gameLevel, CharacterBuilder playerOne, CharacterBuilder playerTwo);
 
+    void replayLastLevel(GameLevel &gameLevel);
+private:
+    int _lastPlayedLevel;
+    CharacterBuilder _lastPlayedCharacterOne;
+    CharacterBuilder _lastPlayedCharacterTwo;
 };
 #endif //PROJECT_SWA_LEVELMANAGER_H

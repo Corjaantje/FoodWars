@@ -6,6 +6,7 @@ LevelTransitionScreen::LevelTransitionScreen(ScreenStateManager &context, bool p
         keyEventObservable = &_inputFacade->getKeyEventObservable();
         keyEventObservable->IObservable<KeyEvent>::registerObserver(this);
         setWallpaper(playerOneLost, playerTwoLost);
+        initButtons();
 }
 
 void LevelTransitionScreen::setWallpaper(bool playerOneLost, bool playerTwoLost) {
@@ -30,11 +31,29 @@ LevelTransitionScreen::~LevelTransitionScreen() {
 
 void LevelTransitionScreen::initButtons() {
         // Retry Level
-        createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "settings.png",
+        createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
+                                  [this]() {
+                                      std::unique_ptr<GameLevel> gameLevel = std::make_unique<GameLevel>();
+                                      _levelManager->replayLastLevel(*gameLevel);
+                                      _context->setActiveScreen(std::make_unique<GameScreen>(*_context, gameLevel));
+                                  },
+                                  400, 120, 600, 350,
+                                  Colour{0,0,0,0})->addToRender(&_renderList);
+
+        // Next Level
+        createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                                   [this]() {
 
                                   },
-                                  120, 120, 1020, 625,
+                                  400, 120, 600, 490,
+                                  Colour{0,0,0,0})->addToRender(&_renderList);
+
+        // Quit Level
+        createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
+                                  [this]() {
+                                      _context->setActiveScreen<MainMenuScreen>();
+                                  },
+                                  400, 120, 600, 630,
                                   Colour{0,0,0,0})->addToRender(&_renderList);
 }
 

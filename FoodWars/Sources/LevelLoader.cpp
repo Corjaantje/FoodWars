@@ -19,6 +19,12 @@ GameLevel *LevelLoader::loadLevel(int level, GameLevel &gameLevel, CharacterBuil
         return nullptr;
     }
     spawnPlayers(gameLevel,playerOne, playerTwo);
+
+    //Set stats for selected levels
+    _lastPlayedLevel = level;
+    _lastPlayedCharacterOne = playerOne;
+    _lastPlayedCharacterTwo = playerTwo;
+
     // Return gameLevel
     return &gameLevel;
 }
@@ -65,4 +71,8 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne,
     int boundBottom = entityManager->createEntity();
     entityManager->addComponentToEntity<BoxCollider>(boundBottom, 1600, 1600);
     entityManager->addComponentToEntity<PositionComponent>(boundBottom, 0, 900);
+}
+
+void LevelLoader::replayLastLevel(GameLevel &gameLevel) {
+    this->loadLevel(_lastPlayedLevel, gameLevel, _lastPlayedCharacterOne, _lastPlayedCharacterTwo);
 }

@@ -45,5 +45,36 @@ void TurnSystem::switchTurn() {
     }
 }
 
+void TurnSystem::resetCurrentTime() {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if (iterator.second->isMyTurn()) {
+            iterator.second->setRemainingTime(30);
+            break;
+        }
+    }
+}
+
+int TurnSystem::getCurrentPlayerID() const {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if (iterator.second->isMyTurn()) {
+            return iterator.first;
+        }
+    }
+}
+
+void TurnSystem::resetCurrentEnergy() {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if (iterator.second->isMyTurn()) {
+            iterator.second->setEnergy(100);
+            break;
+        }
+    }
+}
+
+double TurnSystem::getCurrentPlayerEnergy() const {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>())
+        if (iterator.second->isMyTurn()) return iterator.second->getEnergy();
+}
+
 
 

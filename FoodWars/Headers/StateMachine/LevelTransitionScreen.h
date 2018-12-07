@@ -8,15 +8,13 @@
 class LevelTransitionScreen : public IScreen, public IObserver<KeyEvent>{
 public:
     LevelTransitionScreen(ScreenStateManager& context, bool playerOneLost, bool playerTwoLos, int scorePlayerOne, int scorePlayerTwo);
-    ~LevelTransitionScreen();
+    ~LevelTransitionScreen() = default;
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;
 private:
     void setWallpaper(bool playerOneLost, bool playerTwoLost);
     void initButtons();
 private:
-    MouseEventObservable* mouseEventObservable;
-    KeyEventObservable* keyEventObservable;
     int _scorePlayerOne;
     int _scorePlayerTwo;
 };

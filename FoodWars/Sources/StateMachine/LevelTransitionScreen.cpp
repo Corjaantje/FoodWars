@@ -1,10 +1,8 @@
 #include "../../Headers/StateMachine/LevelTransitionScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
-LevelTransitionScreen::LevelTransitionScreen(ScreenStateManager &context, bool playerOneLost, bool playerTwoLost, int scorePlayerOne, int scorePlayerTwo) : IScreen(context),
-        mouseEventObservable(&_inputFacade->getMouseEventObservable()) {
-        keyEventObservable = &_inputFacade->getKeyEventObservable();
-        keyEventObservable->IObservable<KeyEvent>::registerObserver(this);
+LevelTransitionScreen::LevelTransitionScreen(ScreenStateManager &context, bool playerOneLost, bool playerTwoLost, int scorePlayerOne, int scorePlayerTwo) : IScreen(context){
+        _inputFacade->getKeyEventObservable().IObservable<KeyEvent>::registerObserver(this);
         _scorePlayerOne = scorePlayerOne;
         _scorePlayerTwo = scorePlayerTwo;
         setWallpaper(playerOneLost, playerTwoLost);
@@ -25,10 +23,6 @@ void LevelTransitionScreen::setWallpaper(bool playerOneLost, bool playerTwoLost)
         auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, wallpaperString);
         wallpaper->layer = 0;
         wallpaper->addToRender(&_renderList);
-}
-
-LevelTransitionScreen::~LevelTransitionScreen() {
-
 }
 
 void LevelTransitionScreen::initButtons() {

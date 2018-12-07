@@ -5,12 +5,16 @@
 #include "../GameECS/Components/MoveComponent.h"
 #include "../GameECS/Components/TurnComponent.h"
 
-class ScavengeState : public State {
+class ScavengeState : public State, public CollisionEventHandler {
 public:
-    ScavengeState(EntityManager* entityManager, std::shared_ptr<AudioFacade> audioFacade, int entityId);
+    ScavengeState(EntityManager& entityManager, int entityId, AISystem& context);
     ~ScavengeState() override = default;
 
     void enter() override;
+
+    void handleCollisionEvent(const CollisionEvent &collisionEvent) override;
+
+    bool canHandle(const CollisionEvent &collisionEvent) override;
 
     void execute(double dt) override;
 

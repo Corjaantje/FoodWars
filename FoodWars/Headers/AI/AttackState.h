@@ -3,9 +3,9 @@
 
 #include "State.h"
 
-class AttackState : public State {
+class AttackState : public State, public CollisionEventHandler {
 public:
-    AttackState(EntityManager* entityManager, std::shared_ptr<AudioFacade> audioFacade, int entityId);
+    AttackState(EntityManager& entityManager, int entityId, AISystem& context, IObservable<CollisionEvent>& collisionEventObservable);
 
     ~AttackState() override = default;
 

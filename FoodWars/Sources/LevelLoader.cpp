@@ -80,7 +80,7 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel) {
     // entityManager->addComponentToEntity<PlayerComponent>(player, 2);
     //TODO: AI Test
     int difficulty = 1;
-    entityManager->addComponentToEntity<AIComponent>(player, 2, difficulty);
+    entityManager->addComponentToEntity<AIComponent>(player, 2, difficulty, player);
 
     int boundLeft = entityManager->createEntity();
     entityManager->addComponentToEntity<BoxCollider>(boundLeft, 900, 900);

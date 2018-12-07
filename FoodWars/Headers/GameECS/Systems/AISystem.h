@@ -15,10 +15,11 @@
 #include "../../../Headers/GameECS/Components/JumpComponent.h"
 #include "../../../../TonicEngine/Headers/Audio/AudioFacade.h"
 
-class AISystem : public IBaseSystem, public CollisionEventHandler{
+class AISystem : public IBaseSystem{
 private:
     EntityManager* _entityManager;
     std::shared_ptr<AudioFacade> _audioFacade;
+    IObservable<CollisionEvent>& _collisionEventObservable;
 
     void jump(int entityId, TurnComponent& turnComponent);
     void walkLeft(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);
@@ -27,11 +28,11 @@ public:
     AISystem(EntityManager &entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable);
     ~AISystem() override;
     void update(double dt) override;
-    bool canHandle(const CollisionEvent& collisionEvent) override;
-    void handleCollisionEvent(const CollisionEvent& collisionEvent) override;
-    int getDistanceToEnemy(int entityId);
-    int calculateDistance(int entityOne, int entityTwo);
-    int countObstructingBlocks(PositionComponent* posOne, PositionComponent* posTwo);
+    IObservable<CollisionEvent>& getCollisionEventObservable();
+
+    //int getDistanceToEnemy(int entityId);
+    //int calculateDistance(int entityOne, int entityTwo);
+    //int countObstructingBlocks(PositionComponent* posOne, PositionComponent* posTwo);
 };
 
 

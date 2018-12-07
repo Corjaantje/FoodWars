@@ -7,7 +7,7 @@
 
 class IdleState : public State {
 public:
-    IdleState(EntityManager* entityManager, std::shared_ptr<AudioFacade> audioFacade, int entityId);
+    IdleState(EntityManager& entityManager, int entityId, AISystem& context);
 
     ~IdleState() override = default;
 

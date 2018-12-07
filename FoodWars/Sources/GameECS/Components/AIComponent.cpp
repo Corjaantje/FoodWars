@@ -1,6 +1,6 @@
 #include "../../../Headers/GameECS/Components/AIComponent.h"
 
-AIComponent::AIComponent(int id, int difficulty) : PlayerComponent(id), _difficulty(difficulty) {
+AIComponent::AIComponent(int id, int difficulty, int entityId) : PlayerComponent(id), _difficulty(difficulty), _currentState(nullptr) {
 
 }
 
@@ -14,6 +14,11 @@ void AIComponent::setCurrentState(std::unique_ptr<State> state) {
     _currentState = std::move(state);
 }
 
+State* AIComponent::getCurrentState() const{
+    return _currentState.get();
+}
+
 void AIComponent::update(double dt) {
     if (_currentState) _currentState->execute(dt);
 }
+

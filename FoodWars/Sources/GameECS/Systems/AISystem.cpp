@@ -4,8 +4,11 @@
 #include "../../../Headers/AI/IdleState.h"
 
 AISystem::AISystem(EntityManager &entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable)
-                    : _entityManager(&entityManager), CollisionEventHandler(collisionEventObservable){
-    _audioFacade = audioFacade;
+                                        : _entityManager(&entityManager), _collisionEventObservable(collisionEventObservable), _audioFacade(audioFacade){
+    for(const auto iterator: _entityManager->getAllEntitiesWithComponent<AIComponent>())
+    {
+        iterator.second->setCurrentState(std::make_unique<IdleState>(*_entityManager, iterator.first, *this));
+    }
 }
 
 AISystem::~AISystem() = default;
@@ -17,8 +20,10 @@ void AISystem::update(double dt) {
         auto turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(iterator.first);
         auto moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
 
-        if (!turnComponent->isMyTurn()) {
-            iterator.second->setCurrentState(std::make_unique<IdleState>(_entityManager, _audioFacade, iterator.first));
+        iterator.second->update(dt);
+
+        /*if (!turnComponent->isMyTurn()) {
+            iterator.second->
             iterator.second->update(dt);
         }
         else {
@@ -27,7 +32,7 @@ void AISystem::update(double dt) {
 
             // Scavenge
             // TODO: Check for nearby items
-            iterator.second->setCurrentState(std::make_unique<ScavengeState>(_entityManager, _audioFacade, iterator.first));
+            iterator.second->setCurrentState(std::make_unique<ScavengeState>(_entityManager, _audioFacade, iterator.first, _collisionEventObservable));
             iterator.second->update(dt);
 
             // Attack
@@ -35,7 +40,7 @@ void AISystem::update(double dt) {
 
             // Flee
             // TODO: if weaker than enemy
-        }
+        }*/
             //jump(iterator.first, *turnComponent);
             //walkRight(*moveComponent, *turnComponent, dt);
             //walkLeft(*moveComponent, *turnComponent, dt);
@@ -67,8 +72,13 @@ void AISystem::update(double dt) {
     }
 }
 
+IObservable<CollisionEvent> &AISystem::getCollisionEventObservable() {
+    return _collisionEventObservable;
+}
 
 
+
+/*
 int AISystem::getDistanceToEnemy(int entityId) {
     for(const auto &iterator : _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
         return calculateDistance(entityId, iterator.first);
@@ -105,20 +115,11 @@ int AISystem::countObstructingBlocks(PositionComponent* posOne, PositionComponen
         }
     }
     // print entity Id's
-    /*for(int i : obstructingBlocks){
+    */
+/*for(int i : obstructingBlocks){
         std::cout << "entityId: " << i << std::endl;
-    }*/
+    }*//*
+
 
     return 0;
-}
-
-bool AISystem::canHandle(const CollisionEvent &collisionEvent) {
-    // met AIcomponent?
-    // zonder damagingcomponent
-
-    return false;
-}
-
-void AISystem::handleCollisionEvent(const CollisionEvent &collisionEvent) {
-    // what to do now
-}
+}*/

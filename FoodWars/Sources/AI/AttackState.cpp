@@ -1,9 +1,7 @@
+#include <utility>
 #include <iostream>
 #include "../../Headers/AI/AttackState.h"
-
-AttackState::AttackState(EntityManager* entityManager, std::shared_ptr<AudioFacade> audioFacade, int entityId) : State(entityManager, std::move(audioFacade), entityId) {
-
-}
+#include "../../Headers/GameECS/Systems/AISystem.h"
 
 void AttackState::enter() {
     std::cout << "Entering attack state" << std::endl;
@@ -14,5 +12,13 @@ void AttackState::execute(double dt) {
 }
 
 void AttackState::exit() {
+
+}
+
+AttackState::AttackState(EntityManager &entityManager, int entityId, AISystem &context,
+                         IObservable<CollisionEvent> &collisionEventObservable) : State(entityManager,
+                                                                                        entityId,
+                                                                                        context),
+                                                                                  CollisionEventHandler(context.getCollisionEventObservable()) {
 
 }

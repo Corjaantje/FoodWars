@@ -1,9 +1,7 @@
+#include <utility>
 #include <iostream>
 #include "../../Headers/AI/FleeState.h"
-
-FleeState::FleeState(EntityManager* entityManager, std::shared_ptr<AudioFacade> audioFacade, int entityId) : State(entityManager, std::move(audioFacade), entityId) {
-
-}
+#include "../../Headers/GameECS/Systems/AISystem.h"
 
 void FleeState::enter() {
     std::cout << "Entering flee state" << std::endl;
@@ -14,5 +12,13 @@ void FleeState::execute(double dt) {
 }
 
 void FleeState::exit() {
+
+}
+
+FleeState::FleeState(EntityManager &entityManager, int entityId, AISystem &context,
+                     IObservable<CollisionEvent> &collisionEventObservable) : State(entityManager,
+                                                                                    entityId,
+                                                                                    context),
+                                                                              CollisionEventHandler(context.getCollisionEventObservable()) {
 
 }

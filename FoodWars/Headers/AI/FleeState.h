@@ -4,9 +4,9 @@
 
 #include "State.h"
 
-class FleeState : public State {
+class FleeState : public State, public CollisionEventHandler {
 public:
-    FleeState(EntityManager* entityManager, std::shared_ptr<AudioFacade> audioFacade, int entityId);
+    FleeState(EntityManager& entityManager, int entityId, AISystem& context, IObservable<CollisionEvent>& collisionEventObservable);
 
     ~FleeState() override = default;
 

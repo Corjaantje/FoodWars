@@ -1,19 +1,19 @@
+#include <utility>
+
 #include "../../Headers/StateMachine/CharacterSelectionScreen.h"
 #include "../../Headers/StateMachine/LevelSelectionScreen.h"
 #include "../../Headers/StateMachine/LevelCreationScreen.h"
 #include "../../Headers/StateMachine/GameScreen.h"
 
-CharacterSelectionScreen::CharacterSelectionScreen(ScreenStateManager &context, int levelIterator ) : IScreen(context) {
+CharacterSelectionScreen::CharacterSelectionScreen(ScreenStateManager &context, std::string selectedLevel) : IScreen(context) {
     _inputFacade->getKeyEventObservable().IObservable<KeyEvent>::registerObserver(this);
     auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenCharSelection.png");
     wallpaper->layer = 0;
     wallpaper->addToRender(&_renderList);
 
-    _selectedLevelIterator = levelIterator;
+    _selectedLevel = std::move(selectedLevel);
     initImages();
     initButtons();
-//    _gamelevel = std::make_unique<GameLevel>();
-//    _levelManager->loadLevel(levelIterator, *_gamelevel);
 
     _selectedDifficulty =  createShape<ShapeText>(1300, 135, _difficultyMap[_playerTwoBuilder.getDifficulty()], _difficultyMap[_playerTwoBuilder.getDifficulty()].length()*20, 160, 40, Colour(0, 0, 0, 0));
     _selectedDifficulty->addToRender(&_renderList);
@@ -143,28 +143,28 @@ void CharacterSelectionScreen::initButtons() {
                                   //Force an update to render the loading level.
                                   this->update(0);
                                   std::unique_ptr<GameLevel> gameLevel = std::make_unique<GameLevel>();
-                                  _levelManager->loadLevel(_selectedLevelIterator, *gameLevel, _playerOneBuilder, _playerTwoBuilder);
+                                  _levelManager->loadLevel(_selectedLevel, *gameLevel, _playerOneBuilder, _playerTwoBuilder);
                                   _context->setActiveScreen(std::make_unique<GameScreen>(*_context, gameLevel));
                               },
                               450, 120, 540, 350,
                               Colour{0,0,0,0})->addToRender(&_renderList);
 
     //Toggle AI
-    togglePlayerTwoBot = createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "stateOff.png",
+    _togglePlayerTwoBot = createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "stateOff.png",
                                                  [this]() {
                                                      bool state = _playerTwoBuilder.getIsBot();
                                                      if (!state) {
                                                          _playerTwoBuilder.setIsBot(true);
                                                          _playerTwoBuilder.setFaction(Faction::RANDOM);
-                                                         togglePlayerTwoBot->changeImageURL(std::string("stateOn.png"));
+                                                         _togglePlayerTwoBot->changeImageURL(std::string("stateOn.png"));
                                                      } else {
                                                          _playerTwoBuilder.setIsBot(false);
-                                                         togglePlayerTwoBot->changeImageURL(std::string("stateOff.png"));
+                                                         _togglePlayerTwoBot->changeImageURL(std::string("stateOff.png"));
                                                      }
                                                  },
                                                  50, 50, 1515, 10,
                                                  Colour{0, 0, 0, 0});
-    togglePlayerTwoBot->addToRender(&_renderList);
+    _togglePlayerTwoBot->addToRender(&_renderList);
 }
 
 void CharacterSelectionScreen::initImages() {

@@ -6,9 +6,7 @@
 #include "../../Headers/StateMachine/PauseScreen.h"
 #include "../../Headers/GameECS/Systems/AnimationSystem.h"
 #include "../../Headers/GameECS/Systems/DamageableSystem.h"
-#include "../../Headers/StateMachine/DrawTransitionScreen.h"
-#include "../../Headers/StateMachine/WinTransitionScreen.h"
-#include "../../Headers/StateMachine/LoseTransitionScreen.h"
+#include "../../Headers/StateMachine/LevelTransitionScreen.h"
 
 
 GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &gameLevel) :
@@ -97,18 +95,21 @@ GameScreen::~GameScreen() = default;
 void GameScreen::update(double deltaTime) {
     if (_turnSystem->getCurrentPlayerEnergy() <= 1) nextButton->setFlashing(true);
     std::map<int, TurnComponent *> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
-    if(_entitiesWithTurnComponent.size() == 1)
-    {
-        if (_entityManager->exists(playerOne)) {
-            _context->setActiveScreen(std::make_unique<WinTransitionScreen>(*_context));
+    std::map<int, PlayerComponent *> _entitiesWithPlayerComponent = _entityManager->getAllEntitiesWithComponent<PlayerComponent>();
+    bool playerOneAlive = true;
+    bool playerTwoAlive = true;
+    for(auto const &ent : _entitiesWithPlayerComponent) {
+        if(ent.second->getPlayerID() == 1){
+            playerOneAlive = ent.second->getIsAlive();
         }
-        else {
-            _context->setActiveScreen(std::make_unique<LoseTransitionScreen>(*_context));
+        if(ent.second->getPlayerID() == 2){
+            playerTwoAlive = ent.second->getIsAlive();
         }
-        //((std::static_pointer_cast<LevelTransitionScreen>(_context->getCurrentState())->setScore(100)));
-    } else if(_entitiesWithTurnComponent.empty()) {
-        _context->setActiveScreen(std::make_unique<DrawTransitionScreen>(*_context));
-        //((std::static_pointer_cast<LevelTransitionScreen>(_context->getCurrentState())->setScore(100)));
+    }
+    //Either of the 2 died
+    if(!playerOneAlive || !playerTwoAlive){
+        //TODO Add real scores to constructor
+        _context->setActiveScreen(std::make_unique<LevelTransitionScreen>(*_context, !playerOneAlive, !playerTwoAlive, 500, 500));
     }
     _audioFacade->playMusic(_gameLevel->getBackgroundMusic().c_str());
     _inputFacade->pollEvents();

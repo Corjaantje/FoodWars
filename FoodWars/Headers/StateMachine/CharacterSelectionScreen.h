@@ -8,7 +8,7 @@
 
 class CharacterSelectionScreen : public IScreen, public IObserver<KeyEvent> {
 public:
-    explicit CharacterSelectionScreen(ScreenStateManager& context, int levelIterator);
+    explicit CharacterSelectionScreen(ScreenStateManager& context, std::string selectedLevel);
     ~CharacterSelectionScreen() = default;
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;
@@ -17,10 +17,10 @@ private:
     void initImages();
     void setFactionColor(CharacterBuilder &builder, Faction faction);
 private:
-    int _selectedLevelIterator;
+    std::string _selectedLevel;
     CharacterBuilder _playerOneBuilder;
     CharacterBuilder _playerTwoBuilder;
-    SpriteButton* togglePlayerTwoBot = nullptr;
+    SpriteButton* _togglePlayerTwoBot = nullptr;
     ShapeSprite* _leftPreview = nullptr;
     ShapeSprite* _rightPreview = nullptr;
     ShapeText* _selectedDifficulty = nullptr;

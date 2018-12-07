@@ -17,6 +17,8 @@ private:
 private:
     MouseEventObservable* mouseEventObservable;
     KeyEventObservable* keyEventObservable;
+    int _scorePlayerOne;
+    int _scorePlayerTwo;
 };
 
 

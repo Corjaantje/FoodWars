@@ -5,6 +5,8 @@ LevelTransitionScreen::LevelTransitionScreen(ScreenStateManager &context, bool p
         mouseEventObservable(&_inputFacade->getMouseEventObservable()) {
         keyEventObservable = &_inputFacade->getKeyEventObservable();
         keyEventObservable->IObservable<KeyEvent>::registerObserver(this);
+        _scorePlayerOne = scorePlayerOne;
+        _scorePlayerTwo = scorePlayerTwo;
         setWallpaper(playerOneLost, playerTwoLost);
         initButtons();
 }
@@ -33,6 +35,9 @@ void LevelTransitionScreen::initButtons() {
         // Retry Level
         createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                                   [this]() {
+                                      createShape<ShapeText>(650, 250, "Loading Level...", 0, 340, 45, Colour(255, 255, 255, 0))->addToRender(&_renderList);
+                                      //Force an update to render the loading level.
+                                      this->update(0);
                                       std::unique_ptr<GameLevel> gameLevel = std::make_unique<GameLevel>();
                                       _levelManager->replayLastLevel(*gameLevel);
                                       _context->setActiveScreen(std::make_unique<GameScreen>(*_context, gameLevel));
@@ -43,6 +48,9 @@ void LevelTransitionScreen::initButtons() {
         // Next Level
         createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                                   [this]() {
+                                      createShape<ShapeText>(650, 250, "Loading Level...", 0, 340, 45, Colour(255, 255, 255, 0))->addToRender(&_renderList);
+                                      //Force an update to render the loading level.
+                                      this->update(0);
                                       std::unique_ptr<GameLevel> gameLevel = std::make_unique<GameLevel>();
                                       _levelManager->playNextLevel(*gameLevel);
                                       _context->setActiveScreen(std::make_unique<GameScreen>(*_context, gameLevel));
@@ -57,6 +65,9 @@ void LevelTransitionScreen::initButtons() {
                                   },
                                   400, 120, 600, 630,
                                   Colour{0,0,0,0})->addToRender(&_renderList);
+
+        createShape<ShapeText>(300, 315,  std::to_string(_scorePlayerOne), 0, 25*std::to_string(_scorePlayerOne).size(), 45, Colour(255, 255, 255, 0))->addToRender(&_renderList);
+        createShape<ShapeText>(1220, 315,  std::to_string(_scorePlayerTwo), 0, 25*std::to_string(_scorePlayerTwo).size(), 45, Colour(255, 255, 255, 0))->addToRender(&_renderList);
 }
 
 void LevelTransitionScreen::update(const KeyEvent& event){

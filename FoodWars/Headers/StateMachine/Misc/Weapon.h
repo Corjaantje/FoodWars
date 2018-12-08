@@ -6,6 +6,7 @@
 
 class Weapon : public SerializationReceiver {
 public:
+    Weapon();
     Weapon(const std::string &imageUrl, int ammo);
     ~Weapon() = default;
 public:

@@ -2,6 +2,10 @@
 
 #include "../../../Headers/StateMachine/Misc/Weapon.h"
 
+Weapon::Weapon() : Weapon("", 0) {
+
+}
+
 Weapon::Weapon(const std::string &imageUrl, int ammo) : _imageUrl(imageUrl), _ammo(ammo) {
 
 }

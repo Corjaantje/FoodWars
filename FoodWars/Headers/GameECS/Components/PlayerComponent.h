@@ -23,6 +23,9 @@ public:
     int getSelectedWeaponAvailability() const;
 
     void accept(SerializationVisitor &visitor) override;
+
+    void accept(DeserializeVisitor &visitor) override;
+
 private:
     int _playerID;
     int _score;

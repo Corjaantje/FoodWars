@@ -1,5 +1,5 @@
 #include <utility>
-
+#include <algorithm>
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 
 PlayerComponent::PlayerComponent() : PlayerComponent(0) {
@@ -52,9 +52,25 @@ int PlayerComponent::getSelectedWeaponAvailability() const {
 
 void PlayerComponent::accept(SerializationVisitor &visitor) {
     visitor.visit("playerId", _playerID);
-    for (const auto &weapon : _weapons) {
-        visitor.visit("weapon", *weapon);
-    }
+    std::vector<SerializationReceiver *> weapons;
+    std::transform(_weapons.begin(), _weapons.end(), std::back_inserter(weapons),
+                   [](std::unique_ptr<Weapon> &weaponPtr) {
+                       return weaponPtr.get();
+                   });
+    visitor.visit("weapons", weapons);
+    visitor.visit("selectedWeaponIndex", _selectedWeaponIndex);
+    visitor.visit("score", _score);
+}
+
+void PlayerComponent::accept(DeserializeVisitor &visitor) {
+    visitor.visit("playerId", _playerID);
+    std::vector<SerializationReceiver *> weapons;
+    visitor.visit("weapons", weapons, []() {
+        return new Weapon{};
+    });
+    std::transform(weapons.begin(), weapons.end(), std::back_inserter(_weapons), [](SerializationReceiver *weaponPtr) {
+        return std::unique_ptr<Weapon>(static_cast<Weapon *>(weaponPtr));
+    });
     visitor.visit("selectedWeaponIndex", _selectedWeaponIndex);
     visitor.visit("score", _score);
 }

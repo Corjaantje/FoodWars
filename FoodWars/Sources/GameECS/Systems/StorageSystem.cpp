@@ -44,7 +44,7 @@ void StorageSystem::addComponentTypeOf(std::string compName, map<int, MyNode> &f
 void StorageSystem::addDrawables(MyDocument &myDoc, std::map<int, DrawableComponent *> toSave,
                                  vector<MyNode *> &existingIDNodes, std::map<int, int> &nodeLocations) {
     MyNode rootNode{myDoc.GetRoot()};
-    for (auto const &drawComp : toSave) {
+    /*for (auto const &drawComp : toSave) {
         MyNode *IDNode = new MyNode{"id", nullptr};
         if (nodeLocations.count(drawComp.first)) {
             delete IDNode;
@@ -76,14 +76,14 @@ void StorageSystem::addDrawables(MyDocument &myDoc, std::map<int, DrawableCompon
             existingIDNodes.push_back(IDNode);
             nodeLocations.insert(std::make_pair(drawComp.first, existingIDNodes.size() - 1));
         }
-    }
+    }*/
 
 }
 
 void StorageSystem::addGravity(MyDocument &myDoc, std::map<int, GravityComponent *> toSave,
                                vector<MyNode *> &existingIDNodes, std::map<int, int> &nodeLocations) {
     MyNode rootNode{myDoc.GetRoot()};
-    for (auto const &gravComp : toSave) {
+    /*for (auto const &gravComp : toSave) {
         MyNode *IDNode = new MyNode{"id", nullptr};
         if (nodeLocations.count(gravComp.first)) {
             delete IDNode;
@@ -111,13 +111,13 @@ void StorageSystem::addGravity(MyDocument &myDoc, std::map<int, GravityComponent
             existingIDNodes.push_back(IDNode);
             nodeLocations.insert(std::make_pair(gravComp.first, existingIDNodes.size() - 1));
         }
-    }
+    }*/
 }
 
 void StorageSystem::addMove(MyDocument &myDoc, std::map<int, MoveComponent *> toSave, vector<MyNode *> &existingIDNodes,
                             std::map<int, int> &nodeLocations) {
     MyNode rootNode{myDoc.GetRoot()};
-    for (auto const &moveComp : toSave) {
+    /*for (auto const &moveComp : toSave) {
         MyNode *IDNode = new MyNode{"id", nullptr};
         if (nodeLocations.count(moveComp.first)) {
             delete IDNode;
@@ -147,13 +147,13 @@ void StorageSystem::addMove(MyDocument &myDoc, std::map<int, MoveComponent *> to
             existingIDNodes.push_back(IDNode);
             nodeLocations.insert(std::make_pair(moveComp.first, existingIDNodes.size() - 1));
         }
-    }
+    }*/
 }
 
 void StorageSystem::addPosition(MyDocument &myDoc, std::map<int, PositionComponent *> toSave,
                                 vector<MyNode *> &existingIDNodes, std::map<int, int> &nodeLocations) {
     MyNode rootNode{myDoc.GetRoot()};
-    for (auto const &posComp : toSave) {
+    /*for (auto const &posComp : toSave) {
         MyNode *IDNode = new MyNode{"id", nullptr};
         if (posComp.second != nullptr) {
             if (nodeLocations.count(posComp.first)) {
@@ -185,14 +185,14 @@ void StorageSystem::addPosition(MyDocument &myDoc, std::map<int, PositionCompone
                 nodeLocations.insert(std::make_pair(posComp.first, existingIDNodes.size() - 1));
             }
         }
-    }
+    }*/
 }
 
 void
 StorageSystem::addTurns(MyDocument &myDoc, std::map<int, TurnComponent *> toSave, vector<MyNode *> &existingIDNodes,
                         std::map<int, int> &nodeLocations) {
     MyNode rootNode{myDoc.GetRoot()};
-    for (auto const &turnComp : toSave) {
+    /*for (auto const &turnComp : toSave) {
         MyNode *IDNode = new MyNode{"id", nullptr};
         if (nodeLocations.count(turnComp.first)) {
             delete IDNode;
@@ -225,13 +225,13 @@ StorageSystem::addTurns(MyDocument &myDoc, std::map<int, TurnComponent *> toSave
             existingIDNodes.push_back(IDNode);
             nodeLocations.insert(std::make_pair(turnComp.first, existingIDNodes.size() - 1));
         }
-    }
+    }*/
 }
 
 void StorageSystem::addCollideables(MyDocument &myDoc, std::map<int, BoxCollider *> toSave,
                                     vector<MyNode *> &existingIDNodes, std::map<int, int> &nodeLocations) {
     MyNode rootNode{myDoc.GetRoot()};
-    for (auto const &collideComp : toSave) {
+    /*for (auto const &collideComp : toSave) {
         MyNode *IDNode = new MyNode{"id", nullptr};
         if (nodeLocations.count(collideComp.first)) {
             delete IDNode;
@@ -263,13 +263,13 @@ void StorageSystem::addCollideables(MyDocument &myDoc, std::map<int, BoxCollider
             existingIDNodes.push_back(IDNode);
             nodeLocations.insert(std::make_pair(collideComp.first, existingIDNodes.size() - 1));
         }
-    }
+    }*/
 }
 
 void StorageSystem::addDamageable(MyDocument &myDoc, std::map<int, DamageableComponent *> toSave,
                                   vector<MyNode *> &existingIDNodes, std::map<int, int> &nodeLocations) {
     MyNode rootNode{myDoc.GetRoot()};
-    for (auto const &collideComp : toSave) {
+    /*for (auto const &collideComp : toSave) {
         MyNode *IDNode = new MyNode{"id", nullptr};
         if (nodeLocations.count(collideComp.first)) {
             delete IDNode;
@@ -297,7 +297,7 @@ void StorageSystem::addDamageable(MyDocument &myDoc, std::map<int, DamageableCom
             existingIDNodes.push_back(IDNode);
             nodeLocations.insert(std::make_pair(collideComp.first, existingIDNodes.size() - 1));
         }
-    }
+    }*/
 }
 
 void StorageSystem::prepareRect(MyNode &parentNode, std::vector<std::string> filling) {

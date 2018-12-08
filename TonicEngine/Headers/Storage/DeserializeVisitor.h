@@ -2,16 +2,25 @@
 #define PROJECT_SWA_DESERIALIZEVISITOR_H
 
 #include <string>
+#include <memory>
+#include "SerializationVisitor.h"
 
-class SerializationReceiver;
-
-class DeserializeVisitor {
+class DeserializeVisitor : public SerializationVisitor {
 public:
-    virtual void visit(const std::string &name, std::string &value) = 0; //loadString
-    virtual void visit(const std::string &name, int &value) = 0; //loadInt
-    virtual void visit(const std::string &name, double &value) = 0; //loadDouble
-    virtual void visit(const std::string &name, bool &value) = 0; //loadBoolean
-    virtual void visit(const std::string &name, SerializationReceiver &serializationReceiver) = 0;
+    void visit(const std::string &name, std::string &value) override = 0;
+
+    void visit(const std::string &name, int &value) override = 0;
+
+    void visit(const std::string &name, double &value) override = 0;
+
+    void visit(const std::string &name, bool &value) override = 0;
+
+    void visit(const std::string &name, SerializationReceiver &receiver) override = 0;
+
+    void visit(const std::string &name, std::vector<SerializationReceiver *> &receivers) override = 0;
+
+    virtual void visit(const std::string &name, std::vector<SerializationReceiver *> &receivers,
+                       std::function<SerializationReceiver *()> createFunc) = 0;
 };
 
 #endif //PROJECT_SWA_DESERIALIZEVISITOR_H

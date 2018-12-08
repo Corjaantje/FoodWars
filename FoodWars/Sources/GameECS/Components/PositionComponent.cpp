@@ -34,3 +34,8 @@ std::vector<std::string> PositionComponent::serialize() {
 
     return data;
 }
+
+PositionComponent::PositionComponent(const PositionComponent& other) {
+    X = other.X;
+    Y = other.Y;
+}

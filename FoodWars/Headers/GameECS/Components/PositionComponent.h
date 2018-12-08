@@ -12,6 +12,7 @@ public:
     PositionComponent(int x, int y);
     PositionComponent& operator+=(const PositionComponent& other);
     PositionComponent& operator--(int);
+    PositionComponent(const PositionComponent& other);
     std::vector<std::string> serialize() override;
 };
 

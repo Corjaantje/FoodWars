@@ -14,37 +14,35 @@
 #include "../GameECS/Events/CollisionEventHandler.h"
 
 class AISystem;
+class AIComponent;
 
-class State{
+class State {
 protected:
     int _entityId;
-    int _walkingEnergyCostPerSecond = 20;
     EntityManager* _entityManager;
+    TurnComponent* _turnComponent;
+    PositionComponent* _positionComponent;
+    BoxCollider* _boxCollider;
+    MoveComponent* _moveComponent;
+    AIComponent* _aiComponent;
+
     std::shared_ptr<AudioFacade> _audioFacade;
     AISystem* _context;
 
-
     void jump(){
         auto turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(_entityId);
+
+        // kan ik springen?
+
+        // nee: schiet
+
         if(!_entityManager->getComponentFromEntity<JumpComponent>(_entityId)) {
             _entityManager->addComponentToEntity<JumpComponent>(_entityId);
             turnComponent->lowerEnergy(5);
-            _audioFacade->playEffect("jump");
+            //_audioFacade->playEffect("jump");
         }
     }
 
-    void walkLeft(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt) {
-        moveComponent.xVelocity = -100;
-        turnComponent.lowerEnergy(_walkingEnergyCostPerSecond * dt);
-    }
-
-    void walkRight(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt) {
-        moveComponent.xVelocity = 100;
-        turnComponent.lowerEnergy(_walkingEnergyCostPerSecond * dt);
-    }
-    /*void jump(int entityId, TurnComponent& turnComponent);
-    void walkLeft(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);
-    void walkRight(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);*/
     int getDistanceToEnemy(int entityId) {
         for(const auto &iterator : _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
             return calculateDistance(entityId, iterator.first);
@@ -65,12 +63,16 @@ protected:
     }
 
 public:
-    State(EntityManager& entityManager, int entityId, AISystem& context) : _entityManager(&entityManager), _entityId(entityId), _context(&context){
-        //_audioFacade = audioFacade;
-    }
-    /*bool canHandle(const CollisionEvent& collisionEvent) override;
-    void handleCollisionEvent(const CollisionEvent& collisionEvent) override;*/
+    State(EntityManager& entityManager, int entityId, AISystem& context) : _entityManager(&entityManager),
+                            _entityId(entityId),
+                            _context(&context),
+                            _positionComponent {_entityManager->getComponentFromEntity<PositionComponent>(_entityId)},
+                            _turnComponent{_entityManager->getComponentFromEntity<TurnComponent>(_entityId) },
+                            _boxCollider { _entityManager->getComponentFromEntity<BoxCollider>(_entityId)},
+                            _moveComponent {_entityManager->getComponentFromEntity<MoveComponent>(_entityId)} ,
+                            _aiComponent { _entityManager->getComponentFromEntity<AIComponent>(_entityId)} {
 
+    }
 
     virtual ~State() = default;
     //this will execute when the state is entered
@@ -81,7 +83,5 @@ public:
     virtual void exit() = 0;
     //void update(double dt) override;
 };
-
-
 
 #endif //PROJECT_SWA_STATE_H

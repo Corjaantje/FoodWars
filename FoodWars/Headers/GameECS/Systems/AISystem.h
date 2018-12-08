@@ -24,12 +24,13 @@ private:
     void jump(int entityId, TurnComponent& turnComponent);
     void walkLeft(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);
     void walkRight(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);
+
 public:
     AISystem(EntityManager &entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable);
     ~AISystem() override;
     void update(double dt) override;
     IObservable<CollisionEvent>& getCollisionEventObservable();
-
+    void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider, double velocityX, double velocityY);
     //int getDistanceToEnemy(int entityId);
     //int calculateDistance(int entityOne, int entityTwo);
     //int countObstructingBlocks(PositionComponent* posOne, PositionComponent* posTwo);

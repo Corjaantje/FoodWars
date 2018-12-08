@@ -107,6 +107,8 @@ void ShootingSystem::generateProjectile(const PositionComponent &playerPositionC
     else posX -= projectileWidth + 1;
     if (velocityY < 0) posY -= projectileHeight + 1;
 
+    std::cout << "VelocityX: " << velocityX << ", VelocityY: " << velocityY << std::endl;
+
     const double speedModifier = 2.5;
     _entityManager->addComponentToEntity<DrawableComponent>(_projectile, std::make_unique<ShapeSprite>(projectileWidth,
                                                                                                        projectileHeight,
@@ -116,7 +118,7 @@ void ShootingSystem::generateProjectile(const PositionComponent &playerPositionC
     _entityManager->addComponentToEntity<BoxCollider>(_projectile, projectileWidth, projectileHeight);
     _entityManager->addComponentToEntity<DamagingComponent>(_projectile, 25);
     _entityManager->addComponentToEntity<DamageableComponent>(_projectile, 10);
-    _entityManager->addComponentToEntity<GravityComponent>(_projectile, 6.5 * speedModifier);
+    //_entityManager->addComponentToEntity<GravityComponent>(_projectile, 6.5 * speedModifier);
     _entityManager->addComponentToEntity<MoveComponent>(_projectile, velocityX * speedModifier,
                                                         velocityY * speedModifier);
 }

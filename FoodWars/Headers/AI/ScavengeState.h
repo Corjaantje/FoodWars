@@ -2,12 +2,18 @@
 #define PROJECT_SWA_SCAVENGE_H
 
 #include "State.h"
-#include "../GameECS/Components/MoveComponent.h"
 #include "../GameECS/Components/TurnComponent.h"
 
 class ScavengeState : public State, public CollisionEventHandler {
+private:
+    int _walkingEnergyCostPerSecond = 20;
+
+    PositionComponent _targetPosition;
+    void walkLeft(double dt);
+    void walkRight(double dt);
+    void moveToTarget(double dt);
 public:
-    ScavengeState(EntityManager& entityManager, int entityId, AISystem& context);
+    ScavengeState(EntityManager& entityManager, int entityId, const PositionComponent& targetPosition, AISystem& context);
     ~ScavengeState() override = default;
 
     void enter() override;

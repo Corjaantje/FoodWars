@@ -49,7 +49,7 @@ void JumpSystem::update(std::shared_ptr<KeyEvent> event) {
 }
 
 bool JumpSystem::canHandle(const CollisionEvent &collisionEvent) {
-    return (collisionEvent.getCollisionAngle() >= 270 || collisionEvent.getCollisionAngle() <= 90) && _entityManager->getComponentFromEntity<JumpComponent>(collisionEvent.getEntity()) != nullptr;
+    return (collisionEvent.getCollisionAngle() >= 315 || collisionEvent.getCollisionAngle() <= 45) && _entityManager->getComponentFromEntity<JumpComponent>(collisionEvent.getEntity()) != nullptr;
 }
 
 void JumpSystem::handleCollisionEvent(const CollisionEvent &collisionEvent) {

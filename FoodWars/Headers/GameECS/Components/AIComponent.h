@@ -7,7 +7,6 @@
 
 class AIComponent : public PlayerComponent{
 private:
-    //int _playerID;
     int _difficulty;
     std::unique_ptr<State> _currentState;
 public:

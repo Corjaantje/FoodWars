@@ -21,8 +21,11 @@ void DamageableSystem::update(double deltaTime) {
 bool DamageableSystem::canHandle(const CollisionEvent &collisionEvent) {
     int target = collisionEvent.getEntity();
     int projectile = collisionEvent.getOtherEntity();
-    return _entityManager->getComponentFromEntity<DamagingComponent>(target) &&
-           _entityManager->getComponentFromEntity<DamageableComponent>(projectile);
+    if(_entityManager->getComponentFromEntity<DamagingComponent>(projectile) && _entityManager->getComponentFromEntity<DamageableComponent>(target)){
+        handleInvertedCollisionEvent(collisionEvent);
+        return false;
+    }
+    return _entityManager->getComponentFromEntity<DamagingComponent>(target) && _entityManager->getComponentFromEntity<DamageableComponent>(projectile);
 }
 
 void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent)
@@ -30,8 +33,17 @@ void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent
     auto projectile = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity());
     projectile->Destroy();
     auto target = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity());
-    target->LowerHealth(
-            _entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getEntity())->getDamage());
+    target->LowerHealth(_entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getEntity())->getDamage());
 
     std::cout << "currentHP: " << target->GetHealth() << std::endl;
+}
+
+void DamageableSystem::handleInvertedCollisionEvent(const CollisionEvent &collisionEvent)
+{
+    auto projectile = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity());
+    projectile->Destroy();
+    auto target = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity());
+    target->LowerHealth(_entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getOtherEntity())->getDamage());
+
+    std::cout << "Inverted handle, currentHP: " << target->GetHealth() << std::endl;
 }

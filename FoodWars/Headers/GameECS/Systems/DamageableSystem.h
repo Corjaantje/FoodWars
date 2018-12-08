@@ -14,6 +14,7 @@ public:
 
     bool canHandle(const CollisionEvent& collisionEvent) override;
     void handleCollisionEvent(const CollisionEvent& collisionEvent) override;
+    void handleInvertedCollisionEvent(const CollisionEvent& collisionEvent);
     void update(double deltaTime) override;
 
 };

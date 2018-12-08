@@ -54,14 +54,14 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel) {
                                                                                                  "PlayerW_R0.png"));
     entityManager->addComponentToEntity<BoxCollider>(player, 48, 72);
     entityManager->addComponentToEntity<PositionComponent>(player, spawnPoint1.getXCoord(), spawnPoint1.getYCoord());
-    auto &turnComponent = entityManager->addComponentToEntity<TurnComponent>(player);
-    turnComponent.switchTurn(true);
-    turnComponent.setRemainingTime(30);
+    entityManager->addComponentToEntity<TurnComponent>(player);
     entityManager->addComponentToEntity<MoveComponent>(player);
     entityManager->addComponentToEntity<GravityComponent>(player);
     entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation), 0.1);
-    entityManager->addComponentToEntity<DamageableComponent>(player);
+    entityManager->addComponentToEntity<DamageableComponent>(player, 1000);
     entityManager->addComponentToEntity<PlayerComponent>(player, 1);
+
+
     // Player
     player = entityManager->createEntity();
     entityManager->addComponentToEntity<DrawableComponent>(player, std::make_unique<ShapeSprite>(48, 72,
@@ -71,7 +71,9 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel) {
     //entityManager->addComponentToEntity<DrawableComponent>(player, std::make_unique<ShapeSprite>(48, 72, spawnPoint2.getXCoord(), spawnPoint2.getYCoord(), "PlayerG_R0.png"));
     entityManager->addComponentToEntity<BoxCollider>(player, 48, 72);
     entityManager->addComponentToEntity<PositionComponent>(player, spawnPoint2.getXCoord(), spawnPoint2.getYCoord());
-    entityManager->addComponentToEntity<TurnComponent>(player);
+    auto &turnComponent = entityManager->addComponentToEntity<TurnComponent>(player);
+    turnComponent.switchTurn(true);
+    turnComponent.setRemainingTime(500);
     entityManager->addComponentToEntity<MoveComponent>(player);
     entityManager->addComponentToEntity<GravityComponent>(player);
     entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation2), 0.1);

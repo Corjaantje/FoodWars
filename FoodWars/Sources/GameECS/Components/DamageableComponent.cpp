@@ -4,11 +4,11 @@ DamageableComponent::DamageableComponent(int health) : _health{health} {}
 
 DamageableComponent::DamageableComponent() : _health{100} {}
 
-const bool DamageableComponent::IsAlive() {
+bool DamageableComponent::IsAlive() const {
     return _health > 0;
 }
 
-const int DamageableComponent::GetHealth() {
+int DamageableComponent::GetHealth() const {
     return _health;
 }
 

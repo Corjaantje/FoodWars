@@ -4,6 +4,7 @@
 #include "State.h"
 #include "../GameECS/Components/MoveComponent.h"
 #include "../GameECS/Components/TurnComponent.h"
+#include "../GameECS/Components/AIComponent.h"
 
 class IdleState : public State {
 public:

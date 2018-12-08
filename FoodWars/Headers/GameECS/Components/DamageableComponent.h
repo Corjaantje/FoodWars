@@ -8,13 +8,13 @@ class DamageableComponent: public Component, ISerializable {
 
 public:
     DamageableComponent();
-    DamageableComponent(int health);
+    explicit DamageableComponent(int health);
     ~DamageableComponent() override;
-    const int GetHealth();
+    int GetHealth() const;
     void LowerHealth(int value);
     void IncreaseHealth(int value);
     void Destroy();
-    const bool IsAlive();
+    bool IsAlive() const;
     std::vector<std::string> serialize() override;
 private:
     int _health; // 0 - 100

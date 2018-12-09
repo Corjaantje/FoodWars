@@ -12,6 +12,7 @@ public:
 public:
     void lowerAmmo();
 
+    void setAmmo(int val);
     int getAmmo() const;
     std::string getImage() const;
 private:

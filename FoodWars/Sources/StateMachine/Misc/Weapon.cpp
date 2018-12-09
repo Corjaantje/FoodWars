@@ -17,3 +17,7 @@ std::string Weapon::getImage() const {
 void Weapon::lowerAmmo() {
     _ammo--;
 }
+
+void Weapon::setAmmo(int val) {
+    _ammo = val;
+}

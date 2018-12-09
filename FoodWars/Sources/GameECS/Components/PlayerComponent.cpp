@@ -6,7 +6,7 @@ PlayerComponent::PlayerComponent() : PlayerComponent(0, Faction::WHITE) {
 
 }
 
-PlayerComponent::PlayerComponent(int id, Faction faction) : _playerID(id), _score(0), _selectedWeaponAvailability(5), _faction(faction) {
+PlayerComponent::PlayerComponent(int id, Faction faction) : _playerID(id), _score(0), _selectedWeaponAvailability(5), _faction(faction), _isAlive(true) {
     createWeapon<Weapon>("carrot.png", 5);
     createWeapon<Weapon>("ham.png", 5);
     createWeapon<Weapon>("candycane.png", 5);
@@ -75,4 +75,12 @@ void PlayerComponent::setFaction(Faction faction) {
 
 Faction PlayerComponent::getFaction() const {
     return _faction;
+}
+
+void PlayerComponent::setIsAlive(bool alive) {
+    _isAlive = alive;
+}
+
+bool PlayerComponent::getIsAlive() const {
+    return _isAlive;
 }

@@ -1,20 +1,20 @@
 <highscore>
-  <level>
-    <score>150</score>
+  <level>1<score>150</score>
+	<date>2018-1-1</date>
+</level>
+  <level>2<score>500</score>
+	<date>2018-1-1</date>
   </level>
-  <level>
-    <score>500</score>
+  <level>3<score>235</score>
+	<date>2018-1-1</date>
   </level>
-  <level>
-    <score>235</score>
+  <level>4<score>68</score>
+	<date>2018-1-1</date>
   </level>
-  <level>
-    <score>68</score>
+  <level>5<score>136</score>
+	<date>2018-1-1</date>
   </level>
-  <level>
-    <score>136</score>
-  </level>
-  <level>
-    <score>272</score>
+  <level>6<score>272</score>
+	<date>2018-1-1</date>
   </level>
 </highscore>

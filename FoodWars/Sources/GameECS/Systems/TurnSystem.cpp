@@ -3,6 +3,7 @@
 //
 
 #include "../../../Headers/GameECS/Systems/TurnSystem.h"
+#include "../../../Headers/GameECS/Components/AIComponent.h"
 
 TurnSystem::TurnSystem(EntityManager &entityManager) : _entityManager(&entityManager), _defaultTimePerTurn(30),
                                                        _timePerTurn(_defaultTimePerTurn)
@@ -30,17 +31,18 @@ void TurnSystem::update(double deltaTime) {
 void TurnSystem::switchTurn() {
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         if(iterator.second->isMyTurn()) {
-            iterator.second->switchTurn(false);
-            iterator.second->setEnergy(100);
-            for (const auto &iterator2: _entityManager->getAllEntitiesWithComponent<TurnComponent>())
-            {
-                if(iterator.first != iterator2.first)
-                {
-                    iterator2.second->switchTurn(true);
-                    iterator2.second->setRemainingTime(30);
+            if((_entityManager->getComponentFromEntity<AIComponent>(iterator.first) && (iterator.second->getEnergy() <= 0.0 || iterator.second->getRemainingTime() <= 0))
+            || _entityManager->getComponentFromEntity<PlayerComponent>(iterator.first)) {
+                iterator.second->switchTurn(false);
+                iterator.second->setEnergy(100);
+                for (const auto &iterator2: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+                    if (iterator.first != iterator2.first) {
+                        iterator2.second->switchTurn(true);
+                        iterator2.second->setRemainingTime(30);
+                    }
                 }
+                break;
             }
-            break;
         }
     }
 }

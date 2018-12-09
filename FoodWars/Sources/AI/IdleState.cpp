@@ -21,14 +21,15 @@ void IdleState::enter() {
 }
 
 void IdleState::execute(double dt) {
-    //std::cout << "Executing idle state" << std::endl;
     // Stop walking
     _moveComponent->xVelocity = 0;
 
     // if my turn, calculate new state
-    if(_turnComponent->isMyTurn()) {
+    if(_turnComponent->isMyTurn() && _turnComponent->getRemainingTime() > 0 && _turnComponent->getEnergy() > 0.0) {
         double centerX = _positionComponent->X + _boxCollider->width/2.0;
         double centerY = _positionComponent->Y + _boxCollider->height/2.0;
+
+        //TODO: randomize states
         for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
             auto * _targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
             double distanceToEnemy = abs(_positionComponent->X - _targetPosition->X) /*+ abs(_positionComponent->Y - _targetPosition->Y)*/;

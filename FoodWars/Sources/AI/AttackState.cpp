@@ -22,7 +22,12 @@ void AttackState::enter() {
 }
 
 void AttackState::execute(double dt) {
-    if(!_turnComponent->isMyTurn() || !_target || !_target->isAlive()) {//todo: Check Ammo count
+    if(!_turnComponent->isMyTurn()
+       || _turnComponent->getRemainingTime() <= 0
+       || _turnComponent->getEnergy() <= 0.0
+       || !_target
+       || !_target->isAlive()) {
+        //todo: Check Ammo count
         _aiComponent->setCurrentState(std::make_unique<IdleState>(*_entityManager, _entityId, *_context));
         return;
     }
@@ -31,7 +36,7 @@ void AttackState::execute(double dt) {
         double centerY = _positionComponent->Y + _boxCollider->height/2.0;
         double distance = std::abs(centerX - _targetPosition.X);
         double force = -0.00024 * std::pow(distance, 2) + 0.47 * distance + 6.0;
-        _turnComponent->lowerEnergy(5);
+        _turnComponent->lowerEnergy(20);
         _context->generateProjectile(*_entityManager->getComponentFromEntity<PositionComponent>(_entityId),
                                      *_entityManager->getComponentFromEntity<BoxCollider>(_entityId), centerX > _targetPosition.X ? -force : force, force < 0 ? force : -force);
         _projectileFired = true;

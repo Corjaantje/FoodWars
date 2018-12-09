@@ -14,13 +14,15 @@ void ScavengeState::enter() {
 
 void ScavengeState::execute(double dt) {
     // if not my turn, switch to idle state
-    // if my turn, calculate new state
-
-    if(!_turnComponent->isMyTurn() || (_positionComponent->X <= _targetPosition.X && _positionComponent->X + _boxCollider->width >= _targetPosition.X)){
+    if(!_turnComponent->isMyTurn()
+    || _turnComponent->getRemainingTime() <= 0
+    || _turnComponent->getEnergy() <= 0.0
+    || (_positionComponent->X <= _targetPosition.X && _positionComponent->X + _boxCollider->width >= _targetPosition.X)){
         // Idle state
         _aiComponent->setCurrentState(std::make_unique<IdleState>(*_entityManager, _entityId, *_context));
         return;
     }
+    // If my turn, move towards target
     moveToTarget(dt);
 }
 
@@ -35,16 +37,19 @@ ScavengeState::ScavengeState(EntityManager &entityManager, int entityId, const P
 
 }
 
+// Makes the AI walk left
 void ScavengeState::walkLeft(double dt) {
     _moveComponent->xVelocity = -100;
     _turnComponent->lowerEnergy(_walkingEnergyCostPerSecond * dt);
 }
 
+// Makes the AI walk right
 void ScavengeState::walkRight(double dt) {
     _moveComponent->xVelocity = 100;
     _turnComponent->lowerEnergy(_walkingEnergyCostPerSecond * dt);
 }
 
+// Makes the AI walk towards its target
 void ScavengeState::moveToTarget(double dt){
     // Correct X Position
     if(_positionComponent->X <= _targetPosition.X && _positionComponent->X + _boxCollider->width >= _targetPosition.X)
@@ -60,18 +65,10 @@ void ScavengeState::moveToTarget(double dt){
 
 
 void ScavengeState::handleCollisionEvent(const CollisionEvent &collisionEvent) {
-    // what to do now
-    //std::cout << "boop" << std::endl;
+    // jump over block
     jump();
-    // Check if its the side of a block
-
-
 }
 
 bool ScavengeState::canHandle(const CollisionEvent &collisionEvent) {
-    //if(collisionEvent.getEntity() == _entityId || collisionEvent.getOtherEntity() == _entityId)
-
-
-    // TODO: KEEP BELOW
     return collisionEvent.getCollisionAngle() <= 315 && collisionEvent.getCollisionAngle() >= 45;
 }

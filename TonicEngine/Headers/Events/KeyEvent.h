@@ -18,6 +18,10 @@ enum class KEY {
     KEY_D,
     KEY_F,
     KEY_G,
+    KEY_T,
+    KEY_R,
+    KEY_Y,
+    KEY_K,
     KEY_ESCAPE,
     KEY_PAGEUP,
     KEY_PAGEDOWN,
@@ -38,7 +42,7 @@ private:
 public:
     KeyEvent(KEY pressedKey, KeyEventType eventType);
     KEY getKey() const;
-    KeyEventType getKeyEventType();
+    KeyEventType getKeyEventType() const;
 };
 
 #endif //PROJECT_SWA_KEYEVENT_H

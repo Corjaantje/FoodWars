@@ -4,12 +4,9 @@
 
 #include "../../../Headers/GameECS/Systems/TurnSystem.h"
 
-//TurnSystem::TurnSystem() {
-//    setTurnTime(_defaultTimePerTurn);
-//}
-
 TurnSystem::TurnSystem(EntityManager &entityManager) : _entityManager(&entityManager), _defaultTimePerTurn(30),
-                                                       _timePerTurn(_defaultTimePerTurn) {
+                                                       _timePerTurn(_defaultTimePerTurn)
+{
 }
 
 TurnSystem::~TurnSystem() = default;
@@ -21,20 +18,62 @@ void TurnSystem::update(double deltaTime) {
     for(const auto &iterator: turnComponents) {
         if(iterator.second->isMyTurn()) {
             iterator.second->lowerRemainingTime(deltaTime);
-            if(iterator.second->getRemainingTime() <= 0 || iterator.second->getEnergy() <= 0) {
-                iterator.second->switchTurn(false);
-                for(const auto& it2: turnComponents) {
-                    if(it2.first != iterator.first) {
-                        it2.second->switchTurn(true);
-                        it2.second->setRemainingTime((float) _timePerTurn);
-                        it2.second->setEnergy(100);
-                        break;
-                    }
+            if(iterator.second->getRemainingTime() <= 0) {
+                iterator.second->setRemainingTime(0);
+                iterator.second->setEnergy(0);
+            }
+            break;
+        }
+    }
+}
+
+void TurnSystem::switchTurn() {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if(iterator.second->isMyTurn()) {
+            iterator.second->switchTurn(false);
+            iterator.second->setEnergy(100);
+            for (const auto &iterator2: _entityManager->getAllEntitiesWithComponent<TurnComponent>())
+            {
+                if(iterator.first != iterator2.first)
+                {
+                    iterator2.second->switchTurn(true);
+                    iterator2.second->setRemainingTime(30);
                 }
             }
             break;
         }
     }
+}
+
+void TurnSystem::resetCurrentTime() {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if (iterator.second->isMyTurn()) {
+            iterator.second->setRemainingTime(30);
+            break;
+        }
+    }
+}
+
+int TurnSystem::getCurrentPlayerID() const {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if (iterator.second->isMyTurn()) {
+            return iterator.first;
+        }
+    }
+}
+
+void TurnSystem::resetCurrentEnergy() {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if (iterator.second->isMyTurn()) {
+            iterator.second->setEnergy(100);
+            break;
+        }
+    }
+}
+
+double TurnSystem::getCurrentPlayerEnergy() const {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>())
+        if (iterator.second->isMyTurn()) return iterator.second->getEnergy();
 }
 
 

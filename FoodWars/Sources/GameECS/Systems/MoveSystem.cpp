@@ -11,11 +11,11 @@ MoveSystem::~MoveSystem() {
     delete autoClimbOnCollision;
 }
 
-MoveSystem::MoveSystem(EntityManager &entityManager, std::shared_ptr<InputFacade> inputFacade,
+MoveSystem::MoveSystem(EntityManager &entityManager, InputFacade& inputFacade,
                        IObservable<CollisionEvent> &collisionEventObservable) :
         _entityManager{&entityManager},
         _pressedKey{KEY::KEY_OTHER} {
-    inputFacade->getKeyEventObservable()->registerKeyEventObserver(this);
+    inputFacade.getKeyEventObservable().registerKeyEventObserver(this);
     autoClimbOnCollision  = new CollisionEventHandlerLamda {
         collisionEventObservable,
         // Staircase walking
@@ -45,9 +45,12 @@ void MoveSystem::update(double dt) {
     const int walkingEnergyCostPerSecond = 20;
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
         auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
-        auto turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(iterator.first);
-
-        if (turnComponent->isMyTurn()) {
+        double energy = iterator.second->getEnergy();
+        if (energy - (walkingEnergyCostPerSecond * dt) <= 0) {
+            moveComponent->xVelocity = 0;
+            break;
+        }
+        if (iterator.second->isMyTurn()) {
             if (_pressedKey == KEY::KEY_A) {
                 moveComponent->xVelocity = -100;
                 turnComponent->lowerEnergy(walkingEnergyCostPerSecond * dt);
@@ -72,10 +75,10 @@ void MoveSystem::update(double dt) {
     }
 }
 
-void MoveSystem::update(std::shared_ptr<KeyEvent> event) {
-    if(event->getKeyEventType() == KeyEventType::Up && event->getKey() == _pressedKey) {
+void MoveSystem::update(const KeyEvent& event) {
+    if(event.getKeyEventType() == KeyEventType::Up && event.getKey() == _pressedKey) {
         _pressedKey = KEY::KEY_OTHER;
-    } else if(event->getKeyEventType() == KeyEventType::Down && (event->getKey() == KEY::KEY_A || event->getKey() == KEY::KEY_D)) {
-        _pressedKey = event->getKey();
+    } else if(event.getKeyEventType() == KeyEventType::Down && (event.getKey() == KEY::KEY_A || event.getKey() == KEY::KEY_D)) {
+        _pressedKey = event.getKey();
     }
 }

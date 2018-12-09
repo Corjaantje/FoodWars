@@ -17,9 +17,9 @@ void SpriteButton::addToRender(Renderlist *renderlist) {
     shapeSprite.addToRender(renderlist);
 }
 
-void SpriteButton::update(std::shared_ptr<MouseEvent> event) {
-    if((event->getXPosition() >= xPos && event->getXPosition() <= xPos + width)
-       && (event->getYPosition() >= yPos && event->getYPosition() <= yPos + height)  && event->getMouseEventType() == MouseEventType::Down)
+void SpriteButton::update(const MouseEvent& event) {
+    if((event.getXPosition() >= xPos && event.getXPosition() <= xPos + width)
+       && (event.getYPosition() >= yPos && event.getYPosition() <= yPos + height)  && event.getMouseEventType() == MouseEventType::Down)
         _onClickFunction();
 }
 

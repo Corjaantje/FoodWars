@@ -6,8 +6,8 @@ bool WindowClosedObserver::isWindowClosed() const {
     return _isClosed;
 }
 
-void WindowClosedObserver::update(std::shared_ptr<WindowEvent> event) {
-    if (event->GetWindowEventType() == WindowEventType::Quit) {
+void WindowClosedObserver::update(WindowEvent& event) {
+    if (event.GetWindowEventType() == WindowEventType::Quit) {
         _isClosed = true;
     }
 }

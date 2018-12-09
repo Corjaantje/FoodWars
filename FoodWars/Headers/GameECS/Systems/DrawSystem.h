@@ -5,15 +5,18 @@
 #include "IBaseSystem.h"
 #include "../../../../TonicEngine/Headers/Visual/VisualFacade.h"
 #include "../../../../TonicEngine/Headers/Input/InputFacade.h"
+#include "../../StateMachine/Misc/WeaponSelection.h"
+#include "../../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
 #include <chrono>
 
 class DrawSystem : public IBaseSystem {
 private:
     std::chrono::duration<double> _timeLast;
     std::vector<IShape *> _sprites;
+    std::vector<IShape *> _shapes;
+    VisualFacade* _visualFacade;
+    InputFacade* _inputFacade;
     EntityManager *_entityManager;
-    std::shared_ptr<VisualFacade> _visualFacade;
-    std::shared_ptr<InputFacade> _inputFacade;
     Renderlist _renderList;
     int _updateCallCount;
     std::string _fpsString;
@@ -22,17 +25,20 @@ private:
     std::string _playerIconTwo;
     int _playerUpdateCount = 0;
 
+    WeaponSelection _weaponSelection;
+
     bool _showFPS = true;
 public:
-    DrawSystem(EntityManager &entityManager, std::shared_ptr<VisualFacade> visualFacade, std::shared_ptr<InputFacade>);
+    DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade, InputFacade& inputFacade);
     ~DrawSystem() override;
     void update(double dt) override;
     bool toggleFpsCounter();
-
+    void addShape(IShape* shape);
 private:
     void drawNonComponents();
     void drawPlayers();
     void drawPlayerStats();
+    void drawWeaponSelection(int x, int playerId, std::string selection);
     Colour getConvertedHealthColor(int health);
 
     template<typename T, typename... Args>

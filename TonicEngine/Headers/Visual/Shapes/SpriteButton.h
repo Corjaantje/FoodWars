@@ -17,7 +17,7 @@ private:
 public:
     SpriteButton(MouseEventObservable& mouseEventObservable, const std::string& value, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, Colour buttonColour);
     void changeImageURL(std::string url);
-    void update(std::shared_ptr<MouseEvent> event) override;
+    void update(const MouseEvent& event) override;
     void addToRender(Renderlist* renderlist) override;
 
     void render(IRenderer &renderer) const override;

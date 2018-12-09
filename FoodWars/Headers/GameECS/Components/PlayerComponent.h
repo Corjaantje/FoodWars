@@ -4,27 +4,43 @@
 #include <vector>
 #include <string>
 #include "Component.h"
+#include "../../../Headers/StateMachine/Misc/Weapon.h"
+#include "../../StateMachine/Misc/FactionEnum.h"
 
 class PlayerComponent : public Component {
 public:
     PlayerComponent();
-    explicit PlayerComponent(int id);
+    explicit PlayerComponent(int id, Faction faction);
 public:
     void setPlayerID(int id);
-    void setSelectedWeapon(std::string ImageURL);
+    void setSelectedWeapon(std::string selectionType);
     void setSelectedWeaponAvailability(int weaponAvail);
     void addScore(int score);
+    void setFaction(Faction faction);
+    void setIsAlive(bool alive);
 
     int getPlayerID() const;
     int getScore() const;
-    std::string getSelectedWeapon() const;
+    Weapon* getSelectedWeapon() const;
     int getSelectedWeaponAvailability() const;
+    Faction getFaction() const;
+    bool getIsAlive() const;
 
 protected:
     int _playerID;
     int _score;
-    std::string _selectedWeapon;
     int _selectedWeaponAvailability;
+    bool _isAlive;
+    std::vector<Weapon*> _weapons{};
+    Weapon* _selectedWeapon;
+    Faction _faction;
+
+    template<typename T, typename... Args>
+    Weapon *createWeapon(Args &&... args) {
+        T *weapon = new T(std::forward<Args>(args)...);
+        _weapons.push_back(weapon);
+        return weapon;
+    }
 };
 
 

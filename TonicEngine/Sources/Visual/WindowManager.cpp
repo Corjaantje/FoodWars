@@ -8,9 +8,9 @@
 #include <algorithm>
 #include <iostream>
 
-WindowManager::WindowManager(std::shared_ptr<WindowResolutionCalculator> windowResCalc) {
+WindowManager::WindowManager(WindowResolutionCalculator& windowResCalc) {
     _window = new Window(_title, _windowWidth, _windowHeight);
-    _windowResCalc = std::move(windowResCalc);
+    _windowResCalc = &windowResCalc;
     _assetManager = new AssetManager();
 }
 

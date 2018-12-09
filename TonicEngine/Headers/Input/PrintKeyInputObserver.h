@@ -13,7 +13,7 @@ public:
 
 private:
     ~PrintKeyInputObserver();
-    void update(std::shared_ptr<KeyEvent> event);
+    void update(KeyEvent& event);
 };
 
 #endif //PROJECT_SWA_PRINTKEYINPUTOBSERVER_H

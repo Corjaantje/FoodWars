@@ -1,33 +1,25 @@
 #include "../../Headers/StateMachine/LevelCreationScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
-LevelCreationScreen::LevelCreationScreen(std::shared_ptr<ScreenStateManager> context, const FileManager& fileManager) :
-                IScreen(context), _levelBuilder{fileManager}
+LevelCreationScreen::LevelCreationScreen(ScreenStateManager& context) : IScreen(context), selectedSong{"none"}
 {
-    visualFacade = context->getFacade<VisualFacade>();
-    audioFacade = context->getFacade<AudioFacade>();
-    _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
-    _inputFacade->getMouseEventObservable()->registerObserver(this);
-    _windowResCalc = _context->getWindowResolutionCalculator();
-    _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
-
-    selectedSong = "none";
+    _inputFacade->getKeyEventObservable().IObservable<KeyEvent>::registerObserver(this);
+    _inputFacade->getMouseEventObservable().registerObserver(this);
     this->initButtons();
-
     selectedSongText = createShape<ShapeText>(610 - selectedSong.size() * 10, 130, selectedSong, 150, selectedSong.size() * 20, 50, Colour(0, 0, 0, 0));
 }
 
 void LevelCreationScreen::initButtons() {
 
     //save attempt non const lvalue reference cannot bind to a temporary of type
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "settings.png",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "settings.png",
             [this] () {
                 relinkAndSave();
             },
             50, 50, 0, 100,
             Colour{0,0,0,0});
 
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [c = _context]() {
                 c->setActiveScreen<MainMenuScreen>();
             },
@@ -35,7 +27,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0,0,0,0});
 
     //Color Red Increment
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [this]() {
                 _levelBuilder.incrementColorRed();
             },
@@ -43,7 +35,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0,0,0,0});
 
     //Color Red Decrement
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [this]() {
                 _levelBuilder.decrementColorRed();
             },
@@ -51,7 +43,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0,0,0,0});
 
     //Color Green Increment
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [this]() {
                 _levelBuilder.incrementColorGreen();
             },
@@ -59,7 +51,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0,0,0,0});
 
     //Color Green Decrement
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [this]() {
                 _levelBuilder.decrementColorGreen();
             },
@@ -67,7 +59,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0,0,0,0});
 
     //Color Blue Increment
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [this]() {
                 _levelBuilder.incrementColorBlue();
             },
@@ -75,7 +67,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0,0,0,0});
 
     //Color Blue Decrement
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [this]() {
                 _levelBuilder.decrementColorBlue();
             },
@@ -83,7 +75,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0,0,0,0});
 
     //Wallpaper Next
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [this]() {
                 _levelBuilder.setNextWallpaper();
             },
@@ -91,7 +83,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0,0,0,0});
 
     //Wallpaper Previous
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [this]() {
                 _levelBuilder.setPreviousWallpaper();
             },
@@ -99,7 +91,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0,0,0,0});
 
     //Music Next
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [this]() {
                 _levelBuilder.setNextMusic();
                 selectedSong = _levelBuilder.getSelectedSong();
@@ -108,7 +100,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0,0,0,0});
 
     //Music Previous
-    createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [this]() {
                 _levelBuilder.setPreviousMusic();
                 selectedSong = _levelBuilder.getSelectedSong();
@@ -117,7 +109,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0,0,0,0});
 
     //toggleCollidable
-    toggleCollidable = createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "stateOn.png",
+    toggleCollidable = createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "stateOn.png",
             [this]() {
                 bool state = _levelBuilder.toggleCollidable();
                 if (state) {
@@ -130,7 +122,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0, 0, 0, 0});
 
     //toggleDamageable
-    toggleDamageable = createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "stateOn.png",
+    toggleDamageable = createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "stateOn.png",
             [this]() {
                 bool state = _levelBuilder.toggleDamageable();
                 if (state) {
@@ -143,7 +135,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0, 0, 0, 0});
 
     //toggleBuildTerrain
-    toggleBuildTerrain = createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "stateOn.png",
+    toggleBuildTerrain = createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "stateOn.png",
             [this]() {
                 buildTerrainActive = !buildTerrainActive;
                 if (buildTerrainActive) {
@@ -158,7 +150,7 @@ void LevelCreationScreen::initButtons() {
             Colour{0, 0, 0, 0});
 
     //toggleSetSpawn
-    toggleSetSpawn = createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "stateOff.png",
+    toggleSetSpawn = createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "stateOff.png",
             [this]() {
                 buildTerrainActive = !buildTerrainActive;
                 if (!buildTerrainActive) {
@@ -173,22 +165,19 @@ void LevelCreationScreen::initButtons() {
             Colour{0, 0, 0, 0});
 }
 
-LevelCreationScreen::~LevelCreationScreen() = default;
-
 void LevelCreationScreen::update(double deltaTime) {
     _inputFacade->pollEvents();
 }
 
-void LevelCreationScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
+void LevelCreationScreen::update(const KeyEvent& event){
+    if(event.getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }
 }
 
-void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
-    std::string song = _levelBuilder.getSelectedSong();
-    audioFacade->playMusic(song.c_str());
+void LevelCreationScreen::update(const MouseEvent& event) {
+    _audioFacade->playMusic(_levelBuilder.getSelectedSong().c_str());
 
     selectedSongText->xPos = 610 - selectedSong.size() * 10;
     selectedSongText->width = selectedSong.size() * 20;
@@ -197,29 +186,29 @@ void LevelCreationScreen::update(std::shared_ptr<MouseEvent> event) {
     this->callRender();
 
     if(this->buildTerrainActive) {
-        if ((event->getMouseEventType() == MouseEventType::Down || event->getMouseEventType() == MouseEventType::Drag) && event->getMouseClickType() == MouseClickType::Left) {
-            _levelBuilder.placeBlock(event->getXPosition(), event->getYPosition());
+        if ((event.getMouseEventType() == MouseEventType::Down || event.getMouseEventType() == MouseEventType::Drag) && event.getMouseClickType() == MouseClickType::Left) {
+            _levelBuilder.placeBlock(event.getXPosition(), event.getYPosition());
         }
-        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Right) {
-            _levelBuilder.removeBlock(event->getXPosition(), event->getYPosition());
+        if (event.getMouseEventType() == MouseEventType::Down && event.getMouseClickType() == MouseClickType::Right) {
+            _levelBuilder.removeBlock(event.getXPosition(), event.getYPosition());
         }
     }
     else{
-        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
-            _levelBuilder.placeSpawnPoint(event->getXPosition(), event->getYPosition());
+        if (event.getMouseEventType() == MouseEventType::Down && event.getMouseClickType() == MouseClickType::Left) {
+            _levelBuilder.placeSpawnPoint(event.getXPosition(), event.getYPosition());
         }
-        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Right) {
-            _levelBuilder.removeSpawnPoint(event->getXPosition(), event->getYPosition());
+        if (event.getMouseEventType() == MouseEventType::Down && event.getMouseClickType() == MouseClickType::Right) {
+            _levelBuilder.removeSpawnPoint(event.getXPosition(), event.getYPosition());
         }
     }
 }
 
 void LevelCreationScreen::callRender() {
     _levelBuilder.drawCurrentScene(_renderList);
-    for (int i = 0; i < _sprites.size(); i++) {
-        _sprites[i]->addToRender(&_renderList);
+    for (auto const &sprite : _sprites) {
+        sprite->addToRender(&_renderList);
     }
-    visualFacade->render(_renderList);
+    _visualFacade->render(_renderList);
 }
 
 void LevelCreationScreen::relinkAndSave() {

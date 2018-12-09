@@ -16,7 +16,7 @@ const int SPAWNPOINT_ID = -1;
 
 class LevelBuilder {
 public:
-    explicit LevelBuilder(const FileManager& fileManager);
+    LevelBuilder();
     ~LevelBuilder();
 private:
     GameLevel _gameLevel;
@@ -30,7 +30,7 @@ private:
 
     int _shapeDimension = SHAPE_DIMENSION;
 
-    const FileManager* _fileManager;
+    const FileManager _fileManager;
     int _colorRed; //Between 0 and 255
     int _colorGreen; //Between 0 and 255
     int _colorBlue; //Between 0 and 255
@@ -42,6 +42,7 @@ private:
     int _selectedMusic;
     std::vector<IShape *> _sprites;
     ShapeSprite* wallpaper;
+    ShapeRectangle previewColor;
 
     template<typename T, typename... Args>
     T *createShape(Args &&... args) {

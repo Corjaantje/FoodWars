@@ -7,7 +7,7 @@
 class FileManager
 {
 public:
-    std::vector<std::string> getFiles(const std::string& path, const std::string& fileExtension, bool includeExtension, bool includeSubFolders) const;
+    std::vector<std::string> getFiles(const std::string& path, const std::vector<std::string>& fileExtension, bool includeExtension, bool includeSubFolders) const;
     std::vector<std::string> readFileLines(const std::string& filePath) const;
     void writeFileContent(const std::string& filePath, const std::string& content) const;
     ~FileManager();

@@ -78,7 +78,7 @@ void AudioFacade::playEffect(const char* filename){
 }
 
 // Adds a sound to the audioList
-void AudioFacade::addAudio(const char* key,const char* path){
+void AudioFacade::addAudio(std::string key,std::string path){
     _audioMap->insert(std::pair<std::string,std::string>(key, path) );
 }
 

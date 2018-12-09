@@ -8,6 +8,7 @@
 #include "../../../Headers/GameECS/Components/AnimationComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../Headers/GameECS/Components/AIComponent.h"
 
 bool CharacterBuilder::getIsBot() const {
     return _isBot;
@@ -66,7 +67,8 @@ void CharacterBuilder::buildCharacterEntity(GameLevel &gameLevel, int playerID, 
         turnComponent.setRemainingTime(30);
     }
     if(getIsBot()){
-        //TODO Add an AI component;
+        // TODO: set difficulty
+        entityManager->addComponentToEntity<AIComponent>(player, playerID, _faction, _botDifficulty);
     }
     else{
         entityManager->addComponentToEntity<PlayerComponent>(player, playerID, getFaction());

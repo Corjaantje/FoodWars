@@ -8,6 +8,7 @@
 #include "../../../Headers/GameECS/Components/DamagingComponent.h"
 #include "../../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../Headers/GameECS/Components/AIComponent.h"
 
 
 ShootingSystem::ShootingSystem(EntityManager &entityManager,
@@ -67,8 +68,11 @@ void ShootingSystem::update(const MouseEvent& event) {
                 break;
             }
         }
-        Weapon *selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(
-                currentPlayer)->getSelectedWeapon();
+        Weapon *selectedWeapon;
+        if(_entityManager->getComponentFromEntity<PlayerComponent>(currentPlayer))
+            selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(currentPlayer)->getSelectedWeapon();
+        else if(_entityManager->getComponentFromEntity<AIComponent>(currentPlayer))
+            selectedWeapon = _entityManager->getComponentFromEntity<AIComponent>(currentPlayer)->getSelectedWeapon();
 
         if (_entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->getEnergy() >= 20 && selectedWeapon->getAmmo() > 0) {
             auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(currentPlayer);

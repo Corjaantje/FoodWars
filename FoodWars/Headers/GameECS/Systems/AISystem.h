@@ -18,7 +18,7 @@
 class AISystem : public IBaseSystem{
 private:
     EntityManager* _entityManager;
-    std::shared_ptr<AudioFacade> _audioFacade;
+    AudioFacade* _audioFacade;
     IObservable<CollisionEvent>& _collisionEventObservable;
 
     void jump(int entityId, TurnComponent& turnComponent);
@@ -26,7 +26,7 @@ private:
     void walkRight(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);
 
 public:
-    AISystem(EntityManager &entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable);
+    AISystem(EntityManager &entityManager, AudioFacade& audioFacade, IObservable<CollisionEvent>& collisionEventObservable);
     ~AISystem() override;
     void update(double dt) override;
     IObservable<CollisionEvent>& getCollisionEventObservable();

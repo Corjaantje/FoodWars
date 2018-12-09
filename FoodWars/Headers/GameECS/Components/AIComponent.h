@@ -3,6 +3,7 @@
 
 #include "PlayerComponent.h"
 #include "../../../Headers/AI/State.h"
+#include "../../StateMachine/Misc/DifficultyEnum.h"
 #include <memory>
 
 class AIComponent : public PlayerComponent{
@@ -10,7 +11,7 @@ private:
     int _difficulty;
     std::unique_ptr<State> _currentState;
 public:
-    AIComponent(int playerID, int difficulty, int entityId);
+    AIComponent(int playerID, Faction faction, Difficulty difficulty);
 
     int getDifficulty() const;
 

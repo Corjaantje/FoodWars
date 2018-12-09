@@ -7,9 +7,6 @@
 #include "../../Headers/GameECS/Systems/AnimationSystem.h"
 #include "../../Headers/GameECS/Systems/DamageableSystem.h"
 #include "../../Headers/StateMachine/LevelTransitionScreen.h"
-#include "../../Headers/StateMachine/DrawTransitionScreen.h"
-#include "../../Headers/StateMachine/WinTransitionScreen.h"
-#include "../../Headers/StateMachine/LoseTransitionScreen.h"
 #include "../../Headers/GameECS/Systems/AISystem.h"
 
 
@@ -29,7 +26,7 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
     auto shootingSystem = new ShootingSystem{*_entityManager, *_audioFacade, *_visualFacade, *_inputFacade};
     _systems.push_back(std::unique_ptr<ShootingSystem>(shootingSystem));
     _systems.push_back(std::make_unique<DamageableSystem>(*_entityManager, *_audioFacade, *collisionSystem));
-    _systems.push_back(std::make_unique<AISystem>(*_entityManager, _audioFacade, *collisionSystem));
+    _systems.push_back(std::make_unique<AISystem>(*_entityManager, *_audioFacade, *collisionSystem));
     _systems.push_back(std::unique_ptr<CollisionSystem>(collisionSystem));
     auto drawSystem = new DrawSystem{*_entityManager, *_visualFacade, *_inputFacade};
     _systems.push_back(std::unique_ptr<DrawSystem>(drawSystem));

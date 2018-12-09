@@ -8,8 +8,8 @@
 #include "../../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 
-AISystem::AISystem(EntityManager &entityManager, const std::shared_ptr<AudioFacade>& audioFacade, IObservable<CollisionEvent>& collisionEventObservable)
-                                        : _entityManager(&entityManager), _collisionEventObservable(collisionEventObservable), _audioFacade(audioFacade){
+AISystem::AISystem(EntityManager &entityManager, AudioFacade& audioFacade, IObservable<CollisionEvent>& collisionEventObservable)
+                                        : _entityManager(&entityManager), _collisionEventObservable(collisionEventObservable), _audioFacade(&audioFacade){
     for(const auto iterator: _entityManager->getAllEntitiesWithComponent<AIComponent>()) {
         iterator.second->setCurrentState(std::make_unique<IdleState>(*_entityManager, iterator.first, *this));
     }

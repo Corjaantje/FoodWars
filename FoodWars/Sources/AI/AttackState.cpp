@@ -22,7 +22,7 @@ void AttackState::enter() {
 }
 
 void AttackState::execute(double dt) {
-    if(!_turnComponent->isMyTurn() || !_target || !_target->IsAlive()) {//todo: Check Ammo count
+    if(!_turnComponent->isMyTurn() || !_target || !_target->isAlive()) {//todo: Check Ammo count
         _aiComponent->setCurrentState(std::make_unique<IdleState>(*_entityManager, _entityId, *_context));
         return;
     }

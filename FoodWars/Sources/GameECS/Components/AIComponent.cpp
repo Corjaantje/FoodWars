@@ -1,6 +1,6 @@
 #include "../../../Headers/GameECS/Components/AIComponent.h"
 
-AIComponent::AIComponent(int id, int difficulty, int entityId) : PlayerComponent(id), _difficulty(difficulty), _currentState(nullptr) {
+AIComponent::AIComponent(int playerID, Faction faction, Difficulty difficulty) : PlayerComponent(playerID, faction), _difficulty(difficulty), _currentState(nullptr) {
 
 }
 
@@ -21,4 +21,5 @@ State* AIComponent::getCurrentState() const{
 void AIComponent::update(double dt) {
     if (_currentState) _currentState->execute(dt);
 }
+
 

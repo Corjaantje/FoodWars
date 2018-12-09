@@ -31,10 +31,6 @@ void DamageableSystem::update(double deltaTime) {
 bool DamageableSystem::canHandle(const CollisionEvent &collisionEvent) {
     int target = collisionEvent.getEntity();
     int projectile = collisionEvent.getOtherEntity();
-    if(_entityManager->getComponentFromEntity<DamagingComponent>(projectile) && _entityManager->getComponentFromEntity<DamageableComponent>(target)){
-        handleInvertedCollisionEvent(collisionEvent);
-        return false;
-    }
     return _entityManager->getComponentFromEntity<DamagingComponent>(target) && _entityManager->getComponentFromEntity<DamageableComponent>(projectile);
 }
 
@@ -51,12 +47,4 @@ void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent
     std::cout << "currentHP: " << target->getHealth() << std::endl;
 }
 
-void DamageableSystem::handleInvertedCollisionEvent(const CollisionEvent &collisionEvent)
-{
-    auto projectile = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity());
-    projectile->Destroy();
-    auto target = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity());
-    target->LowerHealth(_entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getOtherEntity())->getDamage());
 
-    std::cout << "Inverted handle, currentHP: " << target->GetHealth() << std::endl;
-}

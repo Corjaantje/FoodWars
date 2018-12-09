@@ -1,6 +1,7 @@
 #include "../../../Headers/GameECS/Systems/DamageableSystem.h"
 #include "../../../Headers/GameECS/Components/DamagingComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include <cmath>
 
 DamageableSystem::DamageableSystem(EntityManager &entityManager, AudioFacade& audioFacade,
@@ -46,4 +47,24 @@ void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent
     _audioFacade->playEffect("damage");
 
     std::cout << "currentHP: " << target->getHealth() << std::endl;
+
+    // Default point increase/decrease
+    int iPoints = 10;
+    std::map<int, PlayerComponent*> players = _entityManager->getAllEntitiesWithComponent<PlayerComponent>();
+    for (auto const& player : _entityManager->getAllEntitiesWithComponent<PlayerComponent>())
+    {
+        if (player.first == collisionEvent.getOtherEntity())
+        {
+            player.second->addScore(-iPoints);
+            iPoints = damage;
+        }
+    }
+
+    for (auto const& turn : _entityManager->getAllEntitiesWithComponent<TurnComponent>())
+    {
+        if (turn.second->isMyTurn())
+        {
+            players[turn.first]->addScore(iPoints);
+        }
+    }
 }

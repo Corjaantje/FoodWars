@@ -6,13 +6,13 @@
 #define PROJECT_SWA_MYDOCUMENT_H
 #pragma once
 #include "MyNode.h"
-class MyDocument
-{
+
+class MyDocument {
 public:
-    MyDocument(MyNode& root);
+    explicit MyDocument(const MyNode &root);
     ~MyDocument();
 
-    MyNode GetRoot();
+    const MyNode &GetRoot() const;
     void AddToRoot(MyNode addition);
 
 private:

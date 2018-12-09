@@ -1,14 +1,14 @@
 #ifndef PROJECT_SWA_SERIALIZATIONRECIEVER_H
 #define PROJECT_SWA_SERIALIZATIONRECIEVER_H
 
-#include "DeserializeVisitor.h"
+#include "DeserializationVisitor.h"
 #include "SerializationVisitor.h"
 
 class SerializationReceiver {
 public:
     virtual void accept(SerializationVisitor &visitor) = 0;
 
-    virtual void accept(DeserializeVisitor &visitor) {
+    virtual void accept(DeserializationVisitor &visitor) {
         accept((SerializationVisitor &) visitor);
     }
 };

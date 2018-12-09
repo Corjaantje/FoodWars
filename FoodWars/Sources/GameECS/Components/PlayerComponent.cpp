@@ -62,7 +62,7 @@ void PlayerComponent::accept(SerializationVisitor &visitor) {
     visitor.visit("score", _score);
 }
 
-void PlayerComponent::accept(DeserializeVisitor &visitor) {
+void PlayerComponent::accept(DeserializationVisitor &visitor) {
     visitor.visit("playerId", _playerID);
     std::vector<SerializationReceiver *> weapons;
     visitor.visit("weapons", weapons, []() {

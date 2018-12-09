@@ -24,7 +24,7 @@ public:
 
     void accept(SerializationVisitor &visitor) override;
 
-    void accept(DeserializeVisitor &visitor) override;
+    void accept(DeserializationVisitor &visitor) override;
 
 private:
     int _playerID;

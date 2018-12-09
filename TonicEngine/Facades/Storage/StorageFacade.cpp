@@ -23,13 +23,13 @@ StorageFacade::~StorageFacade() {
 string StorageFacade::getHighscore(int level) {
 
     std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile("Assets/highscore.xml");
-    if (highscoreFile != nullptr) {
+    /*if (highscoreFile != nullptr) {
         string score = highscoreFile->GetRoot().GetChildren()[level].GetChildren()[0].GetValue();
 
         if (score != "") {
             return score;
         }
-    }
+    }*/
     return "0";
 }
 

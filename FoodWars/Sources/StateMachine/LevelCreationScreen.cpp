@@ -1,5 +1,6 @@
 #include "../../Headers/StateMachine/LevelCreationScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
+#include "../../Headers/Storage/LevelStorage.h"
 
 LevelCreationScreen::LevelCreationScreen(ScreenStateManager& context) : IScreen(context), selectedSong{"none"}
 {
@@ -212,5 +213,6 @@ void LevelCreationScreen::callRender() {
 }
 
 void LevelCreationScreen::relinkAndSave() {
-    StorageSystem{}.saveWorld(_levelBuilder.getConstructedLevelNonConst());
+    //StorageSystem{}.saveWorld(_levelBuilder.getConstructedLevelNonConst());
+    LevelStorage{}.saveLevel(_levelBuilder.getConstructedLevel(), "abc.xml");
 }

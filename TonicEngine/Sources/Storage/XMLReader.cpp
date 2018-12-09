@@ -3,7 +3,6 @@
 //
 
 #include "../../Headers/Storage/XMLReader.h"
-#include <sstream>
 
 #ifndef XMLCheckResult
 #define XMLCheckResult(a_eResult) if (a_eResult != XML_SUCCESS) { printf("Error: %i\n", a_eResult); return a_eResult; }
@@ -42,7 +41,7 @@ void XMLReader::ReadRecursively(XMLElement & elem, MyNode & parent)
     {
         ReadRecursively(*elem.NextSiblingElement(), parent);
     }
-    &parent.AddChild(*current_node);  // TODO: Fix stack/heap
+    //&parent.AddChild(*current_node);  // TODO: Fix stack/heap
 }
 
 XMLReader::XMLReader()

@@ -66,6 +66,8 @@ public:
         return returnMap;
     }
 
+    std::map<int, std::vector<Component *>> getAllEntitiesWithAllComponents() const;
+
     void removeEntity(int entityId);
 
     bool exists(int entityId) const;

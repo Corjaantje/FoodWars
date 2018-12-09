@@ -1,10 +1,5 @@
 #include "../../../Headers/GameECS/Systems/StorageSystem.h"
-#include "../../../../TonicEngine/Headers/Visual/Colour.h"
-#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
-#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
-#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeText.h"
 // For checking # of files in directory
-#include <dirent.h>
 
 StorageSystem::StorageSystem() {
     _reader = new XMLReader();
@@ -20,7 +15,7 @@ StorageSystem::~StorageSystem() {
 template<typename Comp>
 void StorageSystem::addComponentTypeOf(std::string compName, map<int, MyNode> &foundComponents, MyNode &rootNode) {
 
-    std::map<int, DrawableComponent *> components{_entityManager->getAllEntitiesWithComponent<DrawableComponent>()};
+    /*std::map<int, DrawableComponent *> components{_entityManager->getAllEntitiesWithComponent<DrawableComponent>()};
     // Can probably move this to a function with a <T> and pass a name for the newDraw?
     // Would just need an array of the kinds of components.
     for (auto const &drawComp : components) {
@@ -38,7 +33,7 @@ void StorageSystem::addComponentTypeOf(std::string compName, map<int, MyNode> &f
             newID.AddChild(newDraw);
             foundComponents[drawComp.first] = newID;
         }
-    }
+    }*/
 }
 
 void StorageSystem::addDrawables(MyDocument &myDoc, std::map<int, DrawableComponent *> toSave,
@@ -302,7 +297,7 @@ void StorageSystem::addDamageable(MyDocument &myDoc, std::map<int, DamageableCom
 
 void StorageSystem::prepareRect(MyNode &parentNode, std::vector<std::string> filling) {
     // To keep track of type
-    MyNode identifierNode{filling[0], &parentNode};
+    /*MyNode identifierNode{filling[0], &parentNode};
 
     MyNode positionNode{filling[1], &parentNode};
 
@@ -347,12 +342,12 @@ void StorageSystem::prepareRect(MyNode &parentNode, std::vector<std::string> fil
     parentNode.AddChild(positionNode);
     parentNode.AddChild(dimensionNode);
     parentNode.AddChild(colorNode);
-    parentNode.AddChild(identifierNode);
+    parentNode.AddChild(identifierNode);*/
 }
 
 void StorageSystem::prepareSprite(MyNode &parentNode, std::vector<std::string> filling) {
     // To keep track of type
-    MyNode identifierNode{filling[0], &parentNode};
+    /*MyNode identifierNode{filling[0], &parentNode};
 
     MyNode positionNode{filling[1], &parentNode};
 
@@ -388,12 +383,12 @@ void StorageSystem::prepareSprite(MyNode &parentNode, std::vector<std::string> f
     parentNode.AddChild(positionNode);
     parentNode.AddChild(dimensionNode);
     parentNode.AddChild(imageNode);
-    parentNode.AddChild(identifierNode);
+    parentNode.AddChild(identifierNode);*/
 }
 
 void StorageSystem::prepareText(MyNode &parentNode, std::vector<std::string> filling) {
     // To keep track of type
-    MyNode identifierNode{filling[0], &parentNode};
+    /*MyNode identifierNode{filling[0], &parentNode};
 
     MyNode positionNode{filling[1], &parentNode};
 
@@ -441,14 +436,14 @@ void StorageSystem::prepareText(MyNode &parentNode, std::vector<std::string> fil
     parentNode.AddChild(positionNode);
     parentNode.AddChild(dimensionNode);
     parentNode.AddChild(colorNode);
-    parentNode.AddChild(identifierNode);
+    parentNode.AddChild(identifierNode);*/
 }
 
 void StorageSystem::parseSavedInstance(MyNode &rootNode, EntityManager &_entity) {
     MyNode rootChild{"id", &rootNode};
     std::map<int, int> identifier{};
 
-    for (auto const &piece : rootNode.GetChildren()) {
+    /*for (auto const &piece : rootNode.GetChildren()) {
         if (piece.GetName() == "id") {
             int savedID = piece.GetIntValue();
             if (!identifier.count(savedID)) {
@@ -477,11 +472,11 @@ void StorageSystem::parseSavedInstance(MyNode &rootNode, EntityManager &_entity)
                 childrenProcessed++;
             }
         }
-    }
+    }*/
 }
 
 void StorageSystem::recursiveCrawl(MyNode &piece, EntityManager &_entity, int id) {
-    if (piece.NextSiblingElement() == nullptr) {
+    /*if (piece.NextSiblingElement() == nullptr) {
         return;
     } else {
         if (piece.GetName() == "drawablecomponent") {
@@ -498,13 +493,13 @@ void StorageSystem::recursiveCrawl(MyNode &piece, EntityManager &_entity, int id
             parseTurn(piece, _entity, id);
         }
 //        recursiveCrawl(piece.NextSiblingElement(), _entity, id);
-    }
+    }*/
 }
 
 void StorageSystem::parseDrawable(const MyNode &drawableNode, EntityManager &_entity, int identifier) {
     //_entity.addComponentToEntity(identifier, comp);
 
-    std::vector<MyNode> childNodes = drawableNode.GetChildren();
+    /*std::vector<MyNode> childNodes = drawableNode.GetChildren();
     if (childNodes[0].GetName() == "rectangle") {
         _entity.addComponentToEntity<DrawableComponent>(identifier, std::make_unique<ShapeRectangle>(
                 childNodes[2].GetChildren()[0].GetIntValue(),
@@ -538,66 +533,66 @@ void StorageSystem::parseDrawable(const MyNode &drawableNode, EntityManager &_en
                        childNodes[0].GetChildren()[0].GetIntValue(),
                        childNodes[0].GetChildren()[0].GetIntValue()}
         ));
-    }
+    }*/
 }
 
 void StorageSystem::parseGravity(const MyNode &gravityNode, EntityManager &_entity, int identifier) {
-    std::vector<MyNode> childNodes = gravityNode.GetChildren();
-    _entity.addComponentToEntity<GravityComponent>(identifier, childNodes[0].GetIntValue());
+    /* std::vector<MyNode> childNodes = gravityNode.GetChildren();
+     _entity.addComponentToEntity<GravityComponent>(identifier, childNodes[0].GetIntValue());*/
 }
 
 void StorageSystem::parseMove(const MyNode &moveNode, EntityManager &_entity, int identifier) {
-    std::vector<MyNode> childNodes = moveNode.GetChildren();
-    _entity.addComponentToEntity<MoveComponent>(identifier, childNodes[1].GetIntValue(), childNodes[0].GetIntValue());
+    /*std::vector<MyNode> childNodes = moveNode.GetChildren();
+    _entity.addComponentToEntity<MoveComponent>(identifier, childNodes[1].GetIntValue(), childNodes[0].GetIntValue());*/
 }
 
 void StorageSystem::parsePosition(const MyNode &positionNode, EntityManager &_entity, int identifier) {
-    std::vector<MyNode> childNodes = positionNode.GetChildren();
+    /*std::vector<MyNode> childNodes = positionNode.GetChildren();
     _entity.addComponentToEntity<PositionComponent>(identifier, childNodes[0].GetIntValue(),
-                                                    childNodes[1].GetIntValue());
+                                                    childNodes[1].GetIntValue());*/
 }
 
 void StorageSystem::parseTurn(const MyNode &turnNode, EntityManager &_entity, int identifier) {
-    std::vector<MyNode> childNodes = turnNode.GetChildren();
-    _entity.addComponentToEntity<TurnComponent>(identifier, childNodes[1].GetIntValue(), childNodes[0].GetIntValue());
+    /*std::vector<MyNode> childNodes = turnNode.GetChildren();
+    _entity.addComponentToEntity<TurnComponent>(identifier, childNodes[1].GetIntValue(), childNodes[0].GetIntValue());*/
 
 }
 
 void StorageSystem::parseCollideables(const MyNode &collideNode, EntityManager &_entity, int identifier) {
-    std::vector<MyNode> childNodes = collideNode.GetChildren();
-    _entity.addComponentToEntity<BoxCollider>(identifier, childNodes[1].GetIntValue(), childNodes[0].GetIntValue());
+    /* std::vector<MyNode> childNodes = collideNode.GetChildren();
+     _entity.addComponentToEntity<BoxCollider>(identifier, childNodes[1].GetIntValue(), childNodes[0].GetIntValue());*/
 }
 
 void StorageSystem::parseDamageable(const MyNode &damageNode, EntityManager &_entity, int identifier) {
-    std::vector<MyNode> childNodes = damageNode.GetChildren();
-    _entity.addComponentToEntity<DamageableComponent>(identifier, childNodes[0].GetIntValue());
+    /* std::vector<MyNode> childNodes = damageNode.GetChildren();
+     _entity.addComponentToEntity<DamageableComponent>(identifier, childNodes[0].GetIntValue());*/
 }
 
 int StorageSystem::countFilesInDirectory(std::string targetdir) {
-    DIR *dir;
-    struct dirent *entry;
-    struct stat info{};
+    /* DIR *dir;
+     struct dirent *entry;
+     struct stat info{};
 
-    int highestFileFound = 0;
-    dir = opendir(targetdir.c_str());
-    if (!dir) {
-        closedir(dir);
-        return highestFileFound;
-    }
+     int highestFileFound = 0;
+     dir = opendir(targetdir.c_str());
+     if (!dir) {
+         closedir(dir);
+         return highestFileFound;
+     }
 
-    while ((entry = readdir(dir)) != nullptr) {
-        if (entry->d_name[0] != '.') {
-            std::string path = std::string(targetdir) + "/" + std::string(entry->d_name);
-            //stat(path.c_str(),&info);
+     while ((entry = readdir(dir)) != nullptr) {
+         if (entry->d_name[0] != '.') {
+             std::string path = std::string(targetdir) + "/" + std::string(entry->d_name);
+             //stat(path.c_str(),&info);
 
-            if (path.find(".xml") != std::string::npos) {
-                int fileNum = std::stoi(std::string(entry->d_name).substr(5, std::string(entry->d_name).length() - 9));
-                highestFileFound = fileNum >= highestFileFound ? fileNum + 1 : highestFileFound;
-            }
-        }
-    };
-    closedir(dir);
-    return highestFileFound;
+             if (path.find(".xml") != std::string::npos) {
+                 int fileNum = std::stoi(std::string(entry->d_name).substr(5, std::string(entry->d_name).length() - 9));
+                 highestFileFound = fileNum >= highestFileFound ? fileNum + 1 : highestFileFound;
+             }
+         }
+     };
+     closedir(dir);*/
+    return 0;
 }
 // Public functions
 
@@ -630,39 +625,39 @@ void StorageSystem::saveWorld(GameLevel &gameLevel) {//std::string savePath) {
     }
 
 //    MyNode altRoot {"secondary", nullptr };
-    MyNode bgmNode{"backgroundmusic", &trueRootNode};
-    bgmNode.SetValue(gameLevel.getBackgroundMusic());
+    /* MyNode bgmNode{"backgroundmusic", &trueRootNode};
+     bgmNode.SetValue(gameLevel.getBackgroundMusic());
 
-    MyNode wallpaperNode{"wallpaper", &trueRootNode};
-    wallpaperNode.SetValue(gameLevel.getBackgroundWallpaper());
+     MyNode wallpaperNode{"wallpaper", &trueRootNode};
+     wallpaperNode.SetValue(gameLevel.getBackgroundWallpaper());
 
-    MyNode spawnNodes{"spawnpoints", &trueRootNode};
+     MyNode spawnNodes{"spawnpoints", &trueRootNode};
 
-    for (auto const &point : gameLevel.getSpawnPoints()) {
-        MyNode spawner{"spawn", &spawnNodes};
+     for (auto const &point : gameLevel.getSpawnPoints()) {
+         MyNode spawner{"spawn", &spawnNodes};
 
-        MyNode xPos{"x", &spawner};
-        xPos.SetValue(std::to_string(point.getXCoord()));
-        MyNode yPos{"y", &spawner};
-        yPos.SetValue(std::to_string(point.getYCoord()));
+         MyNode xPos{"x", &spawner};
+         xPos.SetValue(std::to_string(point.getXCoord()));
+         MyNode yPos{"y", &spawner};
+         yPos.SetValue(std::to_string(point.getYCoord()));
 
-        spawner.AddChild(yPos);
-        spawner.AddChild(xPos);
+         spawner.AddChild(yPos);
+         spawner.AddChild(xPos);
 
-        spawnNodes.AddChild(spawner);
-    }
+         spawnNodes.AddChild(spawner);
+     }
 
-    myDoc.AddToRoot(spawnNodes);
-    myDoc.AddToRoot(wallpaperNode);
-    myDoc.AddToRoot(bgmNode);
-//    Get number of files in the Levels directory
-    std::string savingName = "Level" + to_string(countFilesInDirectory(const_cast<char *>("./Assets/Levels/")));
+     myDoc.AddToRoot(spawnNodes);
+     myDoc.AddToRoot(wallpaperNode);
+     myDoc.AddToRoot(bgmNode);
+ //    Get number of files in the Levels directory
+     std::string savingName = "Level" + to_string(countFilesInDirectory(const_cast<char *>("./Assets/Levels/")));
 
-    _writer->WriteXMLFile(myDoc, "./Assets/Levels/" + savingName + ".xml");
+     _writer->WriteXMLFile(myDoc, "./Assets/Levels/" + savingName + ".xml");
 
-    for (auto const &point : nodeIDs) {
-        delete point;
-    }
+     for (auto const &point : nodeIDs) {
+         delete point;
+     }*/
 }
 
 GameLevel *StorageSystem::loadWorld(GameLevel &toFill, std::string filePath) {
@@ -682,7 +677,7 @@ GameLevel *StorageSystem::loadWorld(GameLevel &toFill, std::string filePath) {
 
     parseSavedInstance(rootNode, toFill.getEntityManager());
     GameLevel *gameLevel = &toFill;
-    gameLevel->setBackgroundMusic(rootNode.GetChildren()[0].GetValue());
+    /*gameLevel->setBackgroundMusic(rootNode.GetChildren()[0].GetValue());
     gameLevel->setBackgroundWallpaper(rootNode.GetChildren()[1].GetValue());
 
     std::vector<Coordinate> spawnPoints;
@@ -691,7 +686,7 @@ GameLevel *StorageSystem::loadWorld(GameLevel &toFill, std::string filePath) {
         spawner.setCoordinates(spawn.GetChildren()[0].GetIntValue(), spawn.GetChildren()[1].GetIntValue());
         spawnPoints.emplace_back(spawner);
     }
-    gameLevel->setSpawnPoints(spawnPoints);
+    gameLevel->setSpawnPoints(spawnPoints);*/
 
     return gameLevel;
 }

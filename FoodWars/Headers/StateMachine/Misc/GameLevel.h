@@ -3,9 +3,10 @@
 
 #include "../../GameECS/Entities/EntityManager.h"
 #include "Coordinate.h"
+#include "../../Storage/GameLevel/GameLevelSerializationReceiver.h"
 
 // todo: place GameLevel in other directory
-class GameLevel {
+class GameLevel : public GameLevelSerializationReceiver {
 public:
     GameLevel();
 
@@ -30,6 +31,10 @@ public:
     std::string getBackgroundWallpaper() const;
 
     std::vector<Coordinate> getSpawnPoints() const;
+
+    void accept(GameLevelSerializeVisitor &visitor) const override;
+
+    void accept(GameLevelDeserializeVisitor &visitor) override;
 };
 
 

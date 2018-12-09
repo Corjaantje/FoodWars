@@ -5,7 +5,7 @@
 #include <memory>
 #include "SerializationVisitor.h"
 
-class DeserializeVisitor : public SerializationVisitor {
+class DeserializationVisitor : public SerializationVisitor {
 public:
     void visit(const std::string &name, std::string &value) override = 0;
 
@@ -21,6 +21,7 @@ public:
 
     virtual void visit(const std::string &name, std::vector<SerializationReceiver *> &receivers,
                        std::function<SerializationReceiver *()> createFunc) = 0;
+
 };
 
 #endif //PROJECT_SWA_DESERIALIZEVISITOR_H

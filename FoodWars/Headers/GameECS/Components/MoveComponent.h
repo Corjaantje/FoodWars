@@ -9,6 +9,7 @@ class MoveComponent : public Component, public ISerializable {
 public:
     double xVelocity;
     double yVelocity;
+    bool shooting;
     MoveComponent();
     explicit MoveComponent(double velocity);
 

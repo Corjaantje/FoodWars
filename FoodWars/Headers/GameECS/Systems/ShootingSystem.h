@@ -35,6 +35,7 @@ private:
     int _powerBarBackground;
     int _powerBar;
     bool _risingPower;
+    int _currentPlayer;
 
     AudioFacade* _audioFacade;
     VisualFacade* _visualFacade;

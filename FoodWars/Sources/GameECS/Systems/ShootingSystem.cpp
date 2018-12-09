@@ -28,7 +28,8 @@ ShootingSystem::ShootingSystem(EntityManager &entityManager,
         _power(0),
         _powerBarWidth(20),
         _maxPower(50),
-        _risingPower(true)
+        _risingPower(true),
+        _currentPlayer(0)
 {
     inputFacade.getMouseEventObservable().registerObserver(this);
 }
@@ -59,46 +60,52 @@ void ShootingSystem::update(double deltaTime) {
 
 void ShootingSystem::update(const MouseEvent& event) {
     if(_isShooting && !_projectileFired) {
-        int currentPlayer = 0;
         auto turnComponents = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
         for (auto const &x : turnComponents) {
             if (x.second->isMyTurn()) {
-                currentPlayer = x.first;
+                _currentPlayer = x.first;
                 break;
             }
         }
+        _entityManager->getComponentFromEntity<MoveComponent>(_currentPlayer)->shooting = true;
         Weapon *selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(
-                currentPlayer)->getSelectedWeapon();
+                _currentPlayer)->getSelectedWeapon();
 
-        if (_entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->getEnergy() >= 20 && selectedWeapon->getAmmo() > 0) {
-            auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(currentPlayer);
-            auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(currentPlayer);
-            int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
-            int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
-            if (!_entityManager->getComponentFromEntity<AnimationComponent>(currentPlayer)->getIsLookingLeft()) {
-                _powerBarX = playerCenterX - 55;
-            } else {
-                _powerBarX = playerCenterX + 35;
-            }
-            _powerBarY = playerCenterY - 25;
-            double deltaX = event.getXPosition() - playerCenterX;
-            double deltaY = event.getYPosition() - playerCenterY;
+        if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= 20 && selectedWeapon->getAmmo() > 0) {
 
-            // shooting in a circle
-            double totalLength = sqrt( deltaX*deltaX + deltaY*deltaY );
-            double length = totalLength > 150?150 : totalLength;
-            double scale = length / totalLength;
+                auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentPlayer);
+                auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(_currentPlayer);
+                int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
+                int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
 
-            deltaX *= scale;
-            deltaY *= scale;
+                // Check if player is looking left or right to determine the x position of the powerbar
+                if (!_entityManager->getComponentFromEntity<AnimationComponent>(_currentPlayer)->getIsLookingLeft())
+                    _powerBarX = playerCenterX - 55;
+                else
+                    _powerBarX = playerCenterX + 35;
+                _powerBarY = playerCenterY - 25;
 
-            double toX = playerCenterX + deltaX;
-            double toY = playerCenterY + deltaY;
+                double deltaX = event.getXPosition() - playerCenterX;
+                double deltaY = event.getYPosition() - playerCenterY;
 
-            if (!_lineDrawn) {
+                // shooting in a circle
+                double totalLength = sqrt(deltaX * deltaX + deltaY * deltaY);
+                double length = totalLength > 150 ? 150 : totalLength;
+                double scale = length / totalLength;
+
+                deltaX *= scale;
+                deltaY *= scale;
+
+                double toX = playerCenterX + deltaX;
+                double toY = playerCenterY + deltaY;
+
                 if (event.getMouseEventType() == MouseEventType::Down &&
                     event.getMouseClickType() == MouseClickType::Left) {
+
                     createShootingLine(playerCenterX, playerCenterY, toX, toY);
+                    createPowerBar();
+                    _powerBar = _entityManager->createEntity();
+                    _mouseDown = true;
                 }
 
                 if (event.getMouseEventType() == MouseEventType::Drag) {
@@ -112,31 +119,18 @@ void ShootingSystem::update(const MouseEvent& event) {
                     line->yPos2 = toY;
                 }
 
-                if (event.getMouseEventType() == MouseEventType::Up && event.getMouseClickType() == MouseClickType::Left) {
-                    createPowerBar();
-                    _lineDrawn = true;
-                }
-            } else {
-                if (event.getMouseEventType() == MouseEventType::Down &&
-                    event.getMouseClickType() == MouseClickType::Left) {
-                    _powerBar = _entityManager->createEntity();
-                    _mouseDown = true;
-                }
-
                 if (event.getMouseEventType() == MouseEventType::Up &&
                     event.getMouseClickType() == MouseClickType::Left) {
                     _mouseDown = false;
-
                     generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY, selectedWeapon);
                     _isShooting = false;
                     _projectileFired = true;
-                    _lineDrawn = false;
                     _entityManager->removeEntity(_powerBarBackground);
                     _entityManager->removeEntity(_powerBar);
                     _entityManager->removeEntity(_shootingLine);
-                    _entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->lowerEnergy(20);
+                    _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->lowerEnergy(20);
                     _audioFacade->playEffect("throwing");
-                }
+                    _entityManager->getComponentFromEntity<MoveComponent>(_currentPlayer)->shooting = false;
             }
         } else {
             if (event.getMouseEventType() == MouseEventType::Down && event.getMouseClickType() == MouseClickType::Left) {
@@ -163,7 +157,7 @@ void ShootingSystem::createPowerBar() {
 void ShootingSystem::powerHandler() {
     int width = _powerBarWidth - 4;
     int height = _power * -1;
-    int xPos = _powerBarX;
+    int xPos = _powerBarX + 2;
     int yPos = _powerBarY + (_maxPower);
 
     if (!_risingPower) {
@@ -201,6 +195,7 @@ void ShootingSystem::resetShooting() {
     _entityManager->removeEntity(_powerBarBackground);
     _entityManager->removeEntity(_powerBar);
     _entityManager->removeEntity(_shootingLine);
+    _entityManager->getComponentFromEntity<MoveComponent>(_currentPlayer)->shooting = false;
 }
 
 void ShootingSystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,

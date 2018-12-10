@@ -11,7 +11,7 @@ public:
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;
 
-    void getScoreText();
+    void refreshScoreText();
 private:
 
     void placeShape(int xpos, int ypos, std::string text, int width, int height, Colour colour);

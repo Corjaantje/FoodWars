@@ -100,14 +100,14 @@ void GameScreen::update(double deltaTime) {
     bool playerTwoAlive = true;
     int playerOneScore = 0;
     int playerTwoScore = 0;
-    for(auto const &ent : _entitiesWithPlayerComponent) {
-        if(ent.second->getPlayerID() == 1){
-            playerOneAlive = ent.second->getIsAlive();
-            playerOneScore = ent.second->getScore();
+    for(auto const &iterator : _entitiesWithPlayerComponent) {
+        if(iterator.second->getPlayerID() == 1){
+            playerOneAlive = iterator.second->getIsAlive();
+            playerOneScore = iterator.second->getScore();
         }
-        if(ent.second->getPlayerID() == 2){
-            playerTwoAlive = ent.second->getIsAlive();
-            playerTwoScore = ent.second->getScore();
+        if(iterator.second->getPlayerID() == 2){
+            playerTwoAlive = iterator.second->getIsAlive();
+            playerTwoScore = iterator.second->getScore();
         }
     }
     //Either of the 2 died

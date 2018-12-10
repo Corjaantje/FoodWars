@@ -29,7 +29,7 @@ HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context)
                               },
                               60, 60, 1000,444,
                               Colour{0,0,0,0})->addToRender(&_renderList);
-    getScoreText();
+    refreshScoreText();
     for (int i = 0; i < 3 && i < _levelScores.size(); i++)
     {
         placeShape(640, 310 + (i%3 * 125), "", 330, 80, Colour(255, 255, 255, 0));
@@ -50,7 +50,7 @@ void HighscoreScreen::update(double deltaTime) {
 
     _renderList.clearLists();
 
-    getScoreText();
+    refreshScoreText();
     for (int i = 0; i < 3 && i < _levelScores.size(); i++)
     {
         _visualScores[i]->text = _levelScores[i+_currentIndex][2] + " "+_levelScores[i+_currentIndex][0]+" "+std::to_string(i+1+_currentIndex)+": " +_levelScores[i+_currentIndex][1];
@@ -69,9 +69,9 @@ void HighscoreScreen::update(const KeyEvent& event){
     }
 }
 
-void HighscoreScreen::getScoreText() {
+void HighscoreScreen::refreshScoreText() {
     _levelScores.clear();
-    _levelScores = _storageFacade->getHighscoresAndLevels();
+    _levelScores = _storageFacade->loadHighscoresForLevels();
 }
 
 void HighscoreScreen::alterIndex(int dir) {

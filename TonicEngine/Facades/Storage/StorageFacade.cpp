@@ -16,9 +16,7 @@ StorageFacade::StorageFacade(std::string system, std::string user) {
     _userFile = _reader.ReadXMLFile(doc);
 }
 
-StorageFacade::~StorageFacade() {
-
-}
+StorageFacade::~StorageFacade() = default;
 
 // Retrieve highscore
 string StorageFacade::getHighscore(int level) {
@@ -34,7 +32,7 @@ string StorageFacade::getHighscore(int level) {
     return "0";
 }
 
-std::vector<std::vector<std::string>> StorageFacade::getHighscoresAndLevels() {
+std::vector<std::vector<std::string>> StorageFacade::loadHighscoresForLevels() {
     std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile("Assets/Highscore.xml");
     std::vector<std::vector<std::string>> vLevels;
 
@@ -43,7 +41,7 @@ std::vector<std::vector<std::string>> StorageFacade::getHighscoresAndLevels() {
         std::vector<std::string> toFill {lvl.GetName(),
                                          (!lvl.GetChildren()[0].GetValue().empty()) ? lvl.GetChildren()[0].GetValue() : nullptr,
                                          (!lvl.GetChildren()[1].GetValue().empty()) ? lvl.GetChildren()[1].GetValue() : nullptr};
-        vLevels.push_back(toFill);
+        vLevels.emplace_back(toFill);
     }
 
     return vLevels;

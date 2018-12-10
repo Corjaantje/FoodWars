@@ -21,7 +21,6 @@ public:
     void toggleShooting();
 private:
     bool _projectileFired;
-    bool _lineDrawn;
     bool _mouseDown;
     int _projectile;
     int _powerBarX;
@@ -44,6 +43,7 @@ private:
     void createShootingLine(int fromX, int fromY, int toX, int toY);
     void createPowerBar();
     void powerHandler();
+    void setPlayerTurn();
     void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
                             double velocityX, double velocityY, Weapon* selectedWeapon, int playerCenterX, int playerCenterY);
 };

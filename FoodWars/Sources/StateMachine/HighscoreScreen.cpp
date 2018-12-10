@@ -49,7 +49,7 @@ void HighscoreScreen::update(double deltaTime) {
 
     // todo: determine whether highscores should be reloaded every time they're visited
 //    generateScoreText();
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3 && i < _levelScores.size(); i++)
     {
         _visualScores[i]->text = _levelScores[i+_currentIndex][0]+" "+std::to_string(i+1+_currentIndex)+": " +_levelScores[i+_currentIndex][1];
     }
@@ -76,7 +76,7 @@ void HighscoreScreen::generateScoreText() {
 
     Colour textColour = Colour(255, 255, 255, 0);
     std::string highscoreText;
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3 && i < _levelScores.size(); i++)
     {
         highscoreText = _levelScores[i][0]+" "+std::to_string(i+1)+": " +_levelScores[i][1];
         placeShape(680, 310 + (i%3 * 125), highscoreText, 250, 80, textColour);

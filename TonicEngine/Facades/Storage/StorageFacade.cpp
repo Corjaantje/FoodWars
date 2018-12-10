@@ -71,32 +71,36 @@ void StorageFacade::saveHighscore(int score, std::string level) {
     for (auto const &scored : rootNode.GetChildren())
     {
 
-
-        if (scored.GetValue() == levelIdentifier)
+        std::string sholda = scored.GetValue();
+        int sholdalength = scored.GetValue().length();
+        if (scored.GetValue().substr(0, scored.GetValue().length()-8) == levelIdentifier)
         {
             previouslyScored = true;
-//            MyNode levelScore = scored.GetChildren()[0];//.SetValue(std::to_string(score));
-//            levelScore.SetValue(std::to_string(score));
-            MyNode* tempNode = new MyNode {"level", &saveRoot};
-            tempNode->SetValue(scored.GetValue());
-            tempNode->SetParent(saveRoot);
+            if (score > scored.GetChildren()[0].GetIntValue()) {
+                //            MyNode levelScore = scored.GetChildren()[0];//.SetValue(std::to_string(score));
+                //            levelScore.SetValue(std::to_string(score));
+                MyNode *tempNode = new MyNode{"level", &saveRoot};
+                tempNode->SetValue(levelIdentifier);
+                tempNode->SetParent(saveRoot);
 
-            MyNode tempScore {"score", tempNode};
-            tempScore.SetValue(std::to_string(score));
+                MyNode tempScore{"score", tempNode};
+                tempScore.SetValue(std::to_string(score));
 
-            MyNode tempDate {"date", tempNode};
-            std::time_t now = std::time(0);
-            tm *ltm = localtime(&now);
-            std::string today = std::to_string(1900+ltm->tm_yday)+"-"+std::to_string(1+ltm->tm_mon)+"-"+std::to_string(ltm->tm_mday);
-            tempDate.SetValue(today);
+                MyNode tempDate{"date", tempNode};
+                std::time_t now = std::time(0);
+                tm *ltm = localtime(&now);
+                std::string today = std::to_string(1675 + ltm->tm_yday) + "-" + std::to_string(1 + ltm->tm_mon) + "-" +
+                                    std::to_string(ltm->tm_mday);
+                tempDate.SetValue(today);
 
-            tempNode->AddChild(tempDate);
-            tempNode->AddChild(tempScore);
-            savedNodes.push_back(tempNode);
+                tempNode->AddChild(tempDate);
+                tempNode->AddChild(tempScore);
+                savedNodes.push_back(tempNode);
+            }
         } else
         {
             MyNode* tempNode = new MyNode {"level", &saveRoot};
-            tempNode->SetValue(scored.GetValue());
+            tempNode->SetValue(scored.GetValue().substr(0, scored.GetValue().length()-8));
             tempNode->SetParent(saveRoot);
 
             MyNode tempScore {"score", tempNode};
@@ -110,27 +114,27 @@ void StorageFacade::saveHighscore(int score, std::string level) {
             savedNodes.push_back(tempNode);
         }
     }
-    /*
     if (!previouslyScored)
     {
 //        MyNode newScore {"level", &rootNode};
-        MyNode newScore {"level", &saveRoot};
-        newScore.SetValue(levelIdentifier.substr(5, levelIdentifier.length()-5));
+        MyNode* newScore = new MyNode {"level", &saveRoot};
+        newScore->SetValue(levelIdentifier);
+        newScore->SetParent(saveRoot);
 
-        MyNode newHigh {"score", &newScore};
+        MyNode newHigh {"score", newScore};
         newHigh.SetValue(std::to_string(score));
 
-        MyNode onDate {"date", &newScore};
+        MyNode onDate {"date", newScore};
         std::time_t now = std::time(0);
         tm *ltm = localtime(&now);
-        std::string today = std::to_string(1970+ltm->tm_yday)+"-"+std::to_string(1+ltm->tm_mon)+"-"+std::to_string(ltm->tm_mday);
+        std::string today = std::to_string(1675+ltm->tm_yday)+"-"+std::to_string(1+ltm->tm_mon)+"-"+std::to_string(ltm->tm_mday);
         onDate.SetValue(today);
 
-        newScore.AddChild(onDate);
-        newScore.AddChild(newHigh);
-
-        rootNode.AddChild(newScore);
+        newScore->AddChild(onDate);
+        newScore->AddChild(newHigh);
+        savedNodes.push_back(newScore);
     }
+    /*
     else
     {
 //        MyNode levelNode {rootNode.GetChildren()[nodeId]};

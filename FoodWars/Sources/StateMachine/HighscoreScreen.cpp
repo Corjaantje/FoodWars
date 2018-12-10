@@ -29,7 +29,12 @@ HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context)
                               },
                               60, 60, 1000,444,
                               Colour{0,0,0,0})->addToRender(&_renderList);
-    generateScoreText();
+    getScoreText();
+    Colour textColour = Colour(255, 255, 255, 0);
+    for (int i = 0; i < 3 && i < _levelScores.size(); i++)
+    {
+        placeShape(680, 310 + (i%3 * 125), "", 250, 80, textColour);
+    }
 }
 
 HighscoreScreen::~HighscoreScreen() = default;
@@ -47,7 +52,7 @@ void HighscoreScreen::update(double deltaTime) {
     _renderList.clearLists();
 
     // todo: determine whether highscores should be reloaded every time they're visited
-//    generateScoreText();
+    getScoreText();
     for (int i = 0; i < 3 && i < _levelScores.size(); i++)
     {
         _visualScores[i]->text = _levelScores[i+_currentIndex][2] + " "+_levelScores[i+_currentIndex][0]+" "+std::to_string(i+1+_currentIndex)+": " +_levelScores[i+_currentIndex][1];
@@ -66,20 +71,19 @@ void HighscoreScreen::update(const KeyEvent& event){
     }
 }
 
-void HighscoreScreen::generateScoreText() {
-    for (const ShapeText *text : _visualScores) {
-        delete text;
-    }
-    _visualScores.clear();
+void HighscoreScreen::getScoreText() {
+//    for (const ShapeText *text : _visualScores) {
+//        delete text;
+//    }
+//    _visualScores.clear();
+    _levelScores.clear();
     _levelScores = _storageFacade->getHighscoresAndLevels();
 
-    Colour textColour = Colour(255, 255, 255, 0);
-    std::string highscoreText;
-    for (int i = 0; i < 3 && i < _levelScores.size(); i++)
-    {
-//        highscoreText = _levelScores[i][0]+" "+std::to_string(i+1)+": " +_levelScores[i][1]+" "+_levelScores[i][2];
-        placeShape(680, 310 + (i%3 * 125), "", 250, 80, textColour);
-    }
+//    Colour textColour = Colour(255, 255, 255, 0);
+//    for (int i = 0; i < 3 && i < _levelScores.size(); i++)
+//    {
+//        placeShape(680, 310 + (i%3 * 125), "", 250, 80, textColour);
+//    }
 }
 
 void HighscoreScreen::alterIndex(int dir) {

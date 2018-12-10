@@ -95,7 +95,7 @@ bool WanderState::canJumpOverObstruction(int obstructionId) {
     for(const auto &iterator : _entityManager->getAllEntitiesWithComponent<BoxCollider>()) {
         auto positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
         //todo: might have to change the 64
-        if(positionComponent->X == obstructionPosition->X && positionComponent->Y >= obstructionPosition->Y - 64){
+        if(positionComponent->X == obstructionPosition->X && positionComponent->Y >= obstructionPosition->Y - 64 && positionComponent->Y < obstructionPosition->Y){
             // cant jump
             return false;
         }

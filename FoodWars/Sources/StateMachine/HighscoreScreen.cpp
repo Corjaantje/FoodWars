@@ -30,10 +30,9 @@ HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context)
                               60, 60, 1000,444,
                               Colour{0,0,0,0})->addToRender(&_renderList);
     getScoreText();
-    Colour textColour = Colour(255, 255, 255, 0);
     for (int i = 0; i < 3 && i < _levelScores.size(); i++)
     {
-        placeShape(640, 310 + (i%3 * 125), "", 330, 80, textColour);
+        placeShape(640, 310 + (i%3 * 125), "", 330, 80, Colour(255, 255, 255, 0));
     }
 }
 
@@ -51,7 +50,6 @@ void HighscoreScreen::update(double deltaTime) {
 
     _renderList.clearLists();
 
-    // todo: determine whether highscores should be reloaded every time they're visited
     getScoreText();
     for (int i = 0; i < 3 && i < _levelScores.size(); i++)
     {
@@ -72,18 +70,8 @@ void HighscoreScreen::update(const KeyEvent& event){
 }
 
 void HighscoreScreen::getScoreText() {
-//    for (const ShapeText *text : _visualScores) {
-//        delete text;
-//    }
-//    _visualScores.clear();
     _levelScores.clear();
     _levelScores = _storageFacade->getHighscoresAndLevels();
-
-//    Colour textColour = Colour(255, 255, 255, 0);
-//    for (int i = 0; i < 3 && i < _levelScores.size(); i++)
-//    {
-//        placeShape(680, 310 + (i%3 * 125), "", 250, 80, textColour);
-//    }
 }
 
 void HighscoreScreen::alterIndex(int dir) {

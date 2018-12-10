@@ -3,6 +3,8 @@
 //
 
 #include "../../../Headers/GameECS/Systems/TurnSystem.h"
+#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
+#include "../../../Headers/GameECS/Components/PositionComponent.h"
 
 TurnSystem::TurnSystem(EntityManager &entityManager) : _entityManager(&entityManager), _defaultTimePerTurn(30),
                                                        _timePerTurn(_defaultTimePerTurn)
@@ -25,6 +27,9 @@ void TurnSystem::update(double deltaTime) {
             break;
         }
     }
+    if(_currentHighlightEntityId != -1) {
+        resetPlayerHighlight(deltaTime);
+    }
 }
 
 void TurnSystem::switchTurn() {
@@ -38,10 +43,35 @@ void TurnSystem::switchTurn() {
                 {
                     iterator2.second->switchTurn(true);
                     iterator2.second->setRemainingTime(30);
+                    if(_currentHighlightEntityId != -1){
+                        resetPlayerHighlight(2.1);
+                    }
+                    createCurrentPlayerHighlight(iterator2.first);
                 }
             }
             break;
         }
+    }
+}
+
+void TurnSystem::createCurrentPlayerHighlight(int entityID) {
+    _currentHighlightEntityId = _entityManager->createEntity();
+    auto *positionComp = _entityManager->getComponentFromEntity<PositionComponent>(entityID);
+    if (positionComp != nullptr) {
+        _entityManager->addComponentToEntity<DrawableComponent>(_currentHighlightEntityId,
+                                                                std::make_unique<ShapeSprite>(48, 72,
+                                                                                              positionComp->X,
+                                                                                              positionComp->Y - 100,
+                                                                                              "HighlightArrow.png", 4));
+    }
+}
+
+void TurnSystem::resetPlayerHighlight(double deltaTime) {
+    _timePerUpdateHighlight += deltaTime;
+    if(_timePerUpdateHighlight > 2.0){
+        _timePerUpdateHighlight = 0;
+        _entityManager->removeEntity(_currentHighlightEntityId);
+        _currentHighlightEntityId = -1;
     }
 }
 

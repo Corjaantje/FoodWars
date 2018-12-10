@@ -18,6 +18,10 @@ void Weapon::lowerAmmo() {
     _ammo--;
 }
 
+void Weapon::setAmmo(int val) {
+    _ammo = val;
+}
+
 const Faction Weapon::getFaction() const {
     return _faction;
 }

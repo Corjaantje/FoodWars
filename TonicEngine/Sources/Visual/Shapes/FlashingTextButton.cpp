@@ -2,7 +2,7 @@
 #include "../../../Headers/Visual/Shapes/FlashingTextButton.h"
 
 FlashingTextButton::FlashingTextButton(MouseEventObservable& mouseEventObservable, const std::string& text, const std::function<void()>& onClick, int width, int height, int xPos, int yPos, Colour buttonColour, Colour textColour) :
-    TextButton(mouseEventObservable, text, onClick, width, height, xPos, yPos), _flashing{true}{
+    TextButton(mouseEventObservable, text, onClick, width, height, xPos, yPos, buttonColour, textColour), _flashing{true}{
 
 }
 

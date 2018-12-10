@@ -1,6 +1,7 @@
 #include "../../../Headers/GameECS/Systems/DamageableSystem.h"
 #include "../../../Headers/GameECS/Components/DamagingComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include <cmath>
 
 DamageableSystem::DamageableSystem(EntityManager &entityManager, AudioFacade& audioFacade,
                                    IObservable<CollisionEvent>& collisionEventObservable) :
@@ -16,7 +17,14 @@ void DamageableSystem::update(double deltaTime) {
     for (auto x : _entityManager->getAllEntitiesWithComponent<DamageableComponent>()) {
         if(!x.second->isAlive())
         {
-            _entityManager->removeEntity(x.first);
+            auto* playerComp = _entityManager->getComponentFromEntity<PlayerComponent>(x.first);
+            if(playerComp == nullptr) {
+                _entityManager->removeEntity(x.first);
+            }
+            //We've killed a player!
+            else{
+                playerComp->setIsAlive(false);
+            }
         }
     }
 }

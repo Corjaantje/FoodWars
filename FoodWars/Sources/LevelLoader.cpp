@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "../Headers/LevelLoader.h"
 #include "../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 #include "../Headers/GameECS/Components/MoveComponent.h"
@@ -6,19 +8,25 @@
 #include "../Headers/GameECS/Systems/StorageSystem.h"
 #include "../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
 #include "../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../TonicEngine/Headers/Storage/FileManager.h"
 
 LevelLoader::LevelLoader() = default;
 
 LevelLoader::~LevelLoader() = default;
 
-GameLevel *LevelLoader::loadLevel(int level, GameLevel &gameLevel, CharacterBuilder playerOne, CharacterBuilder playerTwo) {
+GameLevel *LevelLoader::loadLevel(std::string levelPath, GameLevel &gameLevel, CharacterBuilder playerOne, CharacterBuilder playerTwo) {
     StorageSystem storage{};
-    std::string levelXML = "Assets/Levels/Level" + std::to_string(level) + ".xml";
-    storage.loadWorld(gameLevel, levelXML);
+    storage.loadWorld(gameLevel, levelPath);
     if (gameLevel.getSpawnPoints().empty()) {
         return nullptr;
     }
     spawnPlayers(gameLevel,playerOne, playerTwo);
+
+    //Set stats for selected levels
+    _lastPlayedLevelPath = levelPath;
+    _lastPlayedCharacterOne = playerOne;
+    _lastPlayedCharacterTwo = playerTwo;
+
     // Return gameLevel
     return &gameLevel;
 }
@@ -65,4 +73,28 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne,
     int boundBottom = entityManager->createEntity();
     entityManager->addComponentToEntity<BoxCollider>(boundBottom, 1600, 1600);
     entityManager->addComponentToEntity<PositionComponent>(boundBottom, 0, 900);
+}
+
+void LevelLoader::replayLastLevel(GameLevel &gameLevel) {
+    this->loadLevel(_lastPlayedLevelPath, gameLevel, _lastPlayedCharacterOne, _lastPlayedCharacterTwo);
+}
+
+void LevelLoader::playNextLevel(GameLevel &gamelevel) {
+    std::string newLevelString;
+    std::vector<string> levels = FileManager().getFiles(DEFAULT_XMLPATH, {"xml"}, true, false);
+    bool loaded = false;
+    for(int i=0; i < levels.size(); i++){
+        if(!loaded) {
+            //If there is another level around this one
+            if (DEFAULT_XMLPATH + levels[i] == _lastPlayedLevelPath && i != levels.size() - 1) {
+                loadLevel(DEFAULT_XMLPATH + levels[i + 1], gamelevel, _lastPlayedCharacterOne,
+                          _lastPlayedCharacterTwo);
+                loaded = true;
+                //No level next? Wrap around.
+            } else if (DEFAULT_XMLPATH + levels[i] == _lastPlayedLevelPath) {
+                loadLevel(DEFAULT_XMLPATH + levels[0], gamelevel, _lastPlayedCharacterOne, _lastPlayedCharacterTwo);
+                loaded = true;
+            }
+        }
+    }
 }

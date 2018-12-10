@@ -17,17 +17,20 @@ public:
     void setSelectedWeaponAvailability(int weaponAvail);
     void addScore(int score);
     void setFaction(Faction faction);
+    void setIsAlive(bool alive);
 
     int getPlayerID() const;
     int getScore() const;
     Weapon* getSelectedWeapon() const;
     int getSelectedWeaponAvailability() const;
-    Faction getFaction() const;
+    const Faction getFaction() const;
+    bool getIsAlive() const;
 
 private:
     int _playerID;
     int _score;
     int _selectedWeaponAvailability;
+    bool _isAlive;
     std::vector<Weapon*> _weapons{};
     Weapon* _selectedWeapon;
     Faction _faction;

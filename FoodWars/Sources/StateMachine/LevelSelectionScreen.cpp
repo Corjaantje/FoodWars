@@ -51,7 +51,7 @@ void LevelSelectionScreen::generateLevelButtons() {
                                             "Level " + std::to_string(i+1),
                                             [c = _context, this, i]() {
                                                 keyEventObservable->IObservable<KeyEvent>::unregisterObserver(this);
-                                                c->setActiveScreen(std::make_unique<CharacterSelectionScreen>(*c, i+1));
+                                                c->setActiveScreen(std::make_unique<CharacterSelectionScreen>(*c, "./Assets/Levels/" + _levels[i]));
                                             }, 250, 80, 680, 310 + (i % 3) * 125, Colour(255, 255, 255, 255),
                                             Colour(255, 255, 255, 255)};
         _levelButtons.push_back(button);

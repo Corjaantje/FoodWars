@@ -12,6 +12,7 @@ public:
     ~Weapon() = default;
 public:
     void lowerAmmo();
+    void setAmmo(int val);
     int getAmmo() const;
     std::string getImage() const;
     const Faction getFaction() const;

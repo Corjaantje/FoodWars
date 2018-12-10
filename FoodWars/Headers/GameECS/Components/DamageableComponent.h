@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
+#include "../../StateMachine/Misc/FactionEnum.h"
 
 class DamageableComponent: public Component, ISerializable {
 

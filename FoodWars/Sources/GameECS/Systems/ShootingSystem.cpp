@@ -221,7 +221,7 @@ void ShootingSystem::generateProjectile(const PositionComponent &playerPositionC
                                                                                                        selectedWeapon->getImage()));
     _entityManager->addComponentToEntity<PositionComponent>(_projectile, posX, posY);
     _entityManager->addComponentToEntity<BoxCollider>(_projectile, projectileWidth, projectileHeight);
-    _entityManager->addComponentToEntity<DamagingComponent>(_projectile, 25);
+    _entityManager->addComponentToEntity<DamagingComponent>(_projectile, 25, selectedWeapon->getFaction());
     _entityManager->addComponentToEntity<DamageableComponent>(_projectile, 10);
     _entityManager->addComponentToEntity<GravityComponent>(_projectile, 6 * speedModifier);
     _entityManager->addComponentToEntity<MoveComponent>(_projectile, (_power / 20) * velocityX * speedModifier,

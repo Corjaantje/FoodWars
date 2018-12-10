@@ -2,7 +2,7 @@
 
 #include "../../../Headers/StateMachine/Misc/Weapon.h"
 
-Weapon::Weapon(std::string imageUrl, int ammo) : _imageUrl(std::move(imageUrl)), _ammo(ammo), _entityManager() {
+Weapon::Weapon(std::string imageUrl, int ammo, Faction faction) : _imageUrl(std::move(imageUrl)), _ammo(ammo), _entityManager(), _faction{faction} {
 
 }
 
@@ -16,4 +16,8 @@ std::string Weapon::getImage() const {
 
 void Weapon::lowerAmmo() {
     _ammo--;
+}
+
+const Faction Weapon::getFaction() const {
+    return _faction;
 }

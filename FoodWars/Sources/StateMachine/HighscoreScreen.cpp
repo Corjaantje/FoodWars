@@ -5,8 +5,7 @@ HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context)
         _currentIndex{0},
         mouseEventObservable(&_inputFacade->getMouseEventObservable()){
     _inputFacade->getKeyEventObservable().registerKeyEventObserver(this);
-//    auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenHighscore.png");
-    auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenLevelSelection.png");
+    auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenHighscore.png");
     wallpaper->layer = 0;
     wallpaper->addToRender(&_renderList);
 

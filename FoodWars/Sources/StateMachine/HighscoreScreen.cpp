@@ -40,7 +40,7 @@ HighscoreScreen::~HighscoreScreen() = default;
 
 
 void HighscoreScreen::placeShape(int xpos, int ypos, std::string text, int width, int height, Colour colour) {
-    ShapeText* shape = createShape<ShapeText>(xpos, ypos, text, 0, width, height, colour);
+    auto * shape = createShape<ShapeText>(xpos, ypos, text, 0, width, height, colour);
     _visualScores.push_back(shape);
 }
 

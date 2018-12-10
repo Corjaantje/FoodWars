@@ -27,7 +27,7 @@ string StorageFacade::getHighscore(int level) {
     if (highscoreFile != nullptr) {
         string score = highscoreFile->GetRoot().GetChildren()[level].GetChildren()[0].GetValue();
 
-        if (score != "") {
+        if (!score.empty()) {
             return score;
         }
     }
@@ -41,8 +41,8 @@ std::vector<std::vector<std::string>> StorageFacade::getHighscoresAndLevels() {
     for (auto const& lvl : highscoreFile->GetRoot().GetChildren())
     {
         std::vector<std::string> toFill {lvl.GetName(),
-                                         (lvl.GetChildren()[0].GetValue() != "") ? lvl.GetChildren()[0].GetValue() : 0,
-                                         (lvl.GetChildren()[1].GetValue() != "") ? lvl.GetChildren()[1].GetValue() : 0};
+                                         (!lvl.GetChildren()[0].GetValue().empty()) ? lvl.GetChildren()[0].GetValue() : nullptr,
+                                         (!lvl.GetChildren()[1].GetValue().empty()) ? lvl.GetChildren()[1].GetValue() : nullptr};
         vLevels.push_back(toFill);
     }
 
@@ -84,7 +84,7 @@ void StorageFacade::saveHighscore(int score, std::string level) {
             }
 
             MyNode tempDate{"date", tempNode};
-            std::time_t now = std::time(0);
+            std::time_t now = std::time(nullptr);
             tm *ltm = localtime(&now);
             std::string today = std::to_string(1675 + ltm->tm_yday) + "-" + std::to_string(1 + ltm->tm_mon) + "-" +
                                 std::to_string(ltm->tm_mday)+" "+std::to_string(ltm->tm_hour)+":"+std::to_string(ltm->tm_min);
@@ -120,7 +120,7 @@ void StorageFacade::saveHighscore(int score, std::string level) {
         newHigh.SetValue(std::to_string(score));
 
         MyNode onDate {"date", newScore};
-        std::time_t now = std::time(0);
+        std::time_t now = std::time(nullptr);
         tm *ltm = localtime(&now);
         std::string today = std::to_string(1675+ltm->tm_yday)+"-"+std::to_string(1+ltm->tm_mon)+"-"+std::to_string(ltm->tm_mday)+" "+std::to_string(ltm->tm_hour)+":"+std::to_string(ltm->tm_min);
         onDate.SetValue(today);

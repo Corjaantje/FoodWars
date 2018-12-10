@@ -13,10 +13,8 @@ void AnimationSystem::update(double deltatime) {
         Faction team;
         if(_entityManager->getComponentFromEntity<PlayerComponent>(iterator.first))
             team = _entityManager->getComponentFromEntity<PlayerComponent>(iterator.first)->getFaction();
-        else if(_entityManager->getComponentFromEntity<AIComponent>(iterator.first))
-            team = _entityManager->getComponentFromEntity<AIComponent>(iterator.first)->getFaction();
         else
-            team = Faction ::RANDOM;
+            team = Faction::RANDOM;
         auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
         auto *positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
         auto *boxCollider = _entityManager->getComponentFromEntity<BoxCollider>(iterator.first);

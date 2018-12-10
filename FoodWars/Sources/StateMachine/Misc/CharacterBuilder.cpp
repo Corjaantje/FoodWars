@@ -62,15 +62,12 @@ void CharacterBuilder::buildCharacterEntity(GameLevel &gameLevel, int playerID, 
     entityManager->addComponentToEntity<GravityComponent>(player);
     entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation), 0.1);
     entityManager->addComponentToEntity<DamageableComponent>(player);
-    if(startTurn){
+    entityManager->addComponentToEntity<PlayerComponent>(player, playerID, getFaction());
+    if (startTurn) {
         turnComponent.switchTurn(true);
         turnComponent.setRemainingTime(30);
     }
-    if(getIsBot()){
-        // TODO: set difficulty
-        entityManager->addComponentToEntity<AIComponent>(player, playerID, _faction, _botDifficulty);
-    }
-    else{
-        entityManager->addComponentToEntity<PlayerComponent>(player, playerID, getFaction());
+    if (getIsBot()) {
+        entityManager->addComponentToEntity<AIComponent>(player, _botDifficulty);
     }
 }

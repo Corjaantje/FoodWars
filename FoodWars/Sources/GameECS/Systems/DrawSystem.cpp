@@ -79,9 +79,7 @@ void DrawSystem::drawPlayers() {
         for (auto const& x : playerComps)
         {
             auto player = _entityManager->getComponentFromEntity<PlayerComponent>(x.first); // Check for players
-            if(player == nullptr)
-                player = _entityManager->getComponentFromEntity<AIComponent>(x.first); // Check for AI
-            if(player != nullptr) {
+            if(player != nullptr){
                 if (player->getPlayerID() == 1) {
                     auto *sprite = dynamic_cast<ShapeSprite *>(_entityManager->getComponentFromEntity<DrawableComponent>(
                             x.first)->getShape());
@@ -111,9 +109,7 @@ void DrawSystem::drawPlayerStats() {
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
 
         auto player = _entityManager->getComponentFromEntity<PlayerComponent>(iterator.first); // Check for players
-        if(player == nullptr)
-            player = _entityManager->getComponentFromEntity<AIComponent>(iterator.first); // Check for AI
-        if(player != nullptr) {
+        if(player != nullptr){
             if (player->getPlayerID() == 1) {
                 int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->getHealth();
                 // for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {

@@ -68,12 +68,8 @@ void ShootingSystem::update(const MouseEvent& event) {
                 break;
             }
         }
-        Weapon *selectedWeapon;
-        if(_entityManager->getComponentFromEntity<PlayerComponent>(currentPlayer))
-            selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(currentPlayer)->getSelectedWeapon();
-        else if(_entityManager->getComponentFromEntity<AIComponent>(currentPlayer))
-            selectedWeapon = _entityManager->getComponentFromEntity<AIComponent>(currentPlayer)->getSelectedWeapon();
-
+        auto selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(currentPlayer)->getSelectedWeapon();
+        if(selectedWeapon == nullptr) return;
         if (_entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->getEnergy() >= 20 && selectedWeapon->getAmmo() > 0) {
             auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(currentPlayer);
             auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(currentPlayer);

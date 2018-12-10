@@ -1,6 +1,6 @@
 #include "../../../Headers/GameECS/Components/AIComponent.h"
 
-AIComponent::AIComponent(int playerID, Faction faction, Difficulty difficulty) : PlayerComponent(playerID, faction), _difficulty(difficulty), _currentState(nullptr) {
+AIComponent::AIComponent(Difficulty difficulty) : _difficulty(difficulty), _currentState(nullptr) {
 
 }
 

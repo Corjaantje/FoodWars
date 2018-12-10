@@ -5,6 +5,7 @@
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../Headers/GameECS/Components/AIComponent.h"
 #include <cmath>
 
 MoveSystem::~MoveSystem() {
@@ -44,6 +45,7 @@ MoveSystem::MoveSystem(EntityManager &entityManager, InputFacade& inputFacade,
 void MoveSystem::update(double dt) {
     const int walkingEnergyCostPerSecond = 20;
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
+        if(_entityManager->getComponentFromEntity<AIComponent>(iterator.first)) continue;
         auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
         auto *turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(iterator.first);
         double energy = turnComponent->getEnergy();

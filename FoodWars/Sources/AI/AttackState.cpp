@@ -4,6 +4,9 @@
 #include "../../Headers/GameECS/Systems/AISystem.h"
 #include "../../Headers/GameECS/Components/DamagingComponent.h"
 #include "../../Headers/AI/IdleState.h"
+#include "../../Headers/GameECS/Components/DrawableComponent.h"
+#include "../../../TonicEngine/Headers/Visual/Colour.h"
+#include "../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 #include <math.h>
 
 AttackState::AttackState(EntityManager &entityManager, int entityId, const PositionComponent &targetPosition,
@@ -19,6 +22,9 @@ AttackState::AttackState(EntityManager &entityManager, int entityId, const Posit
 
 void AttackState::enter() {
     std::cout << "Entering attack state" << std::endl;
+    int targetEntity = _entityManager->createEntity();
+    _entityManager->addComponentToEntity<PositionComponent>(targetEntity, _targetPosition.X, _targetPosition.Y);
+    _entityManager->addComponentToEntity<DrawableComponent>(targetEntity, std::make_unique<ShapeRectangle>(10, 10, _targetPosition.X, _targetPosition.Y, Colour{255, 0, 0, 255}));
 }
 
 void AttackState::execute(double dt) {
@@ -37,7 +43,8 @@ void AttackState::execute(double dt) {
         double distance = std::abs(centerX - _targetPosition.X);
         double force = -0.00024 * std::pow(distance, 2) + 0.47 * distance + 6.0;
         _turnComponent->lowerEnergy(20);
-        _context->generateProjectile(*_entityManager->getComponentFromEntity<PositionComponent>(_entityId),
+        std::cout << "ALLAHU AKBAR" << std::endl;
+        _projectileId = _context->generateProjectile(*_entityManager->getComponentFromEntity<PositionComponent>(_entityId),
                                      *_entityManager->getComponentFromEntity<BoxCollider>(_entityId), centerX > _targetPosition.X ? -force : force, force < 0 ? force : -force);
         _projectileFired = true;
     }
@@ -52,9 +59,5 @@ void AttackState::handleCollisionEvent(const CollisionEvent &collisionEvent) {
 }
 
 bool AttackState::canHandle(const CollisionEvent &collisionEvent) {
-    int target = collisionEvent.getEntity();
-    int projectile = collisionEvent.getOtherEntity();
-
-    return _projectileFired && _entityManager->getComponentFromEntity<DamagingComponent>(target)/* &&
-                               _entityManager->getComponentFromEntity<DamageableComponent>(projectile)*/;
+    return _projectileFired && (collisionEvent.getEntity() == _projectileId || collisionEvent.getOtherEntity() == _projectileId);
 }

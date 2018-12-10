@@ -31,6 +31,7 @@ void IdleState::execute(double dt) {
 
         //TODO: randomize states
         for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
+            if(iterator.first == _entityId) continue;
             auto * _targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
             double distanceToEnemy = abs(_positionComponent->X - _targetPosition->X) /*+ abs(_positionComponent->Y - _targetPosition->Y)*/;
             if(distanceToEnemy > 700) {
@@ -39,13 +40,14 @@ void IdleState::execute(double dt) {
                 if(_targetPosition->X < _positionComponent->X) target.X = _targetPosition->X + (700 - _boxCollider->width);
                 if(_targetPosition->X > _positionComponent->X) target.X = _targetPosition->X - (700 - _boxCollider->width);
                 _entityManager->addComponentToEntity<PositionComponent>(targetEntity, target.X, target.Y);
-                _entityManager->addComponentToEntity<DrawableComponent>(targetEntity, std::make_unique<ShapeRectangle>(10, 10, target.X, target.Y, Colour{0, 0, 0, 255}));
+                _entityManager->addComponentToEntity<DrawableComponent>(targetEntity, std::make_unique<ShapeRectangle>(10, 10, target.X, target.Y, Colour{0, 255, 0, 255}));
                 // Scavenge state
                 _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, target, *_context));
             } else {
                 // Attack state
                 _aiComponent->setCurrentState(std::make_unique<AttackState>(*_entityManager, _entityId, *_targetPosition, *_entityManager->getComponentFromEntity<DamageableComponent>(iterator.first), *_context));
             }
+            return;
         }
     }
 }

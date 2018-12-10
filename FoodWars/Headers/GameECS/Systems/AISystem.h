@@ -19,18 +19,13 @@ class AISystem : public IBaseSystem{
 private:
     EntityManager* _entityManager;
     AudioFacade* _audioFacade;
-    IObservable<CollisionEvent>& _collisionEventObservable;
-
-    void jump(int entityId, TurnComponent& turnComponent);
-    void walkLeft(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);
-    void walkRight(MoveComponent& moveComponent, TurnComponent& turnComponent, double dt);
-
+    IObservable<CollisionEvent>* _collisionEventObservable;
 public:
     AISystem(EntityManager &entityManager, AudioFacade& audioFacade, IObservable<CollisionEvent>& collisionEventObservable);
     ~AISystem() override;
     void update(double dt) override;
     IObservable<CollisionEvent>& getCollisionEventObservable();
-    void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider, double velocityX, double velocityY);
+    int generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider, double velocityX, double velocityY);
 };
 
 

@@ -1,17 +1,16 @@
 #ifndef PROJECT_SWA_AICOMPONENT_H
 #define PROJECT_SWA_AICOMPONENT_H
 
-#include "PlayerComponent.h"
 #include "../../../Headers/AI/State.h"
 #include "../../StateMachine/Misc/DifficultyEnum.h"
 #include <memory>
 
-class AIComponent : public PlayerComponent{
+class AIComponent : public Component{
 private:
     int _difficulty;
     std::unique_ptr<State> _currentState;
 public:
-    AIComponent(int playerID, Faction faction, Difficulty difficulty);
+    explicit AIComponent(Difficulty difficulty);
 
     int getDifficulty() const;
 

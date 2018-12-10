@@ -64,7 +64,8 @@ void WanderState::moveToTarget(double dt){
 }
 
 bool WanderState::canHandle(const CollisionEvent &collisionEvent) {
-    return collisionEvent.getCollisionAngle() <= 315 && collisionEvent.getCollisionAngle() >= 45;
+    //return collisionEvent.getCollisionAngle() <= 315 && collisionEvent.getCollisionAngle() >= 45;
+    return (collisionEvent.getCollisionAngle() <= 135 && collisionEvent.getCollisionAngle() >= 45) || (collisionEvent.getCollisionAngle() <= 315 && collisionEvent.getCollisionAngle() >= 225);
 }
 
 void WanderState::handleCollisionEvent(const CollisionEvent &collisionEvent) {
@@ -73,8 +74,7 @@ void WanderState::handleCollisionEvent(const CollisionEvent &collisionEvent) {
 
     // jump over block
     int obstructionId;
-    if(collisionEvent.getEntity() == _entityId) obstructionId = collisionEvent.getOtherEntity();
-    else if(collisionEvent.getOtherEntity() == _entityId) obstructionId = collisionEvent.getEntity();
+    (collisionEvent.getEntity() == _entityId) ? obstructionId = collisionEvent.getOtherEntity() : obstructionId = collisionEvent.getEntity();
 
     if (canJumpOverObstruction(obstructionId)) {
         jump();
@@ -95,7 +95,10 @@ bool WanderState::canJumpOverObstruction(int obstructionId) {
         auto positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
         //todo: might have to change the 64
         auto aiPosition = _entityManager->getComponentFromEntity<PositionComponent>(_entityId);
-        if(positionComponent->X == obstructionPosition->X && positionComponent->Y < aiPosition->Y/*positionComponent->Y >= obstructionPosition->Y - 64 && positionComponent->Y < obstructionPosition->Y*/){
+
+        if((positionComponent->X == obstructionPosition->X
+        && positionComponent-> Y >= obstructionPosition->Y - 64
+        && positionComponent->Y <= aiPosition->Y)){
             // cant jump
             return false;
         }

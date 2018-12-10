@@ -7,6 +7,7 @@
 class AttackState : public State, public CollisionEventHandler {
 private:
     bool _projectileFired = false;
+    int _projectileId = -1;
     PositionComponent _targetPosition;
     const DamageableComponent* _target;
 public:

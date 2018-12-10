@@ -26,7 +26,6 @@ public:
 private:
     void createCurrentPlayerHighlight(int entityID);
     void resetPlayerHighlight(double deltaTime);
-    std::unique_ptr<DrawableComponent> _currentHighlight = nullptr;
     int _currentHighlightEntityId = -1;
     double _timePerUpdateHighlight = 0;
 };

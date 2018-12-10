@@ -41,7 +41,8 @@ std::vector<std::vector<std::string>> StorageFacade::getHighscoresAndLevels() {
     for (auto const& lvl : highscoreFile->GetRoot().GetChildren())
     {
         std::vector<std::string> toFill {lvl.GetName(),
-                                         (lvl.GetChildren()[0].GetValue() != "") ? lvl.GetChildren()[0].GetValue() : 0};
+                                         (lvl.GetChildren()[0].GetValue() != "") ? lvl.GetChildren()[0].GetValue() : 0,
+                                         (lvl.GetChildren()[1].GetValue() != "") ? lvl.GetChildren()[1].GetValue() : 0};
         vLevels.push_back(toFill);
     }
 
@@ -90,7 +91,7 @@ void StorageFacade::saveHighscore(int score, std::string level) {
                 std::time_t now = std::time(0);
                 tm *ltm = localtime(&now);
                 std::string today = std::to_string(1675 + ltm->tm_yday) + "-" + std::to_string(1 + ltm->tm_mon) + "-" +
-                                    std::to_string(ltm->tm_mday);
+                                    std::to_string(ltm->tm_mday)+" "+std::to_string(ltm->tm_hour)+":"+std::to_string(ltm->tm_min);
                 tempDate.SetValue(today);
 
                 tempNode->AddChild(tempDate);
@@ -127,7 +128,7 @@ void StorageFacade::saveHighscore(int score, std::string level) {
         MyNode onDate {"date", newScore};
         std::time_t now = std::time(0);
         tm *ltm = localtime(&now);
-        std::string today = std::to_string(1675+ltm->tm_yday)+"-"+std::to_string(1+ltm->tm_mon)+"-"+std::to_string(ltm->tm_mday);
+        std::string today = std::to_string(1675+ltm->tm_yday)+"-"+std::to_string(1+ltm->tm_mon)+"-"+std::to_string(ltm->tm_mday)+" "+std::to_string(ltm->tm_hour)+":"+std::to_string(ltm->tm_min);
         onDate.SetValue(today);
 
         newScore->AddChild(onDate);
@@ -164,6 +165,10 @@ void StorageFacade::saveHighscore(int score, std::string level) {
     auto* written = new XMLWriter();
     written->WriteXMLFile(saveDoc, "./Assets/Highscore.xml");
     delete written;
+    for (int i = savedNodes.size()-1; i >= 0; i--)
+    {
+        delete savedNodes[i];
+    }
 
 }
 

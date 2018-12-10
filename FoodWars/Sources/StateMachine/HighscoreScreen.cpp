@@ -50,7 +50,7 @@ void HighscoreScreen::update(double deltaTime) {
 //    generateScoreText();
     for (int i = 0; i < 3 && i < _levelScores.size(); i++)
     {
-        _visualScores[i]->text = _levelScores[i+_currentIndex][0]+" "+std::to_string(i+1+_currentIndex)+": " +_levelScores[i+_currentIndex][1];
+        _visualScores[i]->text = _levelScores[i+_currentIndex][2] + " "+_levelScores[i+_currentIndex][0]+" "+std::to_string(i+1+_currentIndex)+": " +_levelScores[i+_currentIndex][1];
     }
     for (const auto &iterator: _sprites) {
             iterator->addToRender(&_renderList);
@@ -77,8 +77,8 @@ void HighscoreScreen::generateScoreText() {
     std::string highscoreText;
     for (int i = 0; i < 3 && i < _levelScores.size(); i++)
     {
-        highscoreText = _levelScores[i][0]+" "+std::to_string(i+1)+": " +_levelScores[i][1];
-        placeShape(680, 310 + (i%3 * 125), highscoreText, 250, 80, textColour);
+//        highscoreText = _levelScores[i][0]+" "+std::to_string(i+1)+": " +_levelScores[i][1]+" "+_levelScores[i][2];
+        placeShape(680, 310 + (i%3 * 125), "", 250, 80, textColour);
     }
 }
 

@@ -14,7 +14,7 @@ private:
     void moveToTarget(double dt);
 public:
     WanderState(EntityManager& entityManager, int entityId, const PositionComponent& targetPosition, AISystem& context);
-    ~WanderState() = default;
+    ~WanderState() override = default;
 
     void enter() override;
 

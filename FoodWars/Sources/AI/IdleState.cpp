@@ -39,8 +39,7 @@ void IdleState::execute(double dt) {
                 if(_targetPosition->X < _positionComponent->X) target.X = _targetPosition->X + (700 - _boxCollider->width);
                 if(_targetPosition->X > _positionComponent->X) target.X = _targetPosition->X - (700 - _boxCollider->width);
                 _entityManager->addComponentToEntity<PositionComponent>(targetEntity, target.X, target.Y);
-                _entityManager->addComponentToEntity<DrawableComponent>(targetEntity,
-                        std::make_unique<ShapeRectangle>(10, 10, target.X, target.Y, Colour{0, 0, 0, 255}));
+                _entityManager->addComponentToEntity<DrawableComponent>(targetEntity, std::make_unique<ShapeRectangle>(10, 10, target.X, target.Y, Colour{0, 0, 0, 255}));
                 // Scavenge state
                 _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, target, *_context));
             } else {

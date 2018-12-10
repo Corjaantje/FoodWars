@@ -43,7 +43,6 @@ void JumpSystem::update(const KeyEvent& event) {
                 if(!_entityManager->getComponentFromEntity<JumpComponent>(iterator.first)) {
                     _entityManager->addComponentToEntity<JumpComponent>(iterator.first); // warning: this probably gives error!
                     iterator.second->lowerEnergy(5);
-                //    _entityManager->addComponentToEntity(iterator.first, new JumpComponent);
                     _audioFacade->playEffect("jump");
                 }
                 break;

@@ -82,8 +82,7 @@ void WanderState::handleCollisionEvent(const CollisionEvent &collisionEvent) {
         // Attack obstruction
         auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(obstructionId);
         auto targetDamageable = _entityManager->getComponentFromEntity<DamageableComponent>(obstructionId);
-        _aiComponent->setCurrentState(
-                std::make_unique<AttackState>(*_entityManager, _entityId, *targetPosition, *targetDamageable, *_context));
+        _aiComponent->setCurrentState(std::make_unique<AttackState>(*_entityManager, _entityId, *targetPosition, *targetDamageable, *_context));
         return;
     }
 }
@@ -95,7 +94,8 @@ bool WanderState::canJumpOverObstruction(int obstructionId) {
     for(const auto &iterator : _entityManager->getAllEntitiesWithComponent<BoxCollider>()) {
         auto positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
         //todo: might have to change the 64
-        if(positionComponent->X == obstructionPosition->X && positionComponent->Y >= obstructionPosition->Y - 64 && positionComponent->Y < obstructionPosition->Y){
+        auto aiPosition = _entityManager->getComponentFromEntity<PositionComponent>(_entityId);
+        if(positionComponent->X == obstructionPosition->X && positionComponent->Y < aiPosition->Y/*positionComponent->Y >= obstructionPosition->Y - 64 && positionComponent->Y < obstructionPosition->Y*/){
             // cant jump
             return false;
         }

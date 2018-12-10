@@ -31,9 +31,6 @@ public:
     void update(double dt) override;
     IObservable<CollisionEvent>& getCollisionEventObservable();
     void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider, double velocityX, double velocityY);
-    //int getDistanceToEnemy(int entityId);
-    //int calculateDistance(int entityOne, int entityTwo);
-    //int countObstructingBlocks(PositionComponent* posOne, PositionComponent* posTwo);
 };
 
 

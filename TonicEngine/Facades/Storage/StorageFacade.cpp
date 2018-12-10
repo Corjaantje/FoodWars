@@ -70,25 +70,29 @@ void StorageFacade::saveHighscore(int score, std::string level) {
         if (scored.GetValue().substr(0, scored.GetValue().length()-8) == levelIdentifier)
         {
             previouslyScored = true;
-            if (score > scored.GetChildren()[0].GetIntValue()) {
-                MyNode *tempNode = new MyNode{"level", &saveRoot};
-                tempNode->SetValue(levelIdentifier);
-                tempNode->SetParent(saveRoot);
+            MyNode *tempNode = new MyNode{"level", &saveRoot};
+            tempNode->SetValue(levelIdentifier);
+            tempNode->SetParent(saveRoot);
 
-                MyNode tempScore{"score", tempNode};
+            MyNode tempScore{"score", tempNode};
+            if (score > scored.GetChildren()[0].GetIntValue())
+            {
                 tempScore.SetValue(std::to_string(score));
-
-                MyNode tempDate{"date", tempNode};
-                std::time_t now = std::time(0);
-                tm *ltm = localtime(&now);
-                std::string today = std::to_string(1675 + ltm->tm_yday) + "-" + std::to_string(1 + ltm->tm_mon) + "-" +
-                                    std::to_string(ltm->tm_mday)+" "+std::to_string(ltm->tm_hour)+":"+std::to_string(ltm->tm_min);
-                tempDate.SetValue(today);
-
-                tempNode->AddChild(tempDate);
-                tempNode->AddChild(tempScore);
-                savedNodes.push_back(tempNode);
+            } else
+            {
+                tempScore.SetValue(scored.GetChildren()[0].GetValue());
             }
+
+            MyNode tempDate{"date", tempNode};
+            std::time_t now = std::time(0);
+            tm *ltm = localtime(&now);
+            std::string today = std::to_string(1675 + ltm->tm_yday) + "-" + std::to_string(1 + ltm->tm_mon) + "-" +
+                                std::to_string(ltm->tm_mday)+" "+std::to_string(ltm->tm_hour)+":"+std::to_string(ltm->tm_min);
+            tempDate.SetValue(today);
+
+            tempNode->AddChild(tempDate);
+            tempNode->AddChild(tempScore);
+            savedNodes.push_back(tempNode);
         } else
         {
             MyNode* tempNode = new MyNode {"level", &saveRoot};

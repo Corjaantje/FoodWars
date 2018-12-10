@@ -1,7 +1,3 @@
-//
-// Created by pietb on 11-Oct-18.
-//
-
 #ifndef PROJECT_SWA_TURNSYSTEM_H
 #define PROJECT_SWA_TURNSYSTEM_H
 

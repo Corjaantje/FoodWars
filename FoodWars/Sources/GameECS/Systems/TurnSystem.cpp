@@ -1,7 +1,3 @@
-//
-// Created by pietb on 11-Oct-18.
-//
-
 #include "../../../Headers/GameECS/Systems/TurnSystem.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
 #include "../../../Headers/GameECS/Components/PositionComponent.h"

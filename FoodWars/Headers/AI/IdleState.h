@@ -10,7 +10,7 @@ class IdleState : public State {
 public:
     IdleState(EntityManager& entityManager, int entityId, AISystem& context);
 
-    ~IdleState() override = default;
+    ~IdleState() = default;
 
     void enter() override;
 

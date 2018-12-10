@@ -74,7 +74,7 @@ public:
 
     }
 
-    virtual ~State() = default;
+    ~State() = default;
     //this will execute when the state is entered
     virtual void enter() = 0;
     //this is called by the update function each update step

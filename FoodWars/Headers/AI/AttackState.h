@@ -12,7 +12,7 @@ private:
 public:
     AttackState(EntityManager& entityManager, int entityId, const PositionComponent& targetPosition, const DamageableComponent& target, AISystem& context);
 
-    ~AttackState() override = default;
+    ~AttackState() = default;
 
     void enter() override;
 

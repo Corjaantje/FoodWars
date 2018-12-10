@@ -3,7 +3,7 @@
 #include <iostream>
 #include "../../Headers/AI/IdleState.h"
 #include "../../Headers/GameECS/Components/AIComponent.h"
-#include "../../Headers/AI/ScavengeState.h"
+#include "../../Headers/AI/WanderState.h"
 #include "../../Headers/AI/AttackState.h"
 #include "../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../TonicEngine/Headers/Visual/Colour.h"
@@ -42,7 +42,7 @@ void IdleState::execute(double dt) {
                 _entityManager->addComponentToEntity<DrawableComponent>(targetEntity,
                         std::make_unique<ShapeRectangle>(10, 10, target.X, target.Y, Colour{0, 0, 0, 255}));
                 // Scavenge state
-                _aiComponent->setCurrentState(std::make_unique<ScavengeState>(*_entityManager, _entityId, target, *_context));
+                _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, target, *_context));
             } else {
                 // Attack state
                 _aiComponent->setCurrentState(std::make_unique<AttackState>(*_entityManager, _entityId, *_targetPosition, *_entityManager->getComponentFromEntity<DamageableComponent>(iterator.first), *_context));

@@ -4,7 +4,7 @@
 #include "State.h"
 #include "../GameECS/Components/TurnComponent.h"
 
-class ScavengeState : public State, public CollisionEventHandler {
+class WanderState : public State, public CollisionEventHandler {
 private:
     int _walkingEnergyCostPerSecond = 20;
 
@@ -13,14 +13,16 @@ private:
     void walkRight(double dt);
     void moveToTarget(double dt);
 public:
-    ScavengeState(EntityManager& entityManager, int entityId, const PositionComponent& targetPosition, AISystem& context);
-    ~ScavengeState() override = default;
+    WanderState(EntityManager& entityManager, int entityId, const PositionComponent& targetPosition, AISystem& context);
+    ~WanderState() = default;
 
     void enter() override;
 
     void handleCollisionEvent(const CollisionEvent &collisionEvent) override;
 
     bool canHandle(const CollisionEvent &collisionEvent) override;
+
+    bool canJumpOverObstruction(int obstructionId);
 
     void execute(double dt) override;
 

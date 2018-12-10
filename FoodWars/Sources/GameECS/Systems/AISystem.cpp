@@ -1,6 +1,6 @@
 #include <cmath>
 #include "../../../Headers/GameECS/Systems/AISystem.h"
-#include "../../../Headers/AI/ScavengeState.h"
+#include "../../../Headers/AI/WanderState.h"
 #include "../../../Headers/AI/IdleState.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
@@ -62,7 +62,7 @@ void AISystem::update(double dt) {
 
             // Scavenge
             // TODO: Check for nearby items
-            iterator.second->setCurrentState(std::make_unique<ScavengeState>(_entityManager, _audioFacade, iterator.first, _collisionEventObservable));
+            iterator.second->setCurrentState(std::make_unique<WanderState>(_entityManager, _audioFacade, iterator.first, _collisionEventObservable));
             iterator.second->update(dt);
 
             // Attack

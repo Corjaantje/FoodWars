@@ -3,7 +3,7 @@
 MoveComponent::MoveComponent() : MoveComponent(0) {
 }
 
-MoveComponent::MoveComponent(double velocity) : shooting(false) {
+MoveComponent::MoveComponent(double velocity) {
     this->xVelocity = velocity;
     this->yVelocity = velocity;
 }

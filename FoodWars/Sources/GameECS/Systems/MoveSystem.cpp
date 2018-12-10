@@ -43,8 +43,8 @@ MoveSystem::MoveSystem(EntityManager &entityManager, InputFacade& inputFacade,
 void MoveSystem::update(double dt) {
     const int walkingEnergyCostPerSecond = 20;
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if (!iterator.second->getIsShooting()) {
         auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
-        if (!moveComponent->shooting) {
             double energy = iterator.second->getEnergy();
             if (energy - (walkingEnergyCostPerSecond * dt) <= 0) {
                 moveComponent->xVelocity = 0;

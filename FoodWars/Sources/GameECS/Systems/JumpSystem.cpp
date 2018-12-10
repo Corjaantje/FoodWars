@@ -38,7 +38,7 @@ void JumpSystem::update(const KeyEvent& event) {
     if(event.getKeyEventType() == KeyEventType::Down && event.getKey() == KEY::KEY_SPACEBAR) {
         for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
             auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
-            if (!moveComponent->shooting) {
+            if (!iterator.second->getIsShooting()) {
                 if (iterator.second->isMyTurn()) {
                     if (iterator.second->getEnergy() <= 0) break;
                     if (!_entityManager->getComponentFromEntity<JumpComponent>(iterator.first)) {

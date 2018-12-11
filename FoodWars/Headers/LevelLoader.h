@@ -17,7 +17,7 @@ public:
 
     void replayLastLevel(GameLevel &gameLevel);
     void playNextLevel(GameLevel &gamelevel);
-    std::string getLevelIdentifier();
+    std::string getLevelIdentifier() const;
 private:
     std::string _lastPlayedLevelPath;
     CharacterBuilder _lastPlayedCharacterOne;

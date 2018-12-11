@@ -84,7 +84,7 @@ void StorageFacade::saveHighscore(int score, std::string level) {
             MyNode tempDate{"date", tempNode};
             std::time_t now = std::time(nullptr);
             tm *ltm = localtime(&now);
-            std::string today = std::to_string(1675 + ltm->tm_yday) + "-" + std::to_string(1 + ltm->tm_mon) + "-" +
+            std::string today = std::to_string(1900 + ltm->tm_year) + "-" + std::to_string(1 + ltm->tm_mon) + "-" +
                                 std::to_string(ltm->tm_mday)+" "+std::to_string(ltm->tm_hour)+":"+std::to_string(ltm->tm_min);
             tempDate.SetValue(today);
 
@@ -120,7 +120,7 @@ void StorageFacade::saveHighscore(int score, std::string level) {
         MyNode onDate {"date", newScore};
         std::time_t now = std::time(nullptr);
         tm *ltm = localtime(&now);
-        std::string today = std::to_string(1675+ltm->tm_yday)+"-"+std::to_string(1+ltm->tm_mon)+"-"+std::to_string(ltm->tm_mday)+" "+std::to_string(ltm->tm_hour)+":"+std::to_string(ltm->tm_min);
+        std::string today = std::to_string(1900+ltm->tm_year)+"-"+std::to_string(1+ltm->tm_mon)+"-"+std::to_string(ltm->tm_mday)+" "+std::to_string(ltm->tm_hour)+":"+std::to_string(ltm->tm_min);
         onDate.SetValue(today);
 
         newScore->AddChild(onDate);

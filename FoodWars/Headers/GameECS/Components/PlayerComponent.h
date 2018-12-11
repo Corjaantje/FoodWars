@@ -23,7 +23,7 @@ public:
     int getScore() const;
     Weapon* getSelectedWeapon() const;
     int getSelectedWeaponAvailability() const;
-    Faction getFaction() const;
+    const Faction getFaction() const;
     bool getIsAlive() const;
 
 private:

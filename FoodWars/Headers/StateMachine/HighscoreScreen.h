@@ -19,7 +19,7 @@ private:
 
     int _currentIndex;
     std::vector<std::vector<std::string>> _levelScores;
-    MouseEventObservable* mouseEventObservable;
+    MouseEventObservable* _mouseEventObservable;
     std::vector<ShapeText*> _visualScores;
 };
 

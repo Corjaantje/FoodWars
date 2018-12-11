@@ -3,7 +3,7 @@
 
 HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context),
         _currentIndex{0},
-        mouseEventObservable(&_inputFacade->getMouseEventObservable()){
+        _mouseEventObservable(&_inputFacade->getMouseEventObservable()){
     _inputFacade->getKeyEventObservable().registerKeyEventObserver(this);
     auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenHighscore.png");
     wallpaper->layer = 0;
@@ -20,19 +20,19 @@ HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context)
                               [this]() {
                                   alterIndex(-1);
                               },
-                              60, 60, 535, 444,
+                              60, 60, 280, 510,
                               Colour{0,0,0,0})->addToRender(&_renderList);
 
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
                               [this]() {
                                   alterIndex(1);
                               },
-                              60, 60, 1000,444,
+                              60, 60, 1245,510,
                               Colour{0,0,0,0})->addToRender(&_renderList);
     refreshScoreText();
     for (int i = 0; i < 3 && i < _levelScores.size(); i++)
     {
-        placeShape(640, 310 + (i%3 * 125), "", 330, 80, Colour(255, 255, 255, 0));
+        placeShape(465, 295 + (i%3 * 170), "", 670, 160, Colour(255, 255, 255, 0));
     }
 }
 

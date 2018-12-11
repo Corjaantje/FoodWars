@@ -4,7 +4,9 @@
 #include "../../../../TonicEngine/Headers/Storage/DeserializationVisitor.h"
 #include "../../GameECS/Entities/EntityManager.h"
 
-class GameLevelDeserializeVisitor : public DeserializationVisitor {
+class GameLevel;
+
+class GameLevelDeserializeVisitor : public virtual DeserializationVisitor {
 public:
     void visit(const std::string &name, std::string &value) override = 0;
 
@@ -22,6 +24,8 @@ public:
                std::function<SerializationReceiver *()> createFunc) override = 0;
 
     virtual void visit(const std::string &name, EntityManager &entityManager) = 0;
+
+    virtual void visit(GameLevel &value) = 0;
 };
 
 #endif //PROJECT_SWA_GAMELEVELDESERIALIZEVISITOR_H

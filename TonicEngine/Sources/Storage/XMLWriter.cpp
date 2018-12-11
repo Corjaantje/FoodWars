@@ -18,8 +18,14 @@ bool XMLWriter::WriteXMLFile(const MyDocument &doc, const std::string &file_name
 }
 
 bool XMLWriter::WriteXMLFile(const MyNode &node, const std::string &file_name) {
-    MyDocument document{node};
-    return WriteXMLFile(document, file_name);
+    XMLElement *root;
+    root = xml_doc.NewElement(&node.GetName()[0]);
+    xml_doc.InsertFirstChild(root);
+    for (const auto &child : node.GetChildren()) {
+        XMLElement *elem{root};
+        WriteRecursively(child, *elem);
+    }
+    return xml_doc.SaveFile(file_name.c_str()) == 0;
 }
 
 XMLElement *XMLWriter::WriteRecursively(const MyNode &node, XMLElement &parent) {

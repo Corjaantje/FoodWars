@@ -440,7 +440,7 @@ void StorageSystem::prepareText(MyNode &parentNode, std::vector<std::string> fil
 }
 
 void StorageSystem::parseSavedInstance(MyNode &rootNode, EntityManager &_entity) {
-    MyNode rootChild{"id", &rootNode};
+    MyNode rootChild{"id"};
     std::map<int, int> identifier{};
 
     /*for (auto const &piece : rootNode.GetChildren()) {
@@ -605,7 +605,7 @@ void StorageSystem::saveWorld(GameLevel &gameLevel) {//std::string savePath) {
     _writer = new XMLWriter();
     _entityManager = &gameLevel.getEntityManager();
     std::cerr << "StorageSystem line 612: Function Save World should be const!" << std::endl;
-    MyNode trueRootNode{"root", nullptr};
+    MyNode trueRootNode{"root"};
     MyDocument myDoc{trueRootNode};
 
     std::map<int, int> nodeLocations;
@@ -620,9 +620,9 @@ void StorageSystem::saveWorld(GameLevel &gameLevel) {//std::string savePath) {
     addDamageable(myDoc, _entityManager->getAllEntitiesWithComponent<DamageableComponent>(), nodeIDs, nodeLocations);
     if (nodeIDs.size() <= 5)
         return;
-    for (auto const &point : nodeIDs) {
+    /*for (auto const &point : nodeIDs) {
         myDoc.AddToRoot(*point);
-    }
+    }*/
 
 //    MyNode altRoot {"secondary", nullptr };
     /* MyNode bgmNode{"backgroundmusic", &trueRootNode};
@@ -663,8 +663,8 @@ void StorageSystem::saveWorld(GameLevel &gameLevel) {//std::string savePath) {
 GameLevel *StorageSystem::loadWorld(GameLevel &toFill, std::string filePath) {
     delete _reader;
     _reader = new XMLReader();
-    std::unique_ptr<MyDocument> myDoc = _reader->LoadFile("./" + filePath);
-    MyNode rootNode = myDoc->GetRoot();
+    /*std::unique_ptr<MyDocument> myDoc = _reader->LoadFile("./" + filePath);
+    MyNode rootNode = myDoc->GetRoot();*/
 
     // wallpaper
     //rootNode.GetChildren()[1].GetValue();
@@ -675,7 +675,7 @@ GameLevel *StorageSystem::loadWorld(GameLevel &toFill, std::string filePath) {
     comp->shape = new ShapeRectangle{1600,900,0,0, Colour{173,216,230,0}};
     toFill.addComponentToEntity(background, comp);*/
 
-    parseSavedInstance(rootNode, toFill.getEntityManager());
+    //parseSavedInstance(rootNode, toFill.getEntityManager());
     GameLevel *gameLevel = &toFill;
     /*gameLevel->setBackgroundMusic(rootNode.GetChildren()[0].GetValue());
     gameLevel->setBackgroundWallpaper(rootNode.GetChildren()[1].GetValue());

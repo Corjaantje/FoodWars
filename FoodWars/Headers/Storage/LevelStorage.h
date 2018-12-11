@@ -6,6 +6,8 @@
 class LevelStorage {
 public:
     bool saveLevel(const GameLevel &gameLevel, const std::string &toFile);
+
+    bool loadLevel(GameLevel &gameLevel, const std::string &file);
 };
 
 #endif //PROJECT_SWA_LEVELSTORAGE_H

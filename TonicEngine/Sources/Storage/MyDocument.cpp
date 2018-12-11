@@ -1,6 +1,3 @@
-//
-// Created by pietb on 01-Oct-18.
-//
 
 #include "../../Headers/Storage/MyDocument.h"
 
@@ -14,6 +11,7 @@ const MyNode &MyDocument::GetRoot() const {
     return _root;
 }
 
+/*
 void MyDocument::AddToRoot(MyNode addition) {
-    _root.AddChild(addition);
-}
+    _root->AddChild(std::move(addition));
+}*/

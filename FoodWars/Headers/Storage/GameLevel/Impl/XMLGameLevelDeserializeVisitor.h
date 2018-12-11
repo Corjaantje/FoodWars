@@ -1,15 +1,16 @@
-#ifndef PROJECT_SWA_XMLDESERIALIZATIONVISITOR_H
-#define PROJECT_SWA_XMLDESERIALIZATIONVISITOR_H
+#ifndef PROJECT_SWA_XMLGAMELEVELDESERIALIZEVISITOR_H
+#define PROJECT_SWA_XMLGAMELEVELDESERIALIZEVISITOR_H
 
-#include "DeserializationVisitor.h"
-#include "MyDocument.h"
+#include "../GameLevelDeserializeVisitor.h"
+#include "../../../../../TonicEngine/Headers/Storage/XMLDeserializationVisitor.h"
 
-class XMLDeserializationVisitor : public DeserializationVisitor {
-protected:
-    const MyDocument *_document;
-    const MyNode *_currentNode;
+class XMLGameLevelDeserializeVisitor : public virtual GameLevelDeserializeVisitor, public XMLDeserializationVisitor {
 public:
-    explicit XMLDeserializationVisitor(const MyDocument &document);
+    explicit XMLGameLevelDeserializeVisitor(const MyDocument &document);
+
+    void visit(const std::string &name, EntityManager &entityManager) override;
+
+    void visit(GameLevel &value) override;
 
     void visit(const std::string &name, std::string &value) override;
 
@@ -25,7 +26,6 @@ public:
 
     void visit(const std::string &name, std::vector<SerializationReceiver *> &receivers,
                std::function<SerializationReceiver *()> createFunc) override;
-
 };
 
-#endif //PROJECT_SWA_XMLDESERIALIZATIONVISITOR_H
+#endif //PROJECT_SWA_XMLGAMELEVELDESERIALIZEVISITOR_H

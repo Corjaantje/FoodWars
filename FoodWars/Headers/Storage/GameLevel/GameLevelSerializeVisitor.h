@@ -1,7 +1,7 @@
 #ifndef PROJECT_SWA_GAMELEVELSERIALIZER_H
 #define PROJECT_SWA_GAMELEVELSERIALIZER_H
 
-#include "../../../../TonicEngine/Headers/Storage/XMLSerializationVisitor.h"
+#include "../../../../TonicEngine/Headers/Storage/SerializationVisitor.h"
 
 class GameLevel;
 
@@ -21,7 +21,7 @@ public:
 
     void visit(const std::string &name, std::vector<SerializationReceiver *> &receivers) override = 0;
 
-    virtual void visit(const std::string &name, const GameLevel &value) = 0;
+    virtual void visit(const GameLevel &value) = 0;
 
     virtual void visit(const std::string &name, const EntityManager &value) = 0;
 };

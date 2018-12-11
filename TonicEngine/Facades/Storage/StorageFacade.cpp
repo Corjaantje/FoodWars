@@ -9,20 +9,18 @@
 StorageFacade::StorageFacade(std::string system, std::string user) {
     XMLDocument doc;
     doc.LoadFile(system.c_str());
-    _systemFile = _reader.ReadXMLFile(doc);
+    /* _systemFile = _reader.ReadXMLFile(doc);
 
-    doc.LoadFile(user.c_str());
-    _userFile = _reader.ReadXMLFile(doc);
+     doc.LoadFile(user.c_str());
+     _userFile = _reader.ReadXMLFile(doc);*/
 }
 
-StorageFacade::~StorageFacade() {
-
-}
+StorageFacade::~StorageFacade() = default;
 
 // Retrieve highscore
 string StorageFacade::getHighscore(int level) {
 
-    std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile("Assets/highscore.xml");
+    //std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile("Assets/highscore.xml");
     /*if (highscoreFile != nullptr) {
         string score = highscoreFile->GetRoot().GetChildren()[level].GetChildren()[0].GetValue();
 

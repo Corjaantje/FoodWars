@@ -8,30 +8,30 @@ XMLGameLevelSerializeVisitor::XMLGameLevelSerializeVisitor(const std::string &ro
 
 XMLGameLevelSerializeVisitor::~XMLGameLevelSerializeVisitor() = default;
 
-void XMLGameLevelSerializeVisitor::visit(const std::string &name, const GameLevel &value) {
+/*void XMLGameLevelSerializeVisitor::visit(const std::string &name, const GameLevel &value) {
     MyNode *oldCurrent = _currentNode;
     _currentNode = &_currentNode->AddChild(MyNode{name, _currentNode});
     value.accept(*this);
     _currentNode = oldCurrent;
-}
+}*/
 
 void XMLGameLevelSerializeVisitor::visit(const std::string &name, const EntityManager &entityManager) {
     MyNode *oldCurrent = _currentNode;
-    addChildAndSetCurrentNode(name);
+    MyNode *entityManagerNode = addChildAndSetCurrentNode(name);
     for (const auto &entityIterator: entityManager.getAllEntitiesWithAllComponents()) {
-        addChildAndSetCurrentNode("entity");
+        MyNode *entityNode = addChildAndSetCurrentNode("entity");
         for (const auto &componentIterator: entityIterator.second) {
             addChildAndSetCurrentNode(std::string{"c"} + typeid(*componentIterator).name());
             componentIterator->accept(static_cast<SerializationVisitor &>(*this));
-            _currentNode = _currentNode->GetParent();
+            _currentNode = entityNode;
         }
-        _currentNode = _currentNode->GetParent();
+        _currentNode = entityManagerNode;
     }
     _currentNode = oldCurrent;
 }
 
 void XMLGameLevelSerializeVisitor::visit(const std::string &name, const std::string &value) {
-    _currentNode->AddChild(MyNode{name, value, _currentNode});
+    _currentNode->AddChild(MyNode{name, value});
 }
 
 void XMLGameLevelSerializeVisitor::visit(const std::string &name, const int &value) {
@@ -55,4 +55,11 @@ void XMLGameLevelSerializeVisitor::visit(const std::string &name, SerializationR
 
 void XMLGameLevelSerializeVisitor::visit(const std::string &name, std::vector<SerializationReceiver *> &receivers) {
     XMLSerializationVisitor::visit(name, receivers);
+}
+
+void XMLGameLevelSerializeVisitor::visit(const GameLevel &value) {
+    MyNode *oldCurrent = _currentNode;
+    //_currentNode = &_currentNode->AddChild(MyNode{name, _currentNode});
+    value.accept(*this);
+    _currentNode = oldCurrent;
 }

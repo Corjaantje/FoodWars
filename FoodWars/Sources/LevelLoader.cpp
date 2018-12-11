@@ -6,15 +6,18 @@
 #include "../Headers/GameECS/Systems/StorageSystem.h"
 #include "../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
 #include "../Headers/GameECS/Components/PlayerComponent.h"
+#include "../Headers/Storage/LevelStorage.h"
 
 LevelLoader::LevelLoader() = default;
 
 LevelLoader::~LevelLoader() = default;
 
 GameLevel *LevelLoader::loadLevel(int level, GameLevel &gameLevel) {
-    StorageSystem storage{};
+    /*StorageSystem storage{};
     std::string levelXML = "Assets/Levels/Level" + std::to_string(level) + ".xml";
-    storage.loadWorld(gameLevel, levelXML);
+    storage.loadWorld(gameLevel, levelXML);*/
+    LevelStorage loader{};
+    loader.loadLevel(gameLevel, "abc.xml");
     if (gameLevel.getSpawnPoints().empty()) {
         return nullptr;
     }

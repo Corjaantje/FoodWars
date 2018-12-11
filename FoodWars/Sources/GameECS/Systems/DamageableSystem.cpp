@@ -26,8 +26,7 @@ bool DamageableSystem::canHandle(const CollisionEvent &collisionEvent) {
            _entityManager->getComponentFromEntity<DamageableComponent>(projectile);
 }
 
-void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent)
-{
+void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent) {
     auto projectile = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity());
     projectile->destroy();
     auto target = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity());

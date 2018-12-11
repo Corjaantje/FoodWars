@@ -2,6 +2,7 @@
 #define PROJECT_SWA_XMLGAMELEVELSERIALIZEVISITOR_H
 
 #include "../GameLevelSerializeVisitor.h"
+#include "../../../../../TonicEngine/Headers/Storage/XMLSerializationVisitor.h"
 
 class XMLGameLevelSerializeVisitor : public virtual GameLevelSerializeVisitor, public XMLSerializationVisitor {
 public:
@@ -9,7 +10,7 @@ public:
 
     ~XMLGameLevelSerializeVisitor();
 
-    void visit(const std::string &name, const GameLevel &value) override;
+    void visit(const GameLevel &value) override;
 
     void visit(const std::string &name, const EntityManager &value) override;
 

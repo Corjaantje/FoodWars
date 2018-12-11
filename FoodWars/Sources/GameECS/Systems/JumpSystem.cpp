@@ -37,15 +37,18 @@ void JumpSystem::update(double dt) {
 void JumpSystem::update(const KeyEvent& event) {
     if(event.getKeyEventType() == KeyEventType::Down && event.getKey() == KEY::KEY_SPACEBAR) {
         for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
-            if(iterator.second->isMyTurn()){
-                if (iterator.second->getEnergy() <= 0) break;
-                if(!_entityManager->getComponentFromEntity<JumpComponent>(iterator.first)) {
-                    _entityManager->addComponentToEntity<JumpComponent>(
-                            iterator.first); // warning: this probably gives error!
-                    iterator.second->lowerEnergy(5);
-                    _audioFacade->playEffect("jump");
+            auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
+            if (!iterator.second->getIsShooting()) {
+                if (iterator.second->isMyTurn()) {
+                    if (iterator.second->getEnergy() <= 0) break;
+                    if (!_entityManager->getComponentFromEntity<JumpComponent>(iterator.first)) {
+                        _entityManager->addComponentToEntity<JumpComponent>(
+                                iterator.first); // warning: this probably gives error!
+                        iterator.second->lowerEnergy(5);
+                        _audioFacade->playEffect("jump");
+                    }
+                    break;
                 }
-                break;
             }
         }
     }

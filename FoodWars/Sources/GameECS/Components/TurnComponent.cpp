@@ -71,5 +71,17 @@ void TurnComponent::setMaxEnergy(int energy) {
     //_maxEnergy = energy;
 }
 
+bool TurnComponent::getIsShooting() const {
+    return _isShooting;
+}
+
+void TurnComponent::setIsShooting(bool change) {
+    _isShooting = change;
+}
+
+void TurnComponent::changeIsShooting() {
+    _isShooting = !_isShooting;
+}
+
 
 

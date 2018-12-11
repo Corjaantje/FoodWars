@@ -19,26 +19,20 @@ public:
     void update(double deltaTime) override;
     void update(const MouseEvent& event) override;
     void toggleShooting();
-
-    void createShootingLine(int fromX, int fromY, int toX, int toY);
-    void createPowerBar();
-    void powerHandler();
 private:
-    bool _isShooting;
     bool _projectileFired;
-    bool _lineDrawn;
     bool _mouseDown;
     int _projectile;
     int _powerBarX;
     int _powerBarY;
     double _power;
-    int _powerBarWidth;
-    int _maxPower;
     double _timePassed;
     int _shootingLine;
     int _powerBarBackground;
     int _powerBar;
     bool _risingPower;
+    int _currentPlayer;
+    int _otherPlayer;
 
     AudioFacade* _audioFacade;
     VisualFacade* _visualFacade;
@@ -46,9 +40,12 @@ private:
     Renderlist _renderList;
 
     void resetShooting();
-
+    void createShootingLine(int fromX, int fromY, int toX, int toY);
+    void createPowerBar();
+    void powerHandler();
+    void setPlayerTurn();
     void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
-                            double velocityX, double velocityY, Weapon* selectedWeapon);
+                            double velocityX, double velocityY, Weapon* selectedWeapon, int playerCenterX, int playerCenterY);
 };
 
 #endif //PROJECT_SWA_SHOOTSYSTEM_H

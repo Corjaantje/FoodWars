@@ -1,7 +1,3 @@
-//
-// Created by pietb on 01-Oct-18.
-//
-
 #include "../../Headers/Storage/XMLReader.h"
 
 #ifndef XMLCheckResult
@@ -17,8 +13,6 @@ void XMLReader::ReadRecursively(XMLElement &elem, MyNode &parent) {
             current_node.AddAttribute(attr->Name(), attr->Value());
         }
     }
-
-    //MyNode* cur_node_ptr = current_node;
 
     if (elem.GetText() != nullptr) {
         current_node.SetValue(elem.GetText());
@@ -39,7 +33,7 @@ XMLReader::XMLReader() = default;
 
 XMLReader::~XMLReader() = default;
 
-MyDocument XMLReader::LoadFile(string file_name) {
+MyDocument XMLReader::LoadFile(const string &file_name) {
     XMLDocument d;
     d.LoadFile(file_name.c_str());
     MyDocument myDocument = ReadXMLFile(d);
@@ -54,4 +48,24 @@ MyDocument XMLReader::ReadXMLFile(XMLDocument &doc) {
     ReadRecursively(*firstElem, rootNode);
 
     return MyDocument{rootNode};
+}
+
+std::unique_ptr<MyDocument> XMLReader::LoadFile2(const string &fileName) {
+    XMLDocument d;
+    d.LoadFile(fileName.c_str());
+
+    XMLNode *docRoot = d.FirstChild();
+
+    if (docRoot != nullptr) {
+        MyNode rootNode{docRoot->Value(), nullptr};
+        XMLElement *firstElem = docRoot->FirstChildElement();
+
+        ReadRecursively(*firstElem, rootNode);
+
+        auto *myDoc = new MyDocument{rootNode};
+
+
+        return std::unique_ptr<MyDocument>{myDoc};
+    }
+    return nullptr;
 }

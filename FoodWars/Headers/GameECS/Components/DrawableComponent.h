@@ -10,6 +10,7 @@ class DrawableComponent : public Component {
 private:
     std::unique_ptr<IShape> _shape;
 public:
+    DrawableComponent();
     explicit DrawableComponent(std::unique_ptr<IShape> shape);
     ~DrawableComponent() override;
 
@@ -20,6 +21,8 @@ public:
     virtual IShape *getShape() const;
 
     void accept(SerializationVisitor &visitor) override;
+
+    void accept(DeserializationVisitor &visitor) override;
 
     std::string getName() const override;
 };

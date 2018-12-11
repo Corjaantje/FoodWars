@@ -30,7 +30,7 @@ void XMLDeserializationVisitor::visit(const std::string &name, double &value) {
 void XMLDeserializationVisitor::visit(const std::string &name, bool &value) {
     const auto child = _currentNode->GetChild(name);
     if (child)
-        value = child->GetValue() == "true";
+        value = child->GetValue() == "1";
 }
 
 void XMLDeserializationVisitor::visit(const std::string &name,
@@ -105,7 +105,7 @@ void XMLDeserializationVisitor::visit(const std::string &name,
                     std::unique_ptr<SerializationReceiver> serializationReceiver = _factory.getSerializationReceiver(
                             typeAttribute->value);
                     if (serializationReceiver) {
-                        _currentNode = child;
+                        _currentNode = child; //this is not in getSerializationReceiverFromNode
                         serializationReceiver->accept(*this);
                         receivers.push_back(std::move(serializationReceiver));
                     }
@@ -124,15 +124,34 @@ void XMLDeserializationVisitor::visit(const std::string &name,
         return;
     }
     const MyNode *child = _currentNode->GetChild(name);
-    if (child && !child->GetAttributes().empty()) {
-        const Attribute *typeAttribute = child->GetAttribute("typeName");
-        if (typeAttribute) {
-            std::unique_ptr<SerializationReceiver> serializationReceiver = _factory.getSerializationReceiver(
-                    typeAttribute->value);
-            if (serializationReceiver) {
-                receiver = serializationReceiver.release();
-                receiver->accept(*this);
-            }
+    SerializationReceiver *returnValue = getSerializationReceiverFromNode(child).release();
+    receiver = returnValue;
+}
+
+void XMLDeserializationVisitor::visit(const std::string &name, std::unique_ptr<SerializationReceiver> &receiver) {
+    if (receiver) {
+        receiver->accept(*this);
+        return;
+    }
+    const MyNode *child = _currentNode->GetChild(name);
+    std::unique_ptr<SerializationReceiver> deserializedElement = getSerializationReceiverFromNode(child);
+    if (deserializedElement)
+        receiver.reset(deserializedElement.release());
+}
+
+std::unique_ptr<SerializationReceiver> XMLDeserializationVisitor::getSerializationReceiverFromNode(const MyNode *node) {
+    if (!node || node->GetAttributes().empty()) return nullptr;
+    const Attribute *typeAttribute = node->GetAttribute("typeName");
+    if (typeAttribute) {
+        std::unique_ptr<SerializationReceiver> serializationReceiver = _factory.getSerializationReceiver(
+                typeAttribute->value);
+        if (serializationReceiver) {
+            const MyNode *oldCurrent = _currentNode;
+            _currentNode = node;
+            serializationReceiver->accept(*this);
+            _currentNode = oldCurrent;
+            return serializationReceiver;
         }
     }
+    return nullptr;
 }

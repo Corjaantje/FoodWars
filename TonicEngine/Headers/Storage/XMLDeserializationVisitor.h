@@ -10,6 +10,8 @@ protected:
     const MyDocument *_document;
     const MyNode *_currentNode;
     DeserializationFactory _factory;
+
+    std::unique_ptr<SerializationReceiver> getSerializationReceiverFromNode(const MyNode *node);
 public:
     XMLDeserializationVisitor(const MyDocument &document, const DeserializationFactory &factory);
 
@@ -24,6 +26,8 @@ public:
     void visit(const std::string &name, SerializationReceiver &receiver) override;
 
     void visit(const std::string &name, SerializationReceiver *receiver) override;
+
+    void visit(const std::string &name, std::unique_ptr<SerializationReceiver> &receiver) override;
 
     void visit(const std::string &name, std::vector<SerializationReceiver *> &receivers) override;
 

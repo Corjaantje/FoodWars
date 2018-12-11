@@ -19,6 +19,8 @@ public:
 
     virtual void visit(const std::string &name, SerializationReceiver &receiver) = 0;
 
+    virtual void visit(const std::string &name, SerializationReceiver *receiver) = 0;
+
     virtual void
     visit(const std::string &name, std::vector<SerializationReceiver *> &receivers) = 0; //1 usage in playercomponent
 

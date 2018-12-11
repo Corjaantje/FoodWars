@@ -42,7 +42,7 @@ int PlayerComponent::getScore() const {
 }
 
 Weapon* PlayerComponent::getSelectedWeapon() const {
-    return _weapons.size() < _selectedWeaponIndex && _selectedWeaponIndex >= 0 ? _weapons[_selectedWeaponIndex].get()
+    return _weapons.size() > _selectedWeaponIndex && _selectedWeaponIndex >= 0 ? _weapons[_selectedWeaponIndex].get()
                                                                                : nullptr;
 }
 
@@ -66,7 +66,7 @@ void PlayerComponent::setFaction(Faction faction) {
     _faction = faction;
 }
 
-const Faction PlayerComponent::getFaction() const {
+Faction PlayerComponent::getFaction() const {
     return _faction;
 }
 

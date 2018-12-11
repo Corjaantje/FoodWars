@@ -1,6 +1,10 @@
 #include "../../../Headers/Visual/Shapes/ShapeText.h"
 #include "../../../Headers/Visual/Renderlist.h"
 
+ShapeText::ShapeText() : ShapeText(0, 0, "", 0, 0, 0, Colour{}) {
+
+}
+
 ShapeText::ShapeText(const int x, const int y, const std::string &string, int fontSize, int width, int height,
                      Colour colour)
         : IShape(x, y, 3), width(width), height(height), fontSize(fontSize), text(string), colour(colour) {}

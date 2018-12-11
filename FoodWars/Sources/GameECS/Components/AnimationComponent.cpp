@@ -46,7 +46,8 @@ void AnimationComponent::setElapsedTime(double elapsedTime) {
 
 void AnimationComponent::setCurrentShapeIndex(int currentShapeIndex) {
     _currentShapeIndex = currentShapeIndex;
-    _currentShape = _animationShapes[currentShapeIndex].get();
+    if (currentShapeIndex < _animationShapes.size())
+        _currentShape = _animationShapes[currentShapeIndex].get();
 }
 
 IShape *AnimationComponent::getCurrentShape() const {

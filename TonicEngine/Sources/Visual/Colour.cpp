@@ -15,6 +15,7 @@ void Colour::accept(SerializationVisitor &visitor) {
     visitor.visit("green", green);
     visitor.visit("blue", blue);
     visitor.visit("alpha", alpha);
+}
 
 int Colour::getRed() {
     return red;

@@ -7,6 +7,7 @@
 
 class ShapeSprite : public IShape {
 public:
+    ShapeSprite();
     ShapeSprite(int width, int height, int xPos, int yPos, const std::string &imageURL);
 
     ShapeSprite(int width, int height, int xPos, int yPos, const std::string &imageURL, int layer);

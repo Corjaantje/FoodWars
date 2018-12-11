@@ -14,8 +14,8 @@ public:
     explicit PlayerComponent(int id, Faction faction);
 public:
     void setPlayerID(int id);
-    void setSelectedWeapon(std::string selectionType);
-    void setSelectedWeaponAvailability(int weaponAvail);
+
+    void setSelectedWeapon(const std::string &selectionType);
     void addScore(int score);
     void setFaction(Faction faction);
     void setIsAlive(bool alive);
@@ -24,7 +24,8 @@ public:
     int getScore() const;
     Weapon* getSelectedWeapon() const;
     int getSelectedWeaponAvailability() const;
-    const Faction getFaction() const;
+
+    Faction getFaction() const;
     bool getIsAlive() const;
 
     void accept(SerializationVisitor &visitor) override;

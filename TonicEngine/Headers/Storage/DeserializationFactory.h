@@ -13,7 +13,7 @@ private:
 public:
     template<typename T>
     void addType() {
-        std::unique_ptr<SerializationReceiver> ptr = std::make_unique<T>();
+        std::unique_ptr<T> ptr = std::make_unique<T>();
         _createFunctions[ptr->getName()] = []() {
             return std::make_unique<T>();
         };

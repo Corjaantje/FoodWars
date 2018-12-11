@@ -9,7 +9,20 @@ XMLGameLevelDeserializeVisitor::XMLGameLevelDeserializeVisitor(const MyDocument 
 }
 
 void XMLGameLevelDeserializeVisitor::visit(const std::string &name, EntityManager &entityManager) {
-
+    const MyNode *oldCurrent = _currentNode;
+    const MyNode *entityManagerNode = _currentNode->GetChild(name);
+    if (!entityManagerNode) return;
+    for (const MyNode &entity: entityManagerNode->GetChildren()) {
+        int entityId = entityManager.createEntity();
+        for (const MyNode &component: entity.GetChildren()) {
+            _currentNode = &component;
+            std::unique_ptr<Component> compPtr{
+                    dynamic_cast<Component *>(XMLDeserializationVisitor::getSerializationReceiverFromNode(
+                            &component).release())};
+            entityManager.addComponentToEntity(entityId, std::move(compPtr));
+        }
+    }
+    _currentNode = oldCurrent;
 }
 
 void XMLGameLevelDeserializeVisitor::visit(const std::string &name, std::string &value) {
@@ -34,6 +47,10 @@ void XMLGameLevelDeserializeVisitor::visit(const std::string &name, Serializatio
 
 void XMLGameLevelDeserializeVisitor::visit(const std::string &name, std::vector<SerializationReceiver *> &receivers) {
     XMLDeserializationVisitor::visit(name, receivers);
+}
+
+void XMLGameLevelDeserializeVisitor::visit(const std::string &name, std::unique_ptr<SerializationReceiver> &receiver) {
+    XMLDeserializationVisitor::visit(name, receiver);
 }
 
 void XMLGameLevelDeserializeVisitor::visit(const std::string &name, std::vector<SerializationReceiver *> &receivers,

@@ -1,6 +1,10 @@
 #include "../../../Headers/Visual/Shapes/ShapeRectangle.h"
 #include "../../../Headers/Visual/Renderlist.h"
 
+ShapeRectangle::ShapeRectangle() : ShapeRectangle(0, 0, 0, 0, Colour{}) {
+
+}
+
 ShapeRectangle::ShapeRectangle(const int width, const int height, const int xPos, const int yPos, const Colour colour)
     : IShape(xPos, yPos, 1), width(width), height(height), colour(colour) {
 }

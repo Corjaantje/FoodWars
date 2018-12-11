@@ -24,6 +24,8 @@ public:
 
     void visit(const std::string &name, SerializationReceiver &receiver) override;
 
+    void visit(const std::string &name, SerializationReceiver *receiver) override;
+
     void visit(const std::string &name, std::vector<SerializationReceiver *> &receivers) override;
 
     MyNode &getRootNode();

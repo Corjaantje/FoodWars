@@ -3,6 +3,10 @@
 #include "../../../Headers/Visual/Shapes/ShapeSprite.h"
 #include "../../../Headers/Visual/Renderlist.h"
 
+ShapeSprite::ShapeSprite() : ShapeSprite(0, 0, 0, 0, "") {
+
+}
+
 ShapeSprite::ShapeSprite(int width, int height, int xPos, int yPos, const std::string &imageURL) : ShapeSprite(width,
                                                                                                                height,
                                                                                                                xPos,

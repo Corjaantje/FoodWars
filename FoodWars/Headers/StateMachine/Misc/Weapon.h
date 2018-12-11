@@ -20,7 +20,7 @@ public:
 
     std::string getName() const override;
 
-    const Faction getFaction() const;
+    Faction getFaction() const;
 private:
     std::string _imageUrl;
     int _ammo;

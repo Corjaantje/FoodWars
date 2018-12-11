@@ -8,13 +8,6 @@ XMLGameLevelSerializeVisitor::XMLGameLevelSerializeVisitor(const std::string &ro
 
 XMLGameLevelSerializeVisitor::~XMLGameLevelSerializeVisitor() = default;
 
-/*void XMLGameLevelSerializeVisitor::visit(const std::string &name, const GameLevel &value) {
-    MyNode *oldCurrent = _currentNode;
-    _currentNode = &_currentNode->AddChild(MyNode{name, _currentNode});
-    value.accept(*this);
-    _currentNode = oldCurrent;
-}*/
-
 void XMLGameLevelSerializeVisitor::visit(const std::string &name, const EntityManager &entityManager) {
     MyNode *oldCurrent = _currentNode;
     MyNode *entityManagerNode = addChildAndSetCurrentNode(name);
@@ -22,9 +15,7 @@ void XMLGameLevelSerializeVisitor::visit(const std::string &name, const EntityMa
     for (const auto &entityIterator: entityManager.getAllEntitiesWithAllComponents()) {
         MyNode *entityNode = addChildAndSetCurrentNode("entity");
         for (const Component *componentIterator: entityIterator.second) {
-            //addChildAndSetCurrentNode(componentIterator->getName());
             visit("component", (SerializationReceiver &) *componentIterator);
-            //_currentNode = entityNode;
         }
         _currentNode = entityManagerNode;
     }

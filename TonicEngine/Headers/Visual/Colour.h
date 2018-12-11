@@ -15,13 +15,13 @@ public:
     int blue;
     int alpha;
 
-    virtual int getRed();
+    int getRed();
 
-    virtual int getGreen();
+    int getGreen();
 
-    virtual int getBlue();
+    int getBlue();
 
-    virtual int getAlpha();
+    int getAlpha();
 
     void accept(SerializationVisitor &visitor) override;
 

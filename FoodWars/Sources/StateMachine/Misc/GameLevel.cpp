@@ -37,7 +37,6 @@ std::vector<Coordinate> GameLevel::getSpawnPoints() const {
 }
 
 void GameLevel::accept(GameLevelSerializeVisitor &visitor) const {
-    ;
     visitor.visit("backgroundMusic", _backgroundMusic);
     visitor.visit("backgroundWallpaper", _backgroundWallpaper);
     std::vector<SerializationReceiver *> serializableSpawnPoints{_spawnPoints.size()};

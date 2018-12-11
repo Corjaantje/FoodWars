@@ -19,7 +19,9 @@ public:
     XMLReader();
     ~XMLReader();
 
-    MyDocument LoadFile(string file_name);
+    MyDocument LoadFile(const string &file_name);
+
+    std::unique_ptr<MyDocument> LoadFile2(const string &fileName);
 
     MyDocument ReadXMLFile(XMLDocument &doc);
 };

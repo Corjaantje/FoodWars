@@ -34,6 +34,15 @@ void XMLSerializationVisitor::visit(const std::string &name, SerializationReceiv
     _currentNode = oldCurrent;
 }
 
+void XMLSerializationVisitor::visit(const std::string &name, SerializationReceiver *receiver) {
+    if (!receiver) return;
+    MyNode *oldCurrent = _currentNode;
+    _currentNode = &_currentNode->AddChild(MyNode{name});
+    _currentNode->AddAttribute("typeName", receiver->getName());
+    receiver->accept(*this);
+    _currentNode = oldCurrent;
+}
+
 void XMLSerializationVisitor::visit(const std::string &name, std::vector<SerializationReceiver *> &receivers) {
     MyNode *oldCurrent = _currentNode;
     MyNode *vectorNode = &_currentNode->AddChild(MyNode{name});

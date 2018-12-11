@@ -32,7 +32,7 @@ HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context)
     refreshScoreText();
     for (int i = 0; i < 3 && i < _levelScores.size(); i++)
     {
-        placeShape(465, 295 + (i%3 * 170), "", 670, 160, Colour(255, 255, 255, 0));
+        placeShape(465, 310 + (i%3 * 175), "", 670, 110, Colour(255, 255, 255, 0));
     }
 }
 

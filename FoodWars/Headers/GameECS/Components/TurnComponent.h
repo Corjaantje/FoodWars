@@ -23,6 +23,9 @@ public:
     void setEnergy(double energy);
     double getRemainingTime() const;
     bool isMyTurn() const;
+    bool getIsShooting() const;
+    void setIsShooting(bool change);
+    void changeIsShooting();
     void setEnergy(int energy);
     void setMaxEnergy(int energy);
     std::vector<std::string> serialize() override;
@@ -32,6 +35,7 @@ private:
     double _remainingTime;
     int _maxEnergy;
     bool _myTurn = false;
+    bool _isShooting = false;
 };
 
 

@@ -36,14 +36,22 @@ void IdleState::execute(double dt) {
             double distanceToEnemy = abs(_positionComponent->X - _targetPosition->X) /*+ abs(_positionComponent->Y - _targetPosition->Y)*/;
             if(distanceToEnemy > 700) {
                 PositionComponent target{0, _targetPosition->Y};
-                int targetEntity = _entityManager->createEntity();
                 if(_targetPosition->X < _positionComponent->X) target.X = _targetPosition->X + (700 - _boxCollider->width);
                 if(_targetPosition->X > _positionComponent->X) target.X = _targetPosition->X - (700 - _boxCollider->width);
-                _entityManager->addComponentToEntity<PositionComponent>(targetEntity, target.X, target.Y);
-                _entityManager->addComponentToEntity<DrawableComponent>(targetEntity, std::make_unique<ShapeRectangle>(10, 10, target.X, target.Y, Colour{0, 255, 0, 255}));
-                // Scavenge state
+                // Walk towards enemy
                 _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, target, *_context));
             } else {
+                auto playerComponent = _entityManager->getComponentFromEntity<PlayerComponent>(iterator.first);
+                Weapon* selectedWeapon = playerComponent->getSelectedWeapon();
+                for(int i = playerComponent->getAmountOFWeapons(); i > 0; i--){
+                    selectedWeapon = playerComponent->getSelectedWeapon();
+                    if(selectedWeapon->getAmmo() > 0) break;
+                    playerComponent->setSelectedWeapon("next");
+                }
+
+                // todo: search for weapon crate and set as target
+                //if(selectedWeapon->getAmmo() <= 0) _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, target, *_context));
+
                 // Attack state
                 _aiComponent->setCurrentState(std::make_unique<AttackState>(*_entityManager, _entityId, *_targetPosition, *_entityManager->getComponentFromEntity<DamageableComponent>(iterator.first), *_context));
             }

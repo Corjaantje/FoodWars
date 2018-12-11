@@ -25,7 +25,7 @@ public:
     ~AISystem() override;
     void update(double dt) override;
     IObservable<CollisionEvent>& getCollisionEventObservable();
-    int generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider, double velocityX, double velocityY);
+    int generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider, double velocityX, double velocityY, Weapon* selectedWeapon);
 };
 
 

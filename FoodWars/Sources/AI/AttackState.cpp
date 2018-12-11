@@ -32,21 +32,40 @@ void AttackState::execute(double dt) {
        || _turnComponent->getRemainingTime() <= 0
        || _turnComponent->getEnergy() <= 0.0
        || !_target
-       || !_target->isAlive()) {
-        //todo: Check Ammo count
+       || !_target->isAlive()
+       || _entityManager->getComponentFromEntity<TurnComponent>(_entityId)->getEnergy() < 20) {
         _aiComponent->setCurrentState(std::make_unique<IdleState>(*_entityManager, _entityId, *_context));
         return;
     }
     if (!_projectileFired) {
+
+        //todo: multiple angles
         double centerX = _positionComponent->X + _boxCollider->width/2.0;
         double centerY = _positionComponent->Y + _boxCollider->height/2.0;
         double distance = std::abs(centerX - _targetPosition.X);
         double force = -0.00024 * std::pow(distance, 2) + 0.47 * distance + 6.0;
+
+        //todo: Check Ammo count
+        auto playerComponent = _entityManager->getComponentFromEntity<PlayerComponent>(_entityId);
+        Weapon* selectedWeapon = playerComponent->getSelectedWeapon();
+
+
+        for(int i = playerComponent->getAmountOFWeapons(); i > 0; i--){
+            selectedWeapon = playerComponent->getSelectedWeapon();
+            if(selectedWeapon->getAmmo() > 0) break;
+            playerComponent->setSelectedWeapon("next");
+        }
+
+        //todo: energy
+        if(selectedWeapon->getAmmo() <= 0 /*|| _entityManager->getComponentFromEntity<TurnComponent>(_entityId)->getEnergy() < 20*/) return;
+
         _turnComponent->lowerEnergy(20);
-        std::cout << "ALLAHU AKBAR" << std::endl;
         _projectileId = _context->generateProjectile(*_entityManager->getComponentFromEntity<PositionComponent>(_entityId),
-                                     *_entityManager->getComponentFromEntity<BoxCollider>(_entityId), centerX > _targetPosition.X ? -force : force, force < 0 ? force : -force);
+                                                 *_entityManager->getComponentFromEntity<BoxCollider>(_entityId), centerX > _targetPosition.X ? -force : force, force < 0 ? force : -force, selectedWeapon);
         _projectileFired = true;
+
+
+
     }
 }
 

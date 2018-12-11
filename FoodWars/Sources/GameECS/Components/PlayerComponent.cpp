@@ -84,3 +84,7 @@ void PlayerComponent::setIsAlive(bool alive) {
 bool PlayerComponent::getIsAlive() const {
     return _isAlive;
 }
+
+int PlayerComponent::getAmountOFWeapons() const{
+    return _weapons.size();
+}

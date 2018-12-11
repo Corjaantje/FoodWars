@@ -64,7 +64,6 @@ void WanderState::moveToTarget(double dt){
 }
 
 bool WanderState::canHandle(const CollisionEvent &collisionEvent) {
-    //return collisionEvent.getCollisionAngle() <= 315 && collisionEvent.getCollisionAngle() >= 45;
     return (collisionEvent.getCollisionAngle() <= 135 && collisionEvent.getCollisionAngle() >= 45) || (collisionEvent.getCollisionAngle() <= 315 && collisionEvent.getCollisionAngle() >= 225);
 }
 

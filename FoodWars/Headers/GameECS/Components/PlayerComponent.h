@@ -25,6 +25,7 @@ public:
     int getSelectedWeaponAvailability() const;
     Faction getFaction() const;
     bool getIsAlive() const;
+    int getAmountOFWeapons() const;
 
 protected:
     int _playerID;

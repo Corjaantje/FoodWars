@@ -10,6 +10,17 @@ public:
     ~HighscoreScreen();
     void update(double deltaTime) override;
     void update(const KeyEvent& event) override;
+
+    void refreshScoreText();
+private:
+
+    void placeShape(int xpos, int ypos, std::string text, int width, int height, Colour colour);
+    void alterIndex(int dir);
+
+    int _currentIndex;
+    std::vector<std::vector<std::string>> _levelScores;
+    MouseEventObservable* mouseEventObservable;
+    std::vector<ShapeText*> _visualScores;
 };
 
 

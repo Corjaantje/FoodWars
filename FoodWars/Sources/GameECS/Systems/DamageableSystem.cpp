@@ -8,7 +8,8 @@ DamageableSystem::DamageableSystem(EntityManager &entityManager, AudioFacade& au
                                    IObservable<CollisionEvent>& collisionEventObservable) :
         _entityManager{&entityManager},
         _audioFacade{&audioFacade},
-        CollisionEventHandler(collisionEventObservable) {
+        CollisionEventHandler(collisionEventObservable),
+        _damageCalculator{DamageCalculator{}}{
 }
 
 DamageableSystem::~DamageableSystem() = default;
@@ -39,11 +40,19 @@ bool DamageableSystem::canHandle(const CollisionEvent &collisionEvent) {
 void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent)
 {
     auto projectile = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity());
+    auto projectileDamage = _entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getEntity());
     projectile->destroy();
     auto target = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity());
-    auto damage = _entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getEntity())->getDamage();
-    double damageTaken =  damage - (damage * (target->getResistance()/100.0));
-    if (damageTaken > 0) target->lowerHealth((int) std::round(damageTaken));
+    auto player = _entityManager->getComponentFromEntity<PlayerComponent>(collisionEvent.getOtherEntity());
+
+    int damage = 0;
+    if (player == nullptr) {
+        damage = projectileDamage->getDamage() - target->getResistance();
+    } else {
+        damage = _damageCalculator.calculateDamage(*projectileDamage, *target, *player);
+    }
+    if (damage > 0) target->lowerHealth(damage);
+
     _audioFacade->playEffect("damage");
 
     std::cout << "currentHP: " << target->getHealth() << std::endl;

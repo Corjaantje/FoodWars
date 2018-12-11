@@ -6,6 +6,7 @@ DamageableComponent::DamageableComponent() : _health{100}, _resistance{0} {}
 
 DamageableComponent::DamageableComponent(int health, int resist) : _health{health}, _resistance{resist} {}
 
+
 bool DamageableComponent::isAlive() const {
     return _health > 0;
 }

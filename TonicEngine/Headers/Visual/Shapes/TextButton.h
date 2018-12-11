@@ -14,6 +14,7 @@ class TextButton : public ShapeRectangle, public IObserver<MouseEvent>{
 private:
     MouseEventObservable *observable;
     std::function<void()> _onClickFunction;
+protected:
     std::string _text;
     ShapeText shapeText;
 

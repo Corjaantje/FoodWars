@@ -3,13 +3,14 @@
 
 #include "Component.h"
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
+#include "../../StateMachine/Misc/FactionEnum.h"
 
 class DamageableComponent : public Component {
 
 public:
     DamageableComponent();
-
     explicit DamageableComponent(int health);
+    DamageableComponent(int health, int resist);
     ~DamageableComponent() override;
     const int getHealth();
     const int getResistance();
@@ -18,7 +19,7 @@ public:
     void setResistance(int value);
     void destroy();
 
-    bool isAlive();
+    bool isAlive() const;
 
     void accept(SerializationVisitor &visitor) override;
 

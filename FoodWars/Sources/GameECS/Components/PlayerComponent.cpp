@@ -2,14 +2,14 @@
 #include <algorithm>
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 
-PlayerComponent::PlayerComponent() : PlayerComponent(0) {
+PlayerComponent::PlayerComponent() : PlayerComponent(0, Faction::WHITE) {
 
 }
 
-PlayerComponent::PlayerComponent(int id) : _playerID(id), _score(0), _selectedWeaponIndex(-1) {
-    createWeapon<Weapon>("carrot.png", 5);
-    createWeapon<Weapon>("ham.png", 5);
-    createWeapon<Weapon>("candycane.png", 5);
+PlayerComponent::PlayerComponent(int id, Faction faction) : _playerID(id), _score(0), _selectedWeaponAvailability(5), _faction(faction), _isAlive{true} {
+    createWeapon<Weapon>("carrot.png", 5, Faction::GREEN);
+    createWeapon<Weapon>("ham.png", 5, Faction::RED);
+    createWeapon<Weapon>("candycane.png", 5, Faction::YELLOW);
     _selectedWeaponIndex = 0;
 }
 
@@ -60,6 +60,22 @@ void PlayerComponent::accept(SerializationVisitor &visitor) {
     visitor.visit("weapons", weapons);
     visitor.visit("selectedWeaponIndex", _selectedWeaponIndex);
     visitor.visit("score", _score);
+}
+
+void PlayerComponent::setFaction(Faction faction) {
+    _faction = faction;
+}
+
+const Faction PlayerComponent::getFaction() const {
+    return _faction;
+}
+
+void PlayerComponent::setIsAlive(bool alive) {
+    _isAlive = alive;
+}
+
+bool PlayerComponent::getIsAlive() const {
+    return _isAlive;
 }
 
 void PlayerComponent::accept(DeserializationVisitor &visitor) {

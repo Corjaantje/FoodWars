@@ -24,6 +24,9 @@ public:
     void setEnergy(double energy);
     double getRemainingTime() const;
     bool isMyTurn() const;
+    bool getIsShooting() const;
+    void setIsShooting(bool change);
+    void changeIsShooting();
     void setEnergy(int energy);
 
     void accept(SerializationVisitor &visitor) override;
@@ -34,6 +37,7 @@ private:
     double _energy;
     double _remainingTime;
     bool _myTurn = false;
+    bool _isShooting = false;
 };
 
 

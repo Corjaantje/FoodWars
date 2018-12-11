@@ -15,6 +15,14 @@ public:
     int blue;
     int alpha;
 
+    virtual int getRed();
+
+    virtual int getGreen();
+
+    virtual int getBlue();
+
+    virtual int getAlpha();
+
     void accept(SerializationVisitor &visitor) override;
 
     std::string getName() const override;

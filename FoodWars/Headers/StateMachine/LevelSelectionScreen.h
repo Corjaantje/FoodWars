@@ -21,6 +21,7 @@ private:
     int _currentIndex;
     void swapLevels(bool directionNext);
     MouseEventObservable* mouseEventObservable;
+    KeyEventObservable* keyEventObservable;
 };
 
 #endif //PROJECT_SWA_LEVELSELECTIONSCREEN_H

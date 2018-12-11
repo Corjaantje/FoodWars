@@ -6,7 +6,7 @@ Weapon::Weapon() : Weapon("", 0) {
 
 }
 
-Weapon::Weapon(const std::string &imageUrl, int ammo) : _imageUrl(imageUrl), _ammo(ammo) {
+Weapon::Weapon(const std::string &imageUrl, int ammo, Faction faction) : _imageUrl(std::move(imageUrl)), _ammo(ammo), _entityManager(), _faction{faction} {
 
 }
 
@@ -20,6 +20,14 @@ std::string Weapon::getImage() const {
 
 void Weapon::lowerAmmo() {
     _ammo--;
+}
+
+void Weapon::setAmmo(int val) {
+    _ammo = val;
+}
+
+const Faction Weapon::getFaction() const {
+    return _faction;
 }
 
 void Weapon::accept(SerializationVisitor &visitor) {

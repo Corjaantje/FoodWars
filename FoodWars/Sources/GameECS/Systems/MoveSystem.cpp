@@ -43,20 +43,25 @@ MoveSystem::MoveSystem(EntityManager &entityManager, InputFacade& inputFacade,
 void MoveSystem::update(double dt) {
     const int walkingEnergyCostPerSecond = 20;
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if (!iterator.second->getIsShooting()) {
         auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
-
-        if (iterator.second->isMyTurn()) {
-            if (_pressedKey == KEY::KEY_A) {
-                moveComponent->xVelocity = -100;
-                iterator.second->lowerEnergy(walkingEnergyCostPerSecond * dt);
-            }
-            else if (_pressedKey == KEY::KEY_D) {
-                moveComponent->xVelocity = 100;
-                iterator.second->lowerEnergy(walkingEnergyCostPerSecond * dt);
-            }else
+            double energy = iterator.second->getEnergy();
+            if (energy - (walkingEnergyCostPerSecond * dt) <= 0) {
                 moveComponent->xVelocity = 0;
-        } else {
-            moveComponent->xVelocity = 0;
+                break;
+            }
+            if (iterator.second->isMyTurn()) {
+                if (_pressedKey == KEY::KEY_A) {
+                    moveComponent->xVelocity = -100;
+                    iterator.second->lowerEnergy(walkingEnergyCostPerSecond * dt);
+                } else if (_pressedKey == KEY::KEY_D) {
+                    moveComponent->xVelocity = 100;
+                    iterator.second->lowerEnergy(walkingEnergyCostPerSecond * dt);
+                } else
+                    moveComponent->xVelocity = 0;
+            } else {
+                moveComponent->xVelocity = 0;
+            }
         }
     }
 

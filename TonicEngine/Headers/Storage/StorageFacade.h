@@ -29,6 +29,9 @@ public:
     MyDocument getUserXML() const;
 
     string getHighscore(int level);
+    void saveHighscore(int score, std::string level);
+
+    std::vector<std::vector<std::string>> loadHighscoresForLevels();
 
     // Placeholders for loading. Will end up using factories to return usable objects.
     void getAudioComponents();

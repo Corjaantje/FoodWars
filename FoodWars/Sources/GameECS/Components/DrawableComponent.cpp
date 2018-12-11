@@ -21,5 +21,9 @@ void DrawableComponent::setShape(std::unique_ptr<IShape> shape) {
 }
 
 void DrawableComponent::accept(SerializationVisitor &visitor) {
-    visitor.visit(std::string{"s"} + typeid(*_shape).name(), *_shape);
+    visitor.visit("shape", *_shape);
+}
+
+std::string DrawableComponent::getName() const {
+    return "DrawableComponent";
 }

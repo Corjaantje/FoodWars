@@ -41,4 +41,8 @@ void DamageableComponent::accept(SerializationVisitor &visitor) {
     visitor.visit("resistance", _resistance);
 }
 
+std::string DamageableComponent::getName() const {
+    return "DamageableComponent";
+}
+
 DamageableComponent::~DamageableComponent() = default;

@@ -27,6 +27,9 @@ public:
     void setEnergy(int energy);
 
     void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
+
 private:
     double _energy;
     double _remainingTime;

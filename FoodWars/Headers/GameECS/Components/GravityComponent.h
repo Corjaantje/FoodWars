@@ -11,6 +11,8 @@ public:
     explicit GravityComponent(double gravity);
 
     void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
 };
 
 #endif //PROJECT_SWA_GRAVITYCOMPONENT_H

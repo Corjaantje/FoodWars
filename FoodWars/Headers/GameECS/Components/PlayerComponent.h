@@ -26,6 +26,8 @@ public:
 
     void accept(DeserializationVisitor &visitor) override;
 
+    std::string getName() const override;
+
 private:
     int _playerID;
     int _score;

@@ -23,6 +23,10 @@ public:
     void visit(const std::string &name, std::vector<SerializationReceiver *> &receivers,
                std::function<SerializationReceiver *()> createFunc) override = 0;
 
+    void visit(const std::string &name, std::vector<std::unique_ptr<SerializationReceiver>> &receivers) override = 0;
+
+    void visit(const std::string &name, SerializationReceiver *receiver) override = 0;
+
     virtual void visit(const std::string &name, EntityManager &entityManager) = 0;
 
     virtual void visit(GameLevel &value) = 0;

@@ -31,6 +31,9 @@ public:
     void setIsIdle(bool isIdle);
 
     void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
+
 private:
     std::vector<std::unique_ptr<IShape>> _animationShapes;
     bool _isLookingLeft;

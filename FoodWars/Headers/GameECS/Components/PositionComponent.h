@@ -11,4 +11,6 @@ public:
     PositionComponent& operator--(int);
 
     void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
 };

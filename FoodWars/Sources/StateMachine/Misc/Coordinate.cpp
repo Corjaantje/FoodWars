@@ -17,3 +17,7 @@ void Coordinate::accept(SerializationVisitor &visitor) {
     visitor.visit("x", _xCoord);
     visitor.visit("y", _yCoord);
 }
+
+std::string Coordinate::getName() const {
+    return "Coordinate";
+}

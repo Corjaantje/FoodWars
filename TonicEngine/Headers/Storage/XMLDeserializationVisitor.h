@@ -3,13 +3,15 @@
 
 #include "DeserializationVisitor.h"
 #include "MyDocument.h"
+#include "DeserializationFactory.h"
 
 class XMLDeserializationVisitor : public DeserializationVisitor {
 protected:
     const MyDocument *_document;
     const MyNode *_currentNode;
+    DeserializationFactory _factory;
 public:
-    explicit XMLDeserializationVisitor(const MyDocument &document);
+    XMLDeserializationVisitor(const MyDocument &document, const DeserializationFactory &factory);
 
     void visit(const std::string &name, std::string &value) override;
 
@@ -21,10 +23,14 @@ public:
 
     void visit(const std::string &name, SerializationReceiver &receiver) override;
 
+    void visit(const std::string &name, SerializationReceiver *receiver) override;
+
     void visit(const std::string &name, std::vector<SerializationReceiver *> &receivers) override;
 
     void visit(const std::string &name, std::vector<SerializationReceiver *> &receivers,
                std::function<SerializationReceiver *()> createFunc) override;
+
+    void visit(const std::string &name, std::vector<std::unique_ptr<SerializationReceiver>> &receivers) override;
 
 };
 

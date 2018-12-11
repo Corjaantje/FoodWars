@@ -16,3 +16,7 @@ void Colour::accept(SerializationVisitor &visitor) {
     visitor.visit("blue", blue);
     visitor.visit("alpha", alpha);
 }
+
+std::string Colour::getName() const {
+    return "Colour";
+}

@@ -14,3 +14,6 @@ void BoxCollider::accept(SerializationVisitor &visitor) {
     visitor.visit("height", height);
 }
 
+std::string BoxCollider::getName() const {
+    return "BoxCollider";
+}

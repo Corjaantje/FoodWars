@@ -76,3 +76,7 @@ void AnimationComponent::accept(SerializationVisitor &visitor) {
     visitor.visit("elapsedTime", _elapsedTime);
     visitor.visit("currentShapeIndex", _currentShapeIndex);
 }
+
+std::string AnimationComponent::getName() const {
+    return "AnimationComponent";
+}

@@ -32,3 +32,7 @@ void ShapeSprite::accept(SerializationVisitor &visitor) {
     visitor.visit("height", height);
     visitor.visit("imageUrl", imageURL);
 }
+
+std::string ShapeSprite::getName() const {
+    return "Sprite";
+}

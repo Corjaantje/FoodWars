@@ -56,6 +56,11 @@ Attribute &MyNode::AddAttribute(Attribute &attribute) {
     return attribute;
 }
 
+Attribute &MyNode::AddAttribute(const std::string &name, const std::string &value) {
+    _attributes.emplace_back(name, value);
+    return _attributes.back();
+}
+
 void MyNode::SetValue(const string &value) {
     _value = value;
 }
@@ -73,3 +78,11 @@ const MyNode *MyNode::GetChild(const string &tagName) const {
     return nullptr;
 }
 
+const Attribute *MyNode::GetAttribute(const string &name) const {
+    const auto attribute = std::find_if(_attributes.begin(), _attributes.end(), [&name](const Attribute &a) {
+        return a.name == name;
+    });
+    if (attribute != _attributes.end())
+        return &(*attribute);
+    return nullptr;
+}

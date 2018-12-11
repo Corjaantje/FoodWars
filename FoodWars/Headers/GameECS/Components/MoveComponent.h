@@ -17,6 +17,8 @@ public:
     ~MoveComponent() override;
 
     void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
 };
 
 #endif //PROJECT_SWA_MOVECOMPONENT_H

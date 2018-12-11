@@ -30,3 +30,7 @@ void PositionComponent::accept(SerializationVisitor &visitor) {
     visitor.visit("x", X);
     visitor.visit("y", Y);
 }
+
+std::string PositionComponent::getName() const {
+    return "PositionComponent";
+}

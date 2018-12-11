@@ -14,6 +14,8 @@ public:
     void setAcceleration(double acceleration);
 
     void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
 };
 
 #endif //PROJECT_SWA_JUMPCOMPONENT_H

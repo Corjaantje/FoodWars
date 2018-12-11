@@ -13,5 +13,7 @@ public:
     ~BoxCollider() override;
 
     void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
 };
 #endif //PROJECT_SWA_BOXCOLLIDER_H

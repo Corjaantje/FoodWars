@@ -1,3 +1,5 @@
+#include <utility>
+
 #ifndef PROJECT_SWA_MYNODE_H
 #define PROJECT_SWA_MYNODE_H
 
@@ -8,6 +10,8 @@
 
 using namespace std;
 struct Attribute {
+    Attribute(const string &name, const string &value) : name{name}, value{value} {}
+
     string name;
     string value;
 };
@@ -51,6 +55,8 @@ public:
 
     const vector<Attribute> &GetAttributes() const;
 
+    const Attribute *GetAttribute(const string &name) const;
+
     const string &GetValue() const;
 
     const int GetIntValue() const;
@@ -59,6 +65,8 @@ public:
     MyNode &AddChild(MyNode child);
 
     Attribute &AddAttribute(Attribute &attribute);
+
+    Attribute &AddAttribute(const std::string &name, const std::string &value);
 
     void SetValue(const string &value);
 

@@ -26,3 +26,7 @@ void Weapon::accept(SerializationVisitor &visitor) {
     visitor.visit("ammo", _ammo);
     visitor.visit("image", _imageUrl);
 }
+
+std::string Weapon::getName() const {
+    return "Weapon";
+}

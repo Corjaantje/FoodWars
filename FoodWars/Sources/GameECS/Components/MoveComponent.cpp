@@ -23,5 +23,9 @@ void MoveComponent::accept(SerializationVisitor &visitor) {
     visitor.visit("yVelocity", yVelocity);
 }
 
+std::string MoveComponent::getName() const {
+    return "MoveComponent";
+}
+
 MoveComponent::~MoveComponent() = default;
 

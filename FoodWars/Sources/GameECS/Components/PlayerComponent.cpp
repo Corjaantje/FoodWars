@@ -68,7 +68,11 @@ void PlayerComponent::accept(DeserializationVisitor &visitor) {
     visitor.visit("weapons", weapons, [weapons = &_weapons]() {
         weapons->push_back(std::make_unique<Weapon>());
         return static_cast<SerializationReceiver *>(weapons->back().get());
-    });
+    }); //warning!: not sure if this works
     visitor.visit("selectedWeaponIndex", _selectedWeaponIndex);
     visitor.visit("score", _score);
+}
+
+std::string PlayerComponent::getName() const {
+    return "PlayerComponent";
 }

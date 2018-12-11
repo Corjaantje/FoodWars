@@ -21,3 +21,7 @@ void ShapeRectangle::accept(SerializationVisitor &visitor) {
     visitor.visit("height", height);
     visitor.visit("colour", colour);
 }
+
+std::string ShapeRectangle::getName() const {
+    return "Rectangle";
+}

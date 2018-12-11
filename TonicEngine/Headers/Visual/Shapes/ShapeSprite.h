@@ -22,6 +22,8 @@ public:
     int getHeight() const override { return height; }
 
     void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
 };
 
 

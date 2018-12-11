@@ -16,6 +16,9 @@ public:
     void setDamage(int damage);
 
     void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
+
 private:
     int _damage;
 };

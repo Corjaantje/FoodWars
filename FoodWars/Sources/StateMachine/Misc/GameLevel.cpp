@@ -37,6 +37,7 @@ std::vector<Coordinate> GameLevel::getSpawnPoints() const {
 }
 
 void GameLevel::accept(GameLevelSerializeVisitor &visitor) const {
+    ;
     visitor.visit("backgroundMusic", _backgroundMusic);
     visitor.visit("backgroundWallpaper", _backgroundWallpaper);
     std::vector<SerializationReceiver *> serializableSpawnPoints{_spawnPoints.size()};
@@ -51,11 +52,11 @@ void GameLevel::accept(GameLevelSerializeVisitor &visitor) const {
 void GameLevel::accept(GameLevelDeserializeVisitor &visitor) {
     visitor.visit("backgroundMusic", _backgroundMusic);
     visitor.visit("backgroundWallpaper", _backgroundWallpaper);
-    std::vector<SerializationReceiver *> serializableSpawnPoints{};
-    visitor.visit("spawnPoints", serializableSpawnPoints, [spawnPoints = &_spawnPoints]() {
-        spawnPoints->push_back(Coordinate{});
-        return static_cast<SerializationReceiver *>(&spawnPoints->back());
-    });
+    std::vector<std::unique_ptr<SerializationReceiver>> serializableSpawnPoints{};
+    visitor.visit("spawnPoints", serializableSpawnPoints);
+    for (std::unique_ptr<SerializationReceiver> &receiver : serializableSpawnPoints) {
+        _spawnPoints.push_back(*dynamic_cast<Coordinate *>(receiver.get()));
+    }
     visitor.visit("entityManager", _entityManager);
 }
 

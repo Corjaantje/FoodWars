@@ -17,6 +17,8 @@ public:
 
     void accept(SerializationVisitor &visitor) override;
 
+    std::string getName() const override;
+
 private:
     std::string _imageUrl;
     int _ammo;

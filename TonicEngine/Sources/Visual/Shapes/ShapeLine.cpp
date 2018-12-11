@@ -26,3 +26,9 @@ void ShapeLine::accept(SerializationVisitor &visitor) {
     visitor.visit("y2", yPos2);
     visitor.visit("colour", colour);
 }
+
+std::string ShapeLine::getName() const {
+    return "Line";
+}
+
+

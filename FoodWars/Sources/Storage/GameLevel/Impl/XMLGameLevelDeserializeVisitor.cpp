@@ -2,8 +2,9 @@
 #include "../../../../Headers/Storage/GameLevel/Impl/XMLGameLevelDeserializeVisitor.h"
 #include "../../../../Headers/StateMachine/Misc/GameLevel.h"
 
-XMLGameLevelDeserializeVisitor::XMLGameLevelDeserializeVisitor(const MyDocument &document)
-        : XMLDeserializationVisitor(document) {
+XMLGameLevelDeserializeVisitor::XMLGameLevelDeserializeVisitor(const MyDocument &document,
+                                                               const DeserializationFactory &factory)
+        : XMLDeserializationVisitor(document, factory) {
 
 }
 
@@ -45,4 +46,13 @@ void XMLGameLevelDeserializeVisitor::visit(GameLevel &value) {
     //_currentNode = &_currentNode->AddChild(MyNode{name, _currentNode});
     value.accept(*this);
     _currentNode = oldCurrent;
+}
+
+void XMLGameLevelDeserializeVisitor::visit(const std::string &name, SerializationReceiver *receiver) {
+    XMLDeserializationVisitor::visit(name, receiver);
+}
+
+void XMLGameLevelDeserializeVisitor::visit(const std::string &name,
+                                           std::vector<std::unique_ptr<SerializationReceiver>> &receivers) {
+    XMLDeserializationVisitor::visit(name, receivers);
 }

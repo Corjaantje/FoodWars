@@ -20,6 +20,8 @@ public:
     virtual IShape *getShape() const;
 
     void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
 };
 
 

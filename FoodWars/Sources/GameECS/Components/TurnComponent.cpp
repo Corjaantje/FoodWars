@@ -6,7 +6,6 @@
 
 // Pure default initialization
 TurnComponent::TurnComponent() {
-    //TODO: discuss a default values.
     _energy = 100;
     _remainingTime = 0;
 }
@@ -62,6 +61,10 @@ void TurnComponent::accept(SerializationVisitor &visitor) {
     visitor.visit("energy", _energy);
     visitor.visit("remainingTime", _remainingTime);
     visitor.visit("myTurn", _myTurn);
+}
+
+std::string TurnComponent::getName() const {
+    return "TurnComponent";
 }
 
 

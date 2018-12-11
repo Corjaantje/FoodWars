@@ -10,3 +10,7 @@ GravityComponent::GravityComponent(double gravity) : gravityApplied {gravity}{
 void GravityComponent::accept(SerializationVisitor &visitor) {
     visitor.visit("gravityApplied", gravityApplied);
 }
+
+std::string GravityComponent::getName() const {
+    return "GravityComponent";
+}

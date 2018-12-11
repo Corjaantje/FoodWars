@@ -10,14 +10,11 @@
 
 
 void XMLReader::ReadRecursively(XMLElement &elem, MyNode &parent) {
-    MyNode current_node{elem.Name()};  // TODO: Fix stack/heap
-    Attribute a;
+    MyNode current_node{elem.Name()};
     const XMLAttribute* xml_attr = elem.FirstAttribute();
     if (xml_attr != nullptr) {
         for (const XMLAttribute *attr = xml_attr; attr; attr = attr->Next()) {
-            a.name = attr->Name();
-            a.value = attr->Value();
-            current_node.AddAttribute(a);
+            current_node.AddAttribute(attr->Name(), attr->Value());
         }
     }
 
@@ -34,7 +31,7 @@ void XMLReader::ReadRecursively(XMLElement &elem, MyNode &parent) {
     if (elem.NextSiblingElement() != nullptr) { // no child, but sibling
         ReadRecursively(*elem.NextSiblingElement(), parent);
     }
-    parent.AddChild(current_node);  // TODO: Fix stack/heap
+    parent.AddChild(current_node);
 }
 
 XMLReader::XMLReader() = default;

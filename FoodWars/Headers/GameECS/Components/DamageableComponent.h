@@ -21,6 +21,9 @@ public:
     bool isAlive();
 
     void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
+
 private:
     int _health; // 0 - 100
     int _resistance;

@@ -28,3 +28,7 @@ void ShapeText::accept(SerializationVisitor &visitor) {
     visitor.visit("height", height);
     visitor.visit("colour", colour);
 }
+
+std::string ShapeText::getName() const {
+    return "Text";
+}

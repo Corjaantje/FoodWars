@@ -19,3 +19,7 @@ void JumpComponent::setAcceleration(double acceleration) {
 void JumpComponent::accept(SerializationVisitor &visitor) {
     visitor.visit("jumpAcceleratation", _jumpAcceleration);
 }
+
+std::string JumpComponent::getName() const {
+    return "JumpComponent";
+}

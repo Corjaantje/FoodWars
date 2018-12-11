@@ -18,12 +18,13 @@ XMLGameLevelSerializeVisitor::~XMLGameLevelSerializeVisitor() = default;
 void XMLGameLevelSerializeVisitor::visit(const std::string &name, const EntityManager &entityManager) {
     MyNode *oldCurrent = _currentNode;
     MyNode *entityManagerNode = addChildAndSetCurrentNode(name);
+    SerializationVisitor &serializationVisitor = static_cast<SerializationVisitor &>(*this);
     for (const auto &entityIterator: entityManager.getAllEntitiesWithAllComponents()) {
         MyNode *entityNode = addChildAndSetCurrentNode("entity");
-        for (const auto &componentIterator: entityIterator.second) {
-            addChildAndSetCurrentNode(std::string{"c"} + typeid(*componentIterator).name());
-            componentIterator->accept(static_cast<SerializationVisitor &>(*this));
-            _currentNode = entityNode;
+        for (const Component *componentIterator: entityIterator.second) {
+            //addChildAndSetCurrentNode(componentIterator->getName());
+            visit("component", (SerializationReceiver &) *componentIterator);
+            //_currentNode = entityNode;
         }
         _currentNode = entityManagerNode;
     }

@@ -98,3 +98,7 @@ void LevelLoader::playNextLevel(GameLevel &gamelevel) {
         }
     }
 }
+
+std::string LevelLoader::getLevelIdentifier() const{
+    return _lastPlayedLevelPath;
+}

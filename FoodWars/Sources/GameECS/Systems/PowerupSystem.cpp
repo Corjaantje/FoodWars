@@ -14,19 +14,24 @@ PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservab
 }
 
 void PowerupSystem::spawnPowerup() {
-    // 50/50 chance of powerup spawning
-    if (rand() % 2 == 0) {
 
+    Random random;
+    int spawnChance = random.between(0,1);
+
+    // 50/50 chance of powerup spawning
+    if (spawnChance == 0) {
         std::string image;
 
+        int weaponChance = random.between(0,1);
+
         // Random powerup
-        if (rand() % 2 == 0) { //formula needs to be adjusted
+        if (weaponChance == 0) {
             image = "cake.png";
-        } else {
+        } else if (weaponChance == 1) {
             image = "painkiller.png";
         }
 
-        int spawnPointX = rand() % 1571;
+        int spawnPointX = random.between(0,1571);
         int spawnPointY = 0;
 
         Coordinate spawnPoint;

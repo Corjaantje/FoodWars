@@ -12,7 +12,7 @@
 class EntityManager {
 private:
     int _lowestUnassignedEntityId;
-    std::unordered_map<std::string, std::map<int, std::unique_ptr<Component>>> _componentsByClass; //todo: maybe use unordered_map
+    std::unordered_map<std::string, std::map<int, std::unique_ptr<Component>>> _componentsByClass;
 public:
     EntityManager();
 

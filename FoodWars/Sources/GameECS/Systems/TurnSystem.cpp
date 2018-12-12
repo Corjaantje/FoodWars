@@ -3,8 +3,7 @@
 #include "../../../Headers/GameECS/Components/PositionComponent.h"
 
 TurnSystem::TurnSystem(EntityManager &entityManager) : _entityManager(&entityManager), _defaultTimePerTurn(30),
-                                                       _timePerTurn(_defaultTimePerTurn), _powerupManager(PowerupManager{}) {
-    _powerupManager.spawnPowerups(_entityManager);
+                                                       _timePerTurn(_defaultTimePerTurn) {
 }
 
 TurnSystem::~TurnSystem() = default;
@@ -43,7 +42,6 @@ void TurnSystem::switchTurn() {
                         resetPlayerHighlight(2.1);
                     }
                     createCurrentPlayerHighlight(iterator2.first);
-                    _powerupManager.spawnPowerups(_entityManager);
                 }
             }
             break;

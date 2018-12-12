@@ -7,6 +7,7 @@
 #include "../../Headers/GameECS/Systems/AnimationSystem.h"
 #include "../../Headers/GameECS/Systems/DamageableSystem.h"
 #include "../../Headers/StateMachine/LevelTransitionScreen.h"
+#include "../../Headers/GameECS/Systems/PowerupSystem.h"
 
 
 GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &gameLevel) :
@@ -26,6 +27,7 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
     _systems.push_back(std::unique_ptr<ShootingSystem>(shootingSystem));
     _systems.push_back(std::make_unique<DamageableSystem>(*_entityManager, *_audioFacade, *collisionSystem));
     _systems.push_back(std::unique_ptr<CollisionSystem>(collisionSystem));
+    _systems.push_back(std::make_unique<PowerupSystem>(*collisionSystem, *_entityManager));
     auto drawSystem = new DrawSystem{*_entityManager, *_visualFacade, *_inputFacade};
     _systems.push_back(std::unique_ptr<DrawSystem>(drawSystem));
     nextButton = createShape<FlashingTextButton>(_inputFacade->getMouseEventObservable(),"Next", [this]()

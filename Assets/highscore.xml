@@ -15,20 +15,5 @@
             <date>2018-12-10 13:00</date>
 			<levelID>2</levelID>
         </highscore2>
-        <highscore3 typeName="Highscore">
-            <score>100</score>
-            <date>2018-12-10 8:00</date>
-			<levelID>3</levelID>
-        </highscore3>
-        <highscore4 typeName="Highscore">
-            <score>110</score>
-            <date>2018-12-10 9:00</date>
-			<levelID>4</levelID>
-        </highscore4>
-        <highscore5 typeName="Highscore">
-            <score>75</score>
-            <date>2018-12-10 9:00</date>
-			<levelID>5</levelID>
-        </highscore5>
     </highscore>
 </root>

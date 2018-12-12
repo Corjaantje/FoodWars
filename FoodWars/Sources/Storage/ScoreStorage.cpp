@@ -31,7 +31,7 @@ void ScoreStorage::saveScore(int score, std::string levelName) {
     factory.addType<Highscore>();
     XMLDeserializationVisitor deserializationVisitor{document, factory};
     std::vector<SerializationReceiver *> v;
-    deserializationVisitor.visit("Highscore", v);
+    deserializationVisitor.visit("highscore", v);
 
     for (SerializationReceiver *receiver: v) {
         auto *highscore = dynamic_cast<Highscore *>(receiver);
@@ -53,14 +53,14 @@ void ScoreStorage::saveScore(int score, std::string levelName) {
     }
 
     XMLWriter xmlWriter{};
-    XMLSerializationVisitor serializeVisitor{"Highscore"};
+    XMLSerializationVisitor serializeVisitor{"root"};
     std::vector<SerializationReceiver*> toSave;
     for (auto &iterator : _highscores)
     {
         toSave.push_back(static_cast<SerializationReceiver*>(&iterator));
 
     }
-    serializeVisitor.visit("Highscore", toSave);
+    serializeVisitor.visit("highscore", toSave);
     std::string file = DEFAULT_SCOREPATH;
     xmlWriter.WriteXMLFile(serializeVisitor.getRootNode(), file);
 }

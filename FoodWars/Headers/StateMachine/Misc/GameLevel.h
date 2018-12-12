@@ -5,7 +5,6 @@
 #include "Coordinate.h"
 #include "../../Storage/GameLevel/GameLevelSerializationReceiver.h"
 
-// todo: place GameLevel in other directory
 class GameLevel : public GameLevelSerializationReceiver {
 public:
     GameLevel();

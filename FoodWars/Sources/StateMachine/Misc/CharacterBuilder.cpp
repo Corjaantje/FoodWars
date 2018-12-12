@@ -66,7 +66,9 @@ void CharacterBuilder::buildCharacterEntity(GameLevel &gameLevel, int playerID, 
         turnComponent.setRemainingTime(30);
     }
     if(getIsBot()){
-        //TODO Add an AI component;
+        //TODO Add an AI component to the entity if this Entity is a Bot;
+        //TODO Remove Player Component
+        entityManager->addComponentToEntity<PlayerComponent>(player, playerID, getFaction());
     }
     else{
         entityManager->addComponentToEntity<PlayerComponent>(player, playerID, getFaction());

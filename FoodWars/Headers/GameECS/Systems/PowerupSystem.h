@@ -5,6 +5,7 @@
 #include "../Entities/EntityManager.h"
 #include "../Events/CollisionEventHandler.h"
 #include "IBaseSystem.h"
+#include "../../../../TonicEngine/Headers/General/Random.h"
 #include "Misc/ItemFactory.h"
 
 class PowerupSystem :  public IBaseSystem, public CollisionEventHandler {

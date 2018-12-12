@@ -1,6 +1,7 @@
 #include "../../Headers/StateMachine/HighscoreScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 #include "../../../TonicEngine/Headers/Storage/XMLDeserializationVisitor.h"
+#include "../../Headers/StateMachine/Misc/Highscore.h"
 
 HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context),
         _currentIndex{0},
@@ -72,7 +73,7 @@ void HighscoreScreen::update(const KeyEvent& event){
 void HighscoreScreen::refreshScoreText() {
     _scoreText.clear();
     XMLReader reader{};
-    MyDocument document = reader.LoadFile("./Assets/Highscore.xml");
+    MyDocument document = reader.LoadFile("./Assets/highscore.xml");
     DeserializationFactory factory{};
     factory.addType<Highscore>();
     XMLDeserializationVisitor deserializationVisitor{document, factory};

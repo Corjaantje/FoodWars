@@ -21,5 +21,3 @@ State* AIComponent::getCurrentState() const{
 void AIComponent::update(double dt) {
     if (_currentState) _currentState->execute(dt);
 }
-
-

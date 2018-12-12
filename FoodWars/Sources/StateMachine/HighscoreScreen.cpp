@@ -100,6 +100,4 @@ void HighscoreScreen::alterIndex(int dir) {
         _currentIndex = _scoreText.size() - ((_scoreText.size()) % 3);
         _currentIndex += (_scoreText.size()%3==0) ? -(1*3) : 0;
     }
-
-
 }

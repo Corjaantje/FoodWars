@@ -44,7 +44,7 @@ MoveSystem::MoveSystem(EntityManager &entityManager, InputFacade& inputFacade,
 
 void MoveSystem::update(double dt) {
     const int walkingEnergyCostPerSecond = 20;
-    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         if(_entityManager->getComponentFromEntity<AIComponent>(iterator.first)) continue;
         if (!iterator.second->getIsShooting()) {
         auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);

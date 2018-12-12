@@ -17,17 +17,28 @@ PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservab
 }
 
 void PowerupSystem::spawnPowerup() {
-    //min 29
-    int itemX = 150;
-    int itemY = 0;
+    Random random;
 
-    int powerup = _entityManager->createEntity();
-    auto item = _itemFactory.createItem(_itemMap[0]);
-    _entityManager->addComponentToEntity(powerup, std::make_unique<ItemComponent>(item));
-    _entityManager->addComponentToEntity<DrawableComponent>(powerup, std::make_unique<ShapeSprite>(29, 42,itemX,itemY,item.getItemName() +".png"));
-    _entityManager->addComponentToEntity<BoxCollider>(powerup, 29, 42);
-    _entityManager->addComponentToEntity<PositionComponent>(powerup, itemX, itemY);
-    _entityManager->addComponentToEntity<GravityComponent>(powerup, 5);
+    // 50/50 chance of powerup spawning
+    if (random.between(0,1) == 0) {
+        //min 29
+        int itemX = random.between(0,1571);
+        int itemY = 0;
+
+        int powerup = _entityManager->createEntity();
+        int weaponChance = random.between(0,1);
+
+        // Random powerup
+        auto item = _itemFactory.createItem(_itemMap[weaponChance]);
+        _entityManager->addComponentToEntity(powerup, std::make_unique<ItemComponent>(item));
+        _entityManager->addComponentToEntity<DrawableComponent>(powerup,
+                                                                std::make_unique<ShapeSprite>(29, 42, itemX, itemY,
+                                                                                              item.getItemName() +
+                                                                                              ".png"));
+        _entityManager->addComponentToEntity<BoxCollider>(powerup, 29, 42);
+        _entityManager->addComponentToEntity<PositionComponent>(powerup, itemX, itemY);
+        _entityManager->addComponentToEntity<GravityComponent>(powerup, 5);
+    }
 }
 
 bool PowerupSystem::canHandle(const CollisionEvent &collisionEvent) {

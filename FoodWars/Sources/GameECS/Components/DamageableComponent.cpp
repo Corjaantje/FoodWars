@@ -29,6 +29,7 @@ void DamageableComponent::lowerHealth(int value) {
 
 void DamageableComponent::increaseHealth(int value) {
     _health += value;
+    if (_health > 100) _health = 100;
 }
 
 void DamageableComponent::setResistance(int value) {

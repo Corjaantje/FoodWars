@@ -5,7 +5,7 @@
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
 #include "../../StateMachine/Misc/FactionEnum.h"
 
-class DamageableComponent: public Component, ISerializable {
+class DamageableComponent : public Component {
 
 public:
     DamageableComponent();
@@ -18,8 +18,13 @@ public:
     void increaseHealth(int value);
     void setResistance(int value);
     void destroy();
+
     bool isAlive() const;
-    std::vector<std::string> serialize() override;
+
+    void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
+
 private:
     int _health; // 0 - 100
     int _resistance;

@@ -2,7 +2,12 @@
 
 #include "../../../Headers/StateMachine/Misc/Weapon.h"
 
-Weapon::Weapon(std::string imageUrl, int ammo, Faction faction) : _imageUrl(std::move(imageUrl)), _ammo(ammo), _entityManager(), _faction{faction} {
+Weapon::Weapon() : Weapon("", 0, Faction::WHITE) {
+
+}
+
+Weapon::Weapon(const std::string &imageUrl, int ammo, Faction faction) : _imageUrl(imageUrl), _ammo(ammo),
+                                                                         _faction{faction} {
 
 }
 
@@ -22,6 +27,15 @@ void Weapon::setAmmo(int val) {
     _ammo = val;
 }
 
-const Faction Weapon::getFaction() const {
+Faction Weapon::getFaction() const {
     return _faction;
+}
+
+void Weapon::accept(SerializationVisitor &visitor) {
+    visitor.visit("ammo", _ammo);
+    visitor.visit("image", _imageUrl);
+}
+
+std::string Weapon::getName() const {
+    return "Weapon";
 }

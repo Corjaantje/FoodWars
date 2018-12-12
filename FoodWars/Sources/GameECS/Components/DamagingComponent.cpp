@@ -13,4 +13,10 @@ const Faction DamagingComponent::getFaction() const { return _faction; }
 
 void DamagingComponent::setDamage(int damage) { _damage = damage; }
 
+void DamagingComponent::accept(SerializationVisitor &visitor) {
+    visitor.visit("damage", _damage);
+}
 
+std::string DamagingComponent::getName() const {
+    return "DamagingComponent";
+}

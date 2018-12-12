@@ -1,45 +1,82 @@
-//
-// Created by pietb on 01-Oct-18.
-//
+#include <utility>
 
 #ifndef PROJECT_SWA_MYNODE_H
 #define PROJECT_SWA_MYNODE_H
+
 #include <vector>
 #include <string>
+#include <unordered_map>
+#include <iostream>
 
 using namespace std;
-struct Attribute
-{
+struct Attribute {
+    Attribute(const string &name, const string &value) : name{name}, value{value} {}
+
     string name;
     string value;
 };
 
-class MyNode
-{
+class MyNode {
 public:
-    MyNode(string name, MyNode* parent);
+    explicit MyNode(const string &name);
+
+    MyNode(const string &name, const string &value);
+
+    /*MyNode(const MyNode& other) {
+        std::cout << "MyNode&" << std::endl;
+        _parent = other._parent;
+        _children = other._children;
+        _attributes = other._attributes;
+        _value = other._value;
+        _name = other._name;
+        _childrenByTagName = other._childrenByTagName;
+        //_parent->_childrenByTagName[_name] = this;
+    }
+
+    MyNode(MyNode&& other) noexcept {
+        std::cout << "MyNode&&" << std::endl;
+        _parent = other._parent;
+        _children = other._children;
+        _childrenByTagName = other._childrenByTagName;
+        _value = other._value;
+        _name = other._name;
+        _attributes = other._attributes;
+        _parent->_childrenByTagName[_name] = this;
+        other._parent = nullptr;
+    }*/
+
     ~MyNode();
 
-    const string GetName() const;
-    const vector<MyNode> GetChildren() const;
-    const vector<Attribute> GetAttributes() const;
-    const string GetValue() const;
+    const string &GetName() const;
+
+    const vector<MyNode> &GetChildren() const;
+
+    const MyNode *GetChild(const string &tagName) const;
+
+    const vector<Attribute> &GetAttributes() const;
+
+    const Attribute *GetAttribute(const string &name) const;
+
+    const string &GetValue() const;
+
     const int GetIntValue() const;
-    const MyNode* GetParent() const;
 
-    MyNode& AddChild(MyNode& child);
-    Attribute& AddAttribute(Attribute& attribute);
+    //MyNode &AddChild(MyNode &child);
+    MyNode &AddChild(MyNode child);
 
-    MyNode* FirstChildElement();
-    const MyNode* NextSiblingElement();
-    void SetValue(string value);
-    void SetParent(MyNode& parent);
+    Attribute &AddAttribute(Attribute &attribute);
 
-    const MyNode& operator=(const MyNode& other);
+    Attribute &AddAttribute(const std::string &name, const std::string &value);
+
+    void SetValue(const string &value);
+
+    MyNode &operator=(const MyNode &other);
+
 private:
     string _name;
     vector<MyNode> _children;
-    MyNode* _parent;
+    std::unordered_map<std::string, MyNode *> _childrenByTagName;
+    //MyNode *_parent;
     vector<Attribute> _attributes;
     string _value;
 };

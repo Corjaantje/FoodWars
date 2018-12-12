@@ -10,10 +10,10 @@
 StorageFacade::StorageFacade(std::string system, std::string user) {
     XMLDocument doc;
     doc.LoadFile(system.c_str());
-    _systemFile = _reader.ReadXMLFile(doc);
+    /* _systemFile = _reader.ReadXMLFile(doc);
 
-    doc.LoadFile(user.c_str());
-    _userFile = _reader.ReadXMLFile(doc);
+     doc.LoadFile(user.c_str());
+     _userFile = _reader.ReadXMLFile(doc);*/
 }
 
 StorageFacade::~StorageFacade() = default;
@@ -21,7 +21,7 @@ StorageFacade::~StorageFacade() = default;
 // Retrieve highscore
 string StorageFacade::getHighscore(int level) {
 
-    std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile("Assets/Highscore.xml");
+    std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile2("Assets/Highscore.xml");
     if (highscoreFile != nullptr) {
         string score = highscoreFile->GetRoot().GetChildren()[level].GetChildren()[0].GetValue();
 
@@ -32,10 +32,9 @@ string StorageFacade::getHighscore(int level) {
     return "0";
 }
 
-std::vector<std::vector<std::string>> StorageFacade::loadHighscoresForLevels() {
-    std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile("Assets/Highscore.xml");
+std::vector<std::vector<std::string>> StorageFacade::loadHighscoresForLevels(const DeserializationFactory &factory) {
+    std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile2("Assets/Highscore.xml");
     std::vector<std::vector<std::string>> vLevels;
-
     for (auto const& iterator : highscoreFile->GetRoot().GetChildren())
     {
         std::vector<std::string> toFill {iterator.GetName(),
@@ -55,7 +54,7 @@ void StorageFacade::saveHighscore(int score, std::string level) {
 //    Total length: 26
     std::string levelIdentifier = level.substr(level.length()-5, level.length() - 25);
 
-    std::unique_ptr<MyDocument> highDoc = _reader.LoadFile("Assets/Highscore.xml");
+    std::unique_ptr<MyDocument> highDoc = _reader.LoadFile2("Assets/Highscore.xml");
     MyNode rootNode = highDoc->GetRoot();
     std::vector<MyNode *> savedNodes{};
     int nodeId = -1;
@@ -68,11 +67,10 @@ void StorageFacade::saveHighscore(int score, std::string level) {
         if (iterator.GetValue().substr(0, iterator.GetValue().length()-8) == levelIdentifier)
         {
             previouslyScored = true;
-            MyNode *tempNode = new MyNode{"level", &saveRoot};
+            MyNode *tempNode = new MyNode{"level"};
             tempNode->SetValue(levelIdentifier);
-            tempNode->SetParent(saveRoot);
 
-            MyNode tempScore{"score", tempNode};
+            MyNode tempScore{"score"};
             if (score > iterator.GetChildren()[0].GetIntValue())
             {
                 tempScore.SetValue(std::to_string(score));
@@ -81,7 +79,7 @@ void StorageFacade::saveHighscore(int score, std::string level) {
                 tempScore.SetValue(iterator.GetChildren()[0].GetValue());
             }
 
-            MyNode tempDate{"date", tempNode};
+            MyNode tempDate{"date"};
             std::time_t now = std::time(nullptr);
             tm *ltm = localtime(&now);
             std::string today = std::to_string(1900 + ltm->tm_year) + "-" + std::to_string(1 + ltm->tm_mon) + "-" +
@@ -93,14 +91,13 @@ void StorageFacade::saveHighscore(int score, std::string level) {
             savedNodes.push_back(tempNode);
         } else
         {
-            MyNode* tempNode = new MyNode {"level", &saveRoot};
+            MyNode *tempNode = new MyNode{"level"};
             tempNode->SetValue(iterator.GetValue().substr(0, iterator.GetValue().length()-8));
-            tempNode->SetParent(saveRoot);
 
-            MyNode tempScore {"score", tempNode};
+            MyNode tempScore{"score"};
             tempScore.SetValue(iterator.GetChildren()[0].GetValue());
 
-            MyNode tempDate {"date", tempNode};
+            MyNode tempDate{"date"};
             tempDate.SetValue(iterator.GetChildren()[1].GetValue());
 
             tempNode->AddChild(tempDate);
@@ -110,14 +107,13 @@ void StorageFacade::saveHighscore(int score, std::string level) {
     }
     if (!previouslyScored)
     {
-        MyNode* newScore = new MyNode {"level", &saveRoot};
+        MyNode *newScore = new MyNode{"level"};
         newScore->SetValue(levelIdentifier);
-        newScore->SetParent(saveRoot);
 
-        MyNode newHigh {"score", newScore};
+        MyNode newHigh{"score"};
         newHigh.SetValue(std::to_string(score));
 
-        MyNode onDate {"date", newScore};
+        MyNode onDate{"date"};
         std::time_t now = std::time(nullptr);
         tm *ltm = localtime(&now);
         std::string today = std::to_string(1900+ltm->tm_year)+"-"+std::to_string(1+ltm->tm_mon)+"-"+std::to_string(ltm->tm_mday)+" "+std::to_string(ltm->tm_hour)+":"+std::to_string(ltm->tm_min);
@@ -127,10 +123,10 @@ void StorageFacade::saveHighscore(int score, std::string level) {
         newScore->AddChild(newHigh);
         savedNodes.push_back(newScore);
     }
-    for (int i = savedNodes.size()-1; i >= 0; i--)
+    /*for (int i = savedNodes.size()-1; i >= 0; i--)
     {
         saveDoc.AddToRoot(*savedNodes[i]);
-    }
+    }*/
     auto* written = new XMLWriter();
     written->WriteXMLFile(saveDoc, "./Assets/Highscore.xml");
     delete written;

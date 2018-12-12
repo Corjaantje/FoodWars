@@ -4,10 +4,13 @@ GravityComponent::GravityComponent() : gravityApplied {15} {
 }
 
 GravityComponent::GravityComponent(double gravity) : gravityApplied {gravity}{
-}
-std::vector<std::string> GravityComponent::serialize() {
-    std::vector<std::string> data;
-    data.push_back(std::to_string(gravityApplied));
 
-    return data;
+}
+
+void GravityComponent::accept(SerializationVisitor &visitor) {
+    visitor.visit("gravityApplied", gravityApplied);
+}
+
+std::string GravityComponent::getName() const {
+    return "GravityComponent";
 }

@@ -1,11 +1,15 @@
 #include "../../../Headers/Visual/Shapes/ShapeText.h"
 #include "../../../Headers/Visual/Renderlist.h"
 
-ShapeText::ShapeText(const int x, const int y, std::string string, int fontSize, int width, int height,
+ShapeText::ShapeText() : ShapeText(0, 0, "", 0, 0, 0, Colour{}) {
+
+}
+
+ShapeText::ShapeText(const int x, const int y, const std::string &string, int fontSize, int width, int height,
                      Colour colour)
         : IShape(x, y, 3), width(width), height(height), fontSize(fontSize), text(string), colour(colour) {}
 
-ShapeText::~ShapeText() {}
+ShapeText::~ShapeText() = default;
 
 void ShapeText::addToRender(Renderlist *renderlist) {
     renderlist->_shapes[layer].push_back(this);
@@ -20,22 +24,15 @@ void ShapeText::render(IRenderer &renderer) const {
     renderer.renderText(*this);
 }
 
-std::vector<std::string> ShapeText::serialize() {
-    std::vector<std::string> data;
-    data.emplace_back("text");
-    data.emplace_back("position");
-    data.push_back(std::to_string(xPos));
-    data.push_back(std::to_string(yPos));
-    data.emplace_back("dimensions");
-    data.push_back(std::to_string(getHeight()));
-    data.push_back(std::to_string(getWidth()));
-    data.emplace_back("color");
-    data.emplace_back(std::to_string(colour.red));
-    data.emplace_back(std::to_string(colour.green));
-    data.emplace_back(std::to_string(colour.blue));
-    data.emplace_back(std::to_string(colour.alpha));
-    data.emplace_back(text);
-    data.emplace_back("layer");
-    data.emplace_back(std::to_string(layer));
-    return data;
+void ShapeText::accept(SerializationVisitor &visitor) {
+    IShape::accept(visitor);
+    visitor.visit("text", text);
+    visitor.visit("fontSize", fontSize);
+    visitor.visit("width", width);
+    visitor.visit("height", height);
+    visitor.visit("colour", colour);
+}
+
+std::string ShapeText::getName() const {
+    return "Text";
 }

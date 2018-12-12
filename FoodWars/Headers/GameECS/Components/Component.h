@@ -1,7 +1,9 @@
 #ifndef PROJECT_SWA_COMPONENTS_H
 #define PROJECT_SWA_COMPONENTS_H
 
-class Component {
+#include "../../../../TonicEngine/Headers/Storage/SerializationReceiver.h"
+
+class Component : public SerializationReceiver {
 public:
     Component();
     Component(const Component &other) = delete;

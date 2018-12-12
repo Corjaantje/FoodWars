@@ -102,17 +102,16 @@ void GameScreen::update(double deltaTime) {
     int playerTwoScore = 0;
     for(auto const &iterator : _entitiesWithPlayerComponent) {
         if(iterator.second->getPlayerID() == 1){
-            playerOneAlive = iterator.second->getIsAlive();
+            playerOneAlive = iterator.second->isAlive();
             playerOneScore = iterator.second->getScore();
         }
         if(iterator.second->getPlayerID() == 2){
-            playerTwoAlive = iterator.second->getIsAlive();
+            playerTwoAlive = iterator.second->isAlive();
             playerTwoScore = iterator.second->getScore();
         }
     }
     //Either of the 2 died
     if(!playerOneAlive || !playerTwoAlive){
-        //TODO Add real scores to constructor
         _context->setActiveScreen(std::make_unique<LevelTransitionScreen>(*_context, !playerOneAlive, !playerTwoAlive, playerOneScore, playerTwoScore));
     }
     _audioFacade->playMusic(_gameLevel->getBackgroundMusic().c_str());

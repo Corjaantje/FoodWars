@@ -2,8 +2,11 @@
 #define PROJECT_SWA_COLOUR_H
 
 
-class Colour {
+#include "../Storage/SerializationReceiver.h"
+
+class Colour : public SerializationReceiver {
 public:
+    Colour();
     Colour(int red, int green, int blue, int alpha);
     ~Colour();
 public:
@@ -12,13 +15,17 @@ public:
     int blue;
     int alpha;
 
-    virtual int getRed();
+    int getRed();
 
-    virtual int getGreen();
+    int getGreen();
 
-    virtual int getBlue();
+    int getBlue();
 
-    virtual int getAlpha();
+    int getAlpha();
+
+    void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
 };
 
 

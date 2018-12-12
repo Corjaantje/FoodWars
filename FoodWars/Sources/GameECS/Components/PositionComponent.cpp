@@ -26,11 +26,11 @@ PositionComponent &PositionComponent::operator--(int) {
     return *this;
 }
 
-std::vector<std::string> PositionComponent::serialize() {
-    std::vector<std::string> data;
-    data.push_back(std::to_string(X));
-    data.push_back(std::to_string(Y));
+void PositionComponent::accept(SerializationVisitor &visitor) {
+    visitor.visit("x", X);
+    visitor.visit("y", Y);
+}
 
-
-    return data;
+std::string PositionComponent::getName() const {
+    return "PositionComponent";
 }

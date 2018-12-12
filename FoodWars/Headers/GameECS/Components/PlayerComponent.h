@@ -26,7 +26,7 @@ public:
     int getSelectedWeaponAvailability() const;
 
     Faction getFaction() const;
-    bool getIsAlive() const;
+    bool isAlive() const;
 
     void accept(SerializationVisitor &visitor) override;
 
@@ -39,7 +39,7 @@ private:
     int _score;
     int _selectedWeaponAvailability;
     int _selectedWeaponIndex;
-    bool _isAlive; //todo: why?
+    bool _isAlive;
     std::vector<std::unique_ptr<Weapon>> _weapons{};
     Faction _faction;
 

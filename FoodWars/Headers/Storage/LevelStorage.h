@@ -9,9 +9,12 @@ private:
     DeserializationFactory _deserializationFactory;
 
     void fillFactory(DeserializationFactory &factory);
+
+    std::string _levelsDirectory;
 public:
     LevelStorage();
-    bool saveLevel(const GameLevel &gameLevel, const std::string &toFile);
+
+    bool saveLevel(const GameLevel &gameLevel);
 
     bool loadLevel(GameLevel &gameLevel, const std::string &file);
 };

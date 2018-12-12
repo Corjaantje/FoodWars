@@ -18,16 +18,21 @@
 #include "../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/ShapeText.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/ShapeLine.h"
+#include "../../../TonicEngine/Headers/Storage/FileManager.h"
 
-LevelStorage::LevelStorage() : _deserializationFactory{} {
+LevelStorage::LevelStorage() : _deserializationFactory{}, _levelsDirectory{"./Assets/Levels/"} {
     fillFactory(_deserializationFactory);
 }
 
-bool LevelStorage::saveLevel(const GameLevel &gameLevel, const std::string &toFile) {
+bool LevelStorage::saveLevel(const GameLevel &gameLevel) {
     XMLWriter xmlWriter{};
     XMLGameLevelSerializeVisitor serializeVisitor{"Level"};
     serializeVisitor.visit(gameLevel);
-    return xmlWriter.WriteXMLFile(serializeVisitor.getRootNode(), toFile);
+    FileManager fileManager{};
+    std::vector<std::string> files = fileManager.getFiles(_levelsDirectory, {"xml"}, false, false);
+    int highestLevelnum = files.size();
+    std::string file = _levelsDirectory + "Level" + std::to_string(highestLevelnum) + ".xml";
+    return xmlWriter.WriteXMLFile(serializeVisitor.getRootNode(), file);
 }
 
 bool LevelStorage::loadLevel(GameLevel &gameLevel, const std::string &file) {

@@ -102,11 +102,11 @@ void GameScreen::update(double deltaTime) {
     int playerTwoScore = 0;
     for(auto const &iterator : _entitiesWithPlayerComponent) {
         if(iterator.second->getPlayerID() == 1){
-            playerOneAlive = iterator.second->getIsAlive();
+            playerOneAlive = iterator.second->isAlive();
             playerOneScore = iterator.second->getScore();
         }
         if(iterator.second->getPlayerID() == 2){
-            playerTwoAlive = iterator.second->getIsAlive();
+            playerTwoAlive = iterator.second->isAlive();
             playerTwoScore = iterator.second->getScore();
         }
     }

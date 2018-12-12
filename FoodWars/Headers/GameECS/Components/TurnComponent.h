@@ -13,7 +13,6 @@ public:
     TurnComponent();
 
     explicit TurnComponent(double energy);
-    TurnComponent(double energy, bool myTurn); // May be useless?
     ~TurnComponent() override;
 
     void switchTurn(bool change);

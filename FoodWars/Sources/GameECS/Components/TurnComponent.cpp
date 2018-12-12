@@ -15,10 +15,6 @@ TurnComponent::TurnComponent(double energy): _energy(energy) {
 
 }
 
-TurnComponent::TurnComponent(double energy, bool myTurn): _energy(energy), _myTurn(myTurn) {
-
-}
-
 TurnComponent::~TurnComponent() = default;
 
 void TurnComponent::switchTurn(bool change) {

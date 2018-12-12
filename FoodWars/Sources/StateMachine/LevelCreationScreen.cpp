@@ -214,5 +214,5 @@ void LevelCreationScreen::callRender() {
 
 void LevelCreationScreen::relinkAndSave() {
     //StorageSystem{}.saveWorld(_levelBuilder.getConstructedLevelNonConst());
-    LevelStorage{}.saveLevel(_levelBuilder.getConstructedLevel(), "abc.xml");
+    LevelStorage{}.saveLevel(_levelBuilder.getConstructedLevel());
 }

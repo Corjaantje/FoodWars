@@ -30,7 +30,7 @@ public:
         return _date;
     }
 
-    void setDate(std::string newDate) {
+    void setDate(const std::string& newDate) {
         _date = newDate;
     }
 

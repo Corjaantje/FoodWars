@@ -70,19 +70,20 @@ int main(int argc, char** argv)
         //frameRate update
         std::chrono::duration<double> currentTimeTwo = std::chrono::steady_clock::now().time_since_epoch();
         double loggen = currentTimeTwo.count() - timeLastFPS.count();
-        if (loggen >= 1) {
-            if(_updateCallCount < 60){
-                frameRateCap+= 5;
+        if (loggen >= 0.25) {
+            if(_updateCallCount < 16){
+                frameRateCap+= frameRateCap/8;
                 amountOfUpdatesAllowedPerSecond = 1.0 / frameRateCap;
             }
             else{
-                frameRateCap-= 2;
+                frameRateCap-= frameRateCap/16;
                 amountOfUpdatesAllowedPerSecond = 1.0 / frameRateCap;
             }
             timeLastFPS = std::chrono::steady_clock::now().time_since_epoch();
             _updateCallCount = 0;
         }
         //End of framerate update
+
         if (sleepTime > 0.0)
             generalFacade.sleep(sleepTime);
     }

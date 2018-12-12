@@ -3,7 +3,7 @@
 
 #include "../StateMachine/Misc/Highscore.h"
 
-const std::string DEFAULT_XMLPATH = "./Assets/Highscore.xml";
+const std::string DEFAULT_SCOREPATH = "./Assets/Highscore.xml";
 class ScoreStorage {
     public:
     ScoreStorage();
@@ -13,7 +13,6 @@ class ScoreStorage {
     void loadScore();
     void saveScore(int score, std::string levelName);
     private:
-    std::vector<Highscore*> _highscores;
 };
 
 

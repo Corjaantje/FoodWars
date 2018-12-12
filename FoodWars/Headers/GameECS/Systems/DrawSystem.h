@@ -13,6 +13,7 @@ class DrawSystem : public IBaseSystem {
 private:
     std::chrono::duration<double> _timeLast;
     std::vector<IShape *> _sprites;
+    std::vector<IShape *> _shapes;
     VisualFacade* _visualFacade;
     InputFacade* _inputFacade;
     EntityManager *_entityManager;
@@ -32,7 +33,7 @@ public:
     ~DrawSystem() override;
     void update(double dt) override;
     bool toggleFpsCounter();
-
+    void addShape(IShape* shape);
 private:
     void drawNonComponents();
     void drawPlayers();

@@ -1,4 +1,5 @@
 #include "../../../Headers/StateMachine/Misc/WeaponSelection.h"
+#include "../../../Headers/GameECS/Components/TurnComponent.h"
 
 WeaponSelection::WeaponSelection(EntityManager &entityManager) : _entityManager(&entityManager) {
 

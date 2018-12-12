@@ -1,0 +1,11 @@
+#ifndef PROJECT_SWA_FACTIONENUM_H
+#define PROJECT_SWA_FACTIONENUM_H
+
+enum Faction{
+    WHITE,
+    RED,
+    GREEN,
+    YELLOW,
+    RANDOM
+};
+#endif //PROJECT_SWA_FACTIONENUM_H

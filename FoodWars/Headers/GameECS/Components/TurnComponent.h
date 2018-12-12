@@ -8,11 +8,11 @@
 #include "Component.h"
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
 
-class TurnComponent: public Component, ISerializable {
+class TurnComponent : public Component {
 public:
     TurnComponent();
-    TurnComponent(double energy);
-    TurnComponent(double energy, bool myTurn); // May be useless?
+
+    explicit TurnComponent(double energy);
     ~TurnComponent() override;
 
     void switchTurn(bool change);
@@ -23,15 +23,20 @@ public:
     void setEnergy(double energy);
     double getRemainingTime() const;
     bool isMyTurn() const;
+    bool getIsShooting() const;
+    void setIsShooting(bool change);
+    void changeIsShooting();
     void setEnergy(int energy);
-    void setMaxEnergy(int energy);
-    std::vector<std::string> serialize() override;
+
+    void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
 
 private:
     double _energy;
     double _remainingTime;
-    int _maxEnergy;
     bool _myTurn = false;
+    bool _isShooting = false;
 };
 
 

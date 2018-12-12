@@ -84,8 +84,10 @@ void LevelBuilder::placeBlock(int x, int y) {
             _entityManager.addComponentToEntity<BoxCollider>(entity, _shapeDimension, _shapeDimension);
         }
         if (_buildDamageable) {
-            //TODO Nog geen damageable component
             _entityManager.addComponentToEntity<DamageableComponent>(entity, 1);
+        }
+        else {
+            _entityManager.addComponentToEntity<DamageableComponent>(entity, 1, 100);
         }
         _entityManager.addComponentToEntity<DrawableComponent>(entity,
                                                                std::make_unique<ShapeRectangle>(_shapeDimension,

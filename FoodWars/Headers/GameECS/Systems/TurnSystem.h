@@ -3,6 +3,7 @@
 
 #include "IBaseSystem.h"
 #include "../Components/TurnComponent.h"
+#include "../Components/DrawableComponent.h"
 #include "../../PowerupManager.h"
 
 class TurnSystem : public IBaseSystem {
@@ -14,7 +15,17 @@ private:
 public:
     TurnSystem(EntityManager &entityManager);
     ~TurnSystem() override;
+    void switchTurn();
+    void resetCurrentTime();
+    void resetCurrentEnergy();
+    int getCurrentPlayerID() const;
+    double getCurrentPlayerEnergy() const;
     void update(double deltaTime) override;
+private:
+    void createCurrentPlayerHighlight(int entityID);
+    void resetPlayerHighlight(double deltaTime);
+    int _currentHighlightEntityId = -1;
+    double _timePerUpdateHighlight = 0;
 };
 
 

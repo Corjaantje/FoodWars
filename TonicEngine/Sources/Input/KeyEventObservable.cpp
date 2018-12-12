@@ -12,6 +12,12 @@ KeyEventObservable::KeyEventObservable() {
     _keycodeMap[SDL_SCANCODE_PAGEDOWN] = KEY::KEY_PAGEDOWN;
     _keycodeMap[SDL_SCANCODE_HOME] = KEY::KEY_HOME;
     _keycodeMap[SDL_SCANCODE_SPACE] = KEY::KEY_SPACEBAR;
+    _keycodeMap[SDL_SCANCODE_T] = KEY::KEY_T;
+    _keycodeMap[SDL_SCANCODE_R] = KEY::KEY_R;
+    _keycodeMap[SDL_SCANCODE_K] = KEY::KEY_K;
+    _keycodeMap[SDL_SCANCODE_Y] = KEY::KEY_Y;
+
+
     for (auto const &iterator: _keycodeMap) {
         _pressedKeys[iterator.second] = false;
     }

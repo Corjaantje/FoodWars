@@ -1,8 +1,6 @@
 #include "../../../Headers/GameECS/Systems/TurnSystem.h"
-
-//TurnSystem::TurnSystem() {
-//    setTurnTime(_defaultTimePerTurn);
-//}
+#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
+#include "../../../Headers/GameECS/Components/PositionComponent.h"
 
 TurnSystem::TurnSystem(EntityManager &entityManager) : _entityManager(&entityManager), _defaultTimePerTurn(30),
                                                        _timePerTurn(_defaultTimePerTurn), _powerupManager(PowerupManager{}) {
@@ -18,21 +16,91 @@ void TurnSystem::update(double deltaTime) {
     for(const auto &iterator: turnComponents) {
         if(iterator.second->isMyTurn()) {
             iterator.second->lowerRemainingTime(deltaTime);
-            if(iterator.second->getRemainingTime() <= 0 || iterator.second->getEnergy() <= 0) {
-                iterator.second->switchTurn(false);
-                for(const auto& it2: turnComponents) {
-                    if(it2.first != iterator.first) {
-                        it2.second->switchTurn(true);
-                        it2.second->setRemainingTime((float) _timePerTurn);
-                        it2.second->setEnergy(100);
-                        _powerupManager.spawnPowerups(_entityManager);
-                        break;
+            if(iterator.second->getRemainingTime() <= 0) {
+                iterator.second->setRemainingTime(0);
+                iterator.second->setEnergy(0);
+            }
+            break;
+        }
+    }
+    if(_currentHighlightEntityId != -1) {
+        resetPlayerHighlight(deltaTime);
+    }
+}
+
+void TurnSystem::switchTurn() {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if(iterator.second->isMyTurn()) {
+            iterator.second->switchTurn(false);
+            iterator.second->setEnergy(100);
+            for (const auto &iterator2: _entityManager->getAllEntitiesWithComponent<TurnComponent>())
+            {
+                if(iterator.first != iterator2.first)
+                {
+                    iterator2.second->switchTurn(true);
+                    iterator2.second->setRemainingTime(30);
+                    if(_currentHighlightEntityId != -1){
+                        resetPlayerHighlight(2.1);
                     }
+                    createCurrentPlayerHighlight(iterator2.first);
+                    _powerupManager.spawnPowerups(_entityManager);
                 }
             }
             break;
         }
     }
+}
+
+void TurnSystem::createCurrentPlayerHighlight(int entityID) {
+    _currentHighlightEntityId = _entityManager->createEntity();
+    auto *positionComp = _entityManager->getComponentFromEntity<PositionComponent>(entityID);
+    if (positionComp != nullptr) {
+        _entityManager->addComponentToEntity<DrawableComponent>(_currentHighlightEntityId,
+                                                                std::make_unique<ShapeSprite>(48, 72,
+                                                                                              positionComp->X,
+                                                                                              positionComp->Y - 100,
+                                                                                              "HighlightArrow.png", 4));
+    }
+}
+
+void TurnSystem::resetPlayerHighlight(double deltaTime) {
+    _timePerUpdateHighlight += deltaTime;
+    if(_timePerUpdateHighlight > 2.0){
+        _timePerUpdateHighlight = 0;
+        _entityManager->removeEntity(_currentHighlightEntityId);
+        _currentHighlightEntityId = -1;
+    }
+}
+
+void TurnSystem::resetCurrentTime() {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if (iterator.second->isMyTurn()) {
+            iterator.second->setRemainingTime(30);
+            break;
+        }
+    }
+}
+
+int TurnSystem::getCurrentPlayerID() const {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if (iterator.second->isMyTurn()) {
+            return iterator.first;
+        }
+    }
+}
+
+void TurnSystem::resetCurrentEnergy() {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if (iterator.second->isMyTurn()) {
+            iterator.second->setEnergy(100);
+            break;
+        }
+    }
+}
+
+double TurnSystem::getCurrentPlayerEnergy() const {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>())
+        if (iterator.second->isMyTurn()) return iterator.second->getEnergy();
 }
 
 

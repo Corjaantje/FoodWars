@@ -18,6 +18,7 @@
 #include "TonicEngine/Headers/Storage/FileManager.h"
 
 
+
 int main(int argc, char** argv)
 {
     WindowResolutionCalculator windowResolutionCalculator {};
@@ -53,13 +54,35 @@ int main(int argc, char** argv)
     double timeModifier = 1.0;
     std::chrono::duration<double> timeLast = std::chrono::steady_clock::now().time_since_epoch();
 
+    //frameRate Update
+    std::chrono::duration<double> timeLastFPS = std::chrono::steady_clock::now().time_since_epoch();
+    int _updateCallCount = 0;
+    //End of framerate update
     while(!screenStateManager.getCurrentState().isWindowClosed()) {
+        _updateCallCount++;
         std::chrono::duration<double> currentTime = std::chrono::steady_clock::now().time_since_epoch();
         double deltaTime = (currentTime.count() - timeLast.count()) * timeModifier;
         if (deltaTime > 1) deltaTime = 1;
         timeLast = currentTime;
         screenStateManager.getCurrentState().update(deltaTime);
         double sleepTime = amountOfUpdatesAllowedPerSecond * 1000 - deltaTime;
+
+        //frameRate update
+        std::chrono::duration<double> currentTimeTwo = std::chrono::steady_clock::now().time_since_epoch();
+        double loggen = currentTimeTwo.count() - timeLastFPS.count();
+        if (loggen >= 1) {
+            if(_updateCallCount < 60){
+                frameRateCap++;
+                amountOfUpdatesAllowedPerSecond = 1.0 / frameRateCap;
+            }
+            else{
+                frameRateCap--;
+                amountOfUpdatesAllowedPerSecond = 1.0 / frameRateCap;
+            }
+            timeLastFPS = std::chrono::steady_clock::now().time_since_epoch();
+            _updateCallCount = 0;
+        }
+        //End of framerate update
         if (sleepTime > 0.0)
             generalFacade.sleep(sleepTime);
     }

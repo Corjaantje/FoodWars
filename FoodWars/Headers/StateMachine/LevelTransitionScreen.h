@@ -4,6 +4,8 @@
 
 #include "IScreen.h"
 #include "../../../TonicEngine/Headers/Events/KeyEvent.h"
+#include "../Storage/ScoreStorage.h"
+
 
 class LevelTransitionScreen : public IScreen, public IObserver<KeyEvent>{
 public:
@@ -17,6 +19,7 @@ private:
 private:
     int _scorePlayerOne;
     int _scorePlayerTwo;
+    ScoreStorage _scoreStorer;
 };
 
 

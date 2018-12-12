@@ -1,5 +1,6 @@
 #include "../../Headers/StateMachine/HighscoreScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
+#include "../../../TonicEngine/Headers/Storage/XMLDeserializationVisitor.h"
 
 HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context),
         _currentIndex{0},
@@ -30,8 +31,7 @@ HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context)
                               60, 60, 1245,510,
                               Colour{0,0,0,0})->addToRender(&_renderList);
     refreshScoreText();
-    for (int i = 0; i < 3 && i < _levelScores.size(); i++)
-    {
+    for (int i = 0; i < 3 && i < _levelScores.size(); i++) {
         placeShape(465, 310 + (i%3 * 175), "", 670, 110, Colour(255, 255, 255, 0));
     }
 }
@@ -71,7 +71,21 @@ void HighscoreScreen::update(const KeyEvent& event){
 
 void HighscoreScreen::refreshScoreText() {
     _levelScores.clear();
-    _levelScores = _storageFacade->loadHighscoresForLevels();
+    XMLReader reader{};
+    MyDocument document = reader.LoadFile("./Assets/Highscore.xml");
+    DeserializationFactory factory{};
+    factory.addType<Highscore>();
+    XMLDeserializationVisitor deserializationVisitor{document, factory};
+    std::vector<SerializationReceiver *> v;
+    deserializationVisitor.visit("highscore", v);
+    int i = 0;
+    for (SerializationReceiver *receiver: v) {
+        Highscore *highscore = dynamic_cast<Highscore *>(receiver);
+        if (highscore)
+            _levelScores[i++] = std::vector<std::string>{std::to_string(highscore->getScore()), highscore->getDate()};
+        delete highscore;
+    }
+    //_levelScores = _storageFacade->loadHighscoresForLevels();
 }
 
 void HighscoreScreen::alterIndex(int dir) {

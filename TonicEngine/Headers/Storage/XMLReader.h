@@ -15,6 +15,8 @@ using namespace tinyxml2;
 class XMLReader {
 private:
     void ReadRecursively(XMLElement & elem, MyNode& parent);
+
+    MyDocument ReadXMLFile(XMLDocument &doc);
 public:
     XMLReader();
     ~XMLReader();
@@ -23,6 +25,5 @@ public:
 
     std::unique_ptr<MyDocument> LoadFile2(const string &fileName);
 
-    MyDocument ReadXMLFile(XMLDocument &doc);
 };
 #endif //PROJECT_SWA_XMLREADER_H

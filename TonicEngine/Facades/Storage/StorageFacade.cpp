@@ -32,10 +32,9 @@ string StorageFacade::getHighscore(int level) {
     return "0";
 }
 
-std::vector<std::vector<std::string>> StorageFacade::loadHighscoresForLevels() {
+std::vector<std::vector<std::string>> StorageFacade::loadHighscoresForLevels(const DeserializationFactory &factory) {
     std::unique_ptr<MyDocument> highscoreFile = _reader.LoadFile2("Assets/Highscore.xml");
     std::vector<std::vector<std::string>> vLevels;
-
     for (auto const& iterator : highscoreFile->GetRoot().GetChildren())
     {
         std::vector<std::string> toFill {iterator.GetName(),

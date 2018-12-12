@@ -1,20 +1,28 @@
 <root>
-    <level>1<score>15</score>
-        <date>2018-12-10 11:00</date>
-    </level>
-    <level>2<score>40</score>
-        <date>2018-12-10 12:00</date>
-    </level>
-    <level>3<score>0</score>
-        <date>2018-12-10 13:00</date>
-    </level>
-    <level>4<score>100</score>
-        <date>2018-12-10 8:00</date>
-    </level>
-    <level>5<score>110</score>
-        <date>2018-12-10 9:00</date>
-    </level>
-    <level>6<score>75</score>
-        <date>2018-12-10 9:00</date>
-    </level>
+    <highscore>
+        <highscore0 typeName="Highscore">
+            <score>15</score>
+            <date>2018-12-10 11:00</date>
+        </highscore0>
+        <highscore1 typeName="Highscore">
+            <score>40</score>
+            <date>2018-12-10 12:00</date>
+        </highscore1>
+        <highscore2 typeName="Highscore">
+            <score>0</score>
+            <date>2018-12-10 13:00</date>
+        </highscore2>
+        <highscore3 typeName="Highscore">
+            <score>100</score>
+            <date>2018-12-10 8:00</date>
+        </highscore3>
+        <highscore4 typeName="Highscore">
+            <score>110</score>
+            <date>2018-12-10 9:00</date>
+        </highscore4>
+        <highscore5 typeName="Highscore">
+            <score>75</score>
+            <date>2018-12-10 9:00</date>
+        </highscore5>
+    </highscore>
 </root>

@@ -15,24 +15,8 @@ ScoreStorage::~ScoreStorage() {
 
 }
 
-void ScoreStorage::loadScore() {
-//    XMLReader reader{};
-//    MyDocument document = reader.LoadFile("./Assets/highscore.xml");
-//    DeserializationFactory factory{};
-//    factory.addType<Highscore>();
-//    XMLDeserializationVisitor deserializationVisitor{document, factory};
-//    std::vector<SerializationReceiver *> v;
-//    deserializationVisitor.visit("highscore", v);
-//    int i = 0;
-//    for (SerializationReceiver *receiver: v) {
-//        Highscore *highscore = dynamic_cast<Highscore *>(receiver);
-//        if (highscore)
-//            _highscores.emplace_back(highscore);
-//        delete highscore;
-//    }
-}
 void ScoreStorage::saveScore(int score, std::string levelName) {
-    std::vector<Highscore*> _highscores;
+    std::vector<Highscore> _highscores;
     std::string levelIdentifier = levelName.substr(levelName.length()-5, levelName.length() - 25);
     bool levelExists = false;
     std::time_t now = std::time(nullptr);
@@ -42,45 +26,30 @@ void ScoreStorage::saveScore(int score, std::string levelName) {
 
 
     XMLReader reader{};
-    MyDocument document = reader.LoadFile("./Assets/highscore.xml");
+    MyDocument document = reader.LoadFile(DEFAULT_SCOREPATH);
     DeserializationFactory factory{};
     factory.addType<Highscore>();
     XMLDeserializationVisitor deserializationVisitor{document, factory};
     std::vector<SerializationReceiver *> v;
     deserializationVisitor.visit("Highscore", v);
-    int i = 0;
+
     for (SerializationReceiver *receiver: v) {
-        Highscore *highscore = dynamic_cast<Highscore *>(receiver);
+        auto *highscore = dynamic_cast<Highscore *>(receiver);
         if (highscore) {
-            _highscores.push_back(highscore);
-            if (std::to_string(highscore->getID()) == levelName){
+            if (std::to_string(highscore->getID()) == levelIdentifier){
                 levelExists = true;
-                if (highscore->getScore() <= score)
-                    return;
+                if (highscore->getScore() >= score) return;
                 highscore->setDate(today);
                 highscore->setScore(score);
             }
+            _highscores.push_back(*highscore);
         }
     }
 
-
-
-    for (auto &iterator : _highscores)
-    {
-        if (std::to_string(iterator->getID()) == levelName)
-        {
-            levelExists = true;
-            if (iterator->getScore() <= score)
-                return;
-
-            iterator->setDate(today);
-
-            iterator->setScore(score);
-        }
-    }
     if (!levelExists)
     {
-
+        Highscore newHigh = Highscore {score, today, std::stoi(levelIdentifier)};
+        _highscores.push_back(newHigh);
     }
 
     XMLWriter xmlWriter{};
@@ -88,7 +57,7 @@ void ScoreStorage::saveScore(int score, std::string levelName) {
     std::vector<SerializationReceiver*> toSave;
     for (auto &iterator : _highscores)
     {
-        toSave.push_back(static_cast<SerializationReceiver*>(iterator));
+        toSave.push_back(static_cast<SerializationReceiver*>(&iterator));
 
     }
     serializeVisitor.visit("Highscore", toSave);

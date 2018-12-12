@@ -52,7 +52,11 @@ void HighscoreScreen::update(double deltaTime) {
     _renderList.clearLists();
 
     refreshScoreText();
-    for (int i = 0; i < 3 && i < _scoreText.size(); i++)
+    for (int i = 0; i < 3; i++)
+    {
+        _visualScores[i]->text = "";
+    }
+    for (int i = 0; i < 3 && i < (_scoreText.size()-_currentIndex); i++)
     {
         _visualScores[i]->text = _scoreText[i+_currentIndex];
     }
@@ -78,7 +82,7 @@ void HighscoreScreen::refreshScoreText() {
     factory.addType<Highscore>();
     XMLDeserializationVisitor deserializationVisitor{document, factory};
     std::vector<SerializationReceiver *> v;
-    deserializationVisitor.visit("highscore", v);
+    deserializationVisitor.visit("Highscore", v);
     int i = 0;
     for (SerializationReceiver *receiver: v) {
         Highscore *highscore = dynamic_cast<Highscore *>(receiver);

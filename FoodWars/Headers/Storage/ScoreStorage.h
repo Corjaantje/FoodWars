@@ -10,7 +10,6 @@ class ScoreStorage {
 
     ~ScoreStorage();
 
-    void loadScore();
     void saveScore(int score, std::string levelName);
     private:
 };

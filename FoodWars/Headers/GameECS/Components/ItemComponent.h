@@ -13,7 +13,6 @@ public:
     std::string getName() const override;
 private:
     int _itemEffect;
-    std::string _imageUrl;
 };
 
 #endif //PROJECT_SWA_POWERUPCOMPONENT_H

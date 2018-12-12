@@ -13,11 +13,3 @@ void ItemComponent::accept(SerializationVisitor &visitor) {
 std::string ItemComponent::getName() const {
     return "ItemComponent";
 }
-
-std::string ItemComponent::getImage() const {
-    return _imageUrl;
-}
-
-void ItemComponent::setImage(std::string imageUrl) {
-    _imageUrl = imageUrl;
-}

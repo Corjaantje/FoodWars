@@ -1,4 +1,5 @@
 #include <ctime>
+#include <algorithm>
 #include "../../Headers/Storage/ScoreStorage.h"
 #include "../../../TonicEngine/Headers/Storage/XMLReader.h"
 #include "../../../TonicEngine/Headers/Storage/DeserializationFactory.h"
@@ -51,6 +52,13 @@ void ScoreStorage::saveScore(int score, std::string levelName) {
         Highscore newHigh = Highscore {score, today, std::stoi(levelIdentifier)};
         _highscores.push_back(newHigh);
     }
+
+    std::sort(_highscores.begin(),
+              _highscores.end(),
+              [](const Highscore& lhs, const Highscore& rhs)
+              {
+                  return lhs.getID() < rhs.getID();
+              });
 
     XMLWriter xmlWriter{};
     XMLSerializationVisitor serializeVisitor{"root"};

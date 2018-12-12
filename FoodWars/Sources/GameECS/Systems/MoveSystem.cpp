@@ -46,25 +46,25 @@ void MoveSystem::update(double dt) {
     const int walkingEnergyCostPerSecond = 20;
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
         if(_entityManager->getComponentFromEntity<AIComponent>(iterator.first)) continue;
+        if (!iterator.second->getIsShooting()) {
         auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
-        auto *turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(iterator.first);
-        double energy = turnComponent->getEnergy();
-        if (energy - (walkingEnergyCostPerSecond * dt) <= 0) {
-            moveComponent->xVelocity = 0;
-            break;
-        }
-        if (turnComponent->isMyTurn()) {
-            if (_pressedKey == KEY::KEY_A) {
-                moveComponent->xVelocity = -100;
-                turnComponent->lowerEnergy(walkingEnergyCostPerSecond * dt);
-            }
-            else if (_pressedKey == KEY::KEY_D) {
-                moveComponent->xVelocity = 100;
-                turnComponent->lowerEnergy(walkingEnergyCostPerSecond * dt);
-            }else
+            double energy = iterator.second->getEnergy();
+            if (energy - (walkingEnergyCostPerSecond * dt) <= 0) {
                 moveComponent->xVelocity = 0;
-        } else {
-            moveComponent->xVelocity = 0;
+                break;
+            }
+            if (iterator.second->isMyTurn()) {
+                if (_pressedKey == KEY::KEY_A) {
+                    moveComponent->xVelocity = -100;
+                    iterator.second->lowerEnergy(walkingEnergyCostPerSecond * dt);
+                } else if (_pressedKey == KEY::KEY_D) {
+                    moveComponent->xVelocity = 100;
+                    iterator.second->lowerEnergy(walkingEnergyCostPerSecond * dt);
+                } else
+                    moveComponent->xVelocity = 0;
+            } else {
+                moveComponent->xVelocity = 0;
+            }
         }
     }
 

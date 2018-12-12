@@ -46,7 +46,8 @@ void AnimationComponent::setElapsedTime(double elapsedTime) {
 
 void AnimationComponent::setCurrentShapeIndex(int currentShapeIndex) {
     _currentShapeIndex = currentShapeIndex;
-    _currentShape = _animationShapes[currentShapeIndex].get();
+    if (currentShapeIndex < _animationShapes.size())
+        _currentShape = _animationShapes[currentShapeIndex].get();
 }
 
 IShape *AnimationComponent::getCurrentShape() const {
@@ -67,4 +68,16 @@ bool AnimationComponent::getIsIdle() const {
 
 void AnimationComponent::setIsIdle(bool isIdle) {
     _isIdle = isIdle;
+}
+
+void AnimationComponent::accept(SerializationVisitor &visitor) {
+    visitor.visit("isLookingLeft", _isLookingLeft);
+    visitor.visit("isIdle", _isIdle);
+    visitor.visit("animationInterval", _animationInterval);
+    visitor.visit("elapsedTime", _elapsedTime);
+    visitor.visit("currentShapeIndex", _currentShapeIndex);
+}
+
+std::string AnimationComponent::getName() const {
+    return "AnimationComponent";
 }

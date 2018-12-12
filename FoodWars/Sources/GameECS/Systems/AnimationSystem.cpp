@@ -10,11 +10,7 @@ AnimationSystem::AnimationSystem(EntityManager &entityManager)
 void AnimationSystem::update(double deltatime) {
     // Edit player animations based on movement
     for (const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
-        Faction team;
-        if(_entityManager->getComponentFromEntity<PlayerComponent>(iterator.first))
-            team = _entityManager->getComponentFromEntity<PlayerComponent>(iterator.first)->getFaction();
-        else
-            team = Faction::RANDOM;
+        Faction faction = _entityManager->getComponentFromEntity<PlayerComponent>(iterator.first)->getFaction();
         auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
         auto *positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
         auto *boxCollider = _entityManager->getComponentFromEntity<BoxCollider>(iterator.first);
@@ -25,25 +21,25 @@ void AnimationSystem::update(double deltatime) {
             (!animationComponent->getIsLookingLeft() || animationComponent->getIsIdle())) { // Left
             animationComponent->setAnimationShapes(
                     _animationManager.moveLeftAnimation(boxCollider->width, boxCollider->height, positionComponent->X,
-                                                         positionComponent->Y, team));
+                                                         positionComponent->Y, faction));
             animationComponent->setIsLookingLeft(true);
             animationComponent->setIsIdle(false);
         } else if (moveComponent->xVelocity > 0 &&
                    (animationComponent->getIsLookingLeft() || animationComponent->getIsIdle())) { // Right
             animationComponent->setAnimationShapes(
                     _animationManager.moveRightAnimation(boxCollider->width, boxCollider->height, positionComponent->X,
-                                                          positionComponent->Y, team));
+                                                          positionComponent->Y, faction));
             animationComponent->setIsLookingLeft(false);
             animationComponent->setIsIdle(false);
         } else if (moveComponent->xVelocity == 0 && !animationComponent->getIsIdle()) { // Standing still
             if (animationComponent->getIsLookingLeft())
                 animationComponent->setAnimationShapes(
                         _animationManager.lookLeftAnimation(boxCollider->width, boxCollider->height,
-                                                             positionComponent->X, positionComponent->Y, team));
+                                                             positionComponent->X, positionComponent->Y, faction));
             else
                 animationComponent->setAnimationShapes(
                         _animationManager.lookRightAnimation(boxCollider->width, boxCollider->height,
-                                                              positionComponent->X, positionComponent->Y, team));
+                                                              positionComponent->X, positionComponent->Y, faction));
             animationComponent->setIsIdle(true);
         }
     }

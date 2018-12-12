@@ -10,18 +10,18 @@
 
 using namespace tinyxml2;
 
-class XMLWriter
-{
+class XMLWriter {
 private:
     XMLDocument xml_doc;
 public:
     XMLWriter();
     ~XMLWriter();
 
-    XMLDocument& WriteXMLFile(MyDocument& my_doc, std::string file_name);
-    void WriteRecursively(const MyNode& node, XMLElement& parent);
-    //XMLDocument& WriteXMLFile(XMLDocument& doc, std::string file_name);
-    //void WriteRecursively(const XMLNode& node, XMLElement& parent);
+    XMLElement *WriteRecursively(const MyNode &node, XMLElement &parent);
+
+    bool WriteXMLFile(const MyDocument &my_doc, const std::string &file_name);
+
+    bool WriteXMLFile(const MyNode &node, const std::string &file_name);
 };
 
 

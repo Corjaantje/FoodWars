@@ -1,7 +1,6 @@
 #include "../Headers/AnimationManager.h"
 
 std::string AnimationManager::getTeamImage(Faction faction) const{
-    //TODO: Pass animatable item and check if player or item and return correct starting name
     std::string teamString = "Player";
     // Check for team
     if(faction == Faction::WHITE)

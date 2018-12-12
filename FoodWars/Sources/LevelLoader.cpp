@@ -1,23 +1,22 @@
 #include <utility>
 
 #include "../Headers/LevelLoader.h"
-#include "../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 #include "../Headers/GameECS/Components/MoveComponent.h"
-#include "../Headers/GameECS/Components/AnimationComponent.h"
-#include "../Headers/GameECS/Components/DamageableComponent.h"
 #include "../Headers/GameECS/Systems/StorageSystem.h"
+#include "../Headers/Storage/LevelStorage.h"
 #include "../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
 #include "../Headers/GameECS/Components/PlayerComponent.h"
 #include "../Headers/GameECS/Components/AIComponent.h"
 #include "../../TonicEngine/Headers/Storage/FileManager.h"
-
 LevelLoader::LevelLoader() = default;
 
 LevelLoader::~LevelLoader() = default;
 
 GameLevel *LevelLoader::loadLevel(std::string levelPath, GameLevel &gameLevel, CharacterBuilder playerOne, CharacterBuilder playerTwo) {
-    StorageSystem storage{};
-    storage.loadWorld(gameLevel, levelPath);
+    /*StorageSystem storage{};
+    storage.loadWorld(gameLevel, levelPath);*/
+    LevelStorage loader{};
+    loader.loadLevel(gameLevel, levelPath);
     if (gameLevel.getSpawnPoints().empty()) {
         return nullptr;
     }
@@ -98,4 +97,8 @@ void LevelLoader::playNextLevel(GameLevel &gamelevel) {
             }
         }
     }
+}
+
+std::string LevelLoader::getLevelIdentifier() const{
+    return _lastPlayedLevelPath;
 }

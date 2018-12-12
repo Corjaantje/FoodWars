@@ -49,7 +49,27 @@ void DrawSystem::update(double dt) {
 }
 
 void DrawSystem::drawNonComponents() {
-    _renderList._shapes[2].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenGameSmallUI.png"));
+    for (const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if(iterator.second->isMyTurn()){
+            if(iterator.second->getRemainingTime() == 0.0){
+                _renderList._shapes[2].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenGameSmallUI.png"));
+            }
+            else{
+                auto* playerComp = _entityManager->getComponentFromEntity<PlayerComponent>(iterator.first);
+                if(playerComp != nullptr){
+                    if(playerComp->getPlayerID() == 1){
+                        _renderList._shapes[2].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenGameSmallUIHighlight1.png"));
+                    }
+                    else if(playerComp->getPlayerID() == 2){
+                        _renderList._shapes[2].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenGameSmallUIHighlight2.png"));
+                    }
+                    else{
+                        std::cerr << "Error: Unknown Player ID found in drawing highlighted players";
+                    }
+                }
+            }
+        }
+    }
 
     if(!_playerIconOne.empty()) {
         _renderList._shapes[3].push_back(createShape<ShapeSprite>(36, 54, 47, 40, _playerIconOne));

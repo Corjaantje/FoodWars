@@ -10,6 +10,7 @@
 #include "XMLReader.h"
 #include "XMLWriter.h"
 #include "../../Facades/IFacade.h"
+#include "DeserializationFactory.h"
 
 class StorageFacade : public IFacade {
 private:
@@ -29,6 +30,9 @@ public:
     MyDocument getUserXML() const;
 
     string getHighscore(int level);
+    void saveHighscore(int score, std::string level);
+
+    std::vector<std::vector<std::string>> loadHighscoresForLevels(const DeserializationFactory &factory);
 
     // Placeholders for loading. Will end up using factories to return usable objects.
     void getAudioComponents();

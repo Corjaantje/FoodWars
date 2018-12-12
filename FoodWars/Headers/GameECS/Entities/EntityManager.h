@@ -12,7 +12,7 @@
 class EntityManager {
 private:
     int _lowestUnassignedEntityId;
-    std::unordered_map<std::string, std::map<int, std::unique_ptr<Component>>> _componentsByClass; //todo: maybe use unordered_map
+    std::unordered_map<std::string, std::map<int, std::unique_ptr<Component>>> _componentsByClass;
 public:
     EntityManager();
 
@@ -24,18 +24,19 @@ public:
 
     int createEntity();
 
-    int createEntity(Component components[], int size);
 
-    /*template<typename Comp>
-    void addComponentToEntity(int entity, const Comp& component) {
-        std::string componentType = typeid(Comp).name();
-        //_componentsByClass[componentType][entity] = std::make_unique<Comp>(component);
-    }*/
 
     template<typename Comp, typename... Args>
     Comp &addComponentToEntity(int entity, Args &&... args) {
         std::string componentType = typeid(Comp).name();
         _componentsByClass[componentType][entity] = std::make_unique<Comp>(std::forward<Args>(args)...);
+        return *static_cast<Comp *>(_componentsByClass[componentType][entity].get());
+    }
+
+    template<typename Comp>
+    Comp &addComponentToEntity(int entity, std::unique_ptr<Comp> component) {
+        std::string componentType = typeid(*component.get()).name();
+        _componentsByClass[componentType][entity] = std::move(component);
         return *static_cast<Comp *>(_componentsByClass[componentType][entity].get());
     }
 
@@ -65,6 +66,8 @@ public:
         }
         return returnMap;
     }
+
+    std::map<int, std::vector<Component *>> getAllEntitiesWithAllComponents() const;
 
     void removeEntity(int entityId);
 

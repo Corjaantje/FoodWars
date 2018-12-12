@@ -18,11 +18,13 @@ MoveComponent &MoveComponent::operator+=(const MoveComponent &other) {
     return *this;
 }
 
-std::vector<std::string> MoveComponent::serialize() {
-    std::vector<std::string> data{};
-    data.push_back(std::to_string(xVelocity));
-    data.push_back(std::to_string(yVelocity));
-    return data;
+void MoveComponent::accept(SerializationVisitor &visitor) {
+    visitor.visit("xVelocity", xVelocity);
+    visitor.visit("yVelocity", yVelocity);
+}
+
+std::string MoveComponent::getName() const {
+    return "MoveComponent";
 }
 
 MoveComponent::~MoveComponent() = default;

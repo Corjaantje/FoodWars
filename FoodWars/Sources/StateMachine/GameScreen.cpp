@@ -112,7 +112,6 @@ void GameScreen::update(double deltaTime) {
     }
     //Either of the 2 died
     if(!playerOneAlive || !playerTwoAlive){
-        //TODO Add real scores to constructor
         _context->setActiveScreen(std::make_unique<LevelTransitionScreen>(*_context, !playerOneAlive, !playerTwoAlive, playerOneScore, playerTwoScore));
     }
     _audioFacade->playMusic(_gameLevel->getBackgroundMusic().c_str());

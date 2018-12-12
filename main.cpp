@@ -72,11 +72,11 @@ int main(int argc, char** argv)
         double loggen = currentTimeTwo.count() - timeLastFPS.count();
         if (loggen >= 1) {
             if(_updateCallCount < 60){
-                frameRateCap++;
+                frameRateCap+= 5;
                 amountOfUpdatesAllowedPerSecond = 1.0 / frameRateCap;
             }
             else{
-                frameRateCap--;
+                frameRateCap-= 2;
                 amountOfUpdatesAllowedPerSecond = 1.0 / frameRateCap;
             }
             timeLastFPS = std::chrono::steady_clock::now().time_since_epoch();

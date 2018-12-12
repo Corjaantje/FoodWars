@@ -74,7 +74,7 @@ void PlayerComponent::setIsAlive(bool alive) {
     _isAlive = alive;
 }
 
-bool PlayerComponent::getIsAlive() const {
+bool PlayerComponent::isAlive() const {
     return _isAlive;
 }
 

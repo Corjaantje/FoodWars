@@ -225,14 +225,14 @@ void ShootingSystem::generateProjectile(const PositionComponent &playerPositionC
     int posX = playerCenterX;
     int posY = playerCenterY;
     // Checks for shooting down
-    if (velocityX > 0 && velocityY > 70) posY = playerCenterY + 50;
-    else if (velocityX <= 0 && velocityY > 70) posY = playerCenterY + 50;
+    if (velocityX > 0 && velocityY > 70) posY = playerCenterY + (playerCollider.height / 2) + 1;
+    else if (velocityX <= 0 && velocityY > 70) posY = playerCenterY + (playerCollider.height / 2) + 1;
         // Checks for shooting up
-    else if (velocityX > 0 && velocityY <= -70) posY = playerCenterY - 50;
-    else if (velocityX <= 0 && velocityY <= -70) posY = playerCenterY - 50;
+    else if (velocityX > 0 && velocityY <= -70) posY = playerCenterY - (playerCollider.height / 2) - 1;
+    else if (velocityX <= 0 && velocityY <= -70) posY = playerCenterY - (playerCollider.height / 2) - 1;
         // Remaining default checks
-    else if (velocityX > 0) posX += projectileWidth + playerCollider.width + 1;
-    else posX -= projectileWidth + playerCollider.width + 1;
+    else if (velocityX > 0) posX = playerCenterX + (playerCollider.width / 2) + 1;
+    else if (velocityX <= 0) posX = playerCenterX - (playerCollider.width / 2) - (projectileWidth - 1);
     if (velocityY < 0) posY -= projectileHeight + 1;
 
     const double speedModifier = 2.5;

@@ -24,9 +24,10 @@ void PowerupSystem::spawnPowerup() {
 
     // 50/50 chance of powerup spawning
     if (random.between(0,1) == 0) {
-        //min 29
-        int itemX = random.between(0,1571);
         int itemY = 0;
+        int itemWidth = 29;
+        int itemHeight = 42;
+        int itemX = random.between(0,1600-itemWidth);
 
         int powerup = _entityManager->createEntity();
         int powerupChance = random.between(0,_itemFactory.getMapSize()-4);
@@ -36,13 +37,12 @@ void PowerupSystem::spawnPowerup() {
         auto item = _itemFactory.createItem(_itemMap[powerupChance]);
         _entityManager->addComponentToEntity(powerup, std::make_unique<ItemComponent>(item));
         _entityManager->addComponentToEntity<DrawableComponent>(powerup,
-                                                                std::make_unique<ShapeSprite>(29, 42, itemX, itemY,
+                                                                std::make_unique<ShapeSprite>(itemWidth, itemHeight, itemX, itemY,
                                                                                               item.getItemName() +
                                                                                               ".png"));
-        _entityManager->addComponentToEntity<BoxCollider>(powerup, 29, 42);
+        _entityManager->addComponentToEntity<BoxCollider>(powerup, itemWidth, itemHeight);
         _entityManager->addComponentToEntity<PositionComponent>(powerup, itemX, itemY);
         _entityManager->addComponentToEntity<GravityComponent>(powerup, 5);
-        _entityManager->addComponentToEntity<DamageableComponent>(powerup);
     }
 }
 
@@ -85,6 +85,7 @@ void PowerupSystem::handleCollisionEvent(const CollisionEvent &collisionEvent) {
         itemComponent = _entityManager->getComponentFromEntity<ItemComponent>(item);
     }
     itemComponent->getLamda()(*_entityManager, collisionEvent);
+    _entityManager->addComponentToEntity<DamageableComponent>(item);
     _entityManager->getComponentFromEntity<DamageableComponent>(item)->destroy();
 }
 

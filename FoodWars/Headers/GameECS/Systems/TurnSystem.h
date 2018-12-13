@@ -4,14 +4,16 @@
 #include "IBaseSystem.h"
 #include "../Components/TurnComponent.h"
 #include "../Components/DrawableComponent.h"
+#include "../Events/TurnSwitchedEvent.h"
+#include "../../../../TonicEngine/Headers/Input/IObservable.h"
 
-class TurnSystem : public IBaseSystem {
+class TurnSystem : public IBaseSystem, public IObservable<TurnSwitchedEvent> {
 private:
     int _defaultTimePerTurn;
     int _timePerTurn;
     EntityManager *_entityManager;
 public:
-    TurnSystem(EntityManager &entityManager);
+    explicit TurnSystem(EntityManager &entityManager);
     ~TurnSystem() override;
     void switchTurn();
     void resetCurrentTime();

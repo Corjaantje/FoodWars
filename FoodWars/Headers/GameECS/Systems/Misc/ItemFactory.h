@@ -12,7 +12,7 @@ class ItemFactory {
 public:
     ItemFactory();
     ~ItemFactory();
-
+    int getMapSize() const;
     ItemComponent createItem(const std::string& item);
 private:
     std::unordered_map<std::string, ItemComponent> _itemMap;

@@ -51,6 +51,8 @@ void PowerupSystem::spawnWeapon() {
 
     int weaponX = random.between(0, 1571);
     int weaponY = 0;
+    int weaponWidth = 29;
+    int weaponHeight = 42;
 
     int weaponID = _entityManager->createEntity();
     // TODO: Create another factory or change the range hardcoded?
@@ -61,13 +63,12 @@ void PowerupSystem::spawnWeapon() {
     _entityManager->addComponentToEntity(weaponID, std::make_unique<ItemComponent>(weaponType));
     // TODO: better sprite for representing a weapon drop
     _entityManager->addComponentToEntity<DrawableComponent>(weaponID,
-                                                            std::make_unique<ShapeSprite>(29, 42, weaponX, weaponY,
+                                                            std::make_unique<ShapeSprite>(weaponWidth, weaponHeight, weaponX, weaponY,
                                                                                           weaponType.getItemName() +
                                                                                           ".png"));
-    _entityManager->addComponentToEntity<BoxCollider>(weaponID, 29, 42);
+    _entityManager->addComponentToEntity<BoxCollider>(weaponID, weaponWidth, weaponHeight);
     _entityManager->addComponentToEntity<PositionComponent>(weaponID, weaponX, weaponY);
     _entityManager->addComponentToEntity<GravityComponent>(weaponID, 5);
-    _entityManager->addComponentToEntity<DamageableComponent>(weaponID);
 }
 
 bool PowerupSystem::canHandle(const CollisionEvent &collisionEvent) {

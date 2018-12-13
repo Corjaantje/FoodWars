@@ -30,7 +30,7 @@ void PowerupSystem::spawnPowerup() {
         int itemX = random.between(0,1600-itemWidth);
 
         int powerup = _entityManager->createEntity();
-        int powerupChance = random.between(0,_itemFactory.getMapSize()-4);
+        int powerupChance = random.between(0,_itemFactory.getMapSize()-1);
 
         // Random powerup
         std::string sTest = _itemMap[powerupChance];
@@ -54,10 +54,10 @@ void PowerupSystem::spawnWeapon() {
 
     int weaponID = _entityManager->createEntity();
     // TODO: Create another factory or change the range hardcoded?
-    int weaponChance = random.between(2, _itemFactory.getMapSize()-1)-2;
+    int weaponChance = random.between(0, _weaponFactory.getMapSize()-1);
 
     std::string sTest = _weaponMap[weaponChance];
-    auto weaponType = _itemFactory.createItem(_weaponMap[weaponChance]);
+    auto weaponType = _weaponFactory.createItem(_weaponMap[weaponChance]);
     _entityManager->addComponentToEntity(weaponID, std::make_unique<ItemComponent>(weaponType));
     // TODO: better sprite for representing a weapon drop
     _entityManager->addComponentToEntity<DrawableComponent>(weaponID,
@@ -94,6 +94,6 @@ void PowerupSystem::update(double deltaTime) {
 }
 
 void PowerupSystem::handleTurnSwitchedEvent(const TurnSwitchedEvent &turnSwitchedEvent) {
-    spawnPowerup();
     spawnWeapon();
+    spawnPowerup();
 }

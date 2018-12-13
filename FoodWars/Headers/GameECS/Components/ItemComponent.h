@@ -17,7 +17,7 @@ public:
     const std::function<void(EntityManager&, const CollisionEvent& collisionEvent)>& getLamda() const;
 private:
     std::string _name;
-    const std::function<void(EntityManager&, const CollisionEvent& collisionEvent)>* _lamdaOnCollision;
+    const std::function<void(EntityManager&, const CollisionEvent& collisionEvent)> _lamdaOnCollision;
 };
 
 #endif //PROJECT_SWA_POWERUPCOMPONENT_H

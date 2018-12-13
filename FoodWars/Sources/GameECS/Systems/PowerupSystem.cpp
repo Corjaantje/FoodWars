@@ -47,7 +47,7 @@ void PowerupSystem::handleCollisionEvent(const CollisionEvent &collisionEvent) {
         e.getComponentFromEntity<DamageableComponent>(event.getEntity())->increaseHealth(50);
         e.removeEntity(event.getOtherEntity());
     };
-    lambda(*_entityManager, collisionEvent);
+    test(*_entityManager, collisionEvent);
 }
 
 void PowerupSystem::update(double deltaTime) {

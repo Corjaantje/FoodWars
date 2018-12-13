@@ -54,7 +54,7 @@ int main(int argc, char** argv)
     double timeModifier = 1.0;
     std::chrono::duration<double> timeLast = std::chrono::steady_clock::now().time_since_epoch();
 
-    //frameRate Update
+    //framerate Update
     std::chrono::duration<double> timeLastFPS = std::chrono::steady_clock::now().time_since_epoch();
     int _updateCallCount = 0;
     //End of framerate update
@@ -67,9 +67,9 @@ int main(int argc, char** argv)
         screenStateManager.getCurrentState().update(deltaTime);
         double sleepTime = amountOfUpdatesAllowedPerSecond * 1000 - deltaTime;
 
-        //frameRate update
-        std::chrono::duration<double> currentTimeTwo = std::chrono::steady_clock::now().time_since_epoch();
-        double loggen = currentTimeTwo.count() - timeLastFPS.count();
+        //framerate update
+        std::chrono::duration<double> currentTimeFPS = std::chrono::steady_clock::now().time_since_epoch();
+        double loggen = currentTimeFPS.count() - timeLastFPS.count();
         if (loggen >= 0.25) {
             if(_updateCallCount < 16){
                 frameRateCap+= frameRateCap/8;

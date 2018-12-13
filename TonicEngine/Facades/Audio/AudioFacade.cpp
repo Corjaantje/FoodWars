@@ -3,6 +3,12 @@
 
 AudioFacade::AudioFacade() : _backgroundMusic(""){
     AudioFacade::init();
+    for(int i=0; i< 10; i++){
+        this->increaseEffectVolume();
+    }
+    for(int i=0; i<2; i++){
+        this->increaseMusicVolume();
+    }
 }
 
 AudioFacade::~AudioFacade() {
@@ -20,22 +26,12 @@ void AudioFacade::init(){
 
 // Returns the sound effect volume
 int AudioFacade::getEffectVolume(){
-    return _audioPlayer->getEffectVolume();
+    return _effectPercentage;
 }
 
 // Returns the music volume
 int AudioFacade::getMusicVolume(){
-    return _audioPlayer->getMusicVolume();
-}
-
-// Sets the music volume
-void AudioFacade::setMusicVolume(int volume) {
-    _audioPlayer->setMusicVolume(volume);
-}
-
-// Sets the sound effect volume
-void AudioFacade::setEffectVolume(int volume) {
-    _audioPlayer->setEffectVolume(volume);
+    return _musicPercentage;
 }
 
 // Plays Music
@@ -88,4 +84,56 @@ const char* AudioFacade::getAudio(const char* audioName) {
     if(result == _audioMap->end()->second.c_str())
         return nullptr;
     return result;
+}
+
+void AudioFacade::increaseEffectVolume() {
+    if(_audioPlayer->getEffectVolume() > 128-13){
+        _audioPlayer->setEffectVolume(128);
+        _effectPercentage = 10;
+    }
+    else{
+        _audioPlayer->setEffectVolume(_audioPlayer->getEffectVolume()+13);
+        if(_effectPercentage < 10){
+            _effectPercentage++;
+        }
+    }
+}
+
+void AudioFacade::decreaseEffectVolume() {
+    if(_audioPlayer->getEffectVolume() < 13){
+        _audioPlayer->setEffectVolume(0);
+        _effectPercentage = 0;
+    }
+    else{
+        _audioPlayer->setEffectVolume(_audioPlayer->getEffectVolume()-13);
+        if(_effectPercentage > 0){
+            _effectPercentage--;
+        }
+    }
+}
+
+void AudioFacade::increaseMusicVolume() {
+    if(_audioPlayer->getMusicVolume() > 128-13){
+        _audioPlayer->setMusicVolume(128);
+        _musicPercentage = 10;
+    }
+    else{
+        _audioPlayer->setMusicVolume(_audioPlayer->getMusicVolume()+13);
+        if(_musicPercentage < 10){
+            _musicPercentage++;
+        }
+    }
+}
+
+void AudioFacade::decreaseMusicVolume() {
+    if(_audioPlayer->getMusicVolume() < 13){
+        _audioPlayer->setMusicVolume(0);
+        _musicPercentage = 0;
+    }
+    else{
+        _audioPlayer->setMusicVolume(_audioPlayer->getMusicVolume()-13);
+        if(_musicPercentage > 0){
+            _musicPercentage--;
+        }
+    }
 }

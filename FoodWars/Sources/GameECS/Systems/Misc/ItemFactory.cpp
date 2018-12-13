@@ -12,12 +12,10 @@ ItemFactory::ItemFactory() {
       {"cake", ItemComponent{"cake", [](EntityManager& e, const CollisionEvent& event)
       {
           e.getComponentFromEntity<DamageableComponent>(event.getEntity())->increaseHealth(50);
-          e.removeEntity(event.getOtherEntity());
       }}},
       {"painkiller", ItemComponent{"painkiller", [](EntityManager& e, const CollisionEvent& event)
       {
           e.getComponentFromEntity<TurnComponent>(event.getEntity())->setEnergy(100);
-          e.removeEntity(event.getOtherEntity());
       }}}
     }};
 }
@@ -25,4 +23,8 @@ ItemFactory::ItemFactory() {
 ItemFactory::~ItemFactory() = default;
 ItemComponent ItemFactory::createItem(const std::string& item) {
     return _itemMap.at(item);
+}
+
+int ItemFactory::getMapSize() const {
+    return _itemMap.size();
 }

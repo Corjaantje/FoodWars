@@ -25,7 +25,7 @@ void CollisionSystem::update(double dt) {
                 BoxCollider *otherCollider = collideAbleIterator.second;
                 PositionComponent *otherPosition = _entityManager->getComponentFromEntity<PositionComponent>(
                         otherEntity);
-                if (positionComponent) {
+                if (otherPosition ) {
                     bool collisionOccured = positionComponent->X < otherPosition->X + otherCollider->width &&
                                   positionComponent->X + collider->width > otherPosition->X &&
                                   positionComponent->Y < otherPosition->Y + otherCollider->height &&

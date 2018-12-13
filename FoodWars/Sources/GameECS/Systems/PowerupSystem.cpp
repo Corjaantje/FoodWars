@@ -9,8 +9,8 @@
 #include "../../../Headers/GameECS/Components/ItemComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 
-PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservable, EntityManager &entityManager)
-        : CollisionEventHandler(collisionEventObservable), _entityManager{&entityManager}, _itemFactory{ItemFactory{}}{
+PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservable, IObservable<TurnSwitchedEvent> &turnSwitchedEventObservable, EntityManager &entityManager)
+        : CollisionEventHandler(collisionEventObservable), TurnSwitchedEventHandler(turnSwitchedEventObservable), _entityManager{&entityManager}, _itemFactory{ItemFactory{}}{
     _itemMap[0] = "cake";
     _itemMap[1] = "painkiller";
     spawnPowerup();
@@ -26,10 +26,10 @@ void PowerupSystem::spawnPowerup() {
         int itemY = 0;
 
         int powerup = _entityManager->createEntity();
-        int weaponChance = random.between(0,1);
+        int powerupChance = random.between(0,_itemFactory.getMapSize()-1);
 
         // Random powerup
-        auto item = _itemFactory.createItem(_itemMap[weaponChance]);
+        auto item = _itemFactory.createItem(_itemMap[powerupChance]);
         _entityManager->addComponentToEntity(powerup, std::make_unique<ItemComponent>(item));
         _entityManager->addComponentToEntity<DrawableComponent>(powerup,
                                                                 std::make_unique<ShapeSprite>(29, 42, itemX, itemY,
@@ -38,6 +38,7 @@ void PowerupSystem::spawnPowerup() {
         _entityManager->addComponentToEntity<BoxCollider>(powerup, 29, 42);
         _entityManager->addComponentToEntity<PositionComponent>(powerup, itemX, itemY);
         _entityManager->addComponentToEntity<GravityComponent>(powerup, 5);
+        _entityManager->addComponentToEntity<DamageableComponent>(powerup);
     }
 }
 
@@ -50,17 +51,19 @@ bool PowerupSystem::canHandle(const CollisionEvent &collisionEvent) {
 
 void PowerupSystem::handleCollisionEvent(const CollisionEvent &collisionEvent) {
     int item = collisionEvent.getOtherEntity();
-    auto tekkel = _entityManager->getComponentFromEntity<ItemComponent>(item);
-
-    auto test = tekkel->getLamda();
-    auto lambda = [](EntityManager& e, const CollisionEvent& event)
-    {
-        e.getComponentFromEntity<DamageableComponent>(event.getEntity())->increaseHealth(50);
-        e.removeEntity(event.getOtherEntity());
-    };
-    test(*_entityManager, collisionEvent);
+    auto itemComponent = _entityManager->getComponentFromEntity<ItemComponent>(item);
+    if(!itemComponent) {
+        item = collisionEvent.getEntity();
+        itemComponent = _entityManager->getComponentFromEntity<ItemComponent>(item);
+    }
+    itemComponent->getLamda()(*_entityManager, collisionEvent);
+    _entityManager->getComponentFromEntity<DamageableComponent>(item)->destroy();
 }
 
 void PowerupSystem::update(double deltaTime) {
 
+}
+
+void PowerupSystem::handleTurnSwitchedEvent(const TurnSwitchedEvent &turnSwitchedEvent) {
+    spawnPowerup();
 }

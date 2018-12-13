@@ -43,6 +43,7 @@ void PowerupSystem::spawnPowerup() {
         _entityManager->addComponentToEntity<BoxCollider>(powerup, itemWidth, itemHeight);
         _entityManager->addComponentToEntity<PositionComponent>(powerup, itemX, itemY);
         _entityManager->addComponentToEntity<GravityComponent>(powerup, 5);
+        _entityManager->addComponentToEntity<DamageableComponent>(powerup, 1);
     }
 }
 
@@ -69,6 +70,7 @@ void PowerupSystem::spawnWeapon() {
     _entityManager->addComponentToEntity<BoxCollider>(weaponID, weaponWidth, weaponHeight);
     _entityManager->addComponentToEntity<PositionComponent>(weaponID, weaponX, weaponY);
     _entityManager->addComponentToEntity<GravityComponent>(weaponID, 5);
+    _entityManager->addComponentToEntity<DamageableComponent>(weaponID, 1);
 }
 
 bool PowerupSystem::canHandle(const CollisionEvent &collisionEvent) {

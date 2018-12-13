@@ -25,12 +25,16 @@ void CollisionSystem::update(double dt) {
                 BoxCollider *otherCollider = collideAbleIterator.second;
                 PositionComponent *otherPosition = _entityManager->getComponentFromEntity<PositionComponent>(
                         otherEntity);
-                if (positionComponent) {
+                if (otherPosition ) {
                     bool collisionOccured = positionComponent->X < otherPosition->X + otherCollider->width &&
                                   positionComponent->X + collider->width > otherPosition->X &&
                                   positionComponent->Y < otherPosition->Y + otherCollider->height &&
                                   positionComponent->Y + collider->height > otherPosition->Y;
                     if(collisionOccured) {
+                        // Checkt of de gebotste entity een powerupcomponent heeft
+                        /*if (otherEntity == ) {
+
+                        }*/
                         double centerX = positionComponent->X + (collider->width / 2.0);
                         double centerY = positionComponent->Y + (collider->height / 2.0);
                         double otherCenterX = otherPosition->X + otherCollider->width / 2.0;

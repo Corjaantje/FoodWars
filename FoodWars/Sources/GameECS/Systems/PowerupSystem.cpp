@@ -13,6 +13,9 @@ PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservab
         : CollisionEventHandler(collisionEventObservable), TurnSwitchedEventHandler(turnSwitchedEventObservable), _entityManager{&entityManager}, _itemFactory{ItemFactory{}}{
     _itemMap[0] = "cake";
     _itemMap[1] = "painkiller";
+    _weaponMap[0] = "carrot";
+    _weaponMap[1] = "ham";
+    _weaponMap[2] = "candycane";
     spawnPowerup();
 }
 
@@ -26,9 +29,10 @@ void PowerupSystem::spawnPowerup() {
         int itemY = 0;
 
         int powerup = _entityManager->createEntity();
-        int powerupChance = random.between(0,_itemFactory.getMapSize()-1);
+        int powerupChance = random.between(0,_itemFactory.getMapSize()-4);
 
         // Random powerup
+        std::string sTest = _itemMap[powerupChance];
         auto item = _itemFactory.createItem(_itemMap[powerupChance]);
         _entityManager->addComponentToEntity(powerup, std::make_unique<ItemComponent>(item));
         _entityManager->addComponentToEntity<DrawableComponent>(powerup,
@@ -40,6 +44,30 @@ void PowerupSystem::spawnPowerup() {
         _entityManager->addComponentToEntity<GravityComponent>(powerup, 5);
         _entityManager->addComponentToEntity<DamageableComponent>(powerup);
     }
+}
+
+void PowerupSystem::spawnWeapon() {
+    Random random;
+
+    int weaponX = random.between(0, 1571);
+    int weaponY = 0;
+
+    int weaponID = _entityManager->createEntity();
+    // TODO: Create another factory or change the range hardcoded?
+    int weaponChance = random.between(2, _itemFactory.getMapSize()-1)-2;
+
+    std::string sTest = _weaponMap[weaponChance];
+    auto weaponType = _itemFactory.createItem(_weaponMap[weaponChance]);
+    _entityManager->addComponentToEntity(weaponID, std::make_unique<ItemComponent>(weaponType));
+    // TODO: better sprite for representing a weapon drop
+    _entityManager->addComponentToEntity<DrawableComponent>(weaponID,
+                                                            std::make_unique<ShapeSprite>(29, 42, weaponX, weaponY,
+                                                                                          weaponType.getItemName() +
+                                                                                          ".png"));
+    _entityManager->addComponentToEntity<BoxCollider>(weaponID, 29, 42);
+    _entityManager->addComponentToEntity<PositionComponent>(weaponID, weaponX, weaponY);
+    _entityManager->addComponentToEntity<GravityComponent>(weaponID, 5);
+    _entityManager->addComponentToEntity<DamageableComponent>(weaponID);
 }
 
 bool PowerupSystem::canHandle(const CollisionEvent &collisionEvent) {
@@ -66,4 +94,5 @@ void PowerupSystem::update(double deltaTime) {
 
 void PowerupSystem::handleTurnSwitchedEvent(const TurnSwitchedEvent &turnSwitchedEvent) {
     spawnPowerup();
+    spawnWeapon();
 }

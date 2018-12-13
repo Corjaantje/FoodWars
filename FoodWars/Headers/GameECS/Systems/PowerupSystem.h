@@ -23,8 +23,10 @@ public:
     void update(double deltaTime) override;
 private:
     ItemFactory _itemFactory;
+    std::unordered_map<int, std::string> _weaponMap;
     std::unordered_map<int, std::string> _itemMap;
     void spawnPowerup();
+    void spawnWeapon();
 };
 
 #endif //PROJECT_SWA_POWERUPMANAGER_H

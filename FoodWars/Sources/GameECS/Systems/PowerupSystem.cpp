@@ -38,7 +38,6 @@ void PowerupSystem::spawnPowerup() {
         _entityManager->addComponentToEntity<BoxCollider>(powerup, 29, 42);
         _entityManager->addComponentToEntity<PositionComponent>(powerup, itemX, itemY);
         _entityManager->addComponentToEntity<GravityComponent>(powerup, 5);
-        _entityManager->addComponentToEntity<DamageableComponent>(powerup);
     }
 }
 
@@ -57,6 +56,7 @@ void PowerupSystem::handleCollisionEvent(const CollisionEvent &collisionEvent) {
         itemComponent = _entityManager->getComponentFromEntity<ItemComponent>(item);
     }
     itemComponent->getLamda()(*_entityManager, collisionEvent);
+    _entityManager->addComponentToEntity<DamageableComponent>(item);
     _entityManager->getComponentFromEntity<DamageableComponent>(item)->destroy();
 }
 

@@ -79,7 +79,7 @@ SettingsScreen::SettingsScreen(ScreenStateManager& context) : IScreen(context) {
     // Music volume control
     createShape<TextButton>(_inputFacade->getMouseEventObservable(), "",
             [a = _audioFacade, m = musicVolume]() {
-                a->setMusicVolume(a->getMusicVolume() - 5);
+                a->decreaseMusicVolume();
                 m->text = std::to_string(a->getMusicVolume());
             },
             42, 42, 1126, 282,
@@ -88,7 +88,7 @@ SettingsScreen::SettingsScreen(ScreenStateManager& context) : IScreen(context) {
 
     createShape<TextButton>(_inputFacade->getMouseEventObservable(), "",
             [a = _audioFacade, m = musicVolume]() {
-                a->setMusicVolume(a->getMusicVolume() + 5);
+                a->increaseMusicVolume();
                 m->text = std::to_string(a->getMusicVolume());
             },
             42, 42, 1352, 282,
@@ -97,7 +97,7 @@ SettingsScreen::SettingsScreen(ScreenStateManager& context) : IScreen(context) {
 
     createShape<TextButton>(_inputFacade->getMouseEventObservable(), "",
             [a = _audioFacade, e = effectVolume]() {
-                a->setEffectVolume(a->getEffectVolume() - 5);
+                a->decreaseEffectVolume();
                 e->text = std::to_string(a->getEffectVolume());
             },
             42, 42, 1126, 375,
@@ -106,7 +106,7 @@ SettingsScreen::SettingsScreen(ScreenStateManager& context) : IScreen(context) {
 
     createShape<TextButton>(_inputFacade->getMouseEventObservable(), "",
             [a = _audioFacade, e = effectVolume]() {
-                a->setEffectVolume(a->getEffectVolume() + 5);
+                a->increaseEffectVolume();
                 e->text = std::to_string(a->getEffectVolume());
             },
             42, 42, 1352, 375,

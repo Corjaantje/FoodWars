@@ -13,8 +13,10 @@ public:
     ~AudioFacade();
     int getEffectVolume();
     int getMusicVolume();
-    void setEffectVolume(int volume);
-    void setMusicVolume(int volume);
+    void increaseEffectVolume();
+    void decreaseEffectVolume();
+    void increaseMusicVolume();
+    void decreaseMusicVolume();
     void playMusic(const char* filename);
     void playEffect(const char* filename);
     void addAudio(std::string key,std::string path);
@@ -22,6 +24,8 @@ private:
     std::map<std::string, std::string> *_audioMap = nullptr;
     AudioPlayer* _audioPlayer = nullptr;
     std::string _backgroundMusic;
+    int _effectPercentage = 0;
+    int _musicPercentage = 0;
     void init();
     const char* getAudio(const char* audioName);
 };

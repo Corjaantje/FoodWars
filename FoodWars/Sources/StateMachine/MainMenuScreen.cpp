@@ -31,15 +31,6 @@ MainMenuScreen::MainMenuScreen(ScreenStateManager& context) :
             Colour{255,255,255,0},
             Colour{255,255,255,0})->addToRender(&_renderList);
 
-    // Upgrades
-    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"Upgrades",
-            [c = _context]() {
-                //c->setActiveScreen<UpgradesScreen>();
-            },
-            370, 110, 615, 540,
-            Colour{255,255,255,0},
-            Colour{255,255,255,0})->addToRender(&_renderList);
-
     // Settings
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [c = _context]() {

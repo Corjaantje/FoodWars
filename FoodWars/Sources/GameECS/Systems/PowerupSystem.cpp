@@ -15,7 +15,7 @@ PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservab
         : CollisionEventHandler(collisionEventObservable), TurnSwitchedEventHandler(turnSwitchedEventObservable), _entityManager{&entityManager}, _itemFactory{ItemFactory{}}, _random{Random{}}{
     _itemMap[0] = "cake";
     _itemMap[1] = "painkiller";
-    spawnPowerup();
+    spawnDrop(_itemMap);
 }
 
 void PowerupSystem::spawnDrop(const std::unordered_map<int, std::string> &dropMap) {
@@ -73,5 +73,5 @@ void PowerupSystem::update(double deltaTime) {
 }
 
 void PowerupSystem::handleTurnSwitchedEvent(const TurnSwitchedEvent &turnSwitchedEvent) {
-    spawnPowerup();
+    spawnDrop(_itemMap);
 }

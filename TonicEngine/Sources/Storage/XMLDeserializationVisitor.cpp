@@ -125,7 +125,7 @@ void XMLDeserializationVisitor::visit(const std::string &name,
     }
     const MyNode *child = _currentNode->GetChild(name);
     SerializationReceiver *returnValue = getSerializationReceiverFromNode(child).release();
-    receiver = returnValue;
+    *receiver = *returnValue;
 }
 
 void XMLDeserializationVisitor::visit(const std::string &name, std::unique_ptr<SerializationReceiver> &receiver) {

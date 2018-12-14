@@ -1,6 +1,5 @@
 #include <cmath>
 #include "../../../Headers/GameECS/Systems/AISystem.h"
-#include "../../../Headers/AI/WanderState.h"
 #include "../../../Headers/AI/IdleState.h"
 #include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
@@ -19,54 +18,41 @@ AISystem::~AISystem() = default;
 
 int AISystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
                                         double velocityX, double velocityY, Weapon* selectedWeapon) {
-    int _projectile = _entityManager->createEntity();
+    int projectile = _entityManager->createEntity();
     int projectileWidth = 11;
     int projectileHeight = 32;
-    int posX = playerPositionComponent.X;
-    int posY = playerPositionComponent.Y;
-    if (velocityX > 0) posX += projectileWidth + playerCollider.width + 1;
-    else posX -= projectileWidth + 1;
+    double playerCenterX = playerPositionComponent.X + playerCollider.width / 2.0;
+    double playerCenterY = playerPositionComponent.Y + playerCollider.height / 2.0;
+    int posX = playerCenterX;
+    int posY = playerCenterY;
+    // Checks for shooting down
+    if (velocityX > 0 && velocityY > 70) posY = playerCenterY + 50;
+    else if (velocityX <= 0 && velocityY > 70) posY = playerCenterY + 50;
+        // Checks for shooting up
+    else if (velocityX > 0 && velocityY <= -70) posY = playerCenterY - 50;
+    else if (velocityX <= 0 && velocityY <= -70) posY = playerCenterY - 50;
+        // Remaining default checks
+    else if (velocityX > 0) posX += projectileWidth + playerCollider.width + 1;
+    else posX -= projectileWidth + playerCollider.width + 1;
     if (velocityY < 0) posY -= projectileHeight + 1;
 
     std::cout << "VelocityX: " << velocityX << ", VelocityY: " << velocityY << std::endl;
 
     const double speedModifier = 2.5;
-    _entityManager->addComponentToEntity<DrawableComponent>(_projectile, std::make_unique<ShapeSprite>(projectileWidth,
+
+    _entityManager->addComponentToEntity<DrawableComponent>(projectile, std::make_unique<ShapeSprite>(projectileWidth,
                                                                                                        projectileHeight,
                                                                                                        posX, posY,
                                                                                                        selectedWeapon->getImage()));
-    // TODO: SelectedWeapon
-    /*_entityManager->addComponentToEntity<DrawableComponent>(_projectile, std::make_unique<ShapeSprite>(projectileWidth,
-                                                                                                       projectileHeight,
-                                                                                                       posX, posY,
-                                                                                                       selectedWeapon->getImage()));*/
-
-    /*double centerX = _positionComponent->X + _boxCollider->width/2.0;
-    //double centerY = _positionComponent->Y + _boxCollider->height/2.0;
-    double distance = std::abs(centerX - _targetPosition.X);
-    double force = -0.00024 * std::pow(distance, 2) + 0.47 * distance + 6.0;*/
-
-    // TODO: Old physics
-    _entityManager->addComponentToEntity<PositionComponent>(_projectile, posX, posY);
-    _entityManager->addComponentToEntity<BoxCollider>(_projectile, projectileWidth, projectileHeight);
-    _entityManager->addComponentToEntity<DamagingComponent>(_projectile, 25);
-    _entityManager->addComponentToEntity<DamageableComponent>(_projectile, 10);
-    _entityManager->addComponentToEntity<GravityComponent>(_projectile, 6.5 * speedModifier);
-    _entityManager->addComponentToEntity<MoveComponent>(_projectile, velocityX * speedModifier,
+    _entityManager->addComponentToEntity<PositionComponent>(projectile, posX, posY);
+    _entityManager->addComponentToEntity<BoxCollider>(projectile, projectileWidth, projectileHeight);
+    _entityManager->addComponentToEntity<DamagingComponent>(projectile, 25, selectedWeapon->getFaction());
+    _entityManager->addComponentToEntity<DamageableComponent>(projectile, 10);
+    _entityManager->addComponentToEntity<GravityComponent>(projectile, 6 * speedModifier);
+    _entityManager->addComponentToEntity<MoveComponent>(projectile, velocityX * speedModifier,
                                                         velocityY * speedModifier);
-
-    /*// TODO: New physics
-    double _power = 0.0;
-     _entityManager->addComponentToEntity<PositionComponent>(_projectile, posX, posY);
-    _entityManager->addComponentToEntity<BoxCollider>(_projectile, projectileWidth, projectileHeight);
-    _entityManager->addComponentToEntity<DamagingComponent>(_projectile, 25);
-    _entityManager->addComponentToEntity<DamageableComponent>(_projectile, 10);
-    _entityManager->addComponentToEntity<GravityComponent>(_projectile, 6 * speedModifier);
-     _entityManager->addComponentToEntity<MoveComponent>(_projectile, (_power / 20) * velocityX * speedModifier,
-                                                        (_power / 20) * velocityY * speedModifier);*/
-
-    selectedWeapon->lowerAmmo();
-    return _projectile;
+    //selectedWeapon->lowerAmmo();
+    return projectile;
 }
 
 void AISystem::update(double dt) {

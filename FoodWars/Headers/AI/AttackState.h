@@ -3,6 +3,7 @@
 
 #include "State.h"
 #include "../GameECS/Components/DamageableComponent.h"
+#include "ShootingSimulator2019.h"
 
 class AttackState : public State, public CollisionEventHandler {
 private:
@@ -10,6 +11,7 @@ private:
     int _projectileId = -1;
     PositionComponent _targetPosition;
     const DamageableComponent* _target;
+    ShootingSimulator2019 _shootingSimulator;
 public:
     AttackState(EntityManager& entityManager, int entityId, const PositionComponent& targetPosition, const DamageableComponent& target, AISystem& context);
 

@@ -76,9 +76,9 @@ void MoveSystem::update(double dt) {
                 auto* damageableComp = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first);
                 if(damageableComp == nullptr) {
                     _entityManager->removeEntity(iterator.first);
-                } else{
-                    _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->destroy();
+                    _entityManager->addComponentToEntity<DamageableComponent>(iterator.first);
                 }
+                _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->destroy();
             }
         }
     }

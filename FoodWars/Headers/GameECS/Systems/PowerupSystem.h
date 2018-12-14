@@ -8,7 +8,6 @@
 #include "../../../../TonicEngine/Headers/General/Random.h"
 #include "Misc/ItemFactory.h"
 #include "../Events/TurnSwitchedEventHandler.h"
-#include "Misc/WeaponFactory.h"
 
 class PowerupSystem :  public IBaseSystem, public CollisionEventHandler, public TurnSwitchedEventHandler {
 private:
@@ -24,11 +23,9 @@ public:
     void update(double deltaTime) override;
 private:
     ItemFactory _itemFactory;
-    WeaponFactory _weaponFactory;
     std::unordered_map<int, std::string> _weaponMap;
     std::unordered_map<int, std::string> _itemMap;
-    void spawnPowerup();
-    void spawnWeapon();
+    void spawnDrop(std::unordered_map<int, std::string> dropMap);
 };
 
 #endif //PROJECT_SWA_POWERUPMANAGER_H

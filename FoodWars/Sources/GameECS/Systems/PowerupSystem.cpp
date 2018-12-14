@@ -16,37 +16,10 @@ PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservab
     _weaponMap[0] = "carrot";
     _weaponMap[1] = "ham";
     _weaponMap[2] = "candycane";
-    spawnPowerup();
+
 }
 
-void PowerupSystem::spawnPowerup() {
-    Random random;
-
-    // 50/50 chance of powerup spawning
-    if (random.between(0,1) == 0) {
-        int itemY = 0;
-        int itemWidth = 29;
-        int itemHeight = 42;
-        int itemX = random.between(0,1600-itemWidth);
-
-        int powerup = _entityManager->createEntity();
-        int powerupChance = random.between(0,_itemFactory.getMapSize()-1);
-
-        // Random powerup
-        std::string sTest = _itemMap[powerupChance];
-        auto item = _itemFactory.createItem(_itemMap[powerupChance]);
-        _entityManager->addComponentToEntity(powerup, std::make_unique<ItemComponent>(item));
-        _entityManager->addComponentToEntity<DrawableComponent>(powerup,
-                                                                std::make_unique<ShapeSprite>(itemWidth, itemHeight, itemX, itemY,
-                                                                                              item.getItemName() +
-                                                                                              ".png"));
-        _entityManager->addComponentToEntity<BoxCollider>(powerup, itemWidth, itemHeight);
-        _entityManager->addComponentToEntity<PositionComponent>(powerup, itemX, itemY);
-        _entityManager->addComponentToEntity<GravityComponent>(powerup, 5);
-    }
-}
-
-void PowerupSystem::spawnWeapon() {
+void PowerupSystem::spawnDrop(std::unordered_map<int, std::string> dropMap) {
     Random random;
 
     int weaponX = random.between(0, 1571);
@@ -55,11 +28,9 @@ void PowerupSystem::spawnWeapon() {
     int weaponHeight = 42;
 
     int weaponID = _entityManager->createEntity();
-    // TODO: Create another factory or change the range hardcoded?
-    int weaponChance = random.between(0, _weaponFactory.getMapSize()-1);
+    int weaponChance = random.between(0, dropMap.size()-1);
 
-    std::string sTest = _weaponMap[weaponChance];
-    auto weaponType = _weaponFactory.createItem(_weaponMap[weaponChance]);
+    auto weaponType = _itemFactory.createItem(dropMap[weaponChance]);
     _entityManager->addComponentToEntity(weaponID, std::make_unique<ItemComponent>(weaponType));
     // TODO: better sprite for representing a weapon drop
     _entityManager->addComponentToEntity<DrawableComponent>(weaponID,
@@ -70,7 +41,6 @@ void PowerupSystem::spawnWeapon() {
     _entityManager->addComponentToEntity<PositionComponent>(weaponID, weaponX, weaponY);
     _entityManager->addComponentToEntity<GravityComponent>(weaponID, 5);
 }
-
 bool PowerupSystem::canHandle(const CollisionEvent &collisionEvent) {
     int player = collisionEvent.getEntity();
     int item = collisionEvent.getOtherEntity();
@@ -95,6 +65,9 @@ void PowerupSystem::update(double deltaTime) {
 }
 
 void PowerupSystem::handleTurnSwitchedEvent(const TurnSwitchedEvent &turnSwitchedEvent) {
-    spawnWeapon();
-    spawnPowerup();
+    Random random;
+    if (random.between(0,1) == 0) { spawnDrop(_itemMap);}
+    spawnDrop(_weaponMap);
 }
+
+

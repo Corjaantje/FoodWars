@@ -79,7 +79,7 @@ bool PlayerComponent::isAlive() const {
 }
 
 void PlayerComponent::addToWeaponType(const std::string &weaponType, int increaseBy) {
-    auto weaponIterator = find_if(_weapons.begin(), _weapons.end(), [&weaponType](const std::unique_ptr<Weapon>& obj) {
+    auto weaponIterator = std::find_if(_weapons.begin(), _weapons.end(), [&weaponType](const std::unique_ptr<Weapon>& obj) {
         return obj->getImage() == weaponType+".png";
     });
 

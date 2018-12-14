@@ -8,38 +8,45 @@
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 #include "../../../Headers/GameECS/Components/ItemComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
+#include "../../../Headers/GameECS/Components/AnimationComponent.h"
+#include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 
 PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservable, IObservable<TurnSwitchedEvent> &turnSwitchedEventObservable, EntityManager &entityManager)
-        : CollisionEventHandler(collisionEventObservable), TurnSwitchedEventHandler(turnSwitchedEventObservable), _entityManager{&entityManager}, _itemFactory{ItemFactory{}}{
+        : CollisionEventHandler(collisionEventObservable), TurnSwitchedEventHandler(turnSwitchedEventObservable), _entityManager{&entityManager}, _itemFactory{ItemFactory{}}, _random{Random{}}{
     _itemMap[0] = "cake";
     _itemMap[1] = "painkiller";
     spawnPowerup();
 }
 
-void PowerupSystem::spawnPowerup() {
-    Random random;
+void PowerupSystem::spawnDrop(const std::unordered_map<int, std::string> &dropMap) {
 
-    // 50/50 chance of powerup spawning
-    if (random.between(0,1) == 0) {
-        int itemY = 0;
-        int itemWidth = 29;
-        int itemHeight = 42;
-        int itemX = random.between(0,1600-itemWidth);
+    int dropX = _random.between(0, 1571);
+    int dropY = 0;
+    int dropWidth = 29;
+    int dropHeight = 42;
 
-        int powerup = _entityManager->createEntity();
-        int powerupChance = random.between(0,_itemFactory.getMapSize()-1);
+    int dropID = _entityManager->createEntity();
+    int dropChance = _random.between(0, dropMap.size()-1);
 
-        // Random powerup
-        auto item = _itemFactory.createItem(_itemMap[powerupChance]);
-        _entityManager->addComponentToEntity(powerup, std::make_unique<ItemComponent>(item));
-        _entityManager->addComponentToEntity<DrawableComponent>(powerup,
-                                                                std::make_unique<ShapeSprite>(itemWidth, itemHeight, itemX, itemY,
-                                                                                              item.getItemName() +
-                                                                                              ".png"));
-        _entityManager->addComponentToEntity<BoxCollider>(powerup, itemWidth, itemHeight);
-        _entityManager->addComponentToEntity<PositionComponent>(powerup, itemX, itemY);
-        _entityManager->addComponentToEntity<GravityComponent>(powerup, 5);
-    }
+    const std::string &name = dropMap.at(dropChance);
+    auto weaponType = _itemFactory.createItem(name);
+    _entityManager->addComponentToEntity(dropID, std::make_unique<ItemComponent>(weaponType));
+    _entityManager->addComponentToEntity<DrawableComponent>(dropID,
+                                                            std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY,
+                                                                                          "", 3));
+
+    const int amountOfSprites = 3;
+    std::vector<std::unique_ptr<IShape>> animationShapes{amountOfSprites};
+    //TODO: juiste sprites
+    animationShapes[0] = std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY, "carrot.png", 3);
+    animationShapes[1] = std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY, "ham.png", 3);
+    animationShapes[2] = std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY, "candycane.png", 3);
+
+    _entityManager->addComponentToEntity<AnimationComponent>(dropID, std::move(animationShapes), 0.1);
+
+    _entityManager->addComponentToEntity<BoxCollider>(dropID, dropWidth, dropHeight);
+    _entityManager->addComponentToEntity<PositionComponent>(dropID, dropX, dropY);
+    _entityManager->addComponentToEntity<GravityComponent>(dropID, 5);
 }
 
 bool PowerupSystem::canHandle(const CollisionEvent &collisionEvent) {

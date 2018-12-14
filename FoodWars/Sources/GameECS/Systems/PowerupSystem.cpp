@@ -22,25 +22,25 @@ PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservab
 void PowerupSystem::spawnDrop(const std::unordered_map<int, std::string> &dropMap) {
     Random random;
 
-    int weaponX = random.between(0, 1571);
-    int weaponY = 0;
-    int weaponWidth = 29;
-    int weaponHeight = 42;
+    int dropX = random.between(0, 1571);
+    int dropY = 0;
+    int dropWidth = 29;
+    int dropHeight = 42;
 
-    int weaponID = _entityManager->createEntity();
-    int weaponChance = random.between(0, dropMap.size()-1);
+    int dropID = _entityManager->createEntity();
+    int dropChance = random.between(0, dropMap.size()-1);
 
-    const std::string &name = dropMap.at(weaponChance);
+    const std::string &name = dropMap.at(dropChance);
     auto weaponType = _itemFactory.createItem(name);
-    _entityManager->addComponentToEntity(weaponID, std::make_unique<ItemComponent>(weaponType));
+    _entityManager->addComponentToEntity(dropID, std::make_unique<ItemComponent>(weaponType));
     // TODO: better sprite for representing a weapon drop
-    _entityManager->addComponentToEntity<DrawableComponent>(weaponID,
-                                                            std::make_unique<ShapeSprite>(weaponWidth, weaponHeight, weaponX, weaponY,
+    _entityManager->addComponentToEntity<DrawableComponent>(dropID,
+                                                            std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY,
                                                                                           name +
                                                                                           ".png"));
-    _entityManager->addComponentToEntity<BoxCollider>(weaponID, weaponWidth, weaponHeight);
-    _entityManager->addComponentToEntity<PositionComponent>(weaponID, weaponX, weaponY);
-    _entityManager->addComponentToEntity<GravityComponent>(weaponID, 5);
+    _entityManager->addComponentToEntity<BoxCollider>(dropID, dropWidth, dropHeight);
+    _entityManager->addComponentToEntity<PositionComponent>(dropID, dropX, dropY);
+    _entityManager->addComponentToEntity<GravityComponent>(dropID, 5);
 }
 bool PowerupSystem::canHandle(const CollisionEvent &collisionEvent) {
     int player = collisionEvent.getEntity();

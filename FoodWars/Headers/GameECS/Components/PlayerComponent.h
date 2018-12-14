@@ -28,6 +28,8 @@ public:
     Faction getFaction() const;
     bool isAlive() const;
 
+    void addToWeaponType(const std::string &weaponType, int increaseBy);
+
     void accept(SerializationVisitor &visitor) override;
 
     void accept(DeserializationVisitor &visitor) override;

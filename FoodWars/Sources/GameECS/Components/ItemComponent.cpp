@@ -11,13 +11,10 @@ std::string ItemComponent::getName() const {
     return "ItemComponent";
 }
 
-ItemComponent::ItemComponent(std::string name, const std::function<void(EntityManager& e, const CollisionEvent &event)>& lamda) : _name{std::move(name)}, _lamdaOnCollision{lamda} {}
-ItemComponent::ItemComponent(const ItemComponent &copy) : _name{copy._name}, _lamdaOnCollision{copy._lamdaOnCollision} {}
+ItemComponent::ItemComponent(const std::function<void(EntityManager &e, const CollisionEvent &event)> &lamda) : _lamdaOnCollision{lamda} {}
 
-const std::string &ItemComponent::getItemName() const {
-    return _name;
-}
+ItemComponent::ItemComponent(const ItemComponent &copy) : _lamdaOnCollision{copy._lamdaOnCollision} {}
 
-const std::function<void(EntityManager &, const CollisionEvent &collisionEvent)>& ItemComponent::getLamda() const {
+const std::function<void(EntityManager &, const CollisionEvent &collisionEvent)> &ItemComponent::getLamda() const {
     return _lamdaOnCollision;
 }

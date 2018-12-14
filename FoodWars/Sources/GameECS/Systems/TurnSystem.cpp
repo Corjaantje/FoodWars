@@ -24,12 +24,9 @@ void TurnSystem::update(double deltaTime) {
             break;
         }
     }
-
-    auto playerPos = _entityManager->getComponentFromEntity<PositionComponent>(currentPlayerId);
-
-    std::cout << "Current player: " << currentPlayerId << " X: " << playerPos->X << ", Y: " << playerPos->Y << std::endl;
-
+    
     if(_currentHighlightEntityId != -1) {
+        auto playerPos = _entityManager->getComponentFromEntity<PositionComponent>(currentPlayerId);
         auto arrowPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentHighlightEntityId);
         arrowPos->X = playerPos->X;
         arrowPos->Y = playerPos->Y - 100;

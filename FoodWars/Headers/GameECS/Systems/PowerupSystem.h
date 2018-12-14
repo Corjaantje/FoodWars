@@ -23,6 +23,7 @@ public:
     void update(double deltaTime) override;
 private:
     ItemFactory _itemFactory;
+    Random _random;
     std::unordered_map<int, std::string> _weaponMap;
     std::unordered_map<int, std::string> _itemMap;
     void spawnDrop(const std::unordered_map<int, std::string> &dropMap);

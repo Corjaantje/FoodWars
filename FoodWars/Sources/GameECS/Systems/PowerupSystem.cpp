@@ -20,15 +20,13 @@ PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservab
 }
 
 void PowerupSystem::spawnDrop(const std::unordered_map<int, std::string> &dropMap) {
-    Random random;
-
-    int dropX = random.between(0, 1571);
+    int dropX = _random.between(0, 1571);
     int dropY = 0;
     int dropWidth = 29;
     int dropHeight = 42;
 
     int dropID = _entityManager->createEntity();
-    int dropChance = random.between(0, dropMap.size()-1);
+    int dropChance = _random.between(0, dropMap.size()-1);
 
     const std::string &name = dropMap.at(dropChance);
     auto weaponType = _itemFactory.createItem(name);

@@ -10,26 +10,17 @@
 ItemFactory::ItemFactory() {
     _itemMap =
     {{
-        {"cake", ItemComponent{"cake", [](EntityManager& e, const CollisionEvent& event)
+        {"cake", ItemComponent{[](EntityManager& e, const CollisionEvent& event)
         {
           e.getComponentFromEntity<DamageableComponent>(event.getEntity())->increaseHealth(50);
         }}},
-        {"painkiller", ItemComponent{"painkiller", [](EntityManager& e, const CollisionEvent& event)
+        {"painkiller", ItemComponent{[](EntityManager& e, const CollisionEvent& event)
         {
           e.getComponentFromEntity<TurnComponent>(event.getEntity())->setEnergy(100);
         }}},
-        {"carrot", ItemComponent{"carrot", [](EntityManager& e, const CollisionEvent& event) //Possible future change: more than 1
-        {
-         e.getComponentFromEntity<PlayerComponent>(event.getEntity())->addToWeaponType("carrot", 1);
-        }}},
-        {"ham", ItemComponent{"ham", [](EntityManager& e, const CollisionEvent& event)
-        {
-         e.getComponentFromEntity<PlayerComponent>(event.getEntity())->addToWeaponType("ham", 1);
-        }}},
-        {"candycane", ItemComponent{"candycane", [](EntityManager& e, const CollisionEvent& event)
-        {
-         e.getComponentFromEntity<PlayerComponent>(event.getEntity())->addToWeaponType("candycane", 1);
-        }}}
+        {"carrot", createWeapon("carrot")},
+        {"ham", createWeapon("ham")},
+        {"candycane", createWeapon("candycane")}
     }};
 }
 
@@ -40,4 +31,15 @@ ItemComponent ItemFactory::createItem(const std::string& item) {
 
 int ItemFactory::getMapSize() const {
     return _itemMap.size();
+}
+
+ItemComponent ItemFactory::createWeapon(const std::string &weaponName, int ammoCount) {
+    return ItemComponent{[weaponName = weaponName, ammoCount = ammoCount](EntityManager& e, const CollisionEvent& event)
+                         {
+                             e.getComponentFromEntity<PlayerComponent>(event.getEntity())->addToWeaponType(weaponName, ammoCount);
+                         }};
+}
+
+ItemComponent ItemFactory::createWeapon(const std::string &weaponName) {
+    return createWeapon(weaponName, 1);
 }

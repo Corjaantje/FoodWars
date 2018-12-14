@@ -16,5 +16,7 @@ public:
     ItemComponent createItem(const std::string& item);
 private:
     std::unordered_map<std::string, ItemComponent> _itemMap;
+    ItemComponent createWeapon(const std::string &weaponName);
+    ItemComponent createWeapon(const std::string &weaponName, int ammoCount);
 };
 #endif //PROJECT_SWA_ITEMFACTORY_H

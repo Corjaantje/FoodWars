@@ -25,7 +25,7 @@ private:
     ItemFactory _itemFactory;
     std::unordered_map<int, std::string> _weaponMap;
     std::unordered_map<int, std::string> _itemMap;
-    void spawnDrop(std::unordered_map<int, std::string> dropMap);
+    void spawnDrop(const std::unordered_map<int, std::string> &dropMap);
 };
 
 #endif //PROJECT_SWA_POWERUPMANAGER_H

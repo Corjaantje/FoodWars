@@ -19,7 +19,7 @@ PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservab
 
 }
 
-void PowerupSystem::spawnDrop(std::unordered_map<int, std::string> dropMap) {
+void PowerupSystem::spawnDrop(const std::unordered_map<int, std::string> &dropMap) {
     Random random;
 
     int weaponX = random.between(0, 1571);
@@ -30,12 +30,13 @@ void PowerupSystem::spawnDrop(std::unordered_map<int, std::string> dropMap) {
     int weaponID = _entityManager->createEntity();
     int weaponChance = random.between(0, dropMap.size()-1);
 
-    auto weaponType = _itemFactory.createItem(dropMap[weaponChance]);
+    const std::string &name = dropMap.at(weaponChance);
+    auto weaponType = _itemFactory.createItem(name);
     _entityManager->addComponentToEntity(weaponID, std::make_unique<ItemComponent>(weaponType));
     // TODO: better sprite for representing a weapon drop
     _entityManager->addComponentToEntity<DrawableComponent>(weaponID,
                                                             std::make_unique<ShapeSprite>(weaponWidth, weaponHeight, weaponX, weaponY,
-                                                                                          weaponType.getItemName() +
+                                                                                          name +
                                                                                           ".png"));
     _entityManager->addComponentToEntity<BoxCollider>(weaponID, weaponWidth, weaponHeight);
     _entityManager->addComponentToEntity<PositionComponent>(weaponID, weaponX, weaponY);

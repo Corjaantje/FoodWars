@@ -24,7 +24,7 @@ void GravitySystem::update(double dt) {
 }
 
 bool GravitySystem::canHandle(const CollisionEvent &collisionEvent) {
-    return (collisionEvent.getCollisionAngle() >= 315 || collisionEvent.getCollisionAngle() <= 45) && _entityManager->getComponentFromEntity<TurnComponent>(collisionEvent.getEntity()) != nullptr;
+    return (collisionEvent.getCollisionAngle() >= 315 || collisionEvent.getCollisionAngle() <= 45) /*&& _entityManager->getComponentFromEntity<TurnComponent>(collisionEvent.getEntity()) != nullptr*/;
 }
 
 void GravitySystem::handleCollisionEvent(const CollisionEvent &collisionEvent) {

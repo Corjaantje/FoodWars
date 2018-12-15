@@ -6,7 +6,7 @@ LevelTransitionScreen::LevelTransitionScreen(ScreenStateManager &context, bool p
         _scorePlayerOne = scorePlayerOne;
         _scorePlayerTwo = scorePlayerTwo;
         setWallpaper(playerOneLost, playerTwoLost);
-        //_storageFacade->saveHighscore(scorePlayerOne, _levelManager->getLevelIdentifier());
+        _scoreStorer.saveScore(scorePlayerOne, _levelManager->getLevelIdentifier());
         initButtons();
 }
 

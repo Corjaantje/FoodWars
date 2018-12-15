@@ -3,8 +3,7 @@
 #include "../../../Headers/GameECS/Components/PositionComponent.h"
 
 TurnSystem::TurnSystem(EntityManager &entityManager) : _entityManager(&entityManager), _defaultTimePerTurn(30),
-                                                       _timePerTurn(_defaultTimePerTurn)
-{
+                                                       _timePerTurn(_defaultTimePerTurn) {
 }
 
 TurnSystem::~TurnSystem() = default;
@@ -13,8 +12,10 @@ TurnSystem::~TurnSystem() = default;
 // If remainingTime <= 0, end turn.
 void TurnSystem::update(double deltaTime) {
     std::map<int, TurnComponent *> turnComponents = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
+    int currentPlayerId = -1;
     for(const auto &iterator: turnComponents) {
         if(iterator.second->isMyTurn()) {
+            currentPlayerId = iterator.first;
             iterator.second->lowerRemainingTime(deltaTime);
             if(iterator.second->getRemainingTime() <= 0) {
                 iterator.second->setRemainingTime(0);
@@ -23,7 +24,12 @@ void TurnSystem::update(double deltaTime) {
             break;
         }
     }
+
     if(_currentHighlightEntityId != -1) {
+        auto playerPos = _entityManager->getComponentFromEntity<PositionComponent>(currentPlayerId);
+        auto arrowPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentHighlightEntityId);
+        arrowPos->X = playerPos->X;
+        arrowPos->Y = playerPos->Y - 100;
         resetPlayerHighlight(deltaTime);
     }
 }
@@ -44,9 +50,11 @@ void TurnSystem::switchTurn() {
                             resetPlayerHighlight(2.1);
                         }
                         createCurrentPlayerHighlight(iterator2.first);
+                        TurnSwitchedEvent event = TurnSwitchedEvent{iterator2.first};
+                        notify(event);
                     }
                 }
-                    break;
+                break;
             }
         }
     }
@@ -56,6 +64,7 @@ void TurnSystem::createCurrentPlayerHighlight(int entityID) {
     _currentHighlightEntityId = _entityManager->createEntity();
     auto *positionComp = _entityManager->getComponentFromEntity<PositionComponent>(entityID);
     if (positionComp != nullptr) {
+        _entityManager->addComponentToEntity<PositionComponent>(_currentHighlightEntityId, positionComp->X, positionComp->Y - 100);
         _entityManager->addComponentToEntity<DrawableComponent>(_currentHighlightEntityId,
                                                                 std::make_unique<ShapeSprite>(48, 72,
                                                                                               positionComp->X,

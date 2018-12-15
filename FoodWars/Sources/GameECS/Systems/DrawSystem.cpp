@@ -6,7 +6,6 @@
 #include "../../../Headers/GameECS/Components/PositionComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
-#include "../../../Headers/GameECS/Components/AIComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 
 DrawSystem::DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade, InputFacade& inputFacade) :
@@ -95,24 +94,21 @@ void DrawSystem::drawNonComponents() {
 void DrawSystem::drawPlayers() {
     _playerUpdateCount++;
     if (_playerUpdateCount > 30) {
-        std::map<int, TurnComponent *> playerComps = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
+        std::map<int, PlayerComponent *> playerComps = _entityManager->getAllEntitiesWithComponent<PlayerComponent>();
         for (auto const& x : playerComps)
         {
-            auto player = _entityManager->getComponentFromEntity<PlayerComponent>(x.first); // Check for players
-            if(player != nullptr){
-                if (player->getPlayerID() == 1) {
-                    auto *sprite = dynamic_cast<ShapeSprite *>(_entityManager->getComponentFromEntity<DrawableComponent>(
-                            x.first)->getShape());
-                    if (sprite != nullptr) {
-                        _playerIconOne = sprite->imageURL;
-                    }
-                }
-                if (player->getPlayerID() == 2) {
-                    auto *sprite = dynamic_cast<ShapeSprite *>(_entityManager->getComponentFromEntity<DrawableComponent>(
-                            x.first)->getShape());
-                    if (sprite != nullptr) {
-                        _playerIconTwo = sprite->imageURL;
-                    }
+            if(x.second->getPlayerID() == 1){
+                auto *sprite = dynamic_cast<ShapeSprite *>(_entityManager->getComponentFromEntity<DrawableComponent>(
+                        x.first)->getShape());
+               if(sprite != nullptr) {
+                   _playerIconOne = sprite->imageURL;
+               }
+            }
+            if(x.second->getPlayerID() == 2){
+                auto *sprite = dynamic_cast<ShapeSprite *>(_entityManager->getComponentFromEntity<DrawableComponent>(
+                        x.first)->getShape());
+                if(sprite != nullptr) {
+                    _playerIconTwo = sprite->imageURL;
                 }
             }
         }
@@ -126,95 +122,73 @@ bool DrawSystem::toggleFpsCounter() {
 
 void DrawSystem::drawPlayerStats() {
 //Draw Turn Timer and HP
-    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
+        if(iterator.second->getPlayerID() == 1) {
+            int hp = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->getHealth();
+            int hpWidth = hp;
+            if (hpWidth > 100) hpWidth = 100;
+            _renderList._shapes[3].push_back(createShape<ShapeText>(150, 27, std::to_string(hp),180, 40, 25, Colour(255, 255, 255, 0)));
+            _renderList._shapes[2].push_back(createShape<ShapeRectangle>(hpWidth*1.5, 25, 150, 27, getConvertedHealthColor(hpWidth)));
 
-        auto player = _entityManager->getComponentFromEntity<PlayerComponent>(iterator.first); // Check for players
-        if(player != nullptr){
-            if (player->getPlayerID() == 1) {
-                int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->getHealth();
-                // for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
-                //     if(iterator.second->getPlayerID() == 1) {
-                //        int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->getHealth();
-                _renderList._shapes[3].push_back(createShape<ShapeText>(150, 27, std::to_string(hpWidth), 180, 40, 25,
-                                                                        Colour(255, 255, 255, 0)));
-                _renderList._shapes[2].push_back(
-                        createShape<ShapeRectangle>(hpWidth * 1.5, 25, 150, 27, getConvertedHealthColor(hpWidth)));
-
-                //auto turnComp = _entityManager->getComponentFromEntity<TurnComponent>(iterator.first);
-                int energy = static_cast<int>(iterator.second->getEnergy());
-                if (energy < 0) {
-                    energy = 0;
-                }
-                _renderList._shapes[3].push_back(
-                        createShape<ShapeText>(150, 70, std::to_string(energy), 180, 40, 25, Colour(255, 255, 255, 0)));
-                _renderList._shapes[2].push_back(
-                        createShape<ShapeRectangle>(energy * 1.5, 25, 150, 69, Colour(0, 191, 255, 0)));
-                if (iterator.second->isMyTurn()) {
-                    double time = iterator.second->getRemainingTime();
-                    std::string text = std::to_string(time).substr(0, 4);
-                    Colour timeColour = Colour(255, 255, 255, 0);
-                    if (time < 10) {
-                        text = std::to_string(time).substr(0, 3);
-                        timeColour = Colour(255, 165, 0, 0);
-                    }
-                    if (time < 5) {
-                        text = std::to_string(time).substr(0, 3);
-                        timeColour = Colour(255, 0, 0, 0);
-                    }
-                    _renderList._shapes[3].push_back(createShape<ShapeText>(800, 45, text, 180, 75, 37, timeColour));
-                }
-                if (player->getSelectedWeapon() != nullptr) {
-                    _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 396, 45,
-                                                                              player->getSelectedWeapon()->getImage()));
-                }
-                _renderList._shapes[3].push_back(
-                        createShape<ShapeText>(391, 82, std::to_string(player->getSelectedWeaponAvailability()), 180,
-                                               30, 30, Colour(255, 255, 255, 0)));
-
+            auto turnComp = _entityManager->getComponentFromEntity<TurnComponent>(iterator.first);
+            int energy = static_cast<int>(turnComp->getEnergy());
+            if(energy < 0){
+                energy = 0;
             }
-            if (player->getPlayerID() == 2) {
-                int hpWidth = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->getHealth();
-                _renderList._shapes[3].push_back(
-                        createShape<ShapeText>(1300 + 80, 27, std::to_string(hpWidth), 180, 40, 25,
-                                               Colour(255, 255, 255, 0)));
-                _renderList._shapes[2].push_back(
-                        createShape<ShapeRectangle>(hpWidth * 1.3, 25, 1300 - hpWidth * 1.3 + 130, 27,
-                                                    getConvertedHealthColor(hpWidth)));
-
-                auto turnComp = _entityManager->getComponentFromEntity<TurnComponent>(iterator.first);
-                int energy = static_cast<int>(turnComp->getEnergy());
-                if (energy < 0) {
-                    energy = 0;
+            _renderList._shapes[3].push_back(createShape<ShapeText>(150, 70, std::to_string(energy),180, 40, 25, Colour(255, 255, 255, 0)));
+            _renderList._shapes[2].push_back(createShape<ShapeRectangle>(energy*1.5, 25, 150, 69, Colour(0, 191, 255, 0)));
+            if(turnComp->isMyTurn()){
+                double time = turnComp->getRemainingTime();
+                std::string text = std::to_string(time).substr(0, 4);
+                Colour timeColour = Colour (255,255,255,0);
+                if (time < 10) {
+                    text = std::to_string(time).substr(0, 3);
+                    timeColour = Colour(255,165,0,0);
                 }
-                _renderList._shapes[3].push_back(
-                        createShape<ShapeText>(1300 + 80, 70, std::to_string(energy), 180, 40, 25,
-                                               Colour(255, 255, 255, 0)));
-                _renderList._shapes[2].push_back(
-                        createShape<ShapeRectangle>(energy * 1.3, 25, 1300 - energy * 1.3 + 130, 69,
-                                                    Colour(0, 191, 255, 0)));
-
-                if (turnComp->isMyTurn()) {
-                    double time = turnComp->getRemainingTime();
-                    std::string text = std::to_string(time).substr(0, 4);
-                    Colour timeColour = Colour(255, 255, 255, 0);
-                    if (time < 10) {
-                        text = std::to_string(time).substr(0, 3);
-                        timeColour = Colour(255, 165, 0, 0);
-                    }
-                    if (time < 5) {
-                        text = std::to_string(time).substr(0, 3);
-                        timeColour = Colour(255, 0, 0, 0);
-                    }
-                    _renderList._shapes[3].push_back(createShape<ShapeText>(800, 45, text, 180, 75, 37, timeColour));
+                if (time < 5) {
+                    text = std::to_string(time).substr(0, 3);
+                    timeColour = Colour(255, 0,0,0);
                 }
-                if (player->getSelectedWeapon() != nullptr) {
-                    _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 1190, 45,
-                                                                              player->getSelectedWeapon()->getImage()));
-                }
-                _renderList._shapes[3].push_back(
-                        createShape<ShapeText>(1185, 82, std::to_string(player->getSelectedWeaponAvailability()), 180,
-                                               30, 30, Colour(255, 255, 255, 0)));
+                _renderList._shapes[3].push_back(createShape<ShapeText>(800, 45, text, 180, 75, 37, timeColour));
             }
+            if(iterator.second->getSelectedWeapon() != nullptr){
+                _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 396, 45, iterator.second->getSelectedWeapon()->getImage()));
+            }
+            _renderList._shapes[3].push_back(createShape<ShapeText>(391, 82, std::to_string(iterator.second->getSelectedWeaponAvailability()),180, 30, 30, Colour(255, 255, 255, 0)));
+
+        }
+        if(iterator.second->getPlayerID() == 2){
+            int hp = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first)->getHealth();
+            int hpWidth = hp;
+            if (hpWidth > 100) hpWidth = 100;
+            _renderList._shapes[3].push_back(createShape<ShapeText>(1300 + 80, 27, std::to_string(hp),180, 40, 25, Colour(255, 255, 255, 0)));
+            _renderList._shapes[2].push_back(createShape<ShapeRectangle>(hpWidth*1.3, 25, 1300-hpWidth*1.3 + 130, 27, getConvertedHealthColor(hpWidth)));
+
+            auto turnComp = _entityManager->getComponentFromEntity<TurnComponent>(iterator.first);
+            int energy = static_cast<int>(turnComp->getEnergy());
+            if(energy < 0){
+                energy = 0;
+            }
+            _renderList._shapes[3].push_back(createShape<ShapeText>(1300 + 80, 70, std::to_string(energy),180, 40, 25, Colour(255, 255, 255, 0)));
+            _renderList._shapes[2].push_back(createShape<ShapeRectangle>(energy*1.3, 25, 1300-energy*1.3 + 130, 69, Colour(0, 191, 255, 0)));
+
+            if(turnComp->isMyTurn()){
+                double time = turnComp->getRemainingTime();
+                std::string text = std::to_string(time).substr(0, 4);
+                Colour timeColour = Colour (255,255,255,0);
+                if (time < 10) {
+                    text = std::to_string(time).substr(0, 3);
+                    timeColour = Colour(255,165,0,0);
+                } if (time < 5) {
+                    text = std::to_string(time).substr(0, 3);
+                    timeColour = Colour(255, 0,0,0);
+                }
+                _renderList._shapes[3].push_back(createShape<ShapeText>(800, 45, text, 180, 75, 37, timeColour));
+            }
+            if(iterator.second->getSelectedWeapon() != nullptr){
+                _renderList._shapes[3].push_back(createShape<ShapeSprite>(15, 30, 1190, 45, iterator.second->getSelectedWeapon()->getImage()));
+            }
+            _renderList._shapes[3].push_back(createShape<ShapeText>(1185, 82, std::to_string(iterator.second->getSelectedWeaponAvailability()), 180, 30, 30, Colour(255, 255, 255, 0)));
         }
     }
 }

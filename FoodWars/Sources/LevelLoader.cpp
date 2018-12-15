@@ -69,10 +69,6 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne,
     int boundRight = entityManager->createEntity();
     entityManager->addComponentToEntity<BoxCollider>(boundRight, 900, 900);
     entityManager->addComponentToEntity<PositionComponent>(boundRight, 1600, 0);
-
-    int boundBottom = entityManager->createEntity();
-    entityManager->addComponentToEntity<BoxCollider>(boundBottom, 1600, 1600);
-    entityManager->addComponentToEntity<PositionComponent>(boundBottom, 0, 900);
 }
 
 void LevelLoader::replayLastLevel(GameLevel &gameLevel) {

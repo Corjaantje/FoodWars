@@ -38,18 +38,10 @@ void CollisionSystem::update(double dt) {
                         CollisionEvent event{entity, otherEntity, angle};
                         notify(event);
                         if (!collider->isVirtual && !otherCollider->isVirtual) {
-                            if (angle > 315 || angle <= 45) positionComponent->Y = otherPosition->Y -
-                                                                                   collider->height; // moving entity on top of other
-                            if (angle >= 45 && angle <= 135 && moveComponent->xVelocity > 0) positionComponent->X =
-                                                                                                     otherPosition->X -
-                                                                                                     collider->width -
-                                                                                                     1; // moving entity left of other
-                            if (angle > 135 && angle < 225 && moveComponent->yVelocity < 0) positionComponent->Y =
-                                                                                                    otherPosition->Y +
-                                                                                                    otherCollider->height; // moving entity below other
-                            if (angle >= 225 && angle <= 315 && moveComponent->xVelocity < 0) positionComponent->X =
-                                                                                                      otherPosition->X +
-                                                                                                      otherCollider->width; // moving entity right of other
+                            if(angle > 315 || angle <= 45) positionComponent->Y = otherPosition->Y - collider->height; // moving entity on top of other
+                            if(angle >= 45 && angle <= 135 && moveComponent->xVelocity > 0) positionComponent->X = otherPosition->X - collider->width - 1; // moving entity left of other
+                            if(angle > 135 && angle < 225 && moveComponent->yVelocity < 0)  positionComponent->Y = otherPosition->Y + otherCollider->height; // moving entity below other
+                            if(angle >= 225 && angle <= 315 && moveComponent->xVelocity < 0) positionComponent->X = otherPosition->X + otherCollider->width; // moving entity right of other
                         }
                     }
                 }

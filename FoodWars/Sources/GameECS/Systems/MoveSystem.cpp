@@ -4,6 +4,7 @@
 #include "../../../Headers/GameECS/Components/MoveComponent.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
+#include "../../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 #include "../../../Headers/GameECS/Components/AIComponent.h"
 #include <cmath>
@@ -74,6 +75,14 @@ void MoveSystem::update(double dt) {
         if(positionComponent) {
             positionComponent->X += std::round(dt * moveComponent->xVelocity);
             positionComponent->Y += std::round(dt * moveComponent->yVelocity);
+            if (positionComponent->Y > 900) {
+                auto damageableComponent = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first);
+                if(damageableComponent) {
+                    damageableComponent->destroy();
+                } else {
+                    _entityManager->removeEntity(iterator.first);
+                }
+            }
         }
     }
 }

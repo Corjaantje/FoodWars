@@ -1,6 +1,7 @@
 #include "../../Headers/StateMachine/HighscoreScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 #include "../../../TonicEngine/Headers/Storage/XMLDeserializationVisitor.h"
+#include "../../Headers/StateMachine/Misc/Highscore.h"
 
 HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context),
         _currentIndex{0},
@@ -31,7 +32,7 @@ HighscoreScreen::HighscoreScreen(ScreenStateManager& context) : IScreen(context)
                               60, 60, 1245,510,
                               Colour{0,0,0,0})->addToRender(&_renderList);
     refreshScoreText();
-    for (int i = 0; i < 3 && i < _scoreText.size(); i++) {
+    for (int i = 0; i < 3; i++) {
         placeShape(465, 310 + (i%3 * 175), "", 670, 110, Colour(255, 255, 255, 0));
     }
 }
@@ -51,7 +52,11 @@ void HighscoreScreen::update(double deltaTime) {
     _renderList.clearLists();
 
     refreshScoreText();
-    for (int i = 0; i < 3 && i < _scoreText.size(); i++)
+    for (int i = 0; i < 3; i++)
+    {
+        _visualScores[i]->text = "";
+    }
+    for (int i = 0; i < 3 && i < (_scoreText.size()-_currentIndex); i++)
     {
         _visualScores[i]->text = _scoreText[i+_currentIndex];
     }
@@ -72,20 +77,18 @@ void HighscoreScreen::update(const KeyEvent& event){
 void HighscoreScreen::refreshScoreText() {
     _scoreText.clear();
     XMLReader reader{};
-    MyDocument document = reader.LoadFile("./Assets/Highscore.xml");
+    MyDocument document = reader.LoadFile("./Assets/highscore.xml");
     DeserializationFactory factory{};
     factory.addType<Highscore>();
     XMLDeserializationVisitor deserializationVisitor{document, factory};
     std::vector<SerializationReceiver *> v;
     deserializationVisitor.visit("highscore", v);
-    int i = 0;
     for (SerializationReceiver *receiver: v) {
-        Highscore *highscore = dynamic_cast<Highscore *>(receiver);
+        auto *highscore = dynamic_cast<Highscore *>(receiver);
         if (highscore)
-            _scoreText.emplace_back(highscore->getDate()+" Level "+std::to_string(highscore->getID())+": "+std::to_string(highscore->getScore()));// std::vector<std::string>{std::to_string(highscore->getScore()), highscore->getDate()};
+            _scoreText.emplace_back(highscore->getDate()+" Level "+std::to_string(highscore->getID())+": "+std::to_string(highscore->getScore()));
         delete highscore;
     }
-    //_scoreText = _storageFacade->loadHighscoresForLevels();
 }
 
 void HighscoreScreen::alterIndex(int dir) {
@@ -98,6 +101,6 @@ void HighscoreScreen::alterIndex(int dir) {
 
     if (_currentIndex < 0) {
         _currentIndex = _scoreText.size() - ((_scoreText.size()) % 3);
-        _currentIndex += (_scoreText.size()%3==0) ? -(1*3) : 0;
+        _currentIndex += (_scoreText.size()%3==0 && !_scoreText.empty()) ? -(1*3) : 0;
     }
 }

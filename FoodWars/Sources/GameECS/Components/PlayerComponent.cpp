@@ -78,6 +78,20 @@ bool PlayerComponent::isAlive() const {
     return _isAlive;
 }
 
+void PlayerComponent::addToWeaponType(const std::string &weaponType, int increaseBy) {
+    auto weaponIterator = std::find_if(_weapons.begin(), _weapons.end(), [&weaponType](const std::unique_ptr<Weapon>& obj) {
+        return obj->getImage() == weaponType+".png";
+    });
+
+    if (weaponIterator != _weapons.end()){
+        weaponIterator[0]->setAmmo(weaponIterator[0]->getAmmo()+increaseBy);
+    } else {
+        // Future expansion possibility: adding weapons which players don't spawn with. Would require faction info.
+    }
+
+
+}
+
 int PlayerComponent::getAmountOFWeapons() const{
     return _weapons.size();
 }

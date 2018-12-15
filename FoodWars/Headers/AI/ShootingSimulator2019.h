@@ -12,17 +12,15 @@ private:
     std::vector<int> _projectileIds;
     std::unordered_map<int, ShotTry> _shootingTries;
 
-    int _powerIncrease = 2;
-    int _minPower = 10;
-    int _maxPower = 50;
-    int _currentPower = _minPower;
+    double _powerIncrease = 40;
+    double _minPower = 10;
+    double _maxPower = 50;
 
-    int _minYVelocity = 0;
-    int _maxYVelocity = -150;
-    int _currentYVelocity = _minYVelocity;
-    int _yVelocityIncrease = 10;
+    double _minAngle = 0;
+    double _maxAngle = 90;
+    double _angleIncrease = 90;
 
-    int generateProjectile(double power, double yVelocity);
+    int generateProjectile(ShotTry shotTry);
 
     const PositionComponent *_target;
     const PositionComponent *_fromPosition;

@@ -4,13 +4,16 @@
 class ShotTry {
 private:
     double _power;
-    double _velocityX;
-    double _velocityY;
+    double _angle;
     double _score;
 public:
     ShotTry();
 
-    ShotTry(double velocityX, double velocityY, double power);
+    ShotTry(double angle, double power);
+
+    double getAngle() const;
+
+    double getPower() const;
 
     void setScore(double score);
 

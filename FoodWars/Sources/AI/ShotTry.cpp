@@ -1,11 +1,10 @@
 #include "../../Headers/AI/ShotTry.h"
 
-ShotTry::ShotTry(double velocityX, double velocityY, double power) : _velocityX{velocityX}, _velocityY{velocityY},
-                                                                     _power{power} {
+ShotTry::ShotTry(double angle, double power) : _angle{angle}, _power{power} {
 
 }
 
-ShotTry::ShotTry() : ShotTry(0, 0, 0) {
+ShotTry::ShotTry() : ShotTry(0, 0) {
 
 }
 
@@ -15,4 +14,12 @@ void ShotTry::setScore(double score) {
 
 double ShotTry::getScore() const {
     return _score;
+}
+
+double ShotTry::getAngle() const {
+    return _angle;
+}
+
+double ShotTry::getPower() const {
+    return _power;
 }

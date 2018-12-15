@@ -18,26 +18,23 @@ ShootingSimulator2019::ShootingSimulator2019(IObservable<CollisionEvent> &collis
 void ShootingSimulator2019::tryHitting(const PositionComponent &target, const PositionComponent &fromPosition) {
     _target = &target;
     _fromPosition = &fromPosition;
-    _currentPower = _minPower;
-    generateProjectile(_minPower, _minYVelocity);
-    generateProjectile(_minPower, _minYVelocity);
+    //generateProjectile(ShotTry{_minAngle, _minPower});
+    //generateProjectile(ShotTry{_minAngle, _minPower});
+    generateProjectile(ShotTry{_maxAngle, _maxPower});
 }
 
-int ShootingSimulator2019::generateProjectile(double power, double yVelocity) {
+int ShootingSimulator2019::generateProjectile(ShotTry shotTry) {
     int projectileWidth = 11;
     int projectileHeight = 32;
-    int initVelocity = 250;
-    double velocityX = _target->X > _fromPosition->X ? initVelocity : -initVelocity;
-    double velocityY = yVelocity;
 
-    // shooting in a circle
-    double totalLength = sqrt(velocityX * velocityX + velocityY * velocityY);
-    double length = totalLength > 150 ? 150 : totalLength;
-    double scale = length / totalLength;
+    //double velocityX = _target->X > _fromPosition->X ? initVelocity : -initVelocity;
+    double radianAngle = shotTry.getAngle() * M_PI / 180.0;
+    double power = shotTry.getPower();
+    double velocityY = -1 * std::round(cos(radianAngle) * 150 * 100) / 100;
+    double velocityX = std::round(sin(radianAngle) * 150 * 100) / 100;
+    velocityX = _target->X > _fromPosition->X ? velocityX : -velocityX;
 
-    velocityX *= scale;
-    velocityY *= scale;
-
+    std::cout << "Angle: " << shotTry.getAngle() << ", power: " << shotTry.getAngle() << std::endl;
     std::cout << "velocityX: " << velocityX << ", velocityY: " << velocityY << ", power: " << power << std::endl;
     int posX = _fromPosition->X;
     int posY = _fromPosition->Y;
@@ -50,6 +47,7 @@ int ShootingSimulator2019::generateProjectile(double power, double yVelocity) {
     // Remaining default checks
     if (velocityY < 0) posY -= projectileHeight + 1;
 
+    std::cout << "Carrot spawn position: " << posX << ", " << posY << std::endl;
     const double speedModifier = 2.5;
 
     int projectile = _entityManager->createEntity();
@@ -64,7 +62,7 @@ int ShootingSimulator2019::generateProjectile(double power, double yVelocity) {
     _entityManager->addComponentToEntity<GravityComponent>(projectile, 6 * speedModifier);
     _entityManager->addComponentToEntity<MoveComponent>(projectile, (power / 20) * velocityX * speedModifier,
                                                         (power / 20) * velocityY * speedModifier);
-    _shootingTries[projectile] = ShotTry{velocityX, velocityY, power};
+    _shootingTries[projectile] = shotTry;
     return projectile;
 }
 
@@ -77,19 +75,15 @@ void ShootingSimulator2019::handleCollisionEvent(const CollisionEvent &collision
     }
     int projectileId = projectile->first;
     _entityManager->getComponentFromEntity<DamageableComponent>(projectileId)->destroy();
-
+    ShotTry &shotTry = projectile->second;
     //calculate score of projectile
     auto collisionPosition = _entityManager->getComponentFromEntity<PositionComponent>(otherEntity);
-    projectile->second.setScore(100);
+    shotTry.setScore(100);
 
-    if (_currentPower + _powerIncrease <= _maxPower)
-        generateProjectile(_currentPower + _powerIncrease, _currentYVelocity);
-    if (_currentYVelocity + _yVelocityIncrease >= _maxYVelocity) {
-        generateProjectile(_currentPower, _currentYVelocity + _yVelocityIncrease);
-        _currentYVelocity -= _yVelocityIncrease;
-    }
-    if (_currentPower + _powerIncrease <= _maxPower)
-        _currentPower += _powerIncrease;
+    /*if (shotTry.getPower() + _powerIncrease <= _maxPower)
+        generateProjectile(ShotTry{shotTry.getAngle(), shotTry.getPower() + _powerIncrease});
+    if (shotTry.getAngle() + _angleIncrease <= _maxAngle)
+        generateProjectile(ShotTry{shotTry.getAngle() + _angleIncrease, shotTry.getPower()});*/
 }
 
 bool ShootingSimulator2019::canHandle(const CollisionEvent &collisionEvent) {

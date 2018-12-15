@@ -39,3 +39,9 @@ PositionComponent::PositionComponent(const PositionComponent& other) {
     X = other.X;
     Y = other.Y;
 }
+
+PositionComponent &PositionComponent::operator=(const PositionComponent &other) {
+    X = other.X;
+    Y = other.Y;
+    return *this;
+}

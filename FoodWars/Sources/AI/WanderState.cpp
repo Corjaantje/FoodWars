@@ -2,11 +2,8 @@
 #include "../../Headers/AI/WanderState.h"
 #include "../../Headers/GameECS/Systems/AISystem.h"
 #include "../../Headers/AI/IdleState.h"
-#include "../../Headers/GameECS/Components/DamagingComponent.h"
 #include "../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../Headers/AI/AttackState.h"
-#include <iostream>
-#include <math.h>
 
 void WanderState::enter() {
     std::cout << "Entering scavenge state" << std::endl;
@@ -81,7 +78,9 @@ void WanderState::handleCollisionEvent(const CollisionEvent &collisionEvent) {
         // Attack obstruction
         auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(obstructionId);
         auto targetDamageable = _entityManager->getComponentFromEntity<DamageableComponent>(obstructionId);
-        _aiComponent->setCurrentState(std::make_unique<AttackState>(*_entityManager, _entityId, *targetPosition, *targetDamageable, *_context));
+        _aiComponent->setCurrentState(
+                std::make_unique<AttackState>(*_entityManager, _entityId, obstructionId, *targetPosition,
+                                              *targetDamageable, *_context));
         return;
     }
 }

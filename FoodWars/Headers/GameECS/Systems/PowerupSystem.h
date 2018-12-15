@@ -14,7 +14,8 @@ private:
     EntityManager *_entityManager;
 public:
     PowerupSystem(IObservable<CollisionEvent> &collisionEventObservable, IObservable<TurnSwitchedEvent> &turnSwitchedEventObservable, EntityManager &entityManager);
-    ~PowerupSystem() = default;
+
+    ~PowerupSystem() override = default;
 
     bool canHandle(const CollisionEvent& collisionEvent) override;
     void handleCollisionEvent(const CollisionEvent& collisionEvent) override;

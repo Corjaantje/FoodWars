@@ -1,14 +1,8 @@
-#include <unistd.h>
+
 #include "../../../Headers/GameECS/Systems/ShootingSystem.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
-#include "../../../Headers/GameECS/Components/DamageableComponent.h"
-#include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeLine.h"
-#include <cmath>
-#include "../../../Headers/GameECS/Components/DamagingComponent.h"
-#include "../../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
-#include "../../../Headers/GameECS/Components/AIComponent.h"
 
 
 ShootingSystem::ShootingSystem(EntityManager &entityManager,
@@ -18,6 +12,7 @@ ShootingSystem::ShootingSystem(EntityManager &entityManager,
         _audioFacade(&audioFacade),
         _entityManager{&entityManager},
         _visualFacade{&visualFacade},
+        _projectileBuilder{entityManager},
         _projectileFired{false},
         _projectile{-1},
         _timePassed{0},
@@ -89,7 +84,8 @@ void ShootingSystem::update(const MouseEvent& event) {
 
                 // shooting in a circle
                 double totalLength = sqrt(deltaX * deltaX + deltaY * deltaY);
-                double length = totalLength > 150 ? 150 : totalLength;
+                double length =
+                        totalLength > _projectileBuilder.maxVeloctiy ? _projectileBuilder.maxVeloctiy : totalLength;
                 double scale = length / totalLength;
 
                 deltaX *= scale;
@@ -220,37 +216,16 @@ void ShootingSystem::setPlayerTurn() {
 
 void ShootingSystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
                                 double velocityX, double velocityY, Weapon* selectedWeapon, int playerCenterX, int playerCenterY) {
-    _projectile = _entityManager->createEntity();
-    int projectileWidth = 11;
-    int projectileHeight = 32;
-    int posX = playerCenterX;
-    int posY = playerCenterY;
-    // Checks for shooting down
-    if (velocityX > 0 && velocityY > 70) posY = playerCenterY + (playerCollider.height / 2) + 1;
-    else if (velocityX <= 0 && velocityY > 70) posY = playerCenterY + (playerCollider.height / 2) + 1;
-        // Checks for shooting up
-    else if (velocityX > 0 && velocityY <= -70) posY = playerCenterY - (playerCollider.height / 2) - 1;
-    else if (velocityX <= 0 && velocityY <= -70) posY = playerCenterY - (playerCollider.height / 2) - 1;
-        // Remaining default checks
-    else if (velocityX > 0) posX = playerCenterX + (playerCollider.width / 2) + 1;
-    else if (velocityX <= 0) posX = playerCenterX - (playerCollider.width / 2) - (projectileWidth - 1);
-    if (velocityY < 0) posY -= projectileHeight + 1;
-
-    std::cout << "VelocityX: " << velocityX << ", VelocityY: " << velocityY << std::endl;
-
-    const double speedModifier = 2.5;
-
-    _entityManager->addComponentToEntity<DrawableComponent>(_projectile, std::make_unique<ShapeSprite>(projectileWidth,
-                                                                                                       projectileHeight,
-                                                                                                       posX, posY,
-                                                                                                       selectedWeapon->getImage()));
-    _entityManager->addComponentToEntity<PositionComponent>(_projectile, posX, posY);
-    _entityManager->addComponentToEntity<BoxCollider>(_projectile, projectileWidth, projectileHeight);
-    _entityManager->addComponentToEntity<DamagingComponent>(_projectile, 25, selectedWeapon->getFaction());
-    _entityManager->addComponentToEntity<DamageableComponent>(_projectile, 10);
-    _entityManager->addComponentToEntity<GravityComponent>(_projectile, 6 * speedModifier);
-    _entityManager->addComponentToEntity<MoveComponent>(_projectile, (_power / 20) * velocityX * speedModifier,
-                                                        (_power / 20) * velocityY * speedModifier);
+    _projectile = _projectileBuilder
+            .setPlayerPostion(playerPositionComponent)
+            .setPlayerCollider(playerCollider)
+            .setXVelocity(velocityX)
+            .setYVelocity(velocityY)
+            .setPower(_power)
+            .setWeapon(*selectedWeapon)
+            .setPlayerCenterX(playerCenterX)
+            .setPlayerCenterY(playerCenterY)
+            .build();
     selectedWeapon->lowerAmmo();
     _power = 0;
 }

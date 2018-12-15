@@ -2,13 +2,9 @@
 
 #include <iostream>
 #include "../../Headers/AI/IdleState.h"
-#include "../../Headers/GameECS/Components/AIComponent.h"
 #include "../../Headers/AI/WanderState.h"
 #include "../../Headers/AI/AttackState.h"
-#include "../../Headers/GameECS/Components/DrawableComponent.h"
-#include "../../../TonicEngine/Headers/Visual/Colour.h"
 #include <math.h>
-#include "../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 
 IdleState::IdleState(EntityManager &entityManager, int entityId, AISystem &context) : State(entityManager,
                                                                                             entityId,
@@ -53,7 +49,10 @@ void IdleState::execute(double dt) {
                 //if(selectedWeapon->getAmmo() <= 0) _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, target, *_context));
 
                 // Attack state
-                _aiComponent->setCurrentState(std::make_unique<AttackState>(*_entityManager, _entityId, *_targetPosition, *_entityManager->getComponentFromEntity<DamageableComponent>(iterator.first), *_context));
+                _aiComponent->setCurrentState(
+                        std::make_unique<AttackState>(*_entityManager, _entityId, iterator.first, *_targetPosition,
+                                                      *_entityManager->getComponentFromEntity<DamageableComponent>(
+                                                              iterator.first), *_context));
             }
             return;
         }

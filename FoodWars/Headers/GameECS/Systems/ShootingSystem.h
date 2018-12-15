@@ -11,6 +11,7 @@
 #include "../../../../TonicEngine/Headers/Audio/AudioFacade.h"
 #include "../Components/Collider/BoxCollider.h"
 #include "../../StateMachine/Misc/Weapon.h"
+#include "Misc/ProjectileBuilder.h"
 
 class ShootingSystem : public IBaseSystem, public IObserver<MouseEvent> {
 public:
@@ -39,6 +40,7 @@ private:
     EntityManager *_entityManager;
     Renderlist _renderList;
 
+    ProjectileBuilder _projectileBuilder;
     void resetShooting();
     void createShootingLine(int fromX, int fromY, int toX, int toY);
     void createPowerBar();

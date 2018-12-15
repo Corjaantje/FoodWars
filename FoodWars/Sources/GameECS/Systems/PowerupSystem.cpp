@@ -4,9 +4,7 @@
 #include "../../../Headers/GameECS/Components/PositionComponent.h"
 #include "../../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
-#include "../../../Headers/StateMachine/Misc/Coordinate.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
-#include "../../../Headers/GameECS/Components/ItemComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 
 PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservable, IObservable<TurnSwitchedEvent> &turnSwitchedEventObservable, EntityManager &entityManager)
@@ -36,7 +34,7 @@ void PowerupSystem::spawnDrop(const std::unordered_map<int, std::string> &dropMa
                                                             std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY,
                                                                                           name +
                                                                                           ".png"));
-    _entityManager->addComponentToEntity<BoxCollider>(dropID, dropWidth, dropHeight);
+    _entityManager->addComponentToEntity<BoxCollider>(dropID, dropWidth, dropHeight, true);
     _entityManager->addComponentToEntity<PositionComponent>(dropID, dropX, dropY);
     _entityManager->addComponentToEntity<GravityComponent>(dropID, 5);
 }

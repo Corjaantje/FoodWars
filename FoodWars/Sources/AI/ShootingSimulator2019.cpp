@@ -1,53 +1,73 @@
 #include <cmath>
 #include "../../Headers/AI/ShootingSimulator2019.h"
 #include "../../Headers/GameECS/Components/DrawableComponent.h"
-#include "../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../Headers/GameECS/Components/MoveComponent.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 
 ShootingSimulator2019::ShootingSimulator2019(IObservable<CollisionEvent> &collisionEventObservable,
-                                             EntityManager &entityManager) :
+                                             EntityManager &entityManager,
+                                             const std::function<void(const ShotTry &, bool)> &onShotFoundFunc) :
         CollisionEventHandler(collisionEventObservable),
+        _onShotFoundFunc{onShotFoundFunc},
         _entityManager{&entityManager},
         _target{nullptr} {
 
 }
 
-void ShootingSimulator2019::tryHitting(const PositionComponent &target, const PositionComponent &fromPosition) {
-    _target = &target;
-    _fromPosition = &fromPosition;
-    //generateProjectile(ShotTry{_minAngle, _minPower});
-    //generateProjectile(ShotTry{_minAngle, _minPower});
-    generateProjectile(ShotTry{_maxAngle, _maxPower});
+void ShootingSimulator2019::tryHitting(int playerId, int targetId) {
+    _playerId = playerId;
+    _targetId = targetId;
+    _target = _entityManager->getComponentFromEntity<PositionComponent>(targetId);
+    _playerPosition = _entityManager->getComponentFromEntity<PositionComponent>(playerId);
+    _playerCollider = _entityManager->getComponentFromEntity<BoxCollider>(playerId);
+    _centerPlayerPosition = PositionComponent{(int) std::round(_playerPosition->X + _playerCollider->width / 2.0),
+                                              (int) std::round(_playerPosition->Y + _playerCollider->height / 2.0)};
+
+    _currentProjectiles = 0;
+    _maxProjectiles =
+            static_cast<int>(((_maxAngle - _minAngle) / _angleIncrease) * ((_maxPower - _minPower) / _powerIncrease));
+
+    double currentAngle = _minAngle;
+    while (currentAngle + _angleIncrease <= _maxAngle) {
+        generateProjectile(ShotTry{currentAngle, _minPower});
+        currentAngle += _angleIncrease;
+    }
 }
 
 int ShootingSimulator2019::generateProjectile(ShotTry shotTry) {
+    _currentProjectiles++;
+    //std::cout << "Current projectiles: " << _currentProjectiles << ", max: " << _maxProjectiles << std::endl;
     int projectileWidth = 11;
     int projectileHeight = 32;
 
-    //double velocityX = _target->X > _fromPosition->X ? initVelocity : -initVelocity;
+    //double velocityX = _target->X > _centerPlayerPosition->X ? initVelocity : -initVelocity;
     double radianAngle = shotTry.getAngle() * M_PI / 180.0;
     double power = shotTry.getPower();
     double velocityY = -1 * std::round(cos(radianAngle) * 150 * 100) / 100;
     double velocityX = std::round(sin(radianAngle) * 150 * 100) / 100;
-    velocityX = _target->X > _fromPosition->X ? velocityX : -velocityX;
+    velocityX = _target->X > _centerPlayerPosition.X ? velocityX : -velocityX;
+    shotTry.setYVeloctity(velocityY);
+    shotTry.setXVeloctity(velocityX);
 
-    std::cout << "Angle: " << shotTry.getAngle() << ", power: " << shotTry.getAngle() << std::endl;
-    std::cout << "velocityX: " << velocityX << ", velocityY: " << velocityY << ", power: " << power << std::endl;
-    int posX = _fromPosition->X;
-    int posY = _fromPosition->Y;
+    //std::cout << "Angle: " << shotTry.getAngle() << ", power: " << shotTry.getPower() << std::endl;
+    //std::cout << "velocityX: " << velocityX << ", velocityY: " << velocityY << ", power: " << power << std::endl;
+    int posX = _centerPlayerPosition.X;
+    int posY = _centerPlayerPosition.Y;
+
     // Checks for shooting down
-    if (velocityX > 0 && velocityY > 70) posY = _fromPosition->Y + 50;
-    else if (velocityX <= 0 && velocityY > 70) posY = _fromPosition->Y + 50;
+    if (velocityX > 0 && velocityY > 70) posY = _centerPlayerPosition.Y + (_playerCollider->height / 2) + 1;
+    else if (velocityX <= 0 && velocityY > 70) posY = _centerPlayerPosition.Y + (_playerCollider->height / 2) + 1;
         // Checks for shooting up
-    else if (velocityX > 0 && velocityY <= -70) posY = _fromPosition->Y - 50;
-    else if (velocityX <= 0 && velocityY <= -70) posY = _fromPosition->Y - 50;
-    // Remaining default checks
+    else if (velocityX > 0 && velocityY <= -70) posY = _centerPlayerPosition.Y - (_playerCollider->height / 2) - 1;
+    else if (velocityX <= 0 && velocityY <= -70) posY = _centerPlayerPosition.Y - (_playerCollider->height / 2) - 1;
+        // Remaining default checks
+    else if (velocityX > 0) posX = _centerPlayerPosition.X + (_playerCollider->width / 2) + 1;
+    else if (velocityX <= 0) posX = _centerPlayerPosition.X - (_playerCollider->width / 2) - (projectileWidth - 1);
     if (velocityY < 0) posY -= projectileHeight + 1;
 
-    std::cout << "Carrot spawn position: " << posX << ", " << posY << std::endl;
+    //std::cout << "Carrot spawn position: " << posX << ", " << posY << std::endl;
     const double speedModifier = 2.5;
 
     int projectile = _entityManager->createEntity();
@@ -76,19 +96,48 @@ void ShootingSimulator2019::handleCollisionEvent(const CollisionEvent &collision
     int projectileId = projectile->first;
     _entityManager->getComponentFromEntity<DamageableComponent>(projectileId)->destroy();
     ShotTry &shotTry = projectile->second;
-    //calculate score of projectile
-    auto collisionPosition = _entityManager->getComponentFromEntity<PositionComponent>(otherEntity);
-    shotTry.setScore(100);
+    if (shotTry.getScore() < 0) { //hit has not been processed yet
+        if (!mostSuccessfulShot) {
+            mostSuccessfulShot = &shotTry;
+        }
+        if (otherEntity == _targetId) {
+            shotTry.setScore(0);
+            mostSuccessfulShot = &shotTry;
+            _onShotFoundFunc(shotTry, true);
+        } else if (mostSuccessfulShot->getScore() !=
+                   0) { //no direct hit on target so calculate score, the lower the better
+            auto collisionPosition = _entityManager->getComponentFromEntity<PositionComponent>(otherEntity);
+            shotTry.setScore(std::abs(collisionPosition->X - _target->X) + std::abs(collisionPosition->Y - _target->Y));
+            if (shotTry.getScore() < mostSuccessfulShot->getScore()) {
+                mostSuccessfulShot = &shotTry;
+            }
 
-    /*if (shotTry.getPower() + _powerIncrease <= _maxPower)
-        generateProjectile(ShotTry{shotTry.getAngle(), shotTry.getPower() + _powerIncrease});
-    if (shotTry.getAngle() + _angleIncrease <= _maxAngle)
-        generateProjectile(ShotTry{shotTry.getAngle() + _angleIncrease, shotTry.getPower()});*/
+            if (shotTry.getPower() + _powerIncrease <= _maxPower) {
+                generateProjectile(ShotTry{shotTry.getAngle(), shotTry.getPower() + _powerIncrease});
+            } else if (_currentProjectiles >= _maxProjectiles)
+                _onShotFoundFunc(*mostSuccessfulShot, false);
+        }
+    }
 }
 
 bool ShootingSimulator2019::canHandle(const CollisionEvent &collisionEvent) {
     return (_shootingTries.find(collisionEvent.getEntity()) != _shootingTries.end() &&
             _shootingTries.find(collisionEvent.getOtherEntity()) == _shootingTries.end()) ||
            (_shootingTries.find(collisionEvent.getOtherEntity()) != _shootingTries.end() &&
-            _shootingTries.find(collisionEvent.getEntity()) == _shootingTries.end());
+            _shootingTries.find(collisionEvent.getEntity()) ==
+            _shootingTries.end()); //true when a projectile collides with something thats not a projectile
+}
+
+void ShootingSimulator2019::cleanup() {
+    _currentProjectiles = 0;
+    _maxProjectiles = 0;
+    for (const auto shot: _shootingTries) {
+        _entityManager->removeEntity(shot.first);
+    }
+    _shootingTries.clear();
+}
+
+ShootingSimulator2019::~ShootingSimulator2019() {
+    if (_currentProjectiles > 0)
+        this->cleanup();
 }

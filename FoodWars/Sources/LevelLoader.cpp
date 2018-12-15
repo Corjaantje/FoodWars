@@ -4,10 +4,8 @@
 #include "../Headers/GameECS/Components/MoveComponent.h"
 #include "../Headers/GameECS/Systems/StorageSystem.h"
 #include "../Headers/Storage/LevelStorage.h"
-#include "../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
-#include "../Headers/GameECS/Components/PlayerComponent.h"
 #include "../Headers/GameECS/Components/AIComponent.h"
-#include "../../TonicEngine/Headers/Storage/FileManager.h"
+
 LevelLoader::LevelLoader() = default;
 
 LevelLoader::~LevelLoader() = default;
@@ -69,6 +67,10 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne,
     int boundRight = entityManager->createEntity();
     entityManager->addComponentToEntity<BoxCollider>(boundRight, 900, 900);
     entityManager->addComponentToEntity<PositionComponent>(boundRight, 1600, 0);
+
+    int boundBottom = entityManager->createEntity();
+    entityManager->addComponentToEntity<BoxCollider>(boundBottom, 1600, 1600, true);
+    entityManager->addComponentToEntity<PositionComponent>(boundBottom, 0, 900);
 }
 
 void LevelLoader::replayLastLevel(GameLevel &gameLevel) {

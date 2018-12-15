@@ -1,6 +1,6 @@
 #include "../../Headers/AI/ShotTry.h"
 
-ShotTry::ShotTry(double angle, double power) : _angle{angle}, _power{power} {
+ShotTry::ShotTry(double angle, double power) : _angle{angle}, _power{power}, _score{-1}, _xVelocity{0}, _yVelocity{0} {
 
 }
 
@@ -22,4 +22,20 @@ double ShotTry::getAngle() const {
 
 double ShotTry::getPower() const {
     return _power;
+}
+
+void ShotTry::setXVeloctity(double xVelocity) {
+    _xVelocity = xVelocity;
+}
+
+void ShotTry::setYVeloctity(double yVelocity) {
+    _yVelocity = yVelocity;
+}
+
+double ShotTry::getXVelocity() const {
+    return _xVelocity;
+}
+
+double ShotTry::getYVelocity() const {
+    return _yVelocity;
 }

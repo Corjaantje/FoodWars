@@ -6,10 +6,20 @@ private:
     double _power;
     double _angle;
     double _score;
+    double _xVelocity;
+    double _yVelocity;
 public:
     ShotTry();
 
     ShotTry(double angle, double power);
+
+    void setXVeloctity(double xVelocity);
+
+    void setYVeloctity(double yVelocity);
+
+    double getXVelocity() const;
+
+    double getYVelocity() const;
 
     double getAngle() const;
 

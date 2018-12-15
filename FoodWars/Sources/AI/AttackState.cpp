@@ -6,17 +6,23 @@
 #include "../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../TonicEngine/Headers/Visual/Colour.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
-#include <math.h>
+#include "../../Headers/GameECS/Systems/Misc/ProjectileBuilder.h"
 
-AttackState::AttackState(EntityManager &entityManager, int entityId, const PositionComponent &targetPosition,
+AttackState::AttackState(EntityManager &entityManager, int entityId, int targetId,
+                         const PositionComponent &targetPosition,
                          const DamageableComponent &target,
                          AISystem &context) : State(entityManager,
                                                     entityId,
                                                     context),
                                               CollisionEventHandler(context.getCollisionEventObservable()),
+                                              _targetId{targetId},
                                               _targetPosition(targetPosition),
                                               _target{&target},
-                                              _shootingSimulator{context.getCollisionEventObservable(), entityManager} {
+                                              _shootingSimulator{context.getCollisionEventObservable(), entityManager,
+                                                                 [this](const ShotTry &shotTry, bool directHit) {
+                                                                     std::cout << "Shot found! " << std::endl;
+                                                                     shotFound(shotTry, directHit);
+                                                                 }} {
 
 }
 
@@ -41,42 +47,63 @@ void AttackState::execute(double dt) {
             _turnComponent->setRemainingTime(0);
             return;
         }
-        //todo: multiple angles
-        double centerX = _positionComponent->X + _boxCollider->width/2.0;
-        double centerY = _positionComponent->Y + _boxCollider->height/2.0;
-        double distance = std::abs(centerX - _targetPosition.X);
-        double force = -0.00024 * std::pow(distance, 2) + 0.47 * distance + 6.0;
-
-        //todo: Check Ammo count
-        auto playerComponent = _entityManager->getComponentFromEntity<PlayerComponent>(_entityId);
-        Weapon* selectedWeapon = playerComponent->getSelectedWeapon();
-
-        _shootingSimulator.tryHitting(_targetPosition, *_positionComponent);
-
-        for(int i = playerComponent->getAmountOFWeapons(); i > 0; i--){
-            selectedWeapon = playerComponent->getSelectedWeapon();
-            if(selectedWeapon->getAmmo() > 0) break;
-            playerComponent->setSelectedWeapon("next");
-        }
-
-        //todo: energy
-        if(selectedWeapon->getAmmo() <= 0 /*|| _entityManager->getComponentFromEntity<TurnComponent>(_entityId)->getEnergy() < 20*/) return;
-
-        _turnComponent->lowerEnergy(20);
-        /*_projectileId = _context->generateProjectile(*positionComponent,
-                                                 *_entityManager->getComponentFromEntity<BoxCollider>(_entityId), centerX > _targetPosition.X ? -force : force, force < 0 ? force : -force, selectedWeapon);
-        */_projectileFired = true;
+        if (!_canHitTarget) {
+            _shootingSimulator.tryHitting(_entityId, _targetId);
+        } else
+            fireProjectile(_directHit);
+        _projectileFired = true;
     }
 }
 
 void AttackState::exit() {
-
+    _shootingSimulator.cleanup();
 }
 
 void AttackState::handleCollisionEvent(const CollisionEvent &collisionEvent) {
     _projectileFired = false;
+    std::cout << "projectile collided!" << std::endl;
+    _projectileId = -1;
 }
 
 bool AttackState::canHandle(const CollisionEvent &collisionEvent) {
     return _projectileFired && (collisionEvent.getEntity() == _projectileId || collisionEvent.getOtherEntity() == _projectileId);
+}
+
+void AttackState::shotFound(ShotTry shotTry, bool directHit) {
+    _shootingSimulator.cleanup();
+    _canHitTarget = directHit;
+    if (_canHitTarget)
+        _directHit = shotTry;
+    fireProjectile(shotTry);
+}
+
+void AttackState::fireProjectile(const ShotTry &shotTry) {
+    std::cout << "Firing projectile..." << std::endl;
+    _projectileFired = true;
+    auto playerComponent = _entityManager->getComponentFromEntity<PlayerComponent>(_entityId);
+    Weapon *selectedWeapon = playerComponent->getSelectedWeapon();
+
+    for (int i = playerComponent->getAmountOFWeapons(); i > 0; i--) {
+        selectedWeapon = playerComponent->getSelectedWeapon();
+        if (selectedWeapon->getAmmo() > 0) break;
+        playerComponent->setSelectedWeapon("next");
+    }
+
+    //todo: energy
+    if (selectedWeapon->getAmmo() <=
+        0 /*|| _entityManager->getComponentFromEntity<TurnComponent>(_entityId)->getEnergy() < 20*/)
+        return;
+
+    _turnComponent->lowerEnergy(20);
+    selectedWeapon->lowerAmmo();
+    ProjectileBuilder projectileBuilder{*_entityManager};
+    _projectileId = projectileBuilder
+            .setShootingAngle(shotTry.getAngle())
+            .setYVelocity(shotTry.getYVelocity())
+            .setXVelocity(shotTry.getXVelocity())
+            .setPower(shotTry.getPower())
+            .setWeapon(*selectedWeapon)
+            .setPlayerCollider(*_boxCollider)
+            .setPlayerPostion(*_positionComponent)
+            .build();
 }

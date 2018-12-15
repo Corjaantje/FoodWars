@@ -10,6 +10,7 @@ ShootingSimulator2019::ShootingSimulator2019(IObservable<CollisionEvent> &collis
                                              EntityManager &entityManager,
                                              const std::function<void(const ShotTry &, bool)> &onShotFoundFunc) :
         CollisionEventHandler(collisionEventObservable),
+        _projectileBuilder{entityManager},
         _onShotFoundFunc{onShotFoundFunc},
         _entityManager{&entityManager},
         _target{nullptr} {
@@ -45,15 +46,24 @@ int ShootingSimulator2019::generateProjectile(ShotTry shotTry) {
     //double velocityX = _target->X > _centerPlayerPosition->X ? initVelocity : -initVelocity;
     double radianAngle = shotTry.getAngle() * M_PI / 180.0;
     double power = shotTry.getPower();
-    double velocityY = -1 * std::round(cos(radianAngle) * 150 * 100) / 100;
-    double velocityX = std::round(sin(radianAngle) * 150 * 100) / 100;
+    double velocityY = -1 * std::round(cos(radianAngle) * _projectileBuilder.maxVeloctiy * 100) / 100;
+    double velocityX = std::round(sin(radianAngle) * _projectileBuilder.maxVeloctiy * 100) / 100;
     velocityX = _target->X > _centerPlayerPosition.X ? velocityX : -velocityX;
     shotTry.setYVeloctity(velocityY);
     shotTry.setXVeloctity(velocityX);
 
+    int projectile = _projectileBuilder
+            .setPower(shotTry.getPower())
+            .setXVelocity(velocityX)
+            .setYVelocity(velocityY)
+            .isVirtual(true)
+            .setPlayerPostion(*_playerPosition)
+            .setPlayerCollider(*_playerCollider)
+            .build();
+
     //std::cout << "Angle: " << shotTry.getAngle() << ", power: " << shotTry.getPower() << std::endl;
     //std::cout << "velocityX: " << velocityX << ", velocityY: " << velocityY << ", power: " << power << std::endl;
-    int posX = _centerPlayerPosition.X;
+    /*int posX = _centerPlayerPosition.X;
     int posY = _centerPlayerPosition.Y;
 
     // Checks for shooting down
@@ -81,7 +91,7 @@ int ShootingSimulator2019::generateProjectile(ShotTry shotTry) {
     _entityManager->addComponentToEntity<DamageableComponent>(projectile, 10);
     _entityManager->addComponentToEntity<GravityComponent>(projectile, 6 * speedModifier);
     _entityManager->addComponentToEntity<MoveComponent>(projectile, (power / 20) * velocityX * speedModifier,
-                                                        (power / 20) * velocityY * speedModifier);
+                                                        (power / 20) * velocityY * speedModifier);*/
     _shootingTries[projectile] = shotTry;
     return projectile;
 }

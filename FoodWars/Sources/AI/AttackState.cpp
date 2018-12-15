@@ -98,7 +98,6 @@ void AttackState::fireProjectile(const ShotTry &shotTry) {
     selectedWeapon->lowerAmmo();
     ProjectileBuilder projectileBuilder{*_entityManager};
     _projectileId = projectileBuilder
-            .setShootingAngle(shotTry.getAngle())
             .setYVelocity(shotTry.getYVelocity())
             .setXVelocity(shotTry.getXVelocity())
             .setPower(shotTry.getPower())

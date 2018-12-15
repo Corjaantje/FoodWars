@@ -1,4 +1,5 @@
 
+#include <cmath>
 #include "../../../Headers/GameECS/Systems/ShootingSystem.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeLine.h"

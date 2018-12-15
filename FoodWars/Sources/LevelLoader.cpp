@@ -5,6 +5,7 @@
 #include "../Headers/GameECS/Systems/StorageSystem.h"
 #include "../Headers/Storage/LevelStorage.h"
 #include "../Headers/GameECS/Components/AIComponent.h"
+#include "../../TonicEngine/Headers/Storage/FileManager.h"
 
 LevelLoader::LevelLoader() = default;
 

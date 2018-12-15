@@ -6,10 +6,12 @@
 #include "../GameECS/Entities/EntityManager.h"
 #include "ShotTry.h"
 #include "../GameECS/Components/Collider/BoxCollider.h"
+#include "../GameECS/Systems/Misc/ProjectileBuilder.h"
 
 class ShootingSimulator2019 : public CollisionEventHandler {
 private:
     EntityManager *_entityManager;
+    ProjectileBuilder _projectileBuilder;
     int _currentProjectiles = 0;
     int _maxProjectiles = 0;
     std::unordered_map<int, ShotTry> _shootingTries;
@@ -21,7 +23,7 @@ private:
     double _maxPower = 50;
 
     double _minAngle = 0;
-    double _maxAngle = 90;
+    double _maxAngle = 135;
     double _angleIncrease = 10;
 
     int generateProjectile(ShotTry shotTry);

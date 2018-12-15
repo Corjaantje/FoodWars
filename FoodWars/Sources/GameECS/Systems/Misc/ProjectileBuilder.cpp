@@ -78,7 +78,7 @@ int ProjectileBuilder::build() {
     else if (_yVelocity <= -minVeloctiy) posY = _playerCenterY - (_collider->height / 2.0) - bulletSpawnOffset;
     // Remaining default checks
     if (_xVelocity >= minVeloctiy) posX = _playerCenterX + (_collider->width / 2.0) + bulletSpawnOffset;
-    else if (_xVelocity <= minVeloctiy)
+    else if (_xVelocity <= -minVeloctiy)
         posX = _playerCenterX - (_collider->width / 2.0) - projectileWidth - bulletSpawnOffset;
     if (_yVelocity < 0) posY -= projectileHeight + bulletSpawnOffset;
 
@@ -99,15 +99,18 @@ int ProjectileBuilder::build() {
                                                                                                         100}));
     _entityManager->addComponentToEntity<PositionComponent>(projectileId, posX, posY);
     _entityManager->addComponentToEntity<BoxCollider>(projectileId, projectileWidth, projectileHeight, _isVirtual);
-    if (_weapon)
+    if (_weapon && !_isVirtual)
         _entityManager->addComponentToEntity<DamagingComponent>(projectileId, damageOfProjectile,
                                                                 _weapon->getFaction());
-    else
+    else if (!_isVirtual)
         _entityManager->addComponentToEntity<DamagingComponent>(projectileId, damageOfProjectile);
     _entityManager->addComponentToEntity<DamageableComponent>(projectileId, healthOfProjectile);
     _entityManager->addComponentToEntity<GravityComponent>(projectileId, gravityModifier * speedModifier);
     _entityManager->addComponentToEntity<MoveComponent>(projectileId,
                                                         (_power / powerDivision) * _xVelocity * speedModifier,
                                                         (_power / powerDivision) * _yVelocity * speedModifier);
+
+    _playerCenterX = -1;
+    _playerCenterY = -1;
     return projectileId;
 }

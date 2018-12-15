@@ -26,7 +26,7 @@ public:
     const int projectileHeight = 32;
     const int bulletSpawnOffset = 2;
     const int maxVeloctiy = 150;
-    const int minVeloctiy = 70;
+    const int minVeloctiy = 10;
     const int maxPower = 50;
     const double powerDivision = 20;
     const double speedModifier = 2.5;

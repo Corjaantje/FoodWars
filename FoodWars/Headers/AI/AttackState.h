@@ -18,8 +18,7 @@ private:
 
     void fireProjectile(const ShotTry &shotTry);
 public:
-    AttackState(EntityManager &entityManager, int entityId, int targetId, const PositionComponent &targetPosition,
-                const DamageableComponent &target, AISystem &context);
+    AttackState(EntityManager &entityManager, int entityId, int targetId, const PositionComponent &targetPosition, const DamageableComponent &target, AISystem &context);
 
     ~AttackState() override = default;
 

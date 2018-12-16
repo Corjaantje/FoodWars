@@ -7,8 +7,16 @@
 #include "../GameECS/Components/AIComponent.h"
 
 class IdleState : public State {
+private:
+    std::string _previousState;
+
+    int getClosestItem();
+    double getDistanceToEnemy();
+    int getAmountOfAmmo();
+    int getEnemyHealth();
+    void chooseState();
 public:
-    IdleState(EntityManager& entityManager, int entityId, AISystem& context);
+    IdleState(EntityManager& entityManager, int entityId, std::string previousState, AISystem& context);
 
     ~IdleState() override = default;
 

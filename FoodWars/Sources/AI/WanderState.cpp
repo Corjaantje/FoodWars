@@ -14,9 +14,11 @@ void WanderState::execute(double dt) {
     if(!_turnComponent->isMyTurn()
     || _turnComponent->getRemainingTime() <= 0
     || _turnComponent->getEnergy() <= 0.0
-    || (_positionComponent->X <= _targetPosition.X && _positionComponent->X + _boxCollider->width >= _targetPosition.X)){
+    || (_positionComponent->X <= _targetPosition.X && _positionComponent->X + _boxCollider->width >= _targetPosition.X)
+    || !_target
+    || !_target->isAlive()) {
         // Idle state
-        _aiComponent->setCurrentState(std::make_unique<IdleState>(*_entityManager, _entityId, *_context));
+        _aiComponent->setCurrentState(std::make_unique<IdleState>(*_entityManager, _entityId, "wanderstate", *_context));
         return;
     }
     // If my turn, move towards target
@@ -27,10 +29,9 @@ void WanderState::exit() {
 
 }
 
-WanderState::WanderState(EntityManager &entityManager, int entityId, const PositionComponent& targetPosition, AISystem &context) : State(entityManager,
-                                                                                            entityId,
-                                                                                            context),
-                                                                                      CollisionEventHandler(context.getCollisionEventObservable()), _targetPosition(targetPosition) {
+WanderState::WanderState(EntityManager &entityManager, int entityId, const PositionComponent &targetPosition, const DamageableComponent &target, AISystem &context)
+                                                                                        : State(entityManager, entityId, context),
+                                                                                        CollisionEventHandler(context.getCollisionEventObservable()), _targetPosition(targetPosition), _target{&target}{
 
 }
 
@@ -61,7 +62,8 @@ void WanderState::moveToTarget(double dt){
 }
 
 bool WanderState::canHandle(const CollisionEvent &collisionEvent) {
-    return (collisionEvent.getCollisionAngle() <= 135 && collisionEvent.getCollisionAngle() >= 45) || (collisionEvent.getCollisionAngle() <= 315 && collisionEvent.getCollisionAngle() >= 225);
+    return ((collisionEvent.getCollisionAngle() <= 135 && collisionEvent.getCollisionAngle() >= 45) || (collisionEvent.getCollisionAngle() <= 315 && collisionEvent.getCollisionAngle() >= 225))
+    && (collisionEvent.getEntity() == _entityId || collisionEvent.getOtherEntity() == _entityId);
 }
 
 void WanderState::handleCollisionEvent(const CollisionEvent &collisionEvent) {

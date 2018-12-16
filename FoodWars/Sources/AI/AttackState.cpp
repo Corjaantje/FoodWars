@@ -39,7 +39,7 @@ void AttackState::execute(double dt) {
        || _turnComponent->getEnergy() <= 0.0
        || !_target
        || !_target->isAlive()) {
-        _aiComponent->setCurrentState(std::make_unique<IdleState>(*_entityManager, _entityId, *_context));
+        _aiComponent->setCurrentState(std::make_unique<IdleState>(*_entityManager, _entityId, "attackstate", *_context));
         return;
     }
     if (!_projectileFired) {
@@ -48,6 +48,7 @@ void AttackState::execute(double dt) {
             return;
         }
         if (!_canHitTarget) {
+            // todo: difficulty
             _shootingSimulator.tryHitting(_entityId, _targetId);
         } else
             fireProjectile(_directHit);

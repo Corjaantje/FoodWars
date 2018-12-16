@@ -3,17 +3,19 @@
 
 #include "State.h"
 #include "../GameECS/Components/TurnComponent.h"
+#include "../GameECS/Components/DamageableComponent.h"
 
 class WanderState : public State, public CollisionEventHandler {
 private:
-    int _walkingEnergyCostPerSecond = 20;
-
+    const int _walkingEnergyCostPerSecond = 20;
     PositionComponent _targetPosition;
+    const DamageableComponent* _target;
+
     void walkLeft(double dt);
     void walkRight(double dt);
     void moveToTarget(double dt);
 public:
-    WanderState(EntityManager& entityManager, int entityId, const PositionComponent& targetPosition, AISystem& context);
+    WanderState(EntityManager& entityManager, int entityId, const PositionComponent &targetPosition, const DamageableComponent &target, AISystem& context);
     ~WanderState() override = default;
 
     void enter() override;

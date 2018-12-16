@@ -101,13 +101,13 @@ int ProjectileBuilder::build() {
                                                                                               projectileHeight,
                                                                                               posX, posY,
                                                                                               _weapon->getImage()));
-    /* else
-         _entityManager->addComponentToEntity<DrawableComponent>(projectileId,
-                                                                 std::make_unique<ShapeRectangle>(projectileWidth,
-                                                                                                  projectileHeight,
-                                                                                                  posX, posY,
-                                                                                                  Colour{255, 0, 255,
-                                                                                                         100}));*/
+    else
+        _entityManager->addComponentToEntity<DrawableComponent>(projectileId,
+                                                                std::make_unique<ShapeRectangle>(projectileWidth,
+                                                                                                 projectileHeight,
+                                                                                                 posX, posY,
+                                                                                                 Colour{255, 0, 255,
+                                                                                                        100}));
     _entityManager->addComponentToEntity<PositionComponent>(projectileId, posX, posY);
     _entityManager->addComponentToEntity<BoxCollider>(projectileId, projectileWidth, projectileHeight, _isVirtual);
     if (_weapon && !_isVirtual)

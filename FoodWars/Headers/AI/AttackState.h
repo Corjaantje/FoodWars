@@ -5,6 +5,7 @@
 #include "../GameECS/Components/DamageableComponent.h"
 #include "ShootingSimulator2019.h"
 #include "../GameECS/Systems/Misc/LineDrawer.h"
+#include "../GameECS/Systems/Misc/PowerBar.h"
 
 class AttackState : public State, public CollisionEventHandler {
 private:
@@ -17,6 +18,7 @@ private:
     const DamageableComponent* _target;
     ShootingSimulator2019 _shootingSimulator;
     LineDrawer _shootingLine;
+    PowerBar _powerBar;
     double _timePassed = 0;
     void fireProjectile(const ShotTry &shotTry);
 public:

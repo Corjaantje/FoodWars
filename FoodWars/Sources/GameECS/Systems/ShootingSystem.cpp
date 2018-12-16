@@ -1,4 +1,3 @@
-
 #include <cmath>
 #include "../../../Headers/GameECS/Systems/ShootingSystem.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
@@ -17,16 +16,10 @@ ShootingSystem::ShootingSystem(EntityManager &entityManager,
         _projectileBuilder{entityManager},
         _projectileFired{false},
         _projectile{-1},
-        _timePassed{0},
         _mouseDown{false},
-        _powerBarX(0),
-        _powerBarY(0),
-        _power(0),
-        _risingPower(true),
         _currentPlayer(0),
         _otherPlayer(0),
-        _powerBarBackground(-1),
-        _powerBar(-1) {
+        _powerBar(entityManager) {
     inputFacade.getMouseEventObservable().registerObserver(this);
 }
 
@@ -35,7 +28,6 @@ void ShootingSystem::update(double deltaTime) {
     if (_projectileFired) {
         auto projectilePos = _entityManager->getComponentFromEntity<PositionComponent>(_projectile);
         auto projectileSize = _entityManager->getComponentFromEntity<BoxCollider>(_projectile);
-        auto projectileMove = _entityManager->getComponentFromEntity<MoveComponent>(_projectile);
 
         if ((projectilePos->X + projectileSize->width) >= 1590 || projectilePos->X <= 1
             || (projectilePos->Y + projectileSize->height) >= 890) {
@@ -43,14 +35,9 @@ void ShootingSystem::update(double deltaTime) {
             _entityManager->removeEntity(_projectile);
         }
     }
-    _timePassed += deltaTime;
 
-    if (_mouseDown) {
-        if(_timePassed >= 0.02) {
-            powerHandler();
-
-            _timePassed = 0;
-        }
+    if (_mouseDown && _powerBar.isVisible()) {
+        _powerBar.update(deltaTime);
     }
 }
 
@@ -71,13 +58,6 @@ void ShootingSystem::update(const MouseEvent& event) {
                 int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
                 int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
 
-                // Check if player is looking left or right to determine the x position of the powerbar
-                if (!_entityManager->getComponentFromEntity<AnimationComponent>(_currentPlayer)->getIsLookingLeft())
-                    _powerBarX = playerCenterX - 55;
-                else
-                    _powerBarX = playerCenterX + 35;
-                _powerBarY = playerCenterY - 25;
-
                 double deltaX = event.getXPosition() - playerCenterX;
                 double deltaY = event.getYPosition() - playerCenterY;
 
@@ -93,6 +73,11 @@ void ShootingSystem::update(const MouseEvent& event) {
                 double toX = playerCenterX + deltaX;
                 double toY = playerCenterY + deltaY;
 
+                if (!_powerBar.isVisible()) {
+                    _powerBar.show();
+                    _powerBar.lockToPlayer(_currentPlayer);
+                }
+
                 if (event.getMouseEventType() == MouseEventType::Down &&
                     event.getMouseClickType() == MouseClickType::Left) {
                     _shootingLine.setFromX(playerCenterX);
@@ -100,8 +85,6 @@ void ShootingSystem::update(const MouseEvent& event) {
                     _shootingLine.setToX(toX);
                     _shootingLine.setToY(toY);
                     _shootingLine.show();
-                    createPowerBar();
-                    _powerBar = _entityManager->createEntity();
                     _mouseDown = true;
                 }
 
@@ -133,38 +116,6 @@ void ShootingSystem::update(const MouseEvent& event) {
     }
 }
 
-void ShootingSystem::createPowerBar() {
-    _powerBarBackground = _entityManager->createEntity();
-    _entityManager->addComponentToEntity<DrawableComponent>(_powerBarBackground,
-                                                            std::make_unique<ShapeRectangle>(20, 50, _powerBarX, _powerBarY,
-                                                                    Colour(0, 0, 0, 0)));
-}
-
-void ShootingSystem::powerHandler() {
-    int width = 16;
-    int height = _power * -1;
-    int xPos = _powerBarX + 2;
-    int yPos = _powerBarY + 50;
-
-    if (!_risingPower) {
-        if (_power > 0) {
-            _entityManager->addComponentToEntity<DrawableComponent>(_powerBar,
-                                                                    std::make_unique<ShapeRectangle>(width, height, xPos, yPos, Colour(255, 0, 0, 0)));
-            _power--;
-        } else {
-            _risingPower = true;
-        }
-    } else {
-        if (_power < 50) {
-            _entityManager->addComponentToEntity<DrawableComponent>(_powerBar,
-                                                                    std::make_unique<ShapeRectangle>(width, height, xPos, yPos, Colour(255, 0, 0, 0)));
-            _power++;
-        } else {
-            _risingPower = false;
-        }
-    }
-
-}
 
 void ShootingSystem::toggleShooting() {
     if (!_projectileFired) {
@@ -183,9 +134,7 @@ void ShootingSystem::toggleShooting() {
 void ShootingSystem::resetShooting() {
     _mouseDown = false;
     _shootingLine.hide();
-    _power = 0;
-    _entityManager->removeEntity(_powerBarBackground);
-    _entityManager->removeEntity(_powerBar);
+    _powerBar.hide();
     _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->setIsShooting(false);
 }
 
@@ -213,11 +162,10 @@ void ShootingSystem::generateProjectile(const PositionComponent &playerPositionC
             .setPlayerCollider(playerCollider)
             .setXVelocity(velocityX)
             .setYVelocity(velocityY)
-            .setPower(_power)
+            .setPower(_powerBar.getPower())
             .setWeapon(*selectedWeapon)
             .setPlayerCenterX(playerCenterX)
             .setPlayerCenterY(playerCenterY)
             .build();
     selectedWeapon->lowerAmmo();
-    _power = 0;
 }

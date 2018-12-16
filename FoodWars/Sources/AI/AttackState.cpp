@@ -7,6 +7,7 @@
 #include "../../../TonicEngine/Headers/Visual/Colour.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 #include "../../Headers/GameECS/Systems/Misc/ProjectileBuilder.h"
+#include "../../Headers/GameECS/Systems/AISystem.h"
 
 AttackState::AttackState(EntityManager &entityManager, int entityId, int targetId,
                          const PositionComponent &targetPosition,
@@ -19,6 +20,7 @@ AttackState::AttackState(EntityManager &entityManager, int entityId, int targetI
                                               _targetPosition(targetPosition),
                                               _target{&target},
                                               _shootingLine{entityManager},
+                                              _powerBar{entityManager},
                                               _shootingSimulator{context.getCollisionEventObservable(), entityManager,
                                                                  [this](const ShotTry &shotTry, bool directHit) {
                                                                      shotFound(shotTry, directHit);
@@ -55,6 +57,12 @@ void AttackState::execute(double dt) {
         _timePassed = 0;
     } else {
         _timePassed += dt;
+        if (!_powerBar.isVisible()) {
+            _powerBar.show();
+            _powerBar.lockToPlayer(_entityId);
+        }
+        _powerBar.update(dt);
+
         if (_timePassed > 0.5) {
             ShotTry successfulShot = _shootingSimulator.getMostSuccessfulShot();
             double playerCenterX = _positionComponent->X + _boxCollider->width / 2.0;
@@ -71,6 +79,8 @@ void AttackState::execute(double dt) {
 
 void AttackState::exit() {
     _shootingSimulator.cleanup();
+    _powerBar.hide();
+    _shootingLine.hide();
 }
 
 void AttackState::handleCollisionEvent(const CollisionEvent &collisionEvent) {
@@ -85,6 +95,7 @@ bool AttackState::canHandle(const CollisionEvent &collisionEvent) {
 void AttackState::shotFound(ShotTry shotTry, bool directHit) {
     std::cout << "Shot found! " << (directHit ? "" : "no") << " directhit. Angle: " << shotTry.getAngle() << ", power: "
               << shotTry.getPower() << std::endl;
+    _powerBar.setPower(shotTry.getPower());
     _shootingSimulator.cleanup();
     _canHitTarget = directHit;
     if (_canHitTarget)
@@ -120,5 +131,7 @@ void AttackState::fireProjectile(const ShotTry &shotTry) {
             .setPlayerCollider(*_boxCollider)
             .setPlayerPostion(*_positionComponent)
             .build();
+    _context->getAudioFacade().playEffect("throwing");
     _shootingLine.hide();
+    _powerBar.hide();
 }

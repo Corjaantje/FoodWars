@@ -13,7 +13,8 @@ ShootingSimulator2019::ShootingSimulator2019(IObservable<CollisionEvent> &collis
         _projectileBuilder{entityManager},
         _onShotFoundFunc{onShotFoundFunc},
         _entityManager{&entityManager},
-        _target{nullptr} {
+        _target{nullptr},
+        _finishedFiringStartProjectiles{false} {
 
 }
 
@@ -26,11 +27,14 @@ void ShootingSimulator2019::tryHitting(int playerId, int targetId) {
     _centerPlayerPosition = PositionComponent{(int) std::round(_playerPosition->X + _playerCollider->width / 2.0),
                                               (int) std::round(_playerPosition->Y + _playerCollider->height / 2.0)};
 
+    _finishedFiringStartProjectiles = false;
     double currentAngle = _minAngle;
     while (currentAngle + _angleIncrease <= _maxAngle) {
         generateProjectile(ShotTry{currentAngle, _minPower});
+        generateProjectile(ShotTry{currentAngle, _maxPower});
         currentAngle += _angleIncrease;
     }
+    _finishedFiringStartProjectiles = true;
 }
 
 int ShootingSimulator2019::generateProjectile(ShotTry shotTry) {
@@ -77,9 +81,9 @@ void ShootingSimulator2019::handleCollisionEvent(const CollisionEvent &collision
             if (mostSuccessfulShot.getScore() < 0 || shotTry.getScore() < mostSuccessfulShot.getScore()) {
                 mostSuccessfulShot = shotTry;
             }
-            if (shotTry.getPower() + _powerIncrease <= _maxPower) {
+            if (shotTry.getPower() + _powerIncrease < _maxPower) {
                 generateProjectile(ShotTry{shotTry.getAngle(), shotTry.getPower() + _powerIncrease});
-            } else if (_shootingTries.empty())
+            } else if (_finishedFiringStartProjectiles && _shootingTries.empty())
                 _onShotFoundFunc(mostSuccessfulShot, false);
         }
     }

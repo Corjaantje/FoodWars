@@ -26,8 +26,8 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
     _systems.push_back(std::unique_ptr<TurnSystem>(_turnSystem));
     auto shootingSystem = new ShootingSystem{*_entityManager, *_audioFacade, *_visualFacade, *_inputFacade};
     _systems.push_back(std::unique_ptr<ShootingSystem>(shootingSystem));
-    _systems.push_back(std::make_unique<DamageableSystem>(*_entityManager, *_audioFacade, *collisionSystem));
     _systems.push_back(std::make_unique<AISystem>(*_entityManager, *_audioFacade, *collisionSystem));
+    _systems.push_back(std::make_unique<DamageableSystem>(*_entityManager, *_audioFacade, *collisionSystem));
     _systems.push_back(std::unique_ptr<CollisionSystem>(collisionSystem));
     _systems.push_back(std::make_unique<PowerupSystem>(*collisionSystem, *_turnSystem, *_entityManager));
     auto drawSystem = new DrawSystem{*_entityManager, *_visualFacade, *_inputFacade};
@@ -54,10 +54,10 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
         c->createOrSetActiveScreen<PauseScreen>();
     };
     _keyMap[KEY::KEY_PAGEUP] = [c = _context]() {
-        c->setTimeModifier(2.50);
+        c->setTimeModifier(c->getTimeModifier() + 0.2);
     };
     _keyMap[KEY::KEY_PAGEDOWN] = [c = _context]() {
-        c->setTimeModifier(0.40);
+        c->setTimeModifier(c->getTimeModifier() - 0.2);
     };
     _keyMap[KEY::KEY_HOME] = [c = _context]() {
         c->setTimeModifier(1.00);

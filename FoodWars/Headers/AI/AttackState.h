@@ -4,6 +4,7 @@
 #include "State.h"
 #include "../GameECS/Components/DamageableComponent.h"
 #include "ShootingSimulator2019.h"
+#include "../GameECS/Systems/Misc/LineDrawer.h"
 
 class AttackState : public State, public CollisionEventHandler {
 private:
@@ -15,7 +16,8 @@ private:
     PositionComponent _targetPosition;
     const DamageableComponent* _target;
     ShootingSimulator2019 _shootingSimulator;
-
+    LineDrawer _shootingLine;
+    double _timePassed = 0;
     void fireProjectile(const ShotTry &shotTry);
 public:
     AttackState(EntityManager &entityManager, int entityId, int targetId, const PositionComponent &targetPosition,

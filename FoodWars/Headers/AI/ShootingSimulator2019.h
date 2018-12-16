@@ -12,13 +12,11 @@ class ShootingSimulator2019 : public CollisionEventHandler {
 private:
     EntityManager *_entityManager;
     ProjectileBuilder _projectileBuilder;
-    int _currentProjectiles = 0;
-    int _maxProjectiles = 0;
     std::unordered_map<int, ShotTry> _shootingTries;
     int _playerId;
     int _targetId;
 
-    double _powerIncrease = 8;
+    double _powerIncrease = 20;
     double _minPower = 10;
     double _maxPower = 50;
 
@@ -33,7 +31,7 @@ private:
     const BoxCollider *_playerCollider;
     PositionComponent _centerPlayerPosition;
 
-    ShotTry *mostSuccessfulShot = nullptr;
+    ShotTry mostSuccessfulShot = ShotTry{90, _maxPower};
     std::function<void(const ShotTry &, bool)> _onShotFoundFunc;
 public:
     void handleCollisionEvent(const CollisionEvent &collisionEvent) override;
@@ -48,6 +46,8 @@ public:
     void tryHitting(int playerId, int targetId);
 
     void cleanup();
+
+    ShotTry getMostSuccessfulShot() const;
 };
 
 #endif //PROJECT_SWA_SHOOTINGSIMULATOR2019_H

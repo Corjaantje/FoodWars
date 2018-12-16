@@ -10,6 +10,7 @@ ShootingSystem::ShootingSystem(EntityManager &entityManager,
                                AudioFacade& audioFacade,
                                VisualFacade& visualFacade,
                                InputFacade& inputFacade) :
+        _shootingLine{entityManager},
         _audioFacade(&audioFacade),
         _entityManager{&entityManager},
         _visualFacade{&visualFacade},
@@ -25,10 +26,7 @@ ShootingSystem::ShootingSystem(EntityManager &entityManager,
         _currentPlayer(0),
         _otherPlayer(0),
         _powerBarBackground(-1),
-        _powerBar(-1),
-        _shootingLine(-1)
-
-{
+        _powerBar(-1) {
     inputFacade.getMouseEventObservable().registerObserver(this);
 }
 
@@ -97,22 +95,22 @@ void ShootingSystem::update(const MouseEvent& event) {
 
                 if (event.getMouseEventType() == MouseEventType::Down &&
                     event.getMouseClickType() == MouseClickType::Left) {
-
-                    createShootingLine(playerCenterX, playerCenterY, toX, toY);
+                    _shootingLine.setFromX(playerCenterX);
+                    _shootingLine.setFromY(playerCenterY);
+                    _shootingLine.setToX(toX);
+                    _shootingLine.setToY(toY);
+                    _shootingLine.show();
                     createPowerBar();
                     _powerBar = _entityManager->createEntity();
                     _mouseDown = true;
                 }
 
                 if (event.getMouseEventType() == MouseEventType::Drag) {
-                    if (!_entityManager->exists(_shootingLine))
-                        createShootingLine(playerCenterX, playerCenterY, toX, toY);
-                    auto drawable = _entityManager->getComponentFromEntity<DrawableComponent>(_shootingLine);
-                    auto line = static_cast<ShapeLine *>(drawable->getShape());
-                    line->xPos = playerCenterX;
-                    line->yPos = playerCenterY;
-                    line->xPos2 = toX;
-                    line->yPos2 = toY;
+                    _shootingLine.setFromX(playerCenterX);
+                    _shootingLine.setFromY(playerCenterY);
+                    _shootingLine.setToX(toX);
+                    _shootingLine.setToY(toY);
+                    _shootingLine.show();
                 }
 
                 if (event.getMouseEventType() == MouseEventType::Up &&
@@ -133,13 +131,6 @@ void ShootingSystem::update(const MouseEvent& event) {
             resetShooting();
         }
     }
-}
-
-void ShootingSystem::createShootingLine(int fromX, int fromY, int toX, int toY) {
-    _shootingLine = _entityManager->createEntity();
-    _entityManager->addComponentToEntity<DrawableComponent>(_shootingLine,
-                                                            std::make_unique<ShapeLine>(fromX, fromY, toX, toY,
-                                                                                        Colour(0, 0, 0, 0)));
 }
 
 void ShootingSystem::createPowerBar() {
@@ -191,10 +182,10 @@ void ShootingSystem::toggleShooting() {
 
 void ShootingSystem::resetShooting() {
     _mouseDown = false;
+    _shootingLine.hide();
     _power = 0;
     _entityManager->removeEntity(_powerBarBackground);
     _entityManager->removeEntity(_powerBar);
-    _entityManager->removeEntity(_shootingLine);
     _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->setIsShooting(false);
 }
 

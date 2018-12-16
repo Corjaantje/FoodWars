@@ -1,5 +1,7 @@
 #include <utility>
 
+#include <utility>
+
 #include <iostream>
 #include "../../Headers/AI/IdleState.h"
 #include "../../Headers/AI/WanderState.h"
@@ -8,7 +10,7 @@
 #include <math.h>
 
 IdleState::IdleState(EntityManager &entityManager, int entityId, std::string previousState, AISystem &context) : State(entityManager, entityId, context),
-                                                                                            _previousState(previousState) {
+                                                                                            _previousState(std::move(previousState)) {
 
 }
 
@@ -54,7 +56,7 @@ void IdleState::chooseState(){
         return;
 
     // Out of ammo
-    if((amountOfAmmo <= 0 && closestItem != -1) || getDistanceToPoint(closestItem) < 64){
+    if((amountOfAmmo <= 0 && closestItem > 0) || (closestItem > 0 && getDistanceToPoint(closestItem) < 64)){
         std::cout << "Out of ammo, grabbing item" << std::endl;
         auto itemPosition = _entityManager->getComponentFromEntity<PositionComponent>(closestItem);
         _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, *itemPosition, nullptr , *_context));
@@ -72,7 +74,7 @@ void IdleState::chooseState(){
         // Already attacked so < 20 energy
         else if(_previousState == "attackstate"){
             // Cant do much, try walking to the closest item
-            if(closestItem != -1){
+            if(closestItem > 0){
                 std::cout << "Tired, grabbing item" << std::endl;
                 _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, *_entityManager->getComponentFromEntity<PositionComponent>(closestItem), nullptr, *_context));
                 return;
@@ -97,7 +99,7 @@ void IdleState::chooseState(){
     // Over 700 range from enemy
     else if(distanceToEnemy > maxShootingRange) {
         // If item is within walking distance, 32 being a tile size, 4 being the energy spent walking per tile
-        if(closestItem != -1 && energy >= getDistanceToPoint(closestItem) / 32 * 4){
+        if(closestItem > 0 && energy >= getDistanceToPoint(closestItem) / 32 * 4){
             std::cout << "Far away, grabbing item" << std::endl;
             auto itemPosition = _entityManager->getComponentFromEntity<PositionComponent>(closestItem);
             _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, *itemPosition, nullptr , *_context));
@@ -122,7 +124,7 @@ int IdleState::getClosestItem(){
     for(const auto& iterator: _entityManager->getAllEntitiesWithComponent<ItemComponent>()) {
         auto itemPosition = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
         if(abs(_positionComponent->X - itemPosition->X) < 800 &&  abs(_positionComponent->Y - itemPosition->Y) <= 150) {
-            if(closestItem == -1) closestItem = iterator.first;
+            if(closestItem < 0) closestItem = iterator.first;
             else if(abs(_positionComponent->X - itemPosition->X) < abs(_positionComponent->X - _entityManager->getComponentFromEntity<PositionComponent>(closestItem)->X)) {
                 closestItem = iterator.first;
             }

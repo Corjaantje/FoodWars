@@ -53,7 +53,7 @@ void DamageableSystem::handleCollisionEvent(int projectileId, int targetId) {
 
     _audioFacade->playEffect("damage");
 
-    std::cout << "currentHP: " << target->getHealth() << std::endl;
+    //std::cout << "currentHP: " << target->getHealth() << std::endl;
 
     // Default point increase/decrease
     int iPoints = 10;

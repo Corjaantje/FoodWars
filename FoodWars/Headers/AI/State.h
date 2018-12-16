@@ -25,8 +25,6 @@ protected:
     BoxCollider* _boxCollider;
     MoveComponent* _moveComponent;
     AIComponent* _aiComponent;
-
-    std::shared_ptr<AudioFacade> _audioFacade;
     AISystem* _context;
 
     void jump(){

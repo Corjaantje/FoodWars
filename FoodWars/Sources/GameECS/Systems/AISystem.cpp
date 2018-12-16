@@ -66,3 +66,7 @@ void AISystem::update(double dt) {
 IObservable<CollisionEvent> &AISystem::getCollisionEventObservable() {
     return *_collisionEventObservable;
 }
+
+AudioFacade &AISystem::getAudioFacade() const {
+    return *_audioFacade;
+}

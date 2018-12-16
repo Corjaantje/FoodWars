@@ -13,6 +13,7 @@
 #include "../../StateMachine/Misc/Weapon.h"
 #include "Misc/ProjectileBuilder.h"
 #include "Misc/LineDrawer.h"
+#include "Misc/PowerBar.h"
 
 class ShootingSystem : public IBaseSystem, public IObserver<MouseEvent> {
 public:
@@ -23,16 +24,11 @@ public:
     void toggleShooting();
 private:
     LineDrawer _shootingLine;
+    PowerBar _powerBar;
     bool _projectileFired;
     bool _mouseDown;
     int _projectile;
-    int _powerBarX;
-    int _powerBarY;
-    double _power;
-    double _timePassed;
-    int _powerBarBackground;
-    int _powerBar;
-    bool _risingPower;
+
     int _currentPlayer;
     int _otherPlayer;
 
@@ -43,8 +39,6 @@ private:
 
     ProjectileBuilder _projectileBuilder;
     void resetShooting();
-    void createPowerBar();
-    void powerHandler();
     void setPlayerTurn();
     void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
                             double velocityX, double velocityY, Weapon* selectedWeapon, int playerCenterX, int playerCenterY);

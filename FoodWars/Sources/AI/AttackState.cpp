@@ -37,6 +37,7 @@ void AttackState::execute(double dt) {
     if(!_turnComponent->isMyTurn()
        || _turnComponent->getRemainingTime() <= 0
        || _turnComponent->getEnergy() <= 0.0
+       || !hasAmmo()
        || !_target
        || !_target->isAlive()) {
         _aiComponent->setCurrentState(std::make_unique<IdleState>(*_entityManager, _entityId, "attackstate", *_context));
@@ -81,19 +82,11 @@ void AttackState::shotFound(ShotTry shotTry, bool directHit) {
 void AttackState::fireProjectile(const ShotTry &shotTry) {
     std::cout << "Firing projectile..." << std::endl;
     _projectileFired = true;
+
     auto playerComponent = _entityManager->getComponentFromEntity<PlayerComponent>(_entityId);
     Weapon *selectedWeapon = playerComponent->getSelectedWeapon();
 
-    for (int i = playerComponent->getAmountOFWeapons(); i > 0; i--) {
-        selectedWeapon = playerComponent->getSelectedWeapon();
-        if (selectedWeapon->getAmmo() > 0) break;
-        playerComponent->setSelectedWeapon("next");
-    }
-
-    //todo: energy
-    if (selectedWeapon->getAmmo() <=
-        0 /*|| _entityManager->getComponentFromEntity<TurnComponent>(_entityId)->getEnergy() < 20*/)
-        return;
+    if(!hasAmmo()) return;
 
     _turnComponent->lowerEnergy(20);
     selectedWeapon->lowerAmmo();
@@ -106,4 +99,16 @@ void AttackState::fireProjectile(const ShotTry &shotTry) {
             .setPlayerCollider(*_boxCollider)
             .setPlayerPostion(*_positionComponent)
             .build();
+}
+
+bool AttackState::hasAmmo(){
+    auto playerComponent = _entityManager->getComponentFromEntity<PlayerComponent>(_entityId);
+    Weapon *selectedWeapon = playerComponent->getSelectedWeapon();
+
+    for (int i = playerComponent->getAmountOFWeapons(); i > 0; i--) {
+        selectedWeapon = playerComponent->getSelectedWeapon();
+        if (selectedWeapon->getAmmo() > 0) break;
+        playerComponent->setSelectedWeapon("next");
+    }
+    return selectedWeapon->getAmmo() > 0;
 }

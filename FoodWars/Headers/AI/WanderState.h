@@ -15,7 +15,7 @@ private:
     void walkRight(double dt);
     void moveToTarget(double dt);
 public:
-    WanderState(EntityManager& entityManager, int entityId, const PositionComponent &targetPosition, const DamageableComponent &target, AISystem& context);
+    WanderState(EntityManager& entityManager, int entityId, const PositionComponent &targetPosition, const DamageableComponent* target, AISystem& context);
     ~WanderState() override = default;
 
     void enter() override;

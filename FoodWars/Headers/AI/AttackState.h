@@ -16,6 +16,7 @@ private:
     const DamageableComponent* _target;
     ShootingSimulator2019 _shootingSimulator;
 
+    bool hasAmmo();
     void fireProjectile(const ShotTry &shotTry);
 public:
     AttackState(EntityManager &entityManager, int entityId, int targetId, const PositionComponent &targetPosition, const DamageableComponent &target, AISystem &context);

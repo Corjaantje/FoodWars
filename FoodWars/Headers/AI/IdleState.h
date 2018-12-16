@@ -10,8 +10,9 @@ class IdleState : public State {
 private:
     std::string _previousState;
 
+    int getEnemyId();
     int getClosestItem();
-    double getDistanceToEnemy();
+    double getDistanceToPoint(int target);
     int getAmountOfAmmo();
     int getEnemyHealth();
     void chooseState();

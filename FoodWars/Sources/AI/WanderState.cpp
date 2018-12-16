@@ -6,7 +6,7 @@
 #include "../../Headers/AI/AttackState.h"
 
 void WanderState::enter() {
-    std::cout << "Entering scavenge state" << std::endl;
+    std::cout << "Entering wandering state" << std::endl;
 }
 
 void WanderState::execute(double dt) {
@@ -14,9 +14,9 @@ void WanderState::execute(double dt) {
     if(!_turnComponent->isMyTurn()
     || _turnComponent->getRemainingTime() <= 0
     || _turnComponent->getEnergy() <= 0.0
+    || !_positionComponent
     || (_positionComponent->X <= _targetPosition.X && _positionComponent->X + _boxCollider->width >= _targetPosition.X)
-    || !_target
-    || !_target->isAlive()) {
+    || (_target != nullptr && !_target->isAlive())){
         // Idle state
         _aiComponent->setCurrentState(std::make_unique<IdleState>(*_entityManager, _entityId, "wanderstate", *_context));
         return;
@@ -29,9 +29,9 @@ void WanderState::exit() {
 
 }
 
-WanderState::WanderState(EntityManager &entityManager, int entityId, const PositionComponent &targetPosition, const DamageableComponent &target, AISystem &context)
+WanderState::WanderState(EntityManager &entityManager, int entityId, const PositionComponent &targetPosition, const DamageableComponent* target, AISystem &context)
                                                                                         : State(entityManager, entityId, context),
-                                                                                        CollisionEventHandler(context.getCollisionEventObservable()), _targetPosition(targetPosition), _target{&target}{
+                                                                                        CollisionEventHandler(context.getCollisionEventObservable()), _targetPosition(targetPosition), _target{target}{
 
 }
 

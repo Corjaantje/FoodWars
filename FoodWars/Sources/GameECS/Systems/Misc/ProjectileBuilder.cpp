@@ -72,17 +72,28 @@ int ProjectileBuilder::build() {
     }
     double posX = _playerCenterX;
     double posY = _playerCenterY;
-    // Check for shooting down
-    if (_yVelocity > minVeloctiy) posY = _playerCenterY + (_collider->height / 2.0) + bulletSpawnOffset;
-        // Checks for shooting up
-    else if (_yVelocity <= -minVeloctiy) posY = _playerCenterY - (_collider->height / 2.0) - bulletSpawnOffset;
-    // Remaining default checks
-    if (_xVelocity >= minVeloctiy) posX = _playerCenterX + (_collider->width / 2.0) + bulletSpawnOffset;
-    else if (_xVelocity <= -minVeloctiy)
-        posX = _playerCenterX - (_collider->width / 2.0) - projectileWidth - bulletSpawnOffset;
-    if (_yVelocity < 0) posY -= projectileHeight + bulletSpawnOffset;
 
-    std::cout << "VelocityX: " << _xVelocity << ", VelocityY: " << _yVelocity << ", power: " << _power << std::endl;
+    double radianAngle = atan(_yVelocity / fabs(_xVelocity));
+    double angle = (radianAngle * 180.0 / M_PI);
+
+    double posYAdjustment = 0;
+    if (angle < 0) posYAdjustment = std::round(
+                sin(radianAngle) * (projectileHeight * 1.5 + _collider->height / 2.0 + bulletSpawnOffset) * 100) /
+                                    100.0; //shooting up
+    else posYAdjustment = std::round(sin(radianAngle) * ((_collider->height / 2.0) * 1.5) * 100 + bulletSpawnOffset) /
+                          100.0; //shooting down
+
+    double posXAdjustment = 0;
+    if (_xVelocity < 0) posXAdjustment -= std::round(
+                cos(radianAngle) * (projectileWidth + _collider->width / 2.0 * 1.5 + bulletSpawnOffset) * 100) /
+                                          100.0; //shooting to left, take projectile collider into account
+    else posXAdjustment = std::round(cos(radianAngle) * (_collider->width / 2.0 * 1.5 + bulletSpawnOffset) * 100) /
+                          100.0; //shooting to right
+
+    posY += posYAdjustment;
+    posX += posXAdjustment;
+
+    //std::cout << "Angle: " << angle << ", VelocityX: " << _xVelocity << ", VelocityY: " << _yVelocity << ", power: " << _power << std::endl;
 
     if (!_isVirtual)
         _entityManager->addComponentToEntity<DrawableComponent>(projectileId,
@@ -90,13 +101,13 @@ int ProjectileBuilder::build() {
                                                                                               projectileHeight,
                                                                                               posX, posY,
                                                                                               _weapon->getImage()));
-    else
-        _entityManager->addComponentToEntity<DrawableComponent>(projectileId,
-                                                                std::make_unique<ShapeRectangle>(projectileWidth,
-                                                                                                 projectileHeight,
-                                                                                                 posX, posY,
-                                                                                                 Colour{255, 0, 255,
-                                                                                                        100}));
+    /* else
+         _entityManager->addComponentToEntity<DrawableComponent>(projectileId,
+                                                                 std::make_unique<ShapeRectangle>(projectileWidth,
+                                                                                                  projectileHeight,
+                                                                                                  posX, posY,
+                                                                                                  Colour{255, 0, 255,
+                                                                                                         100}));*/
     _entityManager->addComponentToEntity<PositionComponent>(projectileId, posX, posY);
     _entityManager->addComponentToEntity<BoxCollider>(projectileId, projectileWidth, projectileHeight, _isVirtual);
     if (_weapon && !_isVirtual)

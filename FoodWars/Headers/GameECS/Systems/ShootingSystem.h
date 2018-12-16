@@ -12,6 +12,7 @@
 #include "../Components/Collider/BoxCollider.h"
 #include "../../StateMachine/Misc/Weapon.h"
 #include "Misc/ProjectileBuilder.h"
+#include "Misc/LineDrawer.h"
 
 class ShootingSystem : public IBaseSystem, public IObserver<MouseEvent> {
 public:
@@ -21,6 +22,7 @@ public:
     void update(const MouseEvent& event) override;
     void toggleShooting();
 private:
+    LineDrawer _shootingLine;
     bool _projectileFired;
     bool _mouseDown;
     int _projectile;
@@ -28,7 +30,6 @@ private:
     int _powerBarY;
     double _power;
     double _timePassed;
-    int _shootingLine;
     int _powerBarBackground;
     int _powerBar;
     bool _risingPower;
@@ -42,7 +43,6 @@ private:
 
     ProjectileBuilder _projectileBuilder;
     void resetShooting();
-    void createShootingLine(int fromX, int fromY, int toX, int toY);
     void createPowerBar();
     void powerHandler();
     void setPlayerTurn();

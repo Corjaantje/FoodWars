@@ -24,9 +24,9 @@ public:
     // hardcoded values :/
     const int projectileWidth = 11;
     const int projectileHeight = 32;
-    const int bulletSpawnOffset = 2;
+    const int bulletSpawnOffset = 5;
     const int maxVeloctiy = 150;
-    const int minVeloctiy = 10;
+    const int minVeloctiy = 50;
     const int maxPower = 50;
     const double powerDivision = 20;
     const double speedModifier = 2.5;

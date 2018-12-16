@@ -18,9 +18,9 @@ AttackState::AttackState(EntityManager &entityManager, int entityId, int targetI
                                               _targetId{targetId},
                                               _targetPosition(targetPosition),
                                               _target{&target},
+                                              _shootingLine{entityManager},
                                               _shootingSimulator{context.getCollisionEventObservable(), entityManager,
                                                                  [this](const ShotTry &shotTry, bool directHit) {
-                                                                     std::cout << "Shot found! " << std::endl;
                                                                      shotFound(shotTry, directHit);
                                                                  }} {
 
@@ -54,6 +54,20 @@ void AttackState::execute(double dt) {
         } else
             fireProjectile(_directHit);
         _projectileFired = true;
+        _timePassed = 0;
+    } else {
+        _timePassed += dt;
+        if (_timePassed > 0.5) {
+            ShotTry successfulShot = _shootingSimulator.getMostSuccessfulShot();
+            double playerCenterX = _positionComponent->X + _boxCollider->width / 2.0;
+            double playerCenterY = _positionComponent->Y + _boxCollider->height / 2.0;
+            _shootingLine.setFromX(playerCenterX);
+            _shootingLine.setFromY(playerCenterY);
+            _shootingLine.setToX(playerCenterX + successfulShot.getXVelocity());
+            _shootingLine.setToY(playerCenterY + successfulShot.getYVelocity());
+            _shootingLine.show();
+            _timePassed = 0;
+        }
     }
 }
 
@@ -63,7 +77,6 @@ void AttackState::exit() {
 
 void AttackState::handleCollisionEvent(const CollisionEvent &collisionEvent) {
     _projectileFired = false;
-    std::cout << "projectile collided!" << std::endl;
     _projectileId = -1;
 }
 
@@ -72,6 +85,8 @@ bool AttackState::canHandle(const CollisionEvent &collisionEvent) {
 }
 
 void AttackState::shotFound(ShotTry shotTry, bool directHit) {
+    std::cout << "Shot found! " << (directHit ? "" : "no") << " directhit. Angle: " << shotTry.getAngle() << ", power: "
+              << shotTry.getPower() << std::endl;
     _shootingSimulator.cleanup();
     _canHitTarget = directHit;
     if (_canHitTarget)
@@ -80,7 +95,7 @@ void AttackState::shotFound(ShotTry shotTry, bool directHit) {
 }
 
 void AttackState::fireProjectile(const ShotTry &shotTry) {
-    std::cout << "Firing projectile..." << std::endl;
+    //std::cout << "Firing projectile, angle: " <<  shotTry.getAngle() << ", power: " << shotTry.getPower() << std::endl;
     _projectileFired = true;
 
     auto playerComponent = _entityManager->getComponentFromEntity<PlayerComponent>(_entityId);
@@ -99,6 +114,7 @@ void AttackState::fireProjectile(const ShotTry &shotTry) {
             .setPlayerCollider(*_boxCollider)
             .setPlayerPostion(*_positionComponent)
             .build();
+    _shootingLine.hide();
 }
 
 bool AttackState::hasAmmo(){

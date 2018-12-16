@@ -18,14 +18,8 @@ void ScreenStateManager::setWindowResolutionCalculator(const WindowResolutionCal
 }
 
 void ScreenStateManager::setTimeModifier(double modifiedTime) {
-    if (modifiedTime == 1)
+    if (modifiedTime >= 0 && modifiedTime <= 2.40)
         timeModifier = modifiedTime;
-    else {
-        double newTime = timeModifier * modifiedTime;
-
-        if (newTime >= 0.40 && newTime <= 2.50)
-            timeModifier = newTime;
-    }
 }
 
 double ScreenStateManager::getTimeModifier() const {

@@ -97,8 +97,8 @@ bool WanderState::canJumpOverObstruction(int obstructionId) {
         auto aiPosition = _entityManager->getComponentFromEntity<PositionComponent>(_entityId);
 
         if((positionComponent->X == obstructionPosition->X
-        && positionComponent-> Y >= obstructionPosition->Y - 64
-        && positionComponent->Y <= aiPosition->Y)){
+        && positionComponent->Y >= obstructionPosition->Y - 64
+        && (positionComponent->Y <= aiPosition->Y && !_entityManager->getComponentFromEntity<PlayerComponent>(obstructionId)))){
             // cant jump
             return false;
         }

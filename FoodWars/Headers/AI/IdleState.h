@@ -9,6 +9,8 @@
 class IdleState : public State {
 private:
     std::string _previousState;
+    int _playerCenterX = -1;
+    int _playerCenterY = -1;
 
     int getEnemyId();
     int getClosestItem();

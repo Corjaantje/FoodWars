@@ -22,7 +22,17 @@ void IdleState::execute(double dt) {
     // Stop walking
     _moveComponent->xVelocity = 0;
 
+    /** if in shooting range & kogels:
+     *      distance to powerup < 80 om op te pakken ander schieten
+     *  distance to power < 400
+     *      pak powerup
+     */
+
     // if my turn, calculate new state
+
+    _playerCenterX = static_cast<int>(std::round(_positionComponent->X + _boxCollider->width / 2.0));
+    _playerCenterY = static_cast<int>(std::round(_positionComponent->Y + _boxCollider->height / 2.0));
+
     if(_turnComponent->isMyTurn() && _turnComponent->getRemainingTime() > 0 && _turnComponent->getEnergy() > 0.0) {
         chooseState();
     }
@@ -56,10 +66,15 @@ void IdleState::chooseState(){
         return;
 
     // Out of ammo
-    if((amountOfAmmo <= 0 && closestItem > 0) || (closestItem > 0 && getDistanceToPoint(closestItem) < 64)){
+    if ((amountOfAmmo <= 0 && closestItem > 0) || (closestItem > 0 && getDistanceToPoint(closestItem) < 96)) {
         std::cout << "Out of ammo, grabbing item" << std::endl;
         auto itemPosition = _entityManager->getComponentFromEntity<PositionComponent>(closestItem);
-        _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, *itemPosition, nullptr , *_context));
+        auto itemCollider = _entityManager->getComponentFromEntity<BoxCollider>(closestItem);
+        int itemCenterX = static_cast<int>(itemPosition->X + itemCollider->width / 2.0);
+        int itemCenterY = static_cast<int>(itemPosition->Y + itemCollider->height / 2.0);
+        PositionComponent centerItemPosition{itemCenterX, itemCenterY};
+        _aiComponent->setCurrentState(
+                std::make_unique<WanderState>(*_entityManager, _entityId, centerItemPosition, nullptr, *_context));
         return;
     }
     // Within 700 range
@@ -72,21 +87,32 @@ void IdleState::chooseState(){
             return;
         }
         // Already attacked so < 20 energy
-        else if(_previousState == "attackstate"){
-            // Cant do much, try walking to the closest item
-            if(closestItem > 0){
-                std::cout << "Tired, grabbing item" << std::endl;
-                _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, *_entityManager->getComponentFromEntity<PositionComponent>(closestItem), nullptr, *_context));
-                return;
-            }
-            // Cant do anything, set energy to 0
-            else{
-                std::cout << "Tired, set energy to 0" << std::endl;
-                _turnComponent->setEnergy(0);
-            }
+            /*else if(_previousState == "attackstate"){
+                // Cant do much, try walking to the closest item
+                if(closestItem > 0){
+                    std::cout << "Tired, grabbing item" << std::endl;
+                    _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, *_entityManager->getComponentFromEntity<PositionComponent>(closestItem), nullptr, *_context));
+                    return;
+                }
+                // Cant do anything, set energy to 0
+                else{
+                    std::cout << "Tired, set energy to 0" << std::endl;
+                    _turnComponent->setEnergy(0);
+                }
+            }*/
+
+        else if (closestItem > 0) { // walk to closest item
+            auto itemPosition = _entityManager->getComponentFromEntity<PositionComponent>(closestItem);
+            auto itemCollider = _entityManager->getComponentFromEntity<BoxCollider>(closestItem);
+            int itemCenterX = static_cast<int>(itemPosition->X + itemCollider->width / 2.0);
+            int itemCenterY = static_cast<int>(itemPosition->Y + itemCollider->height / 2.0);
+            PositionComponent centerItemPosition{itemCenterX, itemCenterY};
+            _aiComponent->setCurrentState(
+                    std::make_unique<WanderState>(*_entityManager, _entityId, centerItemPosition, nullptr, *_context));
+            return;
         }
-        // Cant do anything, run away from enemy
-        else{
+            // Cant do anything, run away from enemy
+        else {
             /*_turnComponent->setEnergy(0);*/
             auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(enemyId);
             PositionComponent target{0, targetPosition->Y};
@@ -121,13 +147,18 @@ void IdleState::chooseState(){
 // returns closest item Id within 150x and 64y range
 int IdleState::getClosestItem(){
     int closestItem = -1;
+    double closestItemDistance = 1600;
     for(const auto& iterator: _entityManager->getAllEntitiesWithComponent<ItemComponent>()) {
         auto itemPosition = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
-        if(abs(_positionComponent->X - itemPosition->X) < 800 &&  abs(_positionComponent->Y - itemPosition->Y) <= 150) {
-            if(closestItem < 0) closestItem = iterator.first;
-            else if(abs(_positionComponent->X - itemPosition->X) < abs(_positionComponent->X - _entityManager->getComponentFromEntity<PositionComponent>(closestItem)->X)) {
-                closestItem = iterator.first;
-            }
+        auto itemCollider = _entityManager->getComponentFromEntity<BoxCollider>(iterator.first);
+        double itemCenterX = itemPosition->X + itemCollider->width / 2.0;
+        double itemCenterY = itemPosition->Y + itemCollider->height / 2.0;
+        double yDiff = itemCenterY - _playerCenterY;
+        if (yDiff < -45) continue; // item ligt boven de speler
+        double distance = abs(_playerCenterX - itemCenterX) + yDiff;
+        if (distance < closestItemDistance) {
+            closestItem = iterator.first;
+            closestItemDistance = distance;
         }
     }
     return closestItem;

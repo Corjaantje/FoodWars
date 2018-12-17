@@ -26,8 +26,11 @@ private:
     void callRender();
     void relinkAndSave();
     ShapeText* selectedSongText;
+    ShapeText* savingLevel;
     LevelBuilder _levelBuilder;
     const FileManager* _fileManager;
+    double _deltaTime;
+    bool countTime;
 };
 
 #endif //PROJECT_SWA_LEVELEDITORSCREEN_H

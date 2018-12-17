@@ -50,7 +50,7 @@ void DrawSystem::update(double dt) {
 void DrawSystem::drawNonComponents() {
     for (const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         if(iterator.second->isMyTurn()){
-            if(iterator.second->getRemainingTime() == 0.0){
+            if(iterator.second->getEnergy() < 1.0){
                 _renderList._shapes[2].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenGameSmallUI.png"));
             }
             else{

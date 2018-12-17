@@ -79,6 +79,8 @@ public:
 
     const GameLevel &getConstructedLevel() const;
     GameLevel &getConstructedLevelNonConst();
+
+    bool canBuildLevel();
 private:
     int roundXCoordToGrid(int x);
     int roundYCoordToGrid(int y);

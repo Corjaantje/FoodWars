@@ -68,20 +68,13 @@ void ShootingSystem::update(const MouseEvent& event) {
             Weapon *selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(
                     _currentPlayer)->getSelectedWeapon();
 
-            if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= 20 &&
+            if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost() &&
                 selectedWeapon->getAmmo() > 0) {
 
                 auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentPlayer);
                 auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(_currentPlayer);
                 int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
                 int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
-
-                // Check if player is looking left or right to determine the x position of the powerbar
-                if (!_entityManager->getComponentFromEntity<AnimationComponent>(_currentPlayer)->getIsLookingLeft())
-                    _powerBarX = playerCenterX - 55;
-                else
-                    _powerBarX = playerCenterX + 35;
-                _powerBarY = playerCenterY - 25;
 
                 double deltaX = event.getXPosition() - playerCenterX;
                 double deltaY = event.getYPosition() - playerCenterY;
@@ -102,7 +95,7 @@ void ShootingSystem::update(const MouseEvent& event) {
 
                     createShootingLine(playerCenterX, playerCenterY, toX, toY);
                     createPowerBar();
-                    _powerBar = _entityManager->createEntity();
+                    _powerBar = (_powerBar != -1) ? _powerBar : _entityManager->createEntity();
                     _mouseDown = true;
                 }
 
@@ -118,7 +111,7 @@ void ShootingSystem::update(const MouseEvent& event) {
                 }
 
                 if (event.getMouseEventType() == MouseEventType::Up &&
-                    event.getMouseClickType() == MouseClickType::Left) {
+                    event.getMouseClickType() == MouseClickType::Left && _mouseDown) {
                     generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY, selectedWeapon, playerCenterX, playerCenterY);
                     _projectileFired = true;
                     _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->lowerEnergy(20);
@@ -138,14 +131,25 @@ void ShootingSystem::update(const MouseEvent& event) {
 }
 
 void ShootingSystem::createShootingLine(int fromX, int fromY, int toX, int toY) {
-    _shootingLine = _entityManager->createEntity();
+    _shootingLine = (_shootingLine != -1) ? _shootingLine : _entityManager->createEntity();
     _entityManager->addComponentToEntity<DrawableComponent>(_shootingLine,
                                                             std::make_unique<ShapeLine>(fromX, fromY, toX, toY,
                                                                                         Colour(0, 0, 0, 0)));
 }
 
 void ShootingSystem::createPowerBar() {
-    _powerBarBackground = _entityManager->createEntity();
+    auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentPlayer);
+    auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(_currentPlayer);
+    int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
+    int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
+
+    // Check if player is looking left or right to determine the x position of the powerbar
+    if (!_entityManager->getComponentFromEntity<AnimationComponent>(_currentPlayer)->getIsLookingLeft())
+        _powerBarX = playerCenterX - 55;
+    else
+        _powerBarX = playerCenterX + 35;
+    _powerBarY = playerCenterY - 25;
+    _powerBarBackground = (_powerBarBackground != -1) ? _powerBarBackground : _entityManager->createEntity();
     _entityManager->addComponentToEntity<DrawableComponent>(_powerBarBackground,
                                                             std::make_unique<ShapeRectangle>(20, 50, _powerBarX, _powerBarY,
                                                                     Colour(0, 0, 0, 0)));
@@ -181,12 +185,16 @@ void ShootingSystem::toggleShooting() {
     if (!_projectileFired) {
         setPlayerTurn();
         auto playerTurn = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
-        if (playerTurn != nullptr) {
+        if (playerTurn != nullptr &&
+            _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeaponAvailability() > 0 &&
+            _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() > _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost()) {
             playerTurn->changeIsShooting();
             if (!playerTurn->getIsShooting())
                 resetShooting();
-            else
+            else {
+                createPowerBar();
                 _entityManager->getComponentFromEntity<MoveComponent>(_currentPlayer)->xVelocity = 0;
+            }
         }
     }
 }
@@ -195,8 +203,11 @@ void ShootingSystem::resetShooting() {
     _mouseDown = false;
     _power = 0;
     _entityManager->removeEntity(_powerBarBackground);
+    _powerBarBackground = -1;
     _entityManager->removeEntity(_powerBar);
+    _powerBar = -1;
     _entityManager->removeEntity(_shootingLine);
+    _shootingLine = -1;
     _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->setIsShooting(false);
 }
 

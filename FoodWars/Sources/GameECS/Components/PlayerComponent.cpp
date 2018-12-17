@@ -7,9 +7,9 @@ PlayerComponent::PlayerComponent() : PlayerComponent(0, Faction::WHITE) {
 }
 
 PlayerComponent::PlayerComponent(int id, Faction faction) : _playerID(id), _score(0), _selectedWeaponAvailability(5), _faction(faction), _isAlive{true} {
-    createWeapon<Weapon>("carrot.png", 5, Faction::GREEN);
-    createWeapon<Weapon>("ham.png", 5, Faction::RED);
-    createWeapon<Weapon>("candycane.png", 5, Faction::YELLOW);
+    createWeapon<Weapon>("carrot.png", 5, Faction::GREEN, 20);
+    createWeapon<Weapon>("ham.png", 5, Faction::RED, 20);
+    createWeapon<Weapon>("candycane.png", 5, Faction::YELLOW, 20);
     _selectedWeaponIndex = 0;
 }
 

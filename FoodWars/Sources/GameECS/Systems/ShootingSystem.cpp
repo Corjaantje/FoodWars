@@ -68,7 +68,7 @@ void ShootingSystem::update(const MouseEvent& event) {
             Weapon *selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(
                     _currentPlayer)->getSelectedWeapon();
 
-            if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= 20 &&
+            if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost() &&
                 selectedWeapon->getAmmo() > 0) {
 
                 auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentPlayer);

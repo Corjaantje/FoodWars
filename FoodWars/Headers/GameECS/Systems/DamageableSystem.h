@@ -17,7 +17,8 @@ public:
     ~DamageableSystem() override;
 
     bool canHandle(const CollisionEvent& collisionEvent) override;
-    void handleCollisionEvent(const CollisionEvent& collisionEvent) override;
+    void handleCollisionEvent(const CollisionEvent& collisionEvent) override {};
+    void handleCollisionEvent(int projectileId, int targetId);
     void update(double deltaTime) override;
 
 };

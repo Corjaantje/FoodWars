@@ -31,25 +31,24 @@ void DamageableSystem::update(double deltaTime) {
 }
 
 bool DamageableSystem::canHandle(const CollisionEvent &collisionEvent) {
-    int target = collisionEvent.getEntity();
-    int projectile = collisionEvent.getOtherEntity();
-    return _entityManager->getComponentFromEntity<DamagingComponent>(target) &&
-           _entityManager->getComponentFromEntity<DamageableComponent>(projectile);
+    if(_entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getEntity()) && _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity()))
+        handleCollisionEvent(collisionEvent.getEntity(), collisionEvent.getOtherEntity());
+    else if(_entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getOtherEntity()) && _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity()))
+        handleCollisionEvent(collisionEvent.getOtherEntity(), collisionEvent.getEntity());
+    return false;
 }
 
-void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent) {
-    auto projectile = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getEntity());
-    auto projectileDamage = _entityManager->getComponentFromEntity<DamagingComponent>(collisionEvent.getEntity());
+
+void DamageableSystem::handleCollisionEvent(int projectileId, int targetId) {
+    auto projectile = _entityManager->getComponentFromEntity<DamageableComponent>(projectileId);
+    auto projectileDamage = _entityManager->getComponentFromEntity<DamagingComponent>(projectileId);
     projectile->destroy();
-    auto target = _entityManager->getComponentFromEntity<DamageableComponent>(collisionEvent.getOtherEntity());
-    auto player = _entityManager->getComponentFromEntity<PlayerComponent>(collisionEvent.getOtherEntity());
+    auto target = _entityManager->getComponentFromEntity<DamageableComponent>(targetId);
+    auto player = _entityManager->getComponentFromEntity<PlayerComponent>(targetId);
 
     int damage = 0;
-    if (player == nullptr) {
-        damage = projectileDamage->getDamage() - target->getResistance();
-    } else {
-        damage = _damageCalculator.calculateDamage(*projectileDamage, *target, *player);
-    }
+    if (player == nullptr)damage = projectileDamage->getDamage() - target->getResistance();
+    else damage = _damageCalculator.calculateDamage(*projectileDamage, *target, *player);
     if (damage > 0) target->lowerHealth(damage);
 
     _audioFacade->playEffect("damage");
@@ -59,20 +58,16 @@ void DamageableSystem::handleCollisionEvent(const CollisionEvent &collisionEvent
     // Default point increase/decrease
     int iPoints = 10;
     std::map<int, PlayerComponent*> players = _entityManager->getAllEntitiesWithComponent<PlayerComponent>();
-    for (auto const& player : _entityManager->getAllEntitiesWithComponent<PlayerComponent>())
-    {
-        if (player.first == collisionEvent.getOtherEntity())
-        {
+    for (auto const& player : _entityManager->getAllEntitiesWithComponent<PlayerComponent>()){
+        if (player.first == targetId) {
             player.second->addScore(-iPoints);
             iPoints = damage;
         }
     }
-
-    for (auto const& turn : _entityManager->getAllEntitiesWithComponent<TurnComponent>())
-    {
-        if (turn.second->isMyTurn())
-        {
+    for (auto const& turn : _entityManager->getAllEntitiesWithComponent<TurnComponent>()){
+        if (turn.second->isMyTurn()) {
             players[turn.first]->addScore(iPoints);
         }
     }
+    _entityManager->removeComponentFromEntity<DamagingComponent>(projectileId);
 }

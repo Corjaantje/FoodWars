@@ -10,20 +10,23 @@
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../../Headers/GameECS/Components/AnimationComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
+#include "../../../../TonicEngine/Headers/Storage/FileManager.h"
 
 PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservable, IObservable<TurnSwitchedEvent> &turnSwitchedEventObservable, EntityManager &entityManager)
         : CollisionEventHandler(collisionEventObservable), TurnSwitchedEventHandler(turnSwitchedEventObservable), _entityManager{&entityManager}, _itemFactory{ItemFactory{}}, _random{Random{}}{
     _itemMap[0] = "cake";
     _itemMap[1] = "painkiller";
-    spawnDrop(_itemMap);
+    _weaponMap[0] = "carrot";
+    _weaponMap[1] = "ham";
+    _weaponMap[2] = "candycane";
 }
 
 void PowerupSystem::spawnDrop(const std::unordered_map<int, std::string> &dropMap) {
 
     int dropX = _random.between(0, 1571);
     int dropY = 0;
-    int dropWidth = 29;
-    int dropHeight = 42;
+    int dropWidth = 48;
+    int dropHeight = 48;
 
     int dropID = _entityManager->createEntity();
     int dropChance = _random.between(0, dropMap.size()-1);
@@ -35,20 +38,19 @@ void PowerupSystem::spawnDrop(const std::unordered_map<int, std::string> &dropMa
                                                             std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY,
                                                                                           "", 3));
 
-    const int amountOfSprites = 3;
+    const int amountOfSprites = 6;
     std::vector<std::unique_ptr<IShape>> animationShapes{amountOfSprites};
-    //TODO: juiste sprites
-    animationShapes[0] = std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY, "carrot.png", 3);
-    animationShapes[1] = std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY, "ham.png", 3);
-    animationShapes[2] = std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY, "candycane.png", 3);
+    for (int i = 1; i < amountOfSprites; i++)
+    {
+        auto sprite = name + "0" + std::to_string(i) + ".png";
+        animationShapes[i] = std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY, sprite, 3);
+    }
 
     _entityManager->addComponentToEntity<AnimationComponent>(dropID, std::move(animationShapes), 0.1);
-
     _entityManager->addComponentToEntity<BoxCollider>(dropID, dropWidth, dropHeight);
     _entityManager->addComponentToEntity<PositionComponent>(dropID, dropX, dropY);
     _entityManager->addComponentToEntity<GravityComponent>(dropID, 5);
 }
-
 bool PowerupSystem::canHandle(const CollisionEvent &collisionEvent) {
     int player = collisionEvent.getEntity();
     int item = collisionEvent.getOtherEntity();
@@ -73,5 +75,9 @@ void PowerupSystem::update(double deltaTime) {
 }
 
 void PowerupSystem::handleTurnSwitchedEvent(const TurnSwitchedEvent &turnSwitchedEvent) {
-    spawnDrop(_itemMap);
+    Random random;
+    if (random.between(0,1) == 0) { spawnDrop(_itemMap);}
+    spawnDrop(_weaponMap);
 }
+
+

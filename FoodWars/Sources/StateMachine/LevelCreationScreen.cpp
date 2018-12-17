@@ -2,7 +2,7 @@
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 #include "../../Headers/Storage/LevelStorage.h"
 
-LevelCreationScreen::LevelCreationScreen(ScreenStateManager& context) : IScreen(context), selectedSong{"none"}
+LevelCreationScreen::LevelCreationScreen(ScreenStateManager& context) : IScreen(context), selectedSong{"none"}, countTime(false), _deltaTime(0.0)
 {
     _inputFacade->getKeyEventObservable().IObservable<KeyEvent>::registerObserver(this);
     _inputFacade->getMouseEventObservable().registerObserver(this);
@@ -13,11 +13,24 @@ LevelCreationScreen::LevelCreationScreen(ScreenStateManager& context) : IScreen(
 void LevelCreationScreen::initButtons() {
 
     //save attempt non const lvalue reference cannot bind to a temporary of type
-    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "settings.png",
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
             [this] () {
-                relinkAndSave();
+                if(_levelBuilder.canBuildLevel()){
+                        auto it = std::find(_sprites.begin(), _sprites.end(), savingLevel);
+                        if (it != _sprites.end()) {
+                            using std::swap;
+                            swap(*it, _sprites.back());
+                            _sprites.pop_back();
+                        }
+                        savingLevel = createShape<ShapeText>(10, 130, "Saving Level...", 0, 340, 45, Colour(255, 255, 255, 0));
+                        savingLevel->addToRender(&_renderList);
+                        //Force an update to render the loading level.
+                        this->update(0);
+                        countTime = true;
+                        relinkAndSave();
+                }
             },
-            50, 50, 0, 100,
+            50, 50, 0, 75,
             Colour{0,0,0,0});
 
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
@@ -167,6 +180,20 @@ void LevelCreationScreen::initButtons() {
 }
 
 void LevelCreationScreen::update(double deltaTime) {
+    if(countTime) {
+        _deltaTime += deltaTime;
+    }
+    if(savingLevel != nullptr && _deltaTime > 1){
+        auto it = std::find(_sprites.begin(), _sprites.end(), savingLevel);
+        if (it != _sprites.end()) {
+            using std::swap;
+            swap(*it, _sprites.back());
+            _sprites.pop_back();
+        }
+        countTime = false;
+        _deltaTime = 0;
+        callRender();
+    }
     _inputFacade->pollEvents();
 }
 

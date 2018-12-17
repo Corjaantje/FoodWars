@@ -270,3 +270,13 @@ GameLevel &LevelBuilder::getConstructedLevelNonConst() {
               << std::endl;
     return _gameLevel;
 }
+
+bool LevelBuilder::canBuildLevel() {
+    if(_spawnPoints.size() < 2){
+        return false;
+    }
+    if(_CoordinateEntityMap.size() < 8){
+        return false;
+    }
+    return true;
+}

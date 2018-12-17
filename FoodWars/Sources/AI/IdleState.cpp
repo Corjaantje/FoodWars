@@ -137,8 +137,9 @@ void IdleState::chooseState(){
             PositionComponent target{0, -1};
             if (targetPosition->X < _positionComponent->X) target.X = targetPosition->X +
                                                                       (_maxShootingRange - _boxCollider->width);
-            if (targetPosition->X > _positionComponent->X) target.X = targetPosition->X -
-                                                                      (_maxShootingRange - _boxCollider->width);
+            else if (targetPosition->X > _positionComponent->X)
+                target.X = targetPosition->X -
+                           (_maxShootingRange - _boxCollider->width);
             _aiComponent->setCurrentState(
                     std::make_unique<WanderState>(*_entityManager, _entityId, target, nullptr, *_context));
             return;
@@ -212,11 +213,15 @@ void IdleState::flee() {
     auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(_enemyId);
     PositionComponent target{0, -1};
     if (targetPosition->X > _positionComponent->X) //target rechts van speler
-        target.X = 6;
+        target.X = _boxCollider->width / 2.0;
     else
-        target.X = 1600 - (_boxCollider->width + 6);
+        target.X = 1600 - (_boxCollider->width + _boxCollider->width / 2.0);
 
     std::cout << "Tired, fleeing to: " << target.X << std::endl;
+    if (abs(_positionComponent->X - target.X) < _boxCollider->width) {
+        _turnComponent->setEnergy(0);
+        return;
+    }
     _aiComponent->setCurrentState(
             std::make_unique<WanderState>(*_entityManager, _entityId, target, nullptr, *_context));
 }

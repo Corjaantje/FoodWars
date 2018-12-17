@@ -4,15 +4,16 @@
 #include "State.h"
 #include "../GameECS/Components/TurnComponent.h"
 #include "../GameECS/Components/DamageableComponent.h"
+#include "../GameECS/Events/CollisionEventHandlerLamda.h"
 
 class WanderState : public State, public CollisionEventHandler {
 private:
     const int _walkingEnergyCostPerSecond = 20;
     PositionComponent _targetPosition;
     const DamageableComponent* _target;
-
     bool movedTarget;
     bool canReachTarget = true;
+
     void walkLeft(double dt);
     void walkRight(double dt);
     void moveToTarget(double dt);

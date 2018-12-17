@@ -66,7 +66,6 @@ void ShootingSimulator2019::handleCollisionEvent(const CollisionEvent &collision
         if (projectile == _shootingTries.end()) return;
     }
     int projectileId = projectile->first;
-    std::cout << projectileId << " collided." << std::endl;
     _entityManager->getComponentFromEntity<DamageableComponent>(projectileId)->destroy();
     ShotTry shotTry = projectile->second;
     _shootingTries.erase(projectileId);

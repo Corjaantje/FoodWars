@@ -68,17 +68,28 @@ void WanderState::moveToTarget(double dt) {
              (_targetPosition.Y + _boxCollider->width / 2.0) - _positionComponent->Y > 0) { //target is onder speler
         std::cout << "Change target" << std::endl;
         if (_targetPosition.X < _positionComponent->X) { //target links van speler
-            _targetPosition.X -= _boxCollider->width / 2.0 + 6;
+            _targetPosition.X -= _boxCollider->width;
         } else if (_targetPosition.X > _positionComponent->X)
-            _targetPosition.X += _boxCollider->width / 2.0 + 6;
+            _targetPosition.X += _boxCollider->width;
         movedTarget = true;
         moveToTarget(dt);
     } else { //kan niet bij het target
+        std::cout << "Can't reach target" << std::endl;
         canReachTarget = false;
     }
 }
 
 bool WanderState::canHandle(const CollisionEvent &collisionEvent) {
+    //check if collision with an item. When an item is picked up go to idle state
+    if ((collisionEvent.getOtherEntity() == _entityId &&
+         _entityManager->getComponentFromEntity<ItemComponent>(collisionEvent.getEntity())) ||
+        (collisionEvent.getEntity() == _entityId &&
+         _entityManager->getComponentFromEntity<ItemComponent>(collisionEvent.getOtherEntity()))) {
+        _aiComponent->setCurrentState(
+                std::make_unique<IdleState>(*_entityManager, _entityId, "wanderstate", *_context));
+        return false;
+    }
+
     return ((collisionEvent.getCollisionAngle() <= 135 && collisionEvent.getCollisionAngle() >= 45) ||
             (collisionEvent.getCollisionAngle() <= 315 && collisionEvent.getCollisionAngle() >= 225))
            && ((collisionEvent.getEntity() == _entityId &&
@@ -95,13 +106,14 @@ void WanderState::handleCollisionEvent(const CollisionEvent &collisionEvent) {
     int obstructionId;
     (collisionEvent.getEntity() == _entityId) ? obstructionId = collisionEvent.getOtherEntity()
                                               : obstructionId = collisionEvent.getEntity();
+    auto targetDamageable = _entityManager->getComponentFromEntity<DamageableComponent>(obstructionId);
 
     if (canJumpOverObstruction(obstructionId)) {
         jump();
-    } else if (_entityManager->getComponentFromEntity<PlayerComponent>(_entityId)->getTotalAmmoCount()) {
+    } else if (targetDamageable &&
+               _entityManager->getComponentFromEntity<PlayerComponent>(_entityId)->getTotalAmmoCount()) {
         // Attack obstruction
         auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(obstructionId);
-        auto targetDamageable = _entityManager->getComponentFromEntity<DamageableComponent>(obstructionId);
         _aiComponent->setCurrentState(
                 std::make_unique<AttackState>(*_entityManager, _entityId, obstructionId, *targetPosition,
                                               *targetDamageable, *_context));

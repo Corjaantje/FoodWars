@@ -30,10 +30,10 @@ AttackState::AttackState(EntityManager &entityManager, int entityId, int targetI
 
 void AttackState::enter() {
     std::cout << "Entering attack state" << std::endl;
-    int targetEntity = _entityManager->createEntity();
+    /*int targetEntity = _entityManager->createEntity();
     _entityManager->addComponentToEntity<PositionComponent>(targetEntity, _targetPosition.X, _targetPosition.Y);
     _entityManager->addComponentToEntity<DrawableComponent>(targetEntity, std::make_unique<ShapeRectangle>(10, 10, _targetPosition.X, _targetPosition.Y, Colour{255, 0, 0, 255}));
-}
+*/}
 
 void AttackState::execute(double dt) {
     if(!_turnComponent->isMyTurn()
@@ -95,8 +95,8 @@ bool AttackState::canHandle(const CollisionEvent &collisionEvent) {
 }
 
 void AttackState::shotFound(ShotTry shotTry, bool directHit) {
-    std::cout << "Shot found! " << (directHit ? "" : "no") << " directhit. Angle: " << shotTry.getAngle() << ", power: "
-              << shotTry.getPower() << std::endl;
+    /*std::cout << "Shot found! " << (directHit ? "" : "no") << " directhit. Angle: " << shotTry.getAngle() << ", power: "
+              << shotTry.getPower() << std::endl;*/
     _powerBar.setPower(shotTry.getPower());
     _shootingSimulator.cleanup();
     _canHitTarget = directHit;

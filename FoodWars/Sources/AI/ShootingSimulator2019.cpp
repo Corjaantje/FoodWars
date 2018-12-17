@@ -30,8 +30,8 @@ void ShootingSimulator2019::tryHitting(int playerId, int targetId) {
     _finishedFiringStartProjectiles = false;
     double currentAngle = _minAngle;
     while (currentAngle + _angleIncrease <= _maxAngle) {
-        generateProjectile(ShotTry{currentAngle, _minPower});
-        generateProjectile(ShotTry{currentAngle, _maxPower});
+        std::cout << "generate: " << generateProjectile(ShotTry{currentAngle, _minPower}) << std::endl;
+        std::cout << "generate: " << generateProjectile(ShotTry{currentAngle, _maxPower}) << std::endl;
         currentAngle += _angleIncrease;
     }
     _finishedFiringStartProjectiles = true;

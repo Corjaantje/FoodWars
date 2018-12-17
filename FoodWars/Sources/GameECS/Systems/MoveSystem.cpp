@@ -73,8 +73,8 @@ void MoveSystem::update(double dt) {
         auto *moveComponent = iterator.second;
         auto *positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
         if(positionComponent) {
-            positionComponent->X += dt * std::round(moveComponent->xVelocity);
-            positionComponent->Y += dt * std::round(moveComponent->yVelocity);
+            positionComponent->X += std::round(dt * moveComponent->xVelocity);
+            positionComponent->Y += std::round(dt * moveComponent->yVelocity);
             if (positionComponent->Y > 900) {
                 auto damageableComponent = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first);
                 if(damageableComponent) {

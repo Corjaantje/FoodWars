@@ -212,9 +212,9 @@ void IdleState::flee() {
     auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(_enemyId);
     PositionComponent target{0, -1};
     if (targetPosition->X > _positionComponent->X) //target rechts van speler
-        target.X = 2;
+        target.X = 6;
     else
-        target.X = 1600 - (_boxCollider->width + 2);
+        target.X = 1600 - (_boxCollider->width + 6);
 
     std::cout << "Tired, fleeing to: " << target.X << std::endl;
     _aiComponent->setCurrentState(

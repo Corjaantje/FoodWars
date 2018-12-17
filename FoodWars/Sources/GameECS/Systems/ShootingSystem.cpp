@@ -111,7 +111,7 @@ void ShootingSystem::update(const MouseEvent& event) {
                 }
 
                 if (event.getMouseEventType() == MouseEventType::Up &&
-                    event.getMouseClickType() == MouseClickType::Left) {
+                    event.getMouseClickType() == MouseClickType::Left && _mouseDown) {
                     generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY, selectedWeapon, playerCenterX, playerCenterY);
                     _projectileFired = true;
                     _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->lowerEnergy(20);
@@ -131,7 +131,7 @@ void ShootingSystem::update(const MouseEvent& event) {
 }
 
 void ShootingSystem::createShootingLine(int fromX, int fromY, int toX, int toY) {
-    _shootingLine = _entityManager->createEntity();
+    _shootingLine = (_shootingLine != -1) ? _shootingLine : _entityManager->createEntity();
     _entityManager->addComponentToEntity<DrawableComponent>(_shootingLine,
                                                             std::make_unique<ShapeLine>(fromX, fromY, toX, toY,
                                                                                         Colour(0, 0, 0, 0)));
@@ -185,7 +185,9 @@ void ShootingSystem::toggleShooting() {
     if (!_projectileFired) {
         setPlayerTurn();
         auto playerTurn = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
-        if (playerTurn != nullptr && _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeaponAvailability() > 0) {
+        if (playerTurn != nullptr &&
+            _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeaponAvailability() > 0 &&
+            _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() > _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost()) {
             playerTurn->changeIsShooting();
             if (!playerTurn->getIsShooting())
                 resetShooting();

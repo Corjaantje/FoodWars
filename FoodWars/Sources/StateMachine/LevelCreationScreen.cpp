@@ -22,12 +22,12 @@ void LevelCreationScreen::initButtons() {
                             swap(*it, _sprites.back());
                             _sprites.pop_back();
                         }
-                        savingLevel = createShape<ShapeText>(10, 130, "Saving Level...", 0, 340, 45, Colour(255, 255, 255, 0));
+                        relinkAndSave();
+                        savingLevel = createShape<ShapeText>(10, 130, "Saved Level!", 0, 260, 45, Colour(0, 0, 0, 0));
                         savingLevel->addToRender(&_renderList);
                         //Force an update to render the loading level.
                         this->update(0);
                         countTime = true;
-                        relinkAndSave();
                 }
             },
             50, 50, 0, 75,

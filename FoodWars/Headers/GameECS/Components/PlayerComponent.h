@@ -31,6 +31,8 @@ public:
 
     void addToWeaponType(const std::string &weaponType, int increaseBy);
 
+    int getTotalAmmoCount() const;
+
     void accept(SerializationVisitor &visitor) override;
 
     void accept(DeserializationVisitor &visitor) override;

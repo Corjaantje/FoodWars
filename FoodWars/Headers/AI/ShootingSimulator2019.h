@@ -13,7 +13,7 @@ private:
     EntityManager *_entityManager;
     ProjectileBuilder _projectileBuilder;
     std::unordered_map<int, ShotTry> _shootingTries;
-    bool _finishedFiringStartProjectiles;
+    std::vector<int> _projectileIds;
     int _playerId;
     int _targetId;
 

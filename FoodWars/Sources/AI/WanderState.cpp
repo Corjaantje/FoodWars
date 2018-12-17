@@ -68,9 +68,9 @@ void WanderState::moveToTarget(double dt) {
              (_targetPosition.Y + _boxCollider->width / 2.0) - _positionComponent->Y > 0) { //target is onder speler
         std::cout << "Change target" << std::endl;
         if (_targetPosition.X < _positionComponent->X) { //target links van speler
-            _targetPosition.X -= _boxCollider->width / 2.0;
+            _targetPosition.X -= _boxCollider->width / 2.0 + 6;
         } else if (_targetPosition.X > _positionComponent->X)
-            _targetPosition.X += _boxCollider->width / 2.0;
+            _targetPosition.X += _boxCollider->width / 2.0 + 6;
         movedTarget = true;
         moveToTarget(dt);
     } else { //kan niet bij het target
@@ -98,7 +98,7 @@ void WanderState::handleCollisionEvent(const CollisionEvent &collisionEvent) {
 
     if (canJumpOverObstruction(obstructionId)) {
         jump();
-    } else {
+    } else if (_entityManager->getComponentFromEntity<PlayerComponent>(_entityId)->getTotalAmmoCount()) {
         // Attack obstruction
         auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(obstructionId);
         auto targetDamageable = _entityManager->getComponentFromEntity<DamageableComponent>(obstructionId);
@@ -106,6 +106,8 @@ void WanderState::handleCollisionEvent(const CollisionEvent &collisionEvent) {
                 std::make_unique<AttackState>(*_entityManager, _entityId, obstructionId, *targetPosition,
                                               *targetDamageable, *_context));
         return;
+    } else {
+        _turnComponent->setEnergy(0.0);
     }
 }
 

@@ -13,8 +13,8 @@ ShootingSimulator2019::ShootingSimulator2019(IObservable<CollisionEvent> &collis
         _projectileBuilder{entityManager},
         _onShotFoundFunc{onShotFoundFunc},
         _entityManager{&entityManager},
-        _target{nullptr},
-        _finishedFiringStartProjectiles{false} {
+        _projectileIds{},
+        _target{nullptr} {
 
 }
 
@@ -27,14 +27,12 @@ void ShootingSimulator2019::tryHitting(int playerId, int targetId) {
     _centerPlayerPosition = PositionComponent{(int) std::round(_playerPosition->X + _playerCollider->width / 2.0),
                                               (int) std::round(_playerPosition->Y + _playerCollider->height / 2.0)};
 
-    _finishedFiringStartProjectiles = false;
     double currentAngle = _minAngle;
     while (currentAngle + _angleIncrease <= _maxAngle) {
-        std::cout << "generate: " << generateProjectile(ShotTry{currentAngle, _minPower}) << std::endl;
-        std::cout << "generate: " << generateProjectile(ShotTry{currentAngle, _maxPower}) << std::endl;
+        generateProjectile(ShotTry{currentAngle, _minPower});
+        generateProjectile(ShotTry{currentAngle, _maxPower});
         currentAngle += _angleIncrease;
     }
-    _finishedFiringStartProjectiles = true;
 }
 
 int ShootingSimulator2019::generateProjectile(ShotTry shotTry) {
@@ -55,6 +53,7 @@ int ShootingSimulator2019::generateProjectile(ShotTry shotTry) {
             .build();
 
     _shootingTries[projectile] = shotTry;
+    _projectileIds.push_back(projectile);
     return projectile;
 }
 
@@ -64,11 +63,14 @@ void ShootingSimulator2019::handleCollisionEvent(const CollisionEvent &collision
     if (projectile == _shootingTries.end()) {
         projectile = _shootingTries.find(collisionEvent.getOtherEntity());
         otherEntity = collisionEvent.getEntity();
+        if (projectile == _shootingTries.end()) return;
     }
     int projectileId = projectile->first;
+    std::cout << projectileId << " collided." << std::endl;
     _entityManager->getComponentFromEntity<DamageableComponent>(projectileId)->destroy();
     ShotTry shotTry = projectile->second;
     _shootingTries.erase(projectileId);
+
     if (shotTry.getScore() < 0) { //hit has not been processed yet
         if (otherEntity == _targetId) {
             shotTry.setScore(0);
@@ -83,18 +85,20 @@ void ShootingSimulator2019::handleCollisionEvent(const CollisionEvent &collision
             }
             if (shotTry.getPower() + _powerIncrease < _maxPower) {
                 generateProjectile(ShotTry{shotTry.getAngle(), shotTry.getPower() + _powerIncrease});
-            } else if (_finishedFiringStartProjectiles && _shootingTries.empty())
+            } else if (_shootingTries.empty())
                 _onShotFoundFunc(mostSuccessfulShot, false);
         }
     }
 }
 
 bool ShootingSimulator2019::canHandle(const CollisionEvent &collisionEvent) {
-    return (_shootingTries.find(collisionEvent.getEntity()) != _shootingTries.end() &&
-            _shootingTries.find(collisionEvent.getOtherEntity()) == _shootingTries.end()) ||
-           (_shootingTries.find(collisionEvent.getOtherEntity()) != _shootingTries.end() &&
-            _shootingTries.find(collisionEvent.getEntity()) ==
-            _shootingTries.end()); //true when a projectile collides with something thats not a projectile
+    bool entityIsProjectile =
+            std::find(_projectileIds.begin(), _projectileIds.end(), collisionEvent.getEntity()) != _projectileIds.end();
+    bool otherEntityIsProjectile =
+            std::find(_projectileIds.begin(), _projectileIds.end(), collisionEvent.getOtherEntity()) !=
+            _projectileIds.end();
+    return (entityIsProjectile && !otherEntityIsProjectile) || (!entityIsProjectile && otherEntityIsProjectile);
+    //true when a projectile collides with something thats not a projectile
 }
 
 void ShootingSimulator2019::cleanup() {
@@ -103,6 +107,7 @@ void ShootingSimulator2019::cleanup() {
         _entityManager->removeEntity(shot.first);
     }
     _shootingTries.clear();
+    _projectileIds.clear();
 }
 
 ShootingSimulator2019::~ShootingSimulator2019() {

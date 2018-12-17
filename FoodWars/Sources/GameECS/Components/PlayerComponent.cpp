@@ -1,5 +1,6 @@
 #include <utility>
 #include <algorithm>
+#include <numeric>
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 
 PlayerComponent::PlayerComponent() : PlayerComponent(0, Faction::WHITE) {
@@ -109,4 +110,10 @@ void PlayerComponent::accept(DeserializationVisitor &visitor) {
 
 std::string PlayerComponent::getName() const {
     return "PlayerComponent";
+}
+
+int PlayerComponent::getTotalAmmoCount() const {
+    return std::accumulate(_weapons.begin(), _weapons.end(), 0, [](int sum, const std::unique_ptr<Weapon> &weapon) {
+        return sum += weapon->getAmmo();
+    });;
 }

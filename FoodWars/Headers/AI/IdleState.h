@@ -8,9 +8,11 @@
 
 class IdleState : public State {
 private:
+    int _maxShootingRange = 700;
     std::string _previousState;
     int _playerCenterX = -1;
     int _playerCenterY = -1;
+    int _enemyId = -1;
 
     int getEnemyId();
     int getClosestItem();
@@ -18,6 +20,8 @@ private:
     int getAmountOfAmmo();
     int getEnemyHealth();
     void chooseState();
+
+    void flee();
 public:
     IdleState(EntityManager& entityManager, int entityId, std::string previousState, AISystem& context);
 

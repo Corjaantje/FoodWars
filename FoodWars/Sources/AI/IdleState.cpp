@@ -16,6 +16,7 @@ IdleState::IdleState(EntityManager &entityManager, int entityId, std::string pre
 
 void IdleState::enter() {
     std::cout << "Entering idle state" << std::endl;
+    _enemyId = getEnemyId();
 }
 
 void IdleState::execute(double dt) {
@@ -45,24 +46,22 @@ void IdleState::exit() {
 
 void IdleState::chooseState(){
     // Get necessary variables
-    int enemyId = getEnemyId();
     int closestItem = getClosestItem();
-    double distanceToEnemy = getDistanceToPoint(enemyId);
+    double distanceToEnemy = getDistanceToPoint(_enemyId);
     int amountOfAmmo = getAmountOfAmmo();
     double energy = _entityManager->getComponentFromEntity<TurnComponent>(_entityId)->getEnergy();
     int myHealth = _entityManager->getComponentFromEntity<DamageableComponent>(_entityId)->getHealth();
     int enemyHealth = getEnemyHealth();
-    int maxShootingRange = 700;
 
 
-    std::cout << "closestItem: " << closestItem << std::endl;
-    /*std::cout << "distanceToEnemy: " << distanceToEnemy << std::endl;
+    /*std::cout << "closestItem: " << closestItem << std::endl;
+    std::cout << "distanceToEnemy: " << distanceToEnemy << std::endl;
     std::cout << "amountOfAmmo: " << amountOfAmmo << std::endl;
     std::cout << "energy: " << energy << std::endl;
     std::cout << "myHealth: " << myHealth << std::endl;
     std::cout << "enemyHealth: " << enemyHealth << std::endl;*/
 
-    if(!_entityManager->getComponentFromEntity<PlayerComponent>(enemyId)->isAlive())
+    if (!_entityManager->getComponentFromEntity<PlayerComponent>(_enemyId)->isAlive())
         return;
 
     // Out of ammo
@@ -78,12 +77,15 @@ void IdleState::chooseState(){
         return;
     }
     // Within 700 range
-    else if(distanceToEnemy <= maxShootingRange) {
+    else if (distanceToEnemy <= _maxShootingRange + _boxCollider->height) {
         // Enough ammo and energy to shoot enemy
         if(amountOfAmmo > 0 && energy >= 20) {
             std::cout << "Attacking enemy" << std::endl;
-            auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(enemyId);
-            _aiComponent->setCurrentState(std::make_unique<AttackState>(*_entityManager, _entityId, enemyId, *targetPosition, *_entityManager->getComponentFromEntity<DamageableComponent>(enemyId), *_context));
+            auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(_enemyId);
+            _aiComponent->setCurrentState(
+                    std::make_unique<AttackState>(*_entityManager, _entityId, _enemyId, *targetPosition,
+                                                  *_entityManager->getComponentFromEntity<DamageableComponent>(
+                                                          _enemyId), *_context));
             return;
         }
         // Already attacked so < 20 energy
@@ -115,16 +117,12 @@ void IdleState::chooseState(){
             // Cant do anything, run away from enemy
         else {
             /*_turnComponent->setEnergy(0);*/
-            auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(enemyId);
-            PositionComponent target{0, targetPosition->Y};
-            target.X = targetPosition->X + (maxShootingRange + 100 - _boxCollider->width);
-            std::cout << "Tired, fleeing to: " << target.X << std::endl;
-            _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, target, nullptr, *_context));
+            flee();
             return;
         }
     }
     // Over 700 range from enemy
-    else if(distanceToEnemy > maxShootingRange) {
+    else if (distanceToEnemy > _maxShootingRange) {
         // If item is within walking distance, 32 being a tile size, 4 being the energy spent walking per tile
         if (closestItem > 0 && energy >= getDistanceToPoint(closestItem) / 32 * 5) {
             std::cout << "Far away, grabbing item" << std::endl;
@@ -133,13 +131,19 @@ void IdleState::chooseState(){
             return;
         }
         // Walk towards enemy
-        else {
+        else if (amountOfAmmo > 0) {
             std::cout << "Far away, walking towards enemy" << std::endl;
-            auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(enemyId);
-            PositionComponent target{0, targetPosition->Y};
-            if(targetPosition->X < _positionComponent->X) target.X = targetPosition->X + (maxShootingRange - _boxCollider->width);
-            if(targetPosition->X > _positionComponent->X) target.X = targetPosition->X - (maxShootingRange - _boxCollider->width);
-            _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, *targetPosition, _entityManager->getComponentFromEntity<DamageableComponent>(enemyId), *_context));
+            auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(_enemyId);
+            PositionComponent target{0, -1};
+            if (targetPosition->X < _positionComponent->X) target.X = targetPosition->X +
+                                                                      (_maxShootingRange - _boxCollider->width);
+            if (targetPosition->X > _positionComponent->X) target.X = targetPosition->X -
+                                                                      (_maxShootingRange - _boxCollider->width);
+            _aiComponent->setCurrentState(
+                    std::make_unique<WanderState>(*_entityManager, _entityId, target, nullptr, *_context));
+            return;
+        } else {
+            flee();
             return;
         }
     }
@@ -193,7 +197,7 @@ int IdleState::getAmountOfAmmo(){
 
 // Returns the enemy players health
 int IdleState::getEnemyHealth(){
-    return _entityManager->getComponentFromEntity<DamageableComponent>(getEnemyId())->getHealth();
+    return _entityManager->getComponentFromEntity<DamageableComponent>(_enemyId)->getHealth();
 }
 
 int IdleState::getEnemyId() {
@@ -202,4 +206,17 @@ int IdleState::getEnemyId() {
         return iterator.first;
     }
     return -1;
+}
+
+void IdleState::flee() {
+    auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(_enemyId);
+    PositionComponent target{0, -1};
+    if (targetPosition->X > _positionComponent->X) //target rechts van speler
+        target.X = 2;
+    else
+        target.X = 1600 - (_boxCollider->width + 2);
+
+    std::cout << "Tired, fleeing to: " << target.X << std::endl;
+    _aiComponent->setCurrentState(
+            std::make_unique<WanderState>(*_entityManager, _entityId, target, nullptr, *_context));
 }

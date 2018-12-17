@@ -64,7 +64,9 @@ void WanderState::moveToTarget(double dt) {
         walkRight(dt);
     else if (xDiff >= 5)
         walkLeft(dt);
-    else if (!movedTarget && _targetPosition.Y - _positionComponent->Y > 0) { //target is onder speler
+    else if (!movedTarget && _targetPosition.Y > 0 &&
+             (_targetPosition.Y + _boxCollider->width / 2.0) - _positionComponent->Y > 0) { //target is onder speler
+        std::cout << "Change target" << std::endl;
         if (_targetPosition.X < _positionComponent->X) { //target links van speler
             _targetPosition.X -= _boxCollider->width / 2.0;
         } else if (_targetPosition.X > _positionComponent->X)

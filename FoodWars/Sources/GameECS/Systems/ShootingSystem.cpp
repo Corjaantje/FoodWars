@@ -114,7 +114,7 @@ void ShootingSystem::update(const MouseEvent& event) {
                     event.getMouseClickType() == MouseClickType::Left && _mouseDown) {
                     generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY, selectedWeapon, playerCenterX, playerCenterY);
                     _projectileFired = true;
-                    _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->lowerEnergy(20);
+                    _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->lowerEnergy(_entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost());
                     _audioFacade->playEffect("throwing");
                     resetShooting();
                 }
@@ -187,7 +187,7 @@ void ShootingSystem::toggleShooting() {
         auto playerTurn = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
         if (playerTurn != nullptr &&
             _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeaponAvailability() > 0 &&
-            _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() > _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost()) {
+            _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost()) {
             playerTurn->changeIsShooting();
             if (!playerTurn->getIsShooting())
                 resetShooting();

@@ -2,15 +2,19 @@
 
 #include "../../../Headers/StateMachine/Misc/Weapon.h"
 
-Weapon::Weapon() : Weapon("", 0, Faction::WHITE) {
+Weapon::Weapon() : Weapon("", 0, Faction::WHITE, 20) {
 
 }
 
 Weapon::Weapon(const std::string &imageUrl, int ammo, Faction faction) : _imageUrl(imageUrl), _ammo(ammo),
-                                                                         _faction{faction} {
+                                                                         _faction{faction}, _energyCost(20) {
 
 }
 
+Weapon::Weapon(const std::string &imageUrl, int ammo, Faction faction, int energyCost) : _imageUrl(imageUrl), _ammo(ammo),
+                                                                                         _faction{faction}, _energyCost(energyCost) {
+
+}
 int Weapon::getAmmo() const {
     return _ammo;
 }
@@ -39,3 +43,9 @@ void Weapon::accept(SerializationVisitor &visitor) {
 std::string Weapon::getName() const {
     return "Weapon";
 }
+
+int Weapon::getEnergyCost() const {
+    return _energyCost;
+}
+
+

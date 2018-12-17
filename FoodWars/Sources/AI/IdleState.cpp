@@ -102,6 +102,7 @@ void IdleState::chooseState(){
             }*/
 
         else if (closestItem > 0) { // walk to closest item
+            std::cout << "Not enough energy to shoot, walking to nearest item" << std::endl;
             auto itemPosition = _entityManager->getComponentFromEntity<PositionComponent>(closestItem);
             auto itemCollider = _entityManager->getComponentFromEntity<BoxCollider>(closestItem);
             int itemCenterX = static_cast<int>(itemPosition->X + itemCollider->width / 2.0);
@@ -125,14 +126,14 @@ void IdleState::chooseState(){
     // Over 700 range from enemy
     else if(distanceToEnemy > maxShootingRange) {
         // If item is within walking distance, 32 being a tile size, 4 being the energy spent walking per tile
-        if(closestItem > 0 && energy >= getDistanceToPoint(closestItem) / 32 * 4){
+        if (closestItem > 0 && energy >= getDistanceToPoint(closestItem) / 32 * 5) {
             std::cout << "Far away, grabbing item" << std::endl;
             auto itemPosition = _entityManager->getComponentFromEntity<PositionComponent>(closestItem);
             _aiComponent->setCurrentState(std::make_unique<WanderState>(*_entityManager, _entityId, *itemPosition, nullptr , *_context));
             return;
         }
         // Walk towards enemy
-        else{
+        else {
             std::cout << "Far away, walking towards enemy" << std::endl;
             auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(enemyId);
             PositionComponent target{0, targetPosition->Y};

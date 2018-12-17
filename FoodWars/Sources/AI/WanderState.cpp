@@ -20,6 +20,7 @@ void WanderState::execute(double dt) {
             _positionComponent->X + _boxCollider->width >= _targetPosition.X &&
             _positionComponent->Y <= _targetPosition.Y &&
             _positionComponent->Y + _boxCollider->height >= _targetPosition.Y)
+        || !canReachTarget
         || (_target != nullptr && !_target->isAlive())) {
         // Idle state
         _aiComponent->setCurrentState(
@@ -38,6 +39,7 @@ WanderState::WanderState(EntityManager &entityManager, int entityId, const Posit
                          const DamageableComponent *target, AISystem &context)
         : State(entityManager, entityId, context),
           CollisionEventHandler(context.getCollisionEventObservable()), _targetPosition(targetPosition),
+          movedTarget{false},
           _target{target} {
 
 }
@@ -62,8 +64,15 @@ void WanderState::moveToTarget(double dt) {
         walkRight(dt);
     else if (xDiff >= 5)
         walkLeft(dt);
-    else {
-        _positionComponent->Y = static_cast<int>(_targetPosition.Y - _boxCollider->height / 2.0);
+    else if (!movedTarget && _targetPosition.Y - _positionComponent->Y > 0) { //target is onder speler
+        if (_targetPosition.X < _positionComponent->X) { //target links van speler
+            _targetPosition.X -= _boxCollider->width / 2.0;
+        } else if (_targetPosition.X > _positionComponent->X)
+            _targetPosition.X += _boxCollider->width / 2.0;
+        movedTarget = true;
+        moveToTarget(dt);
+    } else { //kan niet bij het target
+        canReachTarget = false;
     }
 }
 

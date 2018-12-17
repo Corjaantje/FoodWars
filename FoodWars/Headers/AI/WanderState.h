@@ -11,6 +11,8 @@ private:
     PositionComponent _targetPosition;
     const DamageableComponent* _target;
 
+    bool movedTarget;
+    bool canReachTarget = true;
     void walkLeft(double dt);
     void walkRight(double dt);
     void moveToTarget(double dt);

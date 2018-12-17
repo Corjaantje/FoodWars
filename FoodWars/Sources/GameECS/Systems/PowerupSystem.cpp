@@ -14,8 +14,8 @@
 
 PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservable, IObservable<TurnSwitchedEvent> &turnSwitchedEventObservable, EntityManager &entityManager)
         : CollisionEventHandler(collisionEventObservable), TurnSwitchedEventHandler(turnSwitchedEventObservable), _entityManager{&entityManager}, _itemFactory{ItemFactory{}}, _random{Random{}}{
-    _itemMap[0] = "cake";
-    _itemMap[1] = "painkiller";
+    _itemMap[0] = "PowerupCoffee";
+    _itemMap[1] = "PowerupPill";
     _weaponMap[0] = "carrot";
     _weaponMap[1] = "ham";
     _weaponMap[2] = "candycane";
@@ -25,8 +25,8 @@ void PowerupSystem::spawnDrop(const std::unordered_map<int, std::string> &dropMa
 
     int dropX = _random.between(0, 1571);
     int dropY = 0;
-    int dropWidth = 48;
-    int dropHeight = 48;
+    int dropWidth = 40;
+    int dropHeight = 40;
 
     int dropID = _entityManager->createEntity();
     int dropChance = _random.between(0, dropMap.size()-1);
@@ -36,17 +36,19 @@ void PowerupSystem::spawnDrop(const std::unordered_map<int, std::string> &dropMa
     _entityManager->addComponentToEntity(dropID, std::make_unique<ItemComponent>(weaponType));
     _entityManager->addComponentToEntity<DrawableComponent>(dropID,
                                                             std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY,
-                                                                                          "", 3));
+                                                                                          name + ".png", 3));
 
-    const int amountOfSprites = 6;
-    std::vector<std::unique_ptr<IShape>> animationShapes{amountOfSprites};
-    for (int i = 1; i < amountOfSprites; i++)
-    {
-        auto sprite = name + "0" + std::to_string(i) + ".png";
-        animationShapes[i] = std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY, sprite, 3);
+    typedef std::unordered_map<int,std::string>::value_type map_value_type;
+    if (_itemMap.end() == find_if(_itemMap.begin(),_itemMap.end(),[&name](const map_value_type& vt)
+    { return vt.second == name; })) {
+        const int amountOfSprites = 6;
+        std::vector<std::unique_ptr<IShape>> animationShapes{amountOfSprites};
+        for (int i = 1; i < amountOfSprites; i++) {
+            auto sprite = name + "0" + std::to_string(i) + ".png";
+            animationShapes[i] = std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY, sprite, 3);
+        }
+        _entityManager->addComponentToEntity<AnimationComponent>(dropID, std::move(animationShapes), 0.1);
     }
-
-    _entityManager->addComponentToEntity<AnimationComponent>(dropID, std::move(animationShapes), 0.1);
     _entityManager->addComponentToEntity<BoxCollider>(dropID, dropWidth, dropHeight);
     _entityManager->addComponentToEntity<PositionComponent>(dropID, dropX, dropY);
     _entityManager->addComponentToEntity<GravityComponent>(dropID, 5);

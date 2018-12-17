@@ -17,13 +17,13 @@ private:
     int _playerId;
     int _targetId;
 
-    double _powerIncrease = 20;
+    double _powerIncrease = 10;
     double _minPower = 10;
     double _maxPower = 50;
 
     double _minAngle = 0;
     double _maxAngle = 135;
-    double _angleIncrease = 10;
+    double _angleIncrease = 5;
 
     int generateProjectile(ShotTry shotTry);
 

@@ -181,7 +181,7 @@ void ShootingSystem::toggleShooting() {
     if (!_projectileFired) {
         setPlayerTurn();
         auto playerTurn = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
-        if (playerTurn != nullptr) {
+        if (playerTurn != nullptr && _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeaponAvailability() > 0) {
             playerTurn->changeIsShooting();
             if (!playerTurn->getIsShooting())
                 resetShooting();

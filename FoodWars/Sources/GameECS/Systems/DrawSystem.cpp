@@ -8,10 +8,11 @@
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 
-DrawSystem::DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade, InputFacade& inputFacade) :
+DrawSystem::DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade, InputFacade& inputFacade, ShootingSystem& shootingSystem) :
        _entityManager{&entityManager},
        _visualFacade{&visualFacade},
        _inputFacade(&inputFacade),
+       _shootingSystem{&shootingSystem},
        _updateCallCount{0},
        _timeLast {std::chrono::steady_clock::now().time_since_epoch()},
        _weaponSelection(entityManager)
@@ -201,6 +202,7 @@ void DrawSystem::drawWeaponSelection(int x, int playerId, std::string selection)
     _renderList._shapes[3].push_back(
             createShape<SpriteButton>(_inputFacade->getMouseEventObservable(),"carrot.png",
                                       [this, playerId, selection]() {
+                                            _shootingSystem->resetShooting();
                                             _weaponSelection.newSelectedWeapon(playerId, selection);
                                       },
                                       27, 27, x, 45,

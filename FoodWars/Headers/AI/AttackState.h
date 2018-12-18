@@ -13,8 +13,10 @@
 class AttackState : public State, public CollisionEventHandler {
 private:
     bool _canHitTarget = false;
-    ShotTry _directHit{0, 0};
+    ShotTry _shot{0, 0};
     bool _projectileFired = false;
+    bool _fireProjectile = false;
+
     int _projectileId = -1;
     int _targetId;
     PositionComponent _targetPosition;

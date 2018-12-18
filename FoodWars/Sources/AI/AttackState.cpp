@@ -42,32 +42,30 @@ void AttackState::enter() {
 }
 
 void AttackState::execute(double dt) {
+    //switch to idle if there is no reason to be in attack state
     if(!_turnComponent->isMyTurn()
        || _turnComponent->getRemainingTime() <= 0
-       || _turnComponent->getEnergy() <= 20.0
+       || _turnComponent->getEnergy() < 20.0
        || !hasAmmo()
        || !_target
        || !_target->isAlive()) {
         _aiComponent->setCurrentState(std::make_unique<IdleState>(*_entityManager, _entityId, *_context));
         return;
     }
+
     if (!_projectileFired) {
-        if (_turnComponent->getEnergy() < 20) {
-            //_turnComponent->setRemainingTime(0);
-            return;
-        }
-        if (!_canHitTarget) {
-            // todo: difficulty
-            std::cout << "Start shooting..." << std::endl;
+        if (!_canHitTarget) { // no direct hit on target is known so search for shot
             _shootingSimulator.setConfig(_configBasedOnDifficulty[_aiComponent->getDifficulty()]);
             _shootingSimulator.tryHitting(_entityId, _targetId);
         } else {
-            drawShootingLine(_directHit);
-            fireProjectile(_directHit);
+            // can hit target so set _fireprojectile true
+            drawShootingLine(_shot);
+            _fireProjectile = true;
         }
         _projectileFired = true;
         _timePassed = 1;
     } else {
+        //update powerbar
         _timePassed += dt;
         if (!_powerBar.isVisible()) {
             _powerBar.show();
@@ -75,9 +73,21 @@ void AttackState::execute(double dt) {
         }
         _powerBar.update(dt);
 
-        if (_timePassed > 0.5) {
-            drawShootingLine(_shootingSimulator.getMostSuccessfulShot());
+        //update shootingline
+        if (_timePassed > 0.2) {
+            if (_fireProjectile)
+                drawShootingLine(_shot);
+            else
+                drawShootingLine(_shootingSimulator.getMostSuccessfulShot());
             _timePassed = 0;
+        }
+
+        //shoot if possible
+        if (_fireProjectile && std::abs(_powerBar.getPower() - _shot.getPower()) < 3) {
+            _powerBar.setPower(static_cast<int>(_shot.getPower()));
+            drawShootingLine(_shot);
+            fireProjectile(_shot);
+            _fireProjectile = false;
         }
     }
 }
@@ -98,16 +108,14 @@ bool AttackState::canHandle(const CollisionEvent &collisionEvent) {
 }
 
 void AttackState::shotFound(ShotTry shotTry, bool directHit) {
-    _powerBar.setPower(shotTry.getPower());
+    drawShootingLine(_shot);
+    _shot = shotTry;
+    _fireProjectile = true;
     _shootingSimulator.cleanup();
     _canHitTarget = directHit;
-    if (_canHitTarget)
-        _directHit = shotTry;
-    fireProjectile(shotTry);
 }
 
 void AttackState::fireProjectile(const ShotTry &shotTry) {
-    //std::cout << "Firing projectile, angle: " <<  shotTry.getAngle() << ", power: " << shotTry.getPower() << std::endl;
     _projectileFired = true;
 
     auto playerComponent = _entityManager->getComponentFromEntity<PlayerComponent>(_entityId);
@@ -128,14 +136,18 @@ void AttackState::fireProjectile(const ShotTry &shotTry) {
         velocityX = deviation > 0 ? std::round(sin(radianAngle) * projectileBuilder.maxVeloctiy * 100) / 100
                                   : shotTry.getXVelocity();
         velocityX = _targetPosition.X > _positionComponent->X ? velocityX : -velocityX;
+        std::cout << "Deviation: " << deviation << std::endl;
         power = _random.between(power - deviation, power + deviation);
+        std::cout << "New power: " << power << std::endl;
+        if (power > projectileBuilder.maxPower) power = projectileBuilder.maxPower;
     }
-
-    std::cout << "Angle: " << angle << ", power: " << shotTry.getPower() << std::endl;
 
     if(!hasAmmo()) return;
     _turnComponent->lowerEnergy(20);
     selectedWeapon->lowerAmmo();
+
+    std::cout << "Firing projectile, angle: " << angle << ", power: " << power << std::endl;
+
     _projectileId = projectileBuilder
             .setYVelocity(velocityY)
             .setXVelocity(velocityX)
@@ -147,9 +159,10 @@ void AttackState::fireProjectile(const ShotTry &shotTry) {
     _context->getAudioFacade().playEffect("throwing");
     _shootingLine.hide();
     _powerBar.hide();
+    _timePassed = 1;
 }
 
-bool AttackState::hasAmmo(){
+bool AttackState::hasAmmo() {
     auto playerComponent = _entityManager->getComponentFromEntity<PlayerComponent>(_entityId);
     Weapon *selectedWeapon = playerComponent->getSelectedWeapon();
 
@@ -162,6 +175,7 @@ bool AttackState::hasAmmo(){
 }
 
 void AttackState::drawShootingLine(const ShotTry &shotTry) {
+    std::cout << "Draw shooting line" << std::endl;
     double playerCenterX = _positionComponent->X + _boxCollider->width / 2.0;
     double playerCenterY = _positionComponent->Y + _boxCollider->height / 2.0;
     _shootingLine.setFromX(playerCenterX);

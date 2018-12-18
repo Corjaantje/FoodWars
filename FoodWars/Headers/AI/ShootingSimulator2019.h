@@ -19,7 +19,6 @@ private:
     int _playerId;
     int _targetId;
     ShootingSimulatorConfig _config;
-    Random _random;
 
     int generateProjectile(ShotTry shotTry);
 

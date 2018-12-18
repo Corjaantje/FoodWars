@@ -39,7 +39,6 @@ private:
     Renderlist _renderList;
 
     ProjectileBuilder _projectileBuilder;
-    void resetShooting();
     void setPlayerTurn();
     void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
                             double velocityX, double velocityY, Weapon* selectedWeapon, int playerCenterX, int playerCenterY);

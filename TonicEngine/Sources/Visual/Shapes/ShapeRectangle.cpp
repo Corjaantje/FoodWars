@@ -12,15 +12,6 @@ ShapeRectangle::ShapeRectangle( int width, int height, int xPos, int yPos, Colou
         : IShape(xPos, yPos, layer), width(width), height(height), colour(colour) {
 }
 
-ShapeRectangle::ShapeRectangle(int width, int height, int xPos, int yPos, Colour colour, int layer) : IShape(xPos, yPos,
-                                                                                                             layer),
-                                                                                                      width(width),
-                                                                                                      height(height),
-                                                                                                      colour(colour) {
-
-}
-
-
 ShapeRectangle::~ShapeRectangle() = default;
 
 void ShapeRectangle::addToRender(Renderlist *renderlist) {

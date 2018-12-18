@@ -128,7 +128,6 @@ void ShootingSystem::toggleShooting() {
             if (!playerTurn->getIsShooting())
                 resetShooting();
             else {
-                createPowerBar();
                 _entityManager->getComponentFromEntity<MoveComponent>(_currentPlayer)->xVelocity = 0;
             }
         }

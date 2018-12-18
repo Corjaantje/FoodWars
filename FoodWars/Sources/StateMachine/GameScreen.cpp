@@ -28,7 +28,7 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
     _systems.push_back(std::make_unique<DamageableSystem>(*_entityManager, *_audioFacade, *collisionSystem));
     _systems.push_back(std::unique_ptr<CollisionSystem>(collisionSystem));
     _systems.push_back(std::make_unique<PowerupSystem>(*collisionSystem, *_turnSystem, *_entityManager));
-    auto drawSystem = new DrawSystem{*_entityManager, *_visualFacade, *_inputFacade};
+    auto drawSystem = new DrawSystem{*_entityManager, *_visualFacade, *_inputFacade, *shootingSystem};
     _systems.push_back(std::unique_ptr<DrawSystem>(drawSystem));
     nextButton = createShape<FlashingTextButton>(_inputFacade->getMouseEventObservable(),"Next", [this]()
                                          {

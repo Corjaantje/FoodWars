@@ -19,6 +19,7 @@ public:
     void update(double deltaTime) override;
     void update(const MouseEvent& event) override;
     void toggleShooting();
+    void resetShooting();
 private:
     bool _projectileFired;
     bool _mouseDown;
@@ -39,7 +40,6 @@ private:
     EntityManager *_entityManager;
     Renderlist _renderList;
 
-    void resetShooting();
     void createShootingLine(int fromX, int fromY, int toX, int toY);
     void createPowerBar();
     void powerHandler();

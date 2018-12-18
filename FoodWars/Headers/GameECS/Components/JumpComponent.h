@@ -12,6 +12,7 @@ public:
     explicit JumpComponent(double acceleration);
     double getAcceleration() const;
     void setAcceleration(double acceleration);
+    ~JumpComponent() override;
 
     void accept(SerializationVisitor &visitor) override;
 

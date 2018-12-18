@@ -23,3 +23,5 @@ void JumpComponent::accept(SerializationVisitor &visitor) {
 std::string JumpComponent::getName() const {
     return "JumpComponent";
 }
+
+JumpComponent::~JumpComponent() = default;

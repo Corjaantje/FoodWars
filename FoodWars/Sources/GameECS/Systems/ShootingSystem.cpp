@@ -3,6 +3,7 @@
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeLine.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../Headers/GameECS/Components/AIComponent.h"
 
 
 ShootingSystem::ShootingSystem(EntityManager &entityManager,
@@ -51,7 +52,7 @@ void ShootingSystem::update(const MouseEvent& event) {
                     _currentPlayer)->getSelectedWeapon();
 
             if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost() &&
-                selectedWeapon->getAmmo() > 0) {
+                selectedWeapon->getAmmo() > 0 && !_entityManager->getComponentFromEntity<AIComponent>(_currentPlayer)) {
 
                 auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentPlayer);
                 auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(_currentPlayer);

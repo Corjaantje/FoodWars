@@ -74,6 +74,3 @@ void TurnComponent::setIsShooting(bool change) {
 void TurnComponent::changeIsShooting() {
     _isShooting = !_isShooting;
 }
-
-
-

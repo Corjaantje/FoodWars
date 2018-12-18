@@ -22,6 +22,7 @@ public:
     void update(double deltaTime) override;
     void update(const MouseEvent& event) override;
     void toggleShooting();
+    void resetShooting();
 private:
     LineDrawer _shootingLine;
     PowerBar _powerBar;

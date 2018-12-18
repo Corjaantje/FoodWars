@@ -53,10 +53,10 @@ void CharacterBuilder::buildCharacterEntity(GameLevel &gameLevel, int playerID, 
     int player = entityManager->createEntity();
     entityManager->addComponentToEntity<DrawableComponent>(player, std::make_unique<ShapeSprite>(48, 72,
                                                                                                  spawnX,
-                                                                                                 spawnY,
+                                                                                                 spawnY-40,
                                                                                                  ""));
     entityManager->addComponentToEntity<BoxCollider>(player, 48, 72);
-    entityManager->addComponentToEntity<PositionComponent>(player, spawnX, spawnY);
+    entityManager->addComponentToEntity<PositionComponent>(player, spawnX, spawnY - 40);
     auto &turnComponent = entityManager->addComponentToEntity<TurnComponent>(player);
     entityManager->addComponentToEntity<MoveComponent>(player);
     entityManager->addComponentToEntity<GravityComponent>(player);

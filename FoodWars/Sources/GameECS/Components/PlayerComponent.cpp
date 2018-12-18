@@ -8,10 +8,30 @@ PlayerComponent::PlayerComponent() : PlayerComponent(0, Faction::WHITE) {
 }
 
 PlayerComponent::PlayerComponent(int id, Faction faction) : _playerID(id), _score(0), _selectedWeaponAvailability(5), _faction(faction), _isAlive{true} {
-    createWeapon<Weapon>("carrot.png", 1, Faction::GREEN);
-    createWeapon<Weapon>("ham.png", 1, Faction::RED);
-    createWeapon<Weapon>("candycane.png", 0, Faction::YELLOW);
-    _selectedWeaponIndex = 0;
+    switch (faction) {
+        case Faction::YELLOW:
+            initWeapon(0,0,3);
+            _selectedWeaponIndex = 2;
+            break;
+        case Faction::RED:
+            initWeapon(0,3,0);
+            _selectedWeaponIndex = 1;
+            break;
+        case Faction::GREEN:
+            initWeapon(3,0,0);
+            _selectedWeaponIndex = 0;
+            break;
+        default:
+            _selectedWeaponIndex = 0;
+            initWeapon(1,1,1);
+            break;
+    }
+}
+
+void PlayerComponent::initWeapon(int ammo, int ammo1, int ammo2) {
+    createWeapon<Weapon>("carrot.png", ammo, Faction::GREEN, 20);
+    createWeapon<Weapon>("ham.png", ammo1, Faction::RED, 20);
+    createWeapon<Weapon>("candycane.png", ammo2, Faction::YELLOW, 20);
 }
 
 void PlayerComponent::setSelectedWeapon(const std::string &selectionType) {

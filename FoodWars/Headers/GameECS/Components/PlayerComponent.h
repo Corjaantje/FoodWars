@@ -46,7 +46,7 @@ protected:
     bool _isAlive;
     std::vector<std::unique_ptr<Weapon>> _weapons{};
     Faction _faction;
-
+    void initWeapon(int ammo, int ammo1, int ammo2);
     template<typename T, typename... Args>
     Weapon *createWeapon(Args &&... args) {
         std::unique_ptr<T> weapon = std::make_unique<T>(std::forward<Args>(args)...);

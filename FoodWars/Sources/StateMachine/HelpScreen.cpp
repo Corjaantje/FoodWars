@@ -13,10 +13,6 @@ HelpScreen::HelpScreen(ScreenStateManager& context) : IScreen(context) {
             },
             140, 140, 12, 12,
             Colour{0,0,0,0})->addToRender(&_renderList);
-
-    createShape<ShapeText>(1040, 480, "'A'", 0, 30, 30, Colour(255, 255, 255, 0))->addToRender(&_renderList);
-    createShape<ShapeText>(1040, 600, "'D'", 0, 30, 30, Colour(255, 255, 255, 0))->addToRender(&_renderList);
-    createShape<ShapeText>(1040, 720, "'Spacebar'", 0, 10 * 20, 30, Colour(255, 255, 255, 0))->addToRender(&_renderList);
 }
 
 HelpScreen::~HelpScreen() = default;

@@ -7,6 +7,7 @@
 #include "../../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../../StateMachine/Misc/WeaponSelection.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
+#include "ShootingSystem.h"
 #include <chrono>
 
 class DrawSystem : public IBaseSystem {
@@ -17,6 +18,7 @@ private:
     VisualFacade* _visualFacade;
     InputFacade* _inputFacade;
     EntityManager *_entityManager;
+    ShootingSystem* _shootingSystem;
     Renderlist _renderList;
     int _updateCallCount;
     std::string _fpsString;
@@ -29,7 +31,7 @@ private:
 
     bool _showFPS = true;
 public:
-    DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade, InputFacade& inputFacade);
+    DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade, InputFacade& inputFacade, ShootingSystem& shootingSystem);
     ~DrawSystem() override;
     void update(double dt) override;
     bool toggleFpsCounter();

@@ -50,7 +50,7 @@ void ShootingSystem::update(const MouseEvent& event) {
             Weapon *selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(
                     _currentPlayer)->getSelectedWeapon();
 
-            if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= 20 &&
+            if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost() &&
                 selectedWeapon->getAmmo() > 0) {
 
                 auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentPlayer);
@@ -97,10 +97,10 @@ void ShootingSystem::update(const MouseEvent& event) {
                 }
 
                 if (event.getMouseEventType() == MouseEventType::Up &&
-                    event.getMouseClickType() == MouseClickType::Left) {
+                    event.getMouseClickType() == MouseClickType::Left && _mouseDown) {
                     generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY, selectedWeapon, playerCenterX, playerCenterY);
                     _projectileFired = true;
-                    _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->lowerEnergy(20);
+                    _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->lowerEnergy(_entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost());
                     _audioFacade->playEffect("throwing");
                     resetShooting();
                 }
@@ -121,12 +121,16 @@ void ShootingSystem::toggleShooting() {
     if (!_projectileFired) {
         setPlayerTurn();
         auto playerTurn = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
-        if (playerTurn != nullptr) {
+        if (playerTurn != nullptr &&
+            _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeaponAvailability() > 0 &&
+            _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost()) {
             playerTurn->changeIsShooting();
             if (!playerTurn->getIsShooting())
                 resetShooting();
-            else
+            else {
+                createPowerBar();
                 _entityManager->getComponentFromEntity<MoveComponent>(_currentPlayer)->xVelocity = 0;
+            }
         }
     }
 }

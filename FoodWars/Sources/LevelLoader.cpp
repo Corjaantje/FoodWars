@@ -6,6 +6,7 @@
 #include "../Headers/Storage/LevelStorage.h"
 #include "../Headers/GameECS/Components/AIComponent.h"
 #include "../../TonicEngine/Headers/Storage/FileManager.h"
+#include "../../TonicEngine/Headers/General/Random.h"
 
 LevelLoader::LevelLoader() = default;
 
@@ -33,11 +34,13 @@ GameLevel *LevelLoader::loadLevel(std::string levelPath, GameLevel &gameLevel, C
 void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne, CharacterBuilder playerTwo) {
     std::vector<Coordinate> spawnPoints = gameLevel.getSpawnPoints();
     EntityManager *entityManager = &gameLevel.getEntityManager();
-    int randomNum = rand() % spawnPoints.size();
-    int randomNum2 = rand() % spawnPoints.size();
+
+    Random rand{};
+    int randomNum = rand.between(0, spawnPoints.size() - 1);
+    int randomNum2 = rand.between(0, spawnPoints.size() - 1);
     Coordinate spawnPoint1 = spawnPoints[randomNum];
     while (randomNum == randomNum2) {
-        randomNum2 = rand() % spawnPoints.size();
+        randomNum2 = rand.between(0, spawnPoints.size() - 1);
     }
     Coordinate spawnPoint2 = spawnPoints[randomNum2];
 
@@ -46,15 +49,15 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne,
     }
     //Turn RANDOM into a legit faction
     if(playerOne.getFaction() == Faction::RANDOM){
-        playerOne.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
+        playerOne.setFaction(static_cast<Faction>(rand.between(0, Faction::RANDOM - 1)));
         while(playerOne.getFaction() == playerTwo.getFaction()){
-            playerOne.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
+            playerOne.setFaction(static_cast<Faction>(rand.between(0, Faction::RANDOM - 1)));
         }
     }
     if(playerTwo.getFaction() == Faction::RANDOM){
-        playerTwo.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
+        playerTwo.setFaction(static_cast<Faction>(rand.between(0, Faction::RANDOM - 1)));
         while(playerTwo.getFaction() == playerOne.getFaction()){
-            playerTwo.setFaction(static_cast<Faction>(rand() % Faction::RANDOM));
+            playerTwo.setFaction(static_cast<Faction>(rand.between(0, Faction::RANDOM - 1)));
         }
     }
 

@@ -8,6 +8,9 @@ ShapeRectangle::ShapeRectangle() : ShapeRectangle(0, 0, 0, 0, Colour{}) {
 ShapeRectangle::ShapeRectangle(const int width, const int height, const int xPos, const int yPos, const Colour colour) :
         ShapeRectangle(width, height, xPos, yPos, colour, 1) {
 }
+ShapeRectangle::ShapeRectangle( int width, int height, int xPos, int yPos, Colour colour, int layer)
+        : IShape(xPos, yPos, layer), width(width), height(height), colour(colour) {
+}
 
 ShapeRectangle::ShapeRectangle(int width, int height, int xPos, int yPos, Colour colour, int layer) : IShape(xPos, yPos,
                                                                                                              layer),

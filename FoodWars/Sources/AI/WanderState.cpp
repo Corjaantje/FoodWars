@@ -90,8 +90,10 @@ bool WanderState::canHandle(const CollisionEvent &collisionEvent) {
         return false;
     }
 
-    return ((collisionEvent.getCollisionAngle() <= 135 && collisionEvent.getCollisionAngle() >= 45) ||
-            (collisionEvent.getCollisionAngle() <= 315 && collisionEvent.getCollisionAngle() >= 225))
+    return ((_targetPosition.X > _positionComponent->X && collisionEvent.getCollisionAngle() <= 135 &&
+             collisionEvent.getCollisionAngle() >= 45) ||
+            (_targetPosition.X < _positionComponent->X && collisionEvent.getCollisionAngle() <= 315 &&
+             collisionEvent.getCollisionAngle() >= 225))
            && ((collisionEvent.getEntity() == _entityId &&
                 !_entityManager->getComponentFromEntity<ItemComponent>(collisionEvent.getOtherEntity())) ||
                (collisionEvent.getOtherEntity() == _entityId &&
@@ -130,11 +132,9 @@ bool WanderState::canJumpOverObstruction(int obstructionId) {
     for (const auto &iterator : _entityManager->getAllEntitiesWithComponent<BoxCollider>()) {
         auto positionComponent = _entityManager->getComponentFromEntity<PositionComponent>(iterator.first);
         //todo: might have to change the 64
-        auto aiPosition = _entityManager->getComponentFromEntity<PositionComponent>(_entityId);
-
         if ((positionComponent->X == obstructionPosition->X
              && positionComponent->Y >= obstructionPosition->Y - 64
-             && (positionComponent->Y <= aiPosition->Y &&
+             && (positionComponent->Y <= _positionComponent->Y &&
                  !_entityManager->getComponentFromEntity<PlayerComponent>(obstructionId)))) {
             // cant jump
             return false;

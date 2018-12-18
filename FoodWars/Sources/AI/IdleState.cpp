@@ -48,6 +48,9 @@ void IdleState::chooseState(){
     // Get necessary variables
     int closestItem = getClosestItem();
     double distanceToEnemy = getDistanceToPoint(_enemyId);
+    auto targetPosition = _entityManager->getComponentFromEntity<PositionComponent>(_enemyId);
+    if(targetPosition->Y > _positionComponent->Y)
+        distanceToEnemy = abs(targetPosition->X - _positionComponent->X);
     int amountOfAmmo = getAmountOfAmmo();
     double energy = _entityManager->getComponentFromEntity<TurnComponent>(_entityId)->getEnergy();
     int myHealth = _entityManager->getComponentFromEntity<DamageableComponent>(_entityId)->getHealth();

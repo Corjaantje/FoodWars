@@ -121,11 +121,6 @@ void ShootingSystem::update(const MouseEvent& event) {
                     _audioFacade->playEffect("throwing");
                     resetShooting();
                 }
-            } else {
-                if (event.getMouseEventType() == MouseEventType::Down &&
-                    event.getMouseClickType() == MouseClickType::Left) {
-                    _audioFacade->playEffect("negative");
-                }
             }
         } else {
             resetShooting();
@@ -202,6 +197,8 @@ void ShootingSystem::toggleShooting() {
             }
         }
     }
+    if (_entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getAmmo() <= 0)
+        _audioFacade->playEffect("negative");
 }
 
 void ShootingSystem::resetShooting() {

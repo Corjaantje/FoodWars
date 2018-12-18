@@ -71,56 +71,52 @@ void ShootingSystem::update(const MouseEvent& event) {
             Weapon *selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(
                     _currentPlayer)->getSelectedWeapon();
 
-            if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost() &&
-                selectedWeapon->getAmmo() > 0) {
+            auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentPlayer);
+            auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(_currentPlayer);
+            int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
+            int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
 
-                auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentPlayer);
-                auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(_currentPlayer);
-                int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
-                int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
+            double deltaX = event.getXPosition() - playerCenterX;
+            double deltaY = event.getYPosition() - playerCenterY;
 
-                double deltaX = event.getXPosition() - playerCenterX;
-                double deltaY = event.getYPosition() - playerCenterY;
+            // shooting in a circle
+            double totalLength = sqrt(deltaX * deltaX + deltaY * deltaY);
+            double length = totalLength > 150 ? 150 : totalLength;
+            double scale = length / totalLength;
 
-                // shooting in a circle
-                double totalLength = sqrt(deltaX * deltaX + deltaY * deltaY);
-                double length = totalLength > 150 ? 150 : totalLength;
-                double scale = length / totalLength;
+            deltaX *= scale;
+            deltaY *= scale;
 
-                deltaX *= scale;
-                deltaY *= scale;
+            double toX = playerCenterX + deltaX;
+            double toY = playerCenterY + deltaY;
 
-                double toX = playerCenterX + deltaX;
-                double toY = playerCenterY + deltaY;
+            if (event.getMouseEventType() == MouseEventType::Down &&
+                event.getMouseClickType() == MouseClickType::Left) {
 
-                if (event.getMouseEventType() == MouseEventType::Down &&
-                    event.getMouseClickType() == MouseClickType::Left) {
+                createShootingLine(playerCenterX, playerCenterY, toX, toY);
+                createPowerBar();
+                _powerBar = (_powerBar != -1) ? _powerBar : _entityManager->createEntity();
+                _mouseDown = true;
+            }
 
+            if (event.getMouseEventType() == MouseEventType::Drag) {
+                if (!_entityManager->exists(_shootingLine))
                     createShootingLine(playerCenterX, playerCenterY, toX, toY);
-                    createPowerBar();
-                    _powerBar = (_powerBar != -1) ? _powerBar : _entityManager->createEntity();
-                    _mouseDown = true;
-                }
+                auto drawable = _entityManager->getComponentFromEntity<DrawableComponent>(_shootingLine);
+                auto line = static_cast<ShapeLine *>(drawable->getShape());
+                line->xPos = playerCenterX;
+                line->yPos = playerCenterY;
+                line->xPos2 = toX;
+                line->yPos2 = toY;
+            }
 
-                if (event.getMouseEventType() == MouseEventType::Drag) {
-                    if (!_entityManager->exists(_shootingLine))
-                        createShootingLine(playerCenterX, playerCenterY, toX, toY);
-                    auto drawable = _entityManager->getComponentFromEntity<DrawableComponent>(_shootingLine);
-                    auto line = static_cast<ShapeLine *>(drawable->getShape());
-                    line->xPos = playerCenterX;
-                    line->yPos = playerCenterY;
-                    line->xPos2 = toX;
-                    line->yPos2 = toY;
-                }
-
-                if (event.getMouseEventType() == MouseEventType::Up &&
-                    event.getMouseClickType() == MouseClickType::Left && _mouseDown) {
-                    generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY, selectedWeapon, playerCenterX, playerCenterY);
-                    _projectileFired = true;
-                    _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->lowerEnergy(_entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost());
-                    _audioFacade->playEffect("throwing");
-                    resetShooting();
-                }
+            if (event.getMouseEventType() == MouseEventType::Up &&
+                event.getMouseClickType() == MouseClickType::Left && _mouseDown) {
+                generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY, selectedWeapon, playerCenterX, playerCenterY);
+                _projectileFired = true;
+                _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->lowerEnergy(_entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost());
+                _audioFacade->playEffect("throwing");
+                resetShooting();
             }
         } else {
             resetShooting();
@@ -197,7 +193,8 @@ void ShootingSystem::toggleShooting() {
             }
         }
     }
-    if (_entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getAmmo() <= 0)
+    if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() < _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost() ||
+        _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getAmmo() <= 0)
         _audioFacade->playEffect("negative");
 }
 

@@ -8,6 +8,7 @@
 #include "../../../Headers/GameECS/Components/DamagingComponent.h"
 #include "../../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../Headers/GameECS/Components/JumpComponent.h"
 
 
 ShootingSystem::ShootingSystem(EntityManager &entityManager,
@@ -56,6 +57,8 @@ void ShootingSystem::update(double deltaTime) {
 
             _timePassed = 0;
         }
+        if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getRemainingTime() == 0)
+            resetShooting();
     }
 }
 
@@ -185,7 +188,9 @@ void ShootingSystem::toggleShooting() {
     if (!_projectileFired) {
         setPlayerTurn();
         auto playerTurn = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
+        auto playerJump = _entityManager->getComponentFromEntity<JumpComponent>(_currentPlayer);
         if (playerTurn != nullptr &&
+            playerJump == nullptr &&
             _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeaponAvailability() > 0 &&
             _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost()) {
             playerTurn->changeIsShooting();

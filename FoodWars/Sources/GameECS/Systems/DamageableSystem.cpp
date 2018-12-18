@@ -28,6 +28,16 @@ void DamageableSystem::update(double deltaTime) {
             }
         }
     }
+
+    for (auto splashDamage = _splashDamages.begin(); splashDamage != _splashDamages.end();) {
+        splashDamage->increaseTime(deltaTime);
+        if (splashDamage->getElapsedTime() >= 1.0) {
+            splashDamage->hide();
+            splashDamage = _splashDamages.erase(splashDamage);
+            continue;
+        }
+        ++splashDamage;
+    }
 }
 
 bool DamageableSystem::canHandle(const CollisionEvent &collisionEvent) {
@@ -52,13 +62,17 @@ void DamageableSystem::handleCollisionEvent(int projectileId, int targetId) {
     if (damage > 0) target->lowerHealth(damage);
 
     _audioFacade->playEffect("damage");
+    if (player) {
+        std::cout << "Create hitsplash" << std::endl;
+        _splashDamages.emplace_back(*_entityManager, targetId);
+    }
 
     //std::cout << "currentHP: " << target->getHealth() << std::endl;
 
     // Default point increase/decrease
     int iPoints = 10;
     std::map<int, PlayerComponent*> players = _entityManager->getAllEntitiesWithComponent<PlayerComponent>();
-    for (auto const& player : _entityManager->getAllEntitiesWithComponent<PlayerComponent>()){
+    for (auto const &player : players) {
         if (player.first == targetId) {
             player.second->addScore(-iPoints);
             iPoints = damage;

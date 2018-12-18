@@ -10,11 +10,11 @@
 ItemFactory::ItemFactory() {
     _itemMap =
     {{
-        {"cake", ItemComponent{[](EntityManager& e, const CollisionEvent& event)
+        {"PowerupPill", ItemComponent{[](EntityManager& e, const CollisionEvent& event)
         {
           e.getComponentFromEntity<DamageableComponent>(event.getEntity())->increaseHealth(50);
         }}},
-        {"painkiller", ItemComponent{[](EntityManager& e, const CollisionEvent& event)
+        {"PowerupCoffee", ItemComponent{[](EntityManager& e, const CollisionEvent& event)
         {
           e.getComponentFromEntity<TurnComponent>(event.getEntity())->setEnergy(100);
         }}},

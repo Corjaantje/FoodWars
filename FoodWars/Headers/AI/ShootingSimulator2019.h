@@ -7,6 +7,8 @@
 #include "ShotTry.h"
 #include "../GameECS/Components/Collider/BoxCollider.h"
 #include "../GameECS/Systems/Misc/ProjectileBuilder.h"
+#include "ShootingSimulatorConfig.h"
+#include "../../../TonicEngine/Headers/General/Random.h"
 
 class ShootingSimulator2019 : public CollisionEventHandler {
 private:
@@ -16,14 +18,8 @@ private:
     std::vector<int> _projectileIds;
     int _playerId;
     int _targetId;
-
-    double _powerIncrease = 10;
-    double _minPower = 10;
-    double _maxPower = 50;
-
-    double _minAngle = 0;
-    double _maxAngle = 135;
-    double _angleIncrease = 5;
+    ShootingSimulatorConfig _config;
+    Random _random;
 
     int generateProjectile(ShotTry shotTry);
 
@@ -32,7 +28,7 @@ private:
     const BoxCollider *_playerCollider;
     PositionComponent _centerPlayerPosition;
 
-    ShotTry mostSuccessfulShot = ShotTry{90, _maxPower};
+    ShotTry mostSuccessfulShot = ShotTry{90, _config.getMaxPower()};
     std::function<void(const ShotTry &, bool)> _onShotFoundFunc;
 public:
     void handleCollisionEvent(const CollisionEvent &collisionEvent) override;
@@ -45,6 +41,8 @@ public:
     ~ShootingSimulator2019();
 
     void tryHitting(int playerId, int targetId);
+
+    void setConfig(const ShootingSimulatorConfig &config);
 
     void cleanup();
 

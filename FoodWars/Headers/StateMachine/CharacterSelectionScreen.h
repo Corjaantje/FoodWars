@@ -1,7 +1,6 @@
 #ifndef PROJECT_SWA_CHARACTERSELECTIONSCREEN_H
 #define PROJECT_SWA_CHARACTERSELECTIONSCREEN_H
 
-
 #include "IScreen.h"
 #include "Misc/CharacterBuilder.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"

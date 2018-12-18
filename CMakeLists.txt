@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(Project_SWA)
+project(Foodwars)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
@@ -71,9 +71,9 @@ file(GLOB_RECURSE SOURCES3 "TonicEngine/Sources/*.cpp")
 file(GLOB_RECURSE SOURCES4 "TonicEngine/Facades/*.cpp")
 file(GLOB_RECURSE SOURCES5 "TonicEngine/Headers/*.h")
 set(SOURCE_FILES main.cpp)
-add_executable(Project_SWA ${SOURCE_FILES} ${SOURCES1} ${SOURCES2} ${SOURCES3} ${SOURCES4} ${SOURCES5})
+add_executable(Foodwars ${SOURCE_FILES} ${SOURCES1} ${SOURCES2} ${SOURCES3} ${SOURCES4} ${SOURCES5})
 
-target_link_libraries(Project_SWA ${DEPENDENCIES} -lmingw32 -lSDL2_mixer -lSDL2_image -lSDL2main -lSDL2 -lSDL2_ttf  -mwindows -static-libgcc -static-libstdc++)
+target_link_libraries(Foodwars ${DEPENDENCIES} -lmingw32 -lSDL2_mixer -lSDL2_image -lSDL2main -lSDL2 -lSDL2_ttf -mwindows -static-libgcc -static-libstdc++)
 file(REMOVE_RECURSE ./cmake-build-debug/Assets/)
 file(COPY Assets DESTINATION .)
 file(COPY _INSTALLATION_/BUILDFILES/ DESTINATION .)

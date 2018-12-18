@@ -31,12 +31,12 @@ Difficulty CharacterBuilder::getDifficulty() const {
 }
 
 void CharacterBuilder::increaseDifficulty() {
-    _botDifficulty = static_cast<Difficulty>((_botDifficulty + 1) % (3));
+    _botDifficulty = static_cast<Difficulty>((_botDifficulty + 1) % (4));
 }
 
 void CharacterBuilder::decreaseDifficulty() {
     if(_botDifficulty - 1 < 0){
-        _botDifficulty = static_cast<Difficulty>(2);
+        _botDifficulty = static_cast<Difficulty>(3);
     }
     else{
         _botDifficulty = static_cast<Difficulty>(_botDifficulty - 1);

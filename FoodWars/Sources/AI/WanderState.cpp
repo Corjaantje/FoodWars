@@ -24,7 +24,7 @@ void WanderState::execute(double dt) {
         || (_target != nullptr && !_target->isAlive())) {
         // Idle state
         _aiComponent->setCurrentState(
-                std::make_unique<IdleState>(*_entityManager, _entityId, "wanderstate", *_context));
+                std::make_unique<IdleState>(*_entityManager, _entityId, *_context));
         return;
     }
     // If my turn, move towards target
@@ -86,7 +86,7 @@ bool WanderState::canHandle(const CollisionEvent &collisionEvent) {
         (collisionEvent.getEntity() == _entityId &&
          _entityManager->getComponentFromEntity<ItemComponent>(collisionEvent.getOtherEntity()))) {
         _aiComponent->setCurrentState(
-                std::make_unique<IdleState>(*_entityManager, _entityId, "wanderstate", *_context));
+                std::make_unique<IdleState>(*_entityManager, _entityId, *_context));
         return false;
     }
 

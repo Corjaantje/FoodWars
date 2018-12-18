@@ -4,7 +4,7 @@ AIComponent::AIComponent(Difficulty difficulty) : _difficulty(difficulty), _curr
 
 }
 
-int AIComponent::getDifficulty() const {
+Difficulty AIComponent::getDifficulty() const {
     return _difficulty;
 }
 

@@ -10,6 +10,7 @@ ShootingSimulator2019::ShootingSimulator2019(IObservable<CollisionEvent> &collis
                                              EntityManager &entityManager,
                                              const std::function<void(const ShotTry &, bool)> &onShotFoundFunc) :
         CollisionEventHandler(collisionEventObservable),
+        _config{},
         _projectileBuilder{entityManager},
         _onShotFoundFunc{onShotFoundFunc},
         _entityManager{&entityManager},
@@ -27,11 +28,11 @@ void ShootingSimulator2019::tryHitting(int playerId, int targetId) {
     _centerPlayerPosition = PositionComponent{(int) std::round(_playerPosition->X + _playerCollider->width / 2.0),
                                               (int) std::round(_playerPosition->Y + _playerCollider->height / 2.0)};
 
-    double currentAngle = _minAngle;
-    while (currentAngle + _angleIncrease <= _maxAngle) {
-        generateProjectile(ShotTry{currentAngle, _minPower});
-        generateProjectile(ShotTry{currentAngle, _maxPower});
-        currentAngle += _angleIncrease;
+    double currentAngle = _config.getMinAngle();
+    while (currentAngle + _config.getAngleIncrease() <= _config.getMaxAngle()) {
+        generateProjectile(ShotTry{currentAngle, _config.getMinPower()});
+        generateProjectile(ShotTry{currentAngle, _config.getMaxPower()});
+        currentAngle += _config.getAngleIncrease();
     }
 }
 
@@ -82,8 +83,8 @@ void ShootingSimulator2019::handleCollisionEvent(const CollisionEvent &collision
             if (mostSuccessfulShot.getScore() < 0 || shotTry.getScore() < mostSuccessfulShot.getScore()) {
                 mostSuccessfulShot = shotTry;
             }
-            if (shotTry.getPower() + _powerIncrease < _maxPower) {
-                generateProjectile(ShotTry{shotTry.getAngle(), shotTry.getPower() + _powerIncrease});
+            if (shotTry.getPower() + _config.getPowerIncrease() < _config.getMaxPower()) {
+                generateProjectile(ShotTry{shotTry.getAngle(), shotTry.getPower() + _config.getPowerIncrease()});
             } else if (_shootingTries.empty())
                 _onShotFoundFunc(mostSuccessfulShot, false);
         }
@@ -101,7 +102,7 @@ bool ShootingSimulator2019::canHandle(const CollisionEvent &collisionEvent) {
 }
 
 void ShootingSimulator2019::cleanup() {
-    mostSuccessfulShot = ShotTry{90, _maxPower};
+    mostSuccessfulShot = ShotTry{90, _config.getMaxPower()};
     for (const auto shot: _shootingTries) {
         _entityManager->removeEntity(shot.first);
     }
@@ -116,4 +117,8 @@ ShootingSimulator2019::~ShootingSimulator2019() {
 
 ShotTry ShootingSimulator2019::getMostSuccessfulShot() const {
     return mostSuccessfulShot;
+}
+
+void ShootingSimulator2019::setConfig(const ShootingSimulatorConfig &config) {
+    _config = config;
 }

@@ -9,12 +9,12 @@ PowerBar::PowerBar(EntityManager &entityManager) : _entityManager{&entityManager
                                                    _risingPower{true},
                                                    _powerBar{-1}, _timePassed{0}, _playerId{-1}, _power{0},
                                                    _powerBarRect{nullptr}, _playerCollider{nullptr},
-                                                   _playerPosition{nullptr} {
+                                                   _playerPosition{nullptr}, _locked{false} {
 
 }
 
 void PowerBar::update(double dt) {
-    if (_playerId > 0 && _powerBar > 0) {
+    if (_playerId > 0 && _powerBar > 0 && !_locked) {
         _timePassed += dt;
 
         if (_timePassed >= 0.02) {
@@ -106,4 +106,12 @@ PowerBar::~PowerBar() {
 void PowerBar::setPower(int power) {
     _power = power;
     _timePassed = 1;
+}
+
+void PowerBar::lock() {
+    _locked = true;
+}
+
+void PowerBar::unlock() {
+    _locked = false;
 }

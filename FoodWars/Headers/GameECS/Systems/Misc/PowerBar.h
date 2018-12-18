@@ -19,6 +19,7 @@ private:
     int _powerBarBackground;
     int _powerBar;
     bool _risingPower;
+    bool _locked;
 public:
     explicit PowerBar(EntityManager &entityManager);
 
@@ -31,6 +32,10 @@ public:
     void show();
 
     void hide();
+
+    void lock();
+
+    void unlock();
 
     int getPower() const;
 

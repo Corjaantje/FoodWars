@@ -22,6 +22,7 @@ enum class KEY {
     KEY_R,
     KEY_Y,
     KEY_K,
+    KEY_U,
     KEY_ESCAPE,
     KEY_PAGEUP,
     KEY_PAGEDOWN,

@@ -7,12 +7,13 @@
 
 class AIComponent : public Component{
 private:
-    int _difficulty;
+    Difficulty _difficulty;
     std::unique_ptr<State> _currentState;
 public:
     explicit AIComponent(Difficulty difficulty);
     ~AIComponent() override = default;
-    int getDifficulty() const;
+
+    Difficulty getDifficulty() const;
 
     void setCurrentState(std::unique_ptr<State> state);
     State* getCurrentState() const;

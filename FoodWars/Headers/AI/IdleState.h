@@ -9,7 +9,6 @@
 class IdleState : public State {
 private:
     int _maxShootingRange = 700;
-    std::string _previousState;
     int _playerCenterX = -1;
     int _playerCenterY = -1;
     int _enemyId = -1;
@@ -23,7 +22,7 @@ private:
 
     void flee();
 public:
-    IdleState(EntityManager& entityManager, int entityId, std::string previousState, AISystem& context);
+    IdleState(EntityManager &entityManager, int entityId, AISystem &context);
 
     ~IdleState() override = default;
 

@@ -9,8 +9,8 @@
 #include "../../Headers/GameECS/Components/ItemComponent.h"
 #include <math.h>
 
-IdleState::IdleState(EntityManager &entityManager, int entityId, std::string previousState, AISystem &context) : State(entityManager, entityId, context),
-                                                                                            _previousState(std::move(previousState)) {
+IdleState::IdleState(EntityManager &entityManager, int entityId, AISystem &context) : State(entityManager, entityId,
+                                                                                            context) {
 
 }
 
@@ -140,6 +140,12 @@ void IdleState::chooseState(){
             else if (targetPosition->X > _positionComponent->X)
                 target.X = targetPosition->X -
                            (_maxShootingRange - _boxCollider->width);
+
+            if (targetPosition->Y < _positionComponent->Y) { //target staat boven player
+                if (targetPosition->X < _positionComponent->X) target.X -= _positionComponent->Y - targetPosition->Y;
+                else if (targetPosition->X > _positionComponent->X)
+                    target.X += _positionComponent->Y - targetPosition->Y;
+            }
             _aiComponent->setCurrentState(
                     std::make_unique<WanderState>(*_entityManager, _entityId, target, nullptr, *_context));
             return;

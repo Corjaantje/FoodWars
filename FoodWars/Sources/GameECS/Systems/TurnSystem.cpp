@@ -1,6 +1,7 @@
 #include "../../../Headers/GameECS/Systems/TurnSystem.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
 #include "../../../Headers/GameECS/Components/PositionComponent.h"
+#include "../../../Headers/GameECS/Components/AIComponent.h"
 
 TurnSystem::TurnSystem(EntityManager &entityManager) : _entityManager(&entityManager), _defaultTimePerTurn(30),
                                                        _timePerTurn(_defaultTimePerTurn) {
@@ -37,9 +38,9 @@ void TurnSystem::update(double deltaTime) {
 void TurnSystem::switchTurn() {
     for (const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
         if (iterator.second->isMyTurn()) {
-            if (/*(_entityManager->getComponentFromEntity<AIComponent>(iterator.first) &&
+            if ((_entityManager->getComponentFromEntity<AIComponent>(iterator.first) &&
                  (iterator.second->getEnergy() <= 0.0 || iterator.second->getRemainingTime() <= 0))
-                || !_entityManager->getComponentFromEntity<AIComponent>(iterator.first)*/true) {
+                || !_entityManager->getComponentFromEntity<AIComponent>(iterator.first)) {
                 iterator.second->switchTurn(false);
                 iterator.second->setEnergy(100);
                 for (const auto &iterator2: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {

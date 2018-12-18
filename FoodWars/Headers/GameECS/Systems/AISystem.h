@@ -27,7 +27,6 @@ public:
     IObservable<CollisionEvent>& getCollisionEventObservable();
 
     AudioFacade &getAudioFacade() const;
-    int generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider, double velocityX, double velocityY, Weapon* selectedWeapon);
 };
 
 

@@ -77,6 +77,9 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
     _keyMap[KEY::KEY_Y] = [t = _turnSystem]() {
         t->resetCurrentEnergy();
     };
+    _keyMap[KEY::KEY_U] = [e = _entityManager, t = _turnSystem]() {
+        e->getComponentFromEntity<DamageableComponent>(t->getCurrentPlayerID())->setResistance(100);
+    };
     _keyMap[KEY::KEY_K] = [t = _turnSystem, p1 = playerOne, p2 = playerTwo, e = _entityManager]() {
         if (t->getCurrentPlayerID() == p1) {
             e->getComponentFromEntity<DamageableComponent>(p2)->destroy();
@@ -98,13 +101,11 @@ GameScreen::~GameScreen() = default;
 
 void GameScreen::update(double deltaTime) {
     if (_turnSystem->getCurrentPlayerEnergy() <= 1) nextButton->setFlashing(true);
-    std::map<int, TurnComponent *> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
-    std::map<int, PlayerComponent *> _entitiesWithPlayerComponent = _entityManager->getAllEntitiesWithComponent<PlayerComponent>();
     bool playerOneAlive = true;
     bool playerTwoAlive = true;
     int playerOneScore = 0;
     int playerTwoScore = 0;
-    for(auto const &iterator : _entitiesWithPlayerComponent) {
+    for (auto const &iterator : _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
         if(iterator.second->getPlayerID() == 1){
             playerOneAlive = iterator.second->isAlive();
             playerOneScore = iterator.second->getScore();

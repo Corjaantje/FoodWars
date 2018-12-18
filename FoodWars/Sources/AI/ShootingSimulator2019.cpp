@@ -5,6 +5,7 @@
 #include "../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../Headers/GameECS/Components/MoveComponent.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
+#include "../../Headers/GameECS/Components/ItemComponent.h"
 
 ShootingSimulator2019::ShootingSimulator2019(IObservable<CollisionEvent> &collisionEventObservable,
                                              EntityManager &entityManager,
@@ -97,7 +98,10 @@ bool ShootingSimulator2019::canHandle(const CollisionEvent &collisionEvent) {
     bool otherEntityIsProjectile =
             std::find(_projectileIds.begin(), _projectileIds.end(), collisionEvent.getOtherEntity()) !=
             _projectileIds.end();
-    return (entityIsProjectile && !otherEntityIsProjectile) || (!entityIsProjectile && otherEntityIsProjectile);
+    return (entityIsProjectile && !otherEntityIsProjectile &&
+            !_entityManager->getComponentFromEntity<ItemComponent>(collisionEvent.getOtherEntity())) ||
+           (!entityIsProjectile && otherEntityIsProjectile &&
+            !_entityManager->getComponentFromEntity<ItemComponent>(collisionEvent.getEntity()));
     //true when a projectile collides with something thats not a projectile
 }
 

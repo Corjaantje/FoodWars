@@ -245,7 +245,6 @@ void LevelBuilder::removeSpawnPoint(int x, int y) {
                 _spawnPoints.erase(_spawnPoints.begin() + i);
                 _spawnPointSprites.erase(_spawnPointSprites.begin() + i);
                 _CoordinateEntityMap.erase(gridCoord);
-                return;
             }
         }
     }

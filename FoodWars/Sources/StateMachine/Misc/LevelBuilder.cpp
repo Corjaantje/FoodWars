@@ -9,7 +9,7 @@ LevelBuilder::LevelBuilder() : _gameLevel(), _entityManager(_gameLevel.getEntity
           previewColor(ShapeRectangle(64, 64, 1200, 60, Colour(_colorRed, _colorGreen, _colorBlue, 255))){
 
     _wallpaperList = _fileManager.getFiles("./Assets/GameWallpapers/", {"png"}, true, false);
-    _musicList = _fileManager.getFiles("./Assets/Audio/", {"mp3"}, false, false);
+    _musicList = _fileManager.getFiles("./Assets/Audio/Music/", {"wav"}, false, false);
     
     _gameLevel.setBackgroundWallpaper(_wallpaperList[_selectedWallpaper]);
     wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, _wallpaperList[_selectedWallpaper]);

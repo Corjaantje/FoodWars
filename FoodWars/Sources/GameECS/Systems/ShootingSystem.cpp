@@ -57,7 +57,7 @@ void ShootingSystem::update(double deltaTime) {
 
             _timePassed = 0;
         }
-        if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getRemainingTime() == 0)
+        if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getRemainingTime() <= 0)
             resetShooting();
     }
 }

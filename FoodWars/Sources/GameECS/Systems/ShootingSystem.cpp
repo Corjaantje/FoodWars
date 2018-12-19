@@ -4,6 +4,7 @@
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeLine.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
 #include "../../../Headers/GameECS/Components/AIComponent.h"
+#include "../../../Headers/GameECS/Components/JumpComponent.h"
 
 
 ShootingSystem::ShootingSystem(EntityManager &entityManager,
@@ -50,9 +51,6 @@ void ShootingSystem::update(const MouseEvent& event) {
 
             Weapon *selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(
                     _currentPlayer)->getSelectedWeapon();
-
-            if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost() &&
-                selectedWeapon->getAmmo() > 0 && !_entityManager->getComponentFromEntity<AIComponent>(_currentPlayer)) {
 
                 auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentPlayer);
                 auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(_currentPlayer);
@@ -105,11 +103,6 @@ void ShootingSystem::update(const MouseEvent& event) {
                     _audioFacade->playEffect("throwing");
                     resetShooting();
                 }
-            } else {
-                if (event.getMouseEventType() == MouseEventType::Down &&
-                    event.getMouseClickType() == MouseClickType::Left) {
-                    _audioFacade->playEffect("negative");
-                }
             }
         } else {
             resetShooting();
@@ -122,7 +115,9 @@ void ShootingSystem::toggleShooting() {
     if (!_projectileFired) {
         setPlayerTurn();
         auto playerTurn = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
+        auto playerJump = _entityManager->getComponentFromEntity<JumpComponent>(_currentPlayer);
         if (playerTurn != nullptr &&
+            playerJump == nullptr &&
             _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeaponAvailability() > 0 &&
             _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost()) {
             playerTurn->changeIsShooting();
@@ -133,6 +128,9 @@ void ShootingSystem::toggleShooting() {
             }
         }
     }
+    if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() < _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost() ||
+        _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getAmmo() <= 0)
+        _audioFacade->playEffect("negative");
 }
 
 void ShootingSystem::resetShooting() {

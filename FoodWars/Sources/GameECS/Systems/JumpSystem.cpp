@@ -41,7 +41,7 @@ void JumpSystem::update(const KeyEvent& event) {
         for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
             if (_entityManager->getComponentFromEntity<AIComponent>(iterator.first)) continue;
             if (!iterator.second->getIsShooting() && iterator.second->isMyTurn()) {
-                if (iterator.second->getEnergy() <= 0) break;
+                if (iterator.second->getEnergy() < 5) break;
                 if (!_entityManager->getComponentFromEntity<JumpComponent>(iterator.first)) {
                     _entityManager->addComponentToEntity<JumpComponent>(
                             iterator.first); // warning: this probably gives error!

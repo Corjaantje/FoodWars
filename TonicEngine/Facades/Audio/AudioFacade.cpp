@@ -87,7 +87,7 @@ const char* AudioFacade::getAudio(const char* audioName) {
 }
 
 void AudioFacade::increaseEffectVolume() {
-    if(_audioPlayer->getEffectVolume() > 128-13){
+    if(_audioPlayer->getEffectVolume() > 128-15){
         _audioPlayer->setEffectVolume(128);
         _effectPercentage = 10;
     }
@@ -100,7 +100,7 @@ void AudioFacade::increaseEffectVolume() {
 }
 
 void AudioFacade::decreaseEffectVolume() {
-    if(_audioPlayer->getEffectVolume() < 13){
+    if(_audioPlayer->getEffectVolume() < 15){
         _audioPlayer->setEffectVolume(0);
         _effectPercentage = 0;
     }
@@ -113,7 +113,7 @@ void AudioFacade::decreaseEffectVolume() {
 }
 
 void AudioFacade::increaseMusicVolume() {
-    if(_audioPlayer->getMusicVolume() > 128-13){
+    if(_audioPlayer->getMusicVolume() > 128-15){
         _audioPlayer->setMusicVolume(128);
         _musicPercentage = 10;
     }
@@ -126,7 +126,7 @@ void AudioFacade::increaseMusicVolume() {
 }
 
 void AudioFacade::decreaseMusicVolume() {
-    if(_audioPlayer->getMusicVolume() < 13){
+    if(_audioPlayer->getMusicVolume() < 15){
         _audioPlayer->setMusicVolume(0);
         _musicPercentage = 0;
     }

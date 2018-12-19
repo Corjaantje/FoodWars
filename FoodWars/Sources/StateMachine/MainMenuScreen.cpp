@@ -62,7 +62,7 @@ MainMenuScreen::MainMenuScreen(ScreenStateManager& context) :
             [c = _context]() {
                 c->createOrSetActiveScreen<AdvertisingScreen>();
             },
-            400, 150, 300, 750,
+            300, 110, 280, 780,
             Colour{255,255,255,0});
     _advertisement->addToRender(&_renderList);
 

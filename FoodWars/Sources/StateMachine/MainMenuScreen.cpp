@@ -58,17 +58,18 @@ MainMenuScreen::MainMenuScreen(ScreenStateManager& context) :
             Colour{255,255,255,0})->addToRender(&_renderList);
 
     // Advertisement
-    auto f = _fileManager.readFileLines("./Assets/Sprites/Advertisements/current.txt");
-    if (!f.empty())
-    {
-        _advertisement = createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), f[0],
-                [c = _context]() {
-                    c->createOrSetActiveScreen<AdvertisingScreen>();
-                },
-                300, 110, 280, 780,
-                Colour{255,255,255,0});
-        _advertisement->addToRender(&_renderList);
+    auto adFile = _fileManager.readFileLines("./Assets/Sprites/Advertisements/current.txt");
+    std::string ad = "";
+    if (!adFile.empty()) {
+        ad = adFile[0];
     }
+    _advertisement = createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), ad,
+            [c = _context]() {
+                c->createOrSetActiveScreen<AdvertisingScreen>();
+            },
+            300, 110, 280, 780,
+            Colour{255,255,255,0});
+    _advertisement->addToRender(&_renderList);
 
 
     // Quit

@@ -23,7 +23,8 @@ AdvertisingScreen::AdvertisingScreen(ScreenStateManager& context) :
         shapeText->addToRender(&_renderList);
         return;
     }
-    if (_currentAD.empty() || std::find(_advertisements.begin(), _advertisements.end(), _currentAD) != _advertisements.end()) {
+    if (_currentAD.empty() ||
+        std::find(_advertisements.begin(), _advertisements.end(), _currentAD) == _advertisements.end()) {
         shapeText->text = "No Current AD.";
         shapeText->addToRender(&_renderList);
     }

@@ -1,6 +1,6 @@
 #include "../../../Headers/GameECS/Components/JumpComponent.h"
 
-JumpComponent::JumpComponent() : JumpComponent(400){
+JumpComponent::JumpComponent() : JumpComponent(425) {
 
 }
 

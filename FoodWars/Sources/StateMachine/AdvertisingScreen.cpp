@@ -64,8 +64,7 @@ AdvertisingScreen::AdvertisingScreen(ScreenStateManager& context) :
             400, 100, (1600/2)-200, 600)->addToRender(&_renderList);
 }
 
-void AdvertisingScreen::update(double deltaTime)
-{
+void AdvertisingScreen::update(double deltaTime) {
     _visualFacade->render(_renderList);
     _audioFacade->playMusic("menu");
     _inputFacade->pollEvents();

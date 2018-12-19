@@ -37,6 +37,8 @@ public:
 
     void unlock();
 
+    bool isLocked() const;
+
     int getPower() const;
 
     void setPower(int power);

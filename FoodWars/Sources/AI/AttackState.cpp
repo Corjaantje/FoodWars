@@ -175,7 +175,6 @@ bool AttackState::hasAmmo() {
 }
 
 void AttackState::drawShootingLine(const ShotTry &shotTry) {
-    std::cout << "Draw shooting line" << std::endl;
     double playerCenterX = _positionComponent->X + _boxCollider->width / 2.0;
     double playerCenterY = _positionComponent->Y + _boxCollider->height / 2.0;
     _shootingLine.setFromX(playerCenterX);

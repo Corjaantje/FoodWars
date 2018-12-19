@@ -67,10 +67,12 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne,
     int boundLeft = entityManager->createEntity();
     entityManager->addComponentToEntity<BoxCollider>(boundLeft, 900, 900);
     entityManager->addComponentToEntity<PositionComponent>(boundLeft, -900, 0);
+    entityManager->addComponentToEntity<DamageableComponent>(boundLeft, 100, 100);
 
     int boundRight = entityManager->createEntity();
     entityManager->addComponentToEntity<BoxCollider>(boundRight, 900, 900);
     entityManager->addComponentToEntity<PositionComponent>(boundRight, 1600, 0);
+    entityManager->addComponentToEntity<DamageableComponent>(boundRight, 100, 100);
 
     int boundBottom = entityManager->createEntity();
     entityManager->addComponentToEntity<BoxCollider>(boundBottom, 1600, 1600, true);

@@ -61,13 +61,12 @@ void DamageableSystem::handleCollisionEvent(int projectileId, int targetId) {
     else damage = _damageCalculator.calculateDamage(*projectileDamage, *target, *player);
     if (damage > 0) target->lowerHealth(damage);
 
-    _audioFacade->playEffect("damage");
     if (player) {
-        std::cout << "Create hitsplash" << std::endl;
         _splashDamages.emplace_back(*_entityManager, targetId);
+        _audioFacade->playEffect("oof");
+    } else {
+        _audioFacade->playEffect("damage");
     }
-
-    //std::cout << "currentHP: " << target->getHealth() << std::endl;
 
     // Default point increase/decrease
     int iPoints = 10;

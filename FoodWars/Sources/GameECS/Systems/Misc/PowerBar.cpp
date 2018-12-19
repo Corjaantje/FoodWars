@@ -33,43 +33,42 @@ void PowerBar::update(double dt) {
                 }
             }
 
-            int playerCenterX = static_cast<int>(_playerPosition->X + _playerCollider->width / 2.0);
-            int playerCenterY = static_cast<int>(_playerPosition->Y + _playerCollider->height / 2.0);
-
             int height = _power * -1;
-
-            if (!_powerBarRect) {
-                int powerBarX;
-                // Check if player is looking left or right to determine the x position of the powerbar
-                if (!_entityManager->getComponentFromEntity<AnimationComponent>(_playerId)->getIsLookingLeft())
-                    powerBarX = playerCenterX - 55;
-                else
-                    powerBarX = playerCenterX + 35;
-                int powerBarY = playerCenterY - 25;
-
-                int width = 16;
-                int xPos = powerBarX + 2;
-                int yPos = powerBarY + 50;
-                _entityManager->addComponentToEntity<DrawableComponent>(_powerBarBackground,
-                                                                        std::make_unique<ShapeRectangle>(20, 50,
-                                                                                                         powerBarX,
-                                                                                                         powerBarY,
-                                                                                                         Colour(0, 0, 0,
-                                                                                                                0)));
-                _powerBarRect = static_cast<ShapeRectangle *>(_entityManager->addComponentToEntity<DrawableComponent>(
-                        _powerBar,
-                        std::make_unique<ShapeRectangle>(width, height, xPos, yPos, Colour(255, 0, 0, 0),
-                                                         2)).getShape());
-            }
             _powerBarRect->height = height;
         }
     }
 }
 
 void PowerBar::show() {
-    if (_powerBar < 0 || _powerBarBackground < 0) {
+    if ((_powerBar < 0 || _powerBarBackground < 0) && _playerPosition && _playerCollider) {
         _powerBar = _entityManager->createEntity();
         _powerBarBackground = _entityManager->createEntity();
+
+        int playerCenterX = static_cast<int>(_playerPosition->X + _playerCollider->width / 2.0);
+        int playerCenterY = static_cast<int>(_playerPosition->Y + _playerCollider->height / 2.0);
+
+        int powerBarX;
+        // Check if player is looking left or right to determine the x position of the powerbar
+        if (!_entityManager->getComponentFromEntity<AnimationComponent>(_playerId)->getIsLookingLeft())
+            powerBarX = playerCenterX - 55;
+        else
+            powerBarX = playerCenterX + 35;
+        int powerBarY = playerCenterY - 25;
+
+        int width = 16;
+        int xPos = powerBarX + 2;
+        int yPos = powerBarY + 50;
+        _entityManager->addComponentToEntity<DrawableComponent>(_powerBarBackground,
+                                                                std::make_unique<ShapeRectangle>(20, 50,
+                                                                                                 powerBarX,
+                                                                                                 powerBarY,
+                                                                                                 Colour(0, 0, 0,
+                                                                                                        0)));
+        _powerBarRect = static_cast<ShapeRectangle *>(_entityManager->addComponentToEntity<DrawableComponent>(
+                _powerBar,
+                std::make_unique<ShapeRectangle>(width, 0, xPos, yPos, Colour(255, 0, 0, 0),
+                                                 2)).getShape());
+
     }
 }
 
@@ -114,4 +113,8 @@ void PowerBar::lock() {
 
 void PowerBar::unlock() {
     _locked = false;
+}
+
+bool PowerBar::isLocked() const {
+    return _locked;
 }

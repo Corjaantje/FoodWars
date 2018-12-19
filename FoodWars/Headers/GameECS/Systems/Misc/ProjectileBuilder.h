@@ -28,7 +28,7 @@ public:
     const int maxVeloctiy = 150;
     const int minVeloctiy = 50;
     const int maxPower = 50;
-    const double powerDivision = 20;
+    const double powerDivision = 22.5;
     const double speedModifier = 2.5;
     const double gravityModifier = 6.0;
     const double damageOfProjectile = 25;

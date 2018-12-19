@@ -5,6 +5,8 @@
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/Collider/BoxCollider.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
+#include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../Headers/GameECS/Components/AIComponent.h"
 #include <cmath>
 
 MoveSystem::~MoveSystem() {
@@ -44,6 +46,7 @@ MoveSystem::MoveSystem(EntityManager &entityManager, InputFacade& inputFacade,
 void MoveSystem::update(double dt) {
     const int walkingEnergyCostPerSecond = 20;
     for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
+        if(_entityManager->getComponentFromEntity<AIComponent>(iterator.first)) continue;
         if (!iterator.second->getIsShooting()) {
         auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
             double energy = iterator.second->getEnergy();
@@ -72,19 +75,13 @@ void MoveSystem::update(double dt) {
         if(positionComponent) {
             double newX = dt * moveComponent->xVelocity;
             double newY = dt * moveComponent->yVelocity;
-            if(newX < 1){
-                positionComponent->X += std::floor(newX);
-            }
-            else{
+            if(newX >= 1 || newX <= -1){
                 positionComponent->X += std::round(newX);
             }
-            if(newY < 1){
-                positionComponent->Y += std::floor(newY);
-            }
-            else
-            {
+            if(newY >= 1 || newY <= -1) {
                 positionComponent->Y += std::round(newY);
             }
+
             if (positionComponent->Y > 900) {
                 auto damageableComponent = _entityManager->getComponentFromEntity<DamageableComponent>(iterator.first);
                 if(damageableComponent) {

@@ -11,7 +11,6 @@ private:
 public:
     explicit CollisionSystem(EntityManager &entityManager);
     void update(double dt) override;
-
 };
 
 #endif //PROJECT_SWA_COLLISIONSYSTEM_H

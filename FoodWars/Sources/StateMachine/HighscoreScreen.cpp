@@ -86,7 +86,8 @@ void HighscoreScreen::refreshScoreText() {
     for (SerializationReceiver *receiver: v) {
         auto *highscore = dynamic_cast<Highscore *>(receiver);
         if (highscore)
-            _scoreText.emplace_back(highscore->getDate()+" Level "+std::to_string(highscore->getID())+": "+std::to_string(highscore->getScore()));
+            _scoreText.emplace_back(highscore->getDate() + " Level " + std::to_string(highscore->getID() + 1) + ": " +
+                                    std::to_string(highscore->getScore()));
         delete highscore;
     }
 }
@@ -103,6 +104,4 @@ void HighscoreScreen::alterIndex(int dir) {
         _currentIndex = _scoreText.size() - ((_scoreText.size()) % 3);
         _currentIndex += (_scoreText.size()%3==0 && !_scoreText.empty()) ? -(1*3) : 0;
     }
-
-
 }

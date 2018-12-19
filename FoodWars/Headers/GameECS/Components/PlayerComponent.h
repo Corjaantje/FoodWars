@@ -24,19 +24,21 @@ public:
     int getScore() const;
     Weapon* getSelectedWeapon() const;
     int getSelectedWeaponAvailability() const;
+    int getAmountOFWeapons() const;
 
     Faction getFaction() const;
     bool isAlive() const;
 
     void addToWeaponType(const std::string &weaponType, int increaseBy);
 
+    int getTotalAmmoCount() const;
+
     void accept(SerializationVisitor &visitor) override;
 
     void accept(DeserializationVisitor &visitor) override;
 
     std::string getName() const override;
-
-private:
+protected:
     int _playerID;
     int _score;
     int _selectedWeaponAvailability;

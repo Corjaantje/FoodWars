@@ -28,6 +28,16 @@ void DamageableSystem::update(double deltaTime) {
             }
         }
     }
+
+    for (auto splashDamage = _splashDamages.begin(); splashDamage != _splashDamages.end();) {
+        splashDamage->increaseTime(deltaTime);
+        if (splashDamage->remove()) {
+            splashDamage->hide();
+            splashDamage = _splashDamages.erase(splashDamage);
+            continue;
+        }
+        ++splashDamage;
+    }
 }
 
 bool DamageableSystem::canHandle(const CollisionEvent &collisionEvent) {
@@ -51,14 +61,17 @@ void DamageableSystem::handleCollisionEvent(int projectileId, int targetId) {
     else damage = _damageCalculator.calculateDamage(*projectileDamage, *target, *player);
     if (damage > 0) target->lowerHealth(damage);
 
-    _audioFacade->playEffect("damage");
-
-    std::cout << "currentHP: " << target->getHealth() << std::endl;
+    if (player) {
+        _splashDamages.emplace_back(*_entityManager, targetId);
+        _audioFacade->playEffect("oof");
+    } else {
+        _audioFacade->playEffect("damage");
+    }
 
     // Default point increase/decrease
     int iPoints = 10;
     std::map<int, PlayerComponent*> players = _entityManager->getAllEntitiesWithComponent<PlayerComponent>();
-    for (auto const& player : _entityManager->getAllEntitiesWithComponent<PlayerComponent>()){
+    for (auto const &player : players) {
         if (player.first == targetId) {
             player.second->addScore(-iPoints);
             iPoints = damage;

@@ -16,7 +16,7 @@ KeyEventObservable::KeyEventObservable() {
     _keycodeMap[SDL_SCANCODE_R] = KEY::KEY_R;
     _keycodeMap[SDL_SCANCODE_K] = KEY::KEY_K;
     _keycodeMap[SDL_SCANCODE_Y] = KEY::KEY_Y;
-
+    _keycodeMap[SDL_SCANCODE_U] = KEY::KEY_U;
 
     for (auto const &iterator: _keycodeMap) {
         _pressedKeys[iterator.second] = false;

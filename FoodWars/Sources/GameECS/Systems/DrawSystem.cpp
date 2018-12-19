@@ -28,7 +28,6 @@ DrawSystem::DrawSystem(EntityManager &entityManager, VisualFacade& visualFacade,
 DrawSystem::~DrawSystem() = default;
 
 void DrawSystem::update(double dt) {
-    std::map<int, DrawableComponent *> drawComps = _entityManager->getAllEntitiesWithComponent<DrawableComponent>();
     _renderList._shapes.clear();
     _updateCallCount++;
     drawNonComponents();

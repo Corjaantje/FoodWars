@@ -7,6 +7,7 @@
 #include "../../Headers/GameECS/Systems/AnimationSystem.h"
 #include "../../Headers/GameECS/Systems/DamageableSystem.h"
 #include "../../Headers/StateMachine/LevelTransitionScreen.h"
+#include "../../Headers/GameECS/Systems/AISystem.h"
 #include "../../Headers/GameECS/Systems/PowerupSystem.h"
 
 
@@ -25,6 +26,7 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
     _systems.push_back(std::unique_ptr<TurnSystem>(_turnSystem));
     auto shootingSystem = new ShootingSystem{*_entityManager, *_audioFacade, *_visualFacade, *_inputFacade};
     _systems.push_back(std::unique_ptr<ShootingSystem>(shootingSystem));
+    _systems.push_back(std::make_unique<AISystem>(*_entityManager, *_audioFacade, *collisionSystem));
     _systems.push_back(std::make_unique<DamageableSystem>(*_entityManager, *_audioFacade, *collisionSystem));
     _systems.push_back(std::unique_ptr<CollisionSystem>(collisionSystem));
     _systems.push_back(std::make_unique<PowerupSystem>(*collisionSystem, *_turnSystem, *_entityManager));
@@ -52,10 +54,10 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
         c->createOrSetActiveScreen<PauseScreen>();
     };
     _keyMap[KEY::KEY_PAGEUP] = [c = _context]() {
-        c->setTimeModifier(2.50);
+        c->setTimeModifier(c->getTimeModifier() + 0.2);
     };
     _keyMap[KEY::KEY_PAGEDOWN] = [c = _context]() {
-        c->setTimeModifier(0.40);
+        c->setTimeModifier(c->getTimeModifier() - 0.2);
     };
     _keyMap[KEY::KEY_HOME] = [c = _context]() {
         c->setTimeModifier(1.00);
@@ -74,6 +76,9 @@ GameScreen::GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &
     };
     _keyMap[KEY::KEY_Y] = [t = _turnSystem]() {
         t->resetCurrentEnergy();
+    };
+    _keyMap[KEY::KEY_U] = [e = _entityManager, t = _turnSystem]() {
+        e->getComponentFromEntity<DamageableComponent>(t->getCurrentPlayerID())->setResistance(100);
     };
     _keyMap[KEY::KEY_K] = [t = _turnSystem, p1 = playerOne, p2 = playerTwo, e = _entityManager]() {
         if (t->getCurrentPlayerID() == p1) {
@@ -96,13 +101,11 @@ GameScreen::~GameScreen() = default;
 
 void GameScreen::update(double deltaTime) {
     if (_turnSystem->getCurrentPlayerEnergy() <= 1) nextButton->setFlashing(true);
-    std::map<int, TurnComponent *> _entitiesWithTurnComponent = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
-    std::map<int, PlayerComponent *> _entitiesWithPlayerComponent = _entityManager->getAllEntitiesWithComponent<PlayerComponent>();
     bool playerOneAlive = true;
     bool playerTwoAlive = true;
     int playerOneScore = 0;
     int playerTwoScore = 0;
-    for(auto const &iterator : _entitiesWithPlayerComponent) {
+    for (auto const &iterator : _entityManager->getAllEntitiesWithComponent<PlayerComponent>()) {
         if(iterator.second->getPlayerID() == 1){
             playerOneAlive = iterator.second->isAlive();
             playerOneScore = iterator.second->getScore();

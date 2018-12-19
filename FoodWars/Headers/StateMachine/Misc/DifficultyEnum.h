@@ -4,7 +4,8 @@
 enum Difficulty{
     EASY,
     MEDIUM,
-    HARD
+    HARD,
+    INSANE
 };
 
 #endif //PROJECT_SWA_DIFFICULTYENUM_H

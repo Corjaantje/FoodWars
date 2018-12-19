@@ -5,6 +5,10 @@ void CollisionEventHandler::update(const CollisionEvent& collisionEvent) {
         handleCollisionEvent(collisionEvent);
 }
 
-CollisionEventHandler::CollisionEventHandler(IObservable<CollisionEvent> &collisionEventObservable) {
+CollisionEventHandler::CollisionEventHandler(IObservable<CollisionEvent> &collisionEventObservable) : _collisionEventObservable(&collisionEventObservable) {
     collisionEventObservable.registerObserver(this);
+}
+
+CollisionEventHandler::~CollisionEventHandler() {
+    _collisionEventObservable->unregisterObserver(this);
 }

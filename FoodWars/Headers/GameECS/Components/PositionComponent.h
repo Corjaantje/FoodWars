@@ -13,9 +13,10 @@ public:
 
     PositionComponent(int x, int y);
 
+    PositionComponent &operator=(const PositionComponent &other);
     PositionComponent& operator+=(const PositionComponent& other);
-
     PositionComponent& operator--(int);
+    PositionComponent(const PositionComponent& other);
 
     void accept(SerializationVisitor &visitor) override;
 

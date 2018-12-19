@@ -11,6 +11,7 @@ private:
 public:
     int between(int min, int max);
 
+    double between(double min, double max);
     explicit Random();
 };
 

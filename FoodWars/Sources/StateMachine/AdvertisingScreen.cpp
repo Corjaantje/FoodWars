@@ -13,13 +13,21 @@ AdvertisingScreen::AdvertisingScreen(ScreenStateManager& context) :
     wallpaper->addToRender(&_renderList);
 
     std::string filePath = "./Assets/Sprites/Advertisements/";
-    _currentAD = _fileManager.readFileLines(filePath + "current.txt")[0];
+    auto file = _fileManager.readFileLines(filePath + "current.txt");
+    if (!file.empty()) _currentAD = file[0];
     _advertisements = _fileManager.getFiles(filePath, {"png"}, true, false);
-    if (_currentAD.empty() || _advertisements.empty())
+
+    auto shapeText = createShape<ShapeText>((1600/2)-200, 375, "No ADs found.", 80, 400, 100, Colour(0,0,0,0));
+    if (_advertisements.empty())
     {
-        createShape<ShapeText>((1600/2)-200, 550, "No ADs found.", 80, 400, 100, Colour(0,0,0,0))->addToRender(&_renderList);
+        shapeText->addToRender(&_renderList);
         return;
     }
+    if (_currentAD.empty() || std::find(_advertisements.begin(), _advertisements.end(), _currentAD) != _advertisements.end()) {
+        shapeText->text = "No Current AD.";
+        shapeText->addToRender(&_renderList);
+    }
+
 
     _shownAD = createShape<ShapeSprite>(400, 150, (1600/2)-200, (900/2)-90, _currentAD);
     _shownAD->addToRender(&_renderList);
@@ -32,15 +40,17 @@ AdvertisingScreen::AdvertisingScreen(ScreenStateManager& context) :
             Colour{0,0,0,0})->addToRender(&_renderList);
 
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
-            [this]() {
+            [this, shapeText]() {
                 swapAdvertisement(false);
+                shapeText->text = "";
             },
             50, 50, 440, 400,
             Colour(0,0,0,0))->addToRender(&_renderList);
 
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
-            [this]() {
+            [this, shapeText]() {
                 swapAdvertisement(true);
+                shapeText->text = "";
             },
             50, 50, 1110, 400,
             Colour(0,0,0,0))->addToRender(&_renderList);

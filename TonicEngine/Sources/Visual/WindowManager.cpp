@@ -39,12 +39,12 @@ void WindowManager::setResolution(int width, int height){
     _window->setResolution(width, height);
 };
 
-void WindowManager::enableFullscreen(){
+void WindowManager::enableFullscreen() {
     _fullscreen = true;
     _window->setFullscreen(true);
 };
 
-void WindowManager::disablefullscreen(){
+void WindowManager::disablefullscreen() {
     _fullscreen = false;
     _window->setFullscreen(false);
 };
@@ -108,6 +108,11 @@ void WindowManager::renderLine(const ShapeLine &line) {
     int x2 = _windowResCalc->getConvertedxPosDraw(line.xPos2);
     int y2 = _windowResCalc->getConvertedyPosDraw(line.yPos2);
     SDL_RenderDrawLine(_renderer, x, y, x2, y2);
+}
+
+void WindowManager::toggleFullscreen() {
+    if(_fullscreen) disablefullscreen();
+    else enableFullscreen();
 }
 
 

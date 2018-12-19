@@ -183,6 +183,7 @@ void CharacterSelectionScreen::initImages() {
     _difficultyMap[Difficulty::EASY] = "Easy";
     _difficultyMap[Difficulty::MEDIUM] = "Medium";
     _difficultyMap[Difficulty::HARD] = "Hard";
+    _difficultyMap[Difficulty::INSANE] = "Insane";
 
     _leftPreview = createShape<ShapeSprite>(48*2.5, 72*2.5, 240, 270, _previewMapLeft[_playerOneBuilder.getFaction()]);
     _leftPreview->addToRender(&_renderList);

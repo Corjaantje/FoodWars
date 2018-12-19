@@ -25,6 +25,7 @@ public:
 
     void enableFullscreen();
     void disablefullscreen();
+    void toggleFullscreen();
 
     bool setBackground();
     bool removeBackground();

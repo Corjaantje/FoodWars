@@ -4,6 +4,7 @@
 #include "../Headers/GameECS/Components/MoveComponent.h"
 #include "../Headers/GameECS/Systems/StorageSystem.h"
 #include "../Headers/Storage/LevelStorage.h"
+#include "../Headers/GameECS/Components/AIComponent.h"
 #include "../../TonicEngine/Headers/Storage/FileManager.h"
 #include "../../TonicEngine/Headers/General/Random.h"
 
@@ -66,10 +67,16 @@ void LevelLoader::spawnPlayers(GameLevel &gameLevel, CharacterBuilder playerOne,
     int boundLeft = entityManager->createEntity();
     entityManager->addComponentToEntity<BoxCollider>(boundLeft, 900, 900);
     entityManager->addComponentToEntity<PositionComponent>(boundLeft, -900, 0);
+    entityManager->addComponentToEntity<DamageableComponent>(boundLeft, 100, 100);
 
     int boundRight = entityManager->createEntity();
     entityManager->addComponentToEntity<BoxCollider>(boundRight, 900, 900);
     entityManager->addComponentToEntity<PositionComponent>(boundRight, 1600, 0);
+    entityManager->addComponentToEntity<DamageableComponent>(boundRight, 100, 100);
+
+    int boundBottom = entityManager->createEntity();
+    entityManager->addComponentToEntity<BoxCollider>(boundBottom, 1600, 1600, true);
+    entityManager->addComponentToEntity<PositionComponent>(boundBottom, 0, 900);
 }
 
 void LevelLoader::replayLastLevel(GameLevel &gameLevel) {

@@ -123,8 +123,9 @@ void SettingsScreen::update(double deltaTime) {
 }
 
 void SettingsScreen::update(const KeyEvent& event){
-    if(event.getKey() == KEY::KEY_ESCAPE)
-    {
+    if(event.getKey() == KEY::KEY_ESCAPE) {
         _context->setActiveScreen<MainMenuScreen>();
+    } else if(event.getKeyEventType() == KeyEventType::Down && event.getKey() == KEY::KEY_F) {
+        _context->getFacade<VisualFacade>()->toggleFullscreen();
     }
 }

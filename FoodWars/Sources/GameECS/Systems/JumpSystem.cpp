@@ -2,6 +2,8 @@
 #include "../../../Headers/GameECS/Components/JumpComponent.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
 #include "../../../Headers/GameECS/Components/MoveComponent.h"
+#include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../Headers/GameECS/Components/AIComponent.h"
 
 JumpSystem::JumpSystem(EntityManager &entityManager, AudioFacade& audioFacade,
                         InputFacade& inputFacade,
@@ -37,25 +39,23 @@ void JumpSystem::update(double dt) {
 void JumpSystem::update(const KeyEvent& event) {
     if(event.getKeyEventType() == KeyEventType::Down && event.getKey() == KEY::KEY_SPACEBAR) {
         for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()) {
-            auto *moveComponent = _entityManager->getComponentFromEntity<MoveComponent>(iterator.first);
-            if (!iterator.second->getIsShooting()) {
-                if (iterator.second->isMyTurn()) {
-                    if (iterator.second->getEnergy() < 5) break;
-                    if (!_entityManager->getComponentFromEntity<JumpComponent>(iterator.first)) {
-                        _entityManager->addComponentToEntity<JumpComponent>(
-                                iterator.first); // warning: this probably gives error!
-                        iterator.second->lowerEnergy(5);
-                        _audioFacade->playEffect("jump");
-                    }
-                    break;
+            if (_entityManager->getComponentFromEntity<AIComponent>(iterator.first)) continue;
+            if (!iterator.second->getIsShooting() && iterator.second->isMyTurn()) {
+                if (iterator.second->getEnergy() < 5) break;
+                if (!_entityManager->getComponentFromEntity<JumpComponent>(iterator.first)) {
+                    _entityManager->addComponentToEntity<JumpComponent>(
+                            iterator.first); // warning: this probably gives error!
+                    iterator.second->lowerEnergy(5);
+                    _audioFacade->playEffect("jump");
                 }
+                break;
             }
         }
     }
 }
 
 bool JumpSystem::canHandle(const CollisionEvent &collisionEvent) {
-    return (collisionEvent.getCollisionAngle() >= 270 || collisionEvent.getCollisionAngle() <= 90) && _entityManager->getComponentFromEntity<JumpComponent>(collisionEvent.getEntity()) != nullptr;
+    return (collisionEvent.getCollisionAngle() >= 315 || collisionEvent.getCollisionAngle() <= 45) && _entityManager->getComponentFromEntity<JumpComponent>(collisionEvent.getEntity()) != nullptr;
 }
 
 void JumpSystem::handleCollisionEvent(const CollisionEvent &collisionEvent) {

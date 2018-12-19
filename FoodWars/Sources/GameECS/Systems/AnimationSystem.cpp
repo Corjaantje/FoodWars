@@ -1,5 +1,6 @@
 #include "../../../Headers/GameECS/Systems/AnimationSystem.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../Headers/GameECS/Components/AIComponent.h"
 
 AnimationSystem::AnimationSystem(EntityManager &entityManager)
         : _entityManager(&entityManager), _animationManager(AnimationManager{})

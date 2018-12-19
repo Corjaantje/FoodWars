@@ -3,7 +3,7 @@
 
 
 
-AudioPlayer::AudioPlayer() : _effectVolume{0}, _musicVolume{0}{
+AudioPlayer::AudioPlayer() : _effectVolume{2}, _musicVolume{2}{
     AudioPlayer::init();
     Mix_VolumeMusic(_musicVolume);
     Mix_Volume(-1, _effectVolume);

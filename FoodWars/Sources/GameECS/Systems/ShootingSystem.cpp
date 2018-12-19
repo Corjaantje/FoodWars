@@ -1,47 +1,43 @@
-#include <unistd.h>
+#include <cmath>
 #include "../../../Headers/GameECS/Systems/ShootingSystem.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
-#include "../../../Headers/GameECS/Components/DamageableComponent.h"
-#include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeLine.h"
-#include <cmath>
-#include "../../../Headers/GameECS/Components/DamagingComponent.h"
-#include "../../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../Headers/GameECS/Components/AIComponent.h"
 #include "../../../Headers/GameECS/Components/JumpComponent.h"
 
-
 ShootingSystem::ShootingSystem(EntityManager &entityManager,
-                               AudioFacade& audioFacade,
-                               VisualFacade& visualFacade,
-                               InputFacade& inputFacade) :
+                               AudioFacade &audioFacade,
+                               VisualFacade &visualFacade,
+                               InputFacade &inputFacade) :
+        _shootingLine{entityManager},
         _audioFacade(&audioFacade),
         _entityManager{&entityManager},
         _visualFacade{&visualFacade},
+        _projectileBuilder{entityManager},
         _projectileFired{false},
         _projectile{-1},
-        _timePassed{0},
         _mouseDown{false},
-        _powerBarX(0),
-        _powerBarY(0),
-        _power(0),
-        _risingPower(true),
-        _currentPlayer(0),
-        _otherPlayer(0),
-        _powerBarBackground(-1),
-        _powerBar(-1),
-        _shootingLine(-1)
-
-{
+        _currentPlayer(-1),
+        _otherPlayer(-1),
+        _powerBar(entityManager) {
     inputFacade.getMouseEventObservable().registerObserver(this);
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()){
+        if(iterator.second->isMyTurn())
+            _currentPlayer = iterator.first;
+        else
+            _otherPlayer = iterator.first;
+    }
 }
 
 void ShootingSystem::update(double deltaTime) {
     if (!_entityManager->exists(_projectile)) _projectileFired = false;
+
+    setPlayerTurn();
+
     if (_projectileFired) {
         auto projectilePos = _entityManager->getComponentFromEntity<PositionComponent>(_projectile);
         auto projectileSize = _entityManager->getComponentFromEntity<BoxCollider>(_projectile);
-        auto projectileMove = _entityManager->getComponentFromEntity<MoveComponent>(_projectile);
 
         if ((projectilePos->X + projectileSize->width) >= 1590 || projectilePos->X <= 1
             || (projectilePos->Y + projectileSize->height) >= 890) {
@@ -49,27 +45,28 @@ void ShootingSystem::update(double deltaTime) {
             _entityManager->removeEntity(_projectile);
         }
     }
-    _timePassed += deltaTime;
 
-    if (_mouseDown) {
-        if(_timePassed >= 0.02) {
-            powerHandler();
-
-            _timePassed = 0;
-        }
-        if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getRemainingTime() <= 0)
-            resetShooting();
+    if (_mouseDown && _powerBar.isVisible()) {
+        _powerBar.update(deltaTime);
     }
 }
 
-void ShootingSystem::update(const MouseEvent& event) {
-    if(!_projectileFired) {
-        setPlayerTurn();
+void ShootingSystem::update(const MouseEvent &event) {
+    if (!_projectileFired) {
+        auto turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
         if (!_entityManager->getComponentFromEntity<TurnComponent>(_otherPlayer)->getIsShooting() &&
-            _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getIsShooting()) {
+            turnComponent->getIsShooting()) {
+
+            if(turnComponent->getRemainingTime() <= 0.0) {
+                resetShooting();
+                return;
+            }
 
             Weapon *selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(
                     _currentPlayer)->getSelectedWeapon();
+
+            _powerBar.show();
+            _powerBar.unlock();
 
             auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentPlayer);
             auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(_currentPlayer);
@@ -81,7 +78,8 @@ void ShootingSystem::update(const MouseEvent& event) {
 
             // shooting in a circle
             double totalLength = sqrt(deltaX * deltaX + deltaY * deltaY);
-            double length = totalLength > 150 ? 150 : totalLength;
+            double length =
+                    totalLength > _projectileBuilder.maxVeloctiy ? _projectileBuilder.maxVeloctiy : totalLength;
             double scale = length / totalLength;
 
             deltaX *= scale;
@@ -92,172 +90,97 @@ void ShootingSystem::update(const MouseEvent& event) {
 
             if (event.getMouseEventType() == MouseEventType::Down &&
                 event.getMouseClickType() == MouseClickType::Left) {
-
-                createShootingLine(playerCenterX, playerCenterY, toX, toY);
-                createPowerBar();
-                _powerBar = (_powerBar != -1) ? _powerBar : _entityManager->createEntity();
+                _shootingLine.setFromX(playerCenterX);
+                _shootingLine.setFromY(playerCenterY);
+                _shootingLine.setToX(toX);
+                _shootingLine.setToY(toY);
+                _shootingLine.show();
                 _mouseDown = true;
             }
 
             if (event.getMouseEventType() == MouseEventType::Drag) {
-                if (!_entityManager->exists(_shootingLine))
-                    createShootingLine(playerCenterX, playerCenterY, toX, toY);
-                auto drawable = _entityManager->getComponentFromEntity<DrawableComponent>(_shootingLine);
-                auto line = static_cast<ShapeLine *>(drawable->getShape());
-                line->xPos = playerCenterX;
-                line->yPos = playerCenterY;
-                line->xPos2 = toX;
-                line->yPos2 = toY;
+                _shootingLine.setFromX(playerCenterX);
+                _shootingLine.setFromY(playerCenterY);
+                _shootingLine.setToX(toX);
+                _shootingLine.setToY(toY);
+                _shootingLine.show();
             }
 
             if (event.getMouseEventType() == MouseEventType::Up &&
                 event.getMouseClickType() == MouseClickType::Left && _mouseDown) {
-                generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY, selectedWeapon, playerCenterX, playerCenterY);
+                generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY, selectedWeapon, playerCenterX,
+                                   playerCenterY);
                 _projectileFired = true;
-                _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->lowerEnergy(_entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost());
+                _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->lowerEnergy(
+                        _entityManager->getComponentFromEntity<PlayerComponent>(
+                                _currentPlayer)->getSelectedWeapon()->getEnergyCost());
                 _audioFacade->playEffect("throwing");
                 resetShooting();
             }
-        } else {
-            resetShooting();
-        }
-    }
-}
-
-void ShootingSystem::createShootingLine(int fromX, int fromY, int toX, int toY) {
-    _shootingLine = (_shootingLine != -1) ? _shootingLine : _entityManager->createEntity();
-    _entityManager->addComponentToEntity<DrawableComponent>(_shootingLine,
-                                                            std::make_unique<ShapeLine>(fromX, fromY, toX, toY,
-                                                                                        Colour(0, 0, 0, 0)));
-}
-
-void ShootingSystem::createPowerBar() {
-    auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentPlayer);
-    auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(_currentPlayer);
-    int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
-    int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
-
-    // Check if player is looking left or right to determine the x position of the powerbar
-    if (!_entityManager->getComponentFromEntity<AnimationComponent>(_currentPlayer)->getIsLookingLeft())
-        _powerBarX = playerCenterX - 55;
-    else
-        _powerBarX = playerCenterX + 35;
-    _powerBarY = playerCenterY - 25;
-    _powerBarBackground = (_powerBarBackground != -1) ? _powerBarBackground : _entityManager->createEntity();
-    _entityManager->addComponentToEntity<DrawableComponent>(_powerBarBackground,
-                                                            std::make_unique<ShapeRectangle>(20, 50, _powerBarX, _powerBarY,
-                                                                    Colour(0, 0, 0, 0)));
-}
-
-void ShootingSystem::powerHandler() {
-    int width = 16;
-    int height = _power * -1;
-    int xPos = _powerBarX + 2;
-    int yPos = _powerBarY + 50;
-
-    if (!_risingPower) {
-        if (_power > 0) {
-            _entityManager->addComponentToEntity<DrawableComponent>(_powerBar,
-                                                                    std::make_unique<ShapeRectangle>(width, height, xPos, yPos, Colour(255, 0, 0, 0)));
-            _power--;
-        } else {
-            _risingPower = true;
         }
     } else {
-        if (_power < 50) {
-            _entityManager->addComponentToEntity<DrawableComponent>(_powerBar,
-                                                                    std::make_unique<ShapeRectangle>(width, height, xPos, yPos, Colour(255, 0, 0, 0)));
-            _power++;
-        } else {
-            _risingPower = false;
-        }
+        resetShooting();
     }
-
 }
 
 void ShootingSystem::toggleShooting() {
     if (!_projectileFired) {
-        setPlayerTurn();
         auto playerTurn = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
         auto playerJump = _entityManager->getComponentFromEntity<JumpComponent>(_currentPlayer);
         if (playerTurn != nullptr &&
             playerJump == nullptr &&
             _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeaponAvailability() > 0 &&
-            _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >= _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost()) {
+            _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >=
+            _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost() &&
+            !_entityManager->getComponentFromEntity<AIComponent>(_currentPlayer)) {
             playerTurn->changeIsShooting();
+
             if (!playerTurn->getIsShooting())
                 resetShooting();
             else {
-                createPowerBar();
                 _entityManager->getComponentFromEntity<MoveComponent>(_currentPlayer)->xVelocity = 0;
+                _powerBar.lockToPlayer(_currentPlayer);
+                _powerBar.show();
+                _powerBar.lock();
             }
         }
     }
-    if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() < _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost() ||
-        _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getAmmo() <= 0)
+    if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() <
+        _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost() ||
+        _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getAmmo() <= 0 ||
+        _entityManager->getComponentFromEntity<AIComponent>(_currentPlayer))
         _audioFacade->playEffect("negative");
 }
 
 void ShootingSystem::resetShooting() {
     _mouseDown = false;
-    _power = 0;
-    _entityManager->removeEntity(_powerBarBackground);
-    _powerBarBackground = -1;
-    _entityManager->removeEntity(_powerBar);
-    _powerBar = -1;
-    _entityManager->removeEntity(_shootingLine);
-    _shootingLine = -1;
+    _shootingLine.hide();
+    _powerBar.hide();
     _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->setIsShooting(false);
 }
 
 void ShootingSystem::setPlayerTurn() {
-    auto turnComponents = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
-    for (auto const &x : turnComponents) {
-        if (x.second->isMyTurn()) {
-            _currentPlayer = x.first;
-            break;
-        }
-    }
-    for(const auto &iterator : _entityManager->getAllEntitiesWithComponent<PlayerComponent>()){
-        if (iterator.first != _currentPlayer) {
-            _otherPlayer = iterator.first;
-            _entityManager->getComponentFromEntity<TurnComponent>(_otherPlayer)->setIsShooting(false);
-            break;
-        }
+    auto turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
+    if(/*turnComponent->getIsShooting() && */!turnComponent->isMyTurn()) {
+        resetShooting();
+        int player = _currentPlayer;
+        _currentPlayer = _otherPlayer;
+        _otherPlayer = player;
     }
 }
 
 void ShootingSystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
-                                double velocityX, double velocityY, Weapon* selectedWeapon, int playerCenterX, int playerCenterY) {
-    _projectile = _entityManager->createEntity();
-    int projectileWidth = 11;
-    int projectileHeight = 32;
-    int posX = playerCenterX;
-    int posY = playerCenterY;
-    // Checks for shooting down
-    if (velocityX > 0 && velocityY > 70) posY = playerCenterY + (playerCollider.height / 2) + 1;
-    else if (velocityX <= 0 && velocityY > 70) posY = playerCenterY + (playerCollider.height / 2) + 1;
-        // Checks for shooting up
-    else if (velocityX > 0 && velocityY <= -70) posY = playerCenterY - (playerCollider.height / 2) - 1;
-    else if (velocityX <= 0 && velocityY <= -70) posY = playerCenterY - (playerCollider.height / 2) - 1;
-        // Remaining default checks
-    else if (velocityX > 0) posX = playerCenterX + (playerCollider.width / 2) + 1;
-    else if (velocityX <= 0) posX = playerCenterX - (playerCollider.width / 2) - (projectileWidth - 1);
-    if (velocityY < 0) posY -= projectileHeight + 1;
-
-    const double speedModifier = 2.5;
-
-    _entityManager->addComponentToEntity<DrawableComponent>(_projectile, std::make_unique<ShapeSprite>(projectileWidth,
-                                                                                                       projectileHeight,
-                                                                                                       posX, posY,
-                                                                                                       selectedWeapon->getImage()));
-    _entityManager->addComponentToEntity<PositionComponent>(_projectile, posX, posY);
-    _entityManager->addComponentToEntity<BoxCollider>(_projectile, projectileWidth, projectileHeight);
-    _entityManager->addComponentToEntity<DamagingComponent>(_projectile, 25, selectedWeapon->getFaction());
-    _entityManager->addComponentToEntity<DamageableComponent>(_projectile, 10);
-    _entityManager->addComponentToEntity<GravityComponent>(_projectile, 6 * speedModifier);
-    _entityManager->addComponentToEntity<MoveComponent>(_projectile, (_power / 20) * velocityX * speedModifier,
-                                                        (_power / 20) * velocityY * speedModifier);
+                                   double velocityX, double velocityY, Weapon *selectedWeapon, int playerCenterX,
+                                   int playerCenterY) {
+    _projectile = _projectileBuilder
+            .setPlayerPostion(playerPositionComponent)
+            .setPlayerCollider(playerCollider)
+            .setXVelocity(velocityX)
+            .setYVelocity(velocityY)
+            .setPower(_powerBar.getPower())
+            .setWeapon(*selectedWeapon)
+            .setPlayerCenterX(playerCenterX)
+            .setPlayerCenterY(playerCenterY)
+            .build();
     selectedWeapon->lowerAmmo();
-    _power = 0;
 }

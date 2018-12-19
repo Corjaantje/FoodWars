@@ -4,16 +4,16 @@
 #include "../../../Headers/GameECS/Components/PositionComponent.h"
 #include "../../../Headers/GameECS/Components/GravityComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
-#include "../../../Headers/StateMachine/Misc/Coordinate.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
-#include "../../../Headers/GameECS/Components/ItemComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../../Headers/GameECS/Components/AnimationComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeRectangle.h"
 #include "../../../../TonicEngine/Headers/Storage/FileManager.h"
 
-PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservable, IObservable<TurnSwitchedEvent> &turnSwitchedEventObservable, EntityManager &entityManager)
-        : CollisionEventHandler(collisionEventObservable), TurnSwitchedEventHandler(turnSwitchedEventObservable), _entityManager{&entityManager}, _itemFactory{ItemFactory{}}, _random{Random{}}{
+PowerupSystem::PowerupSystem(IObservable<CollisionEvent> &collisionEventObservable,
+                             IObservable<TurnSwitchedEvent> &turnSwitchedEventObservable, EntityManager &entityManager)
+        : CollisionEventHandler(collisionEventObservable), TurnSwitchedEventHandler(turnSwitchedEventObservable),
+          _entityManager{&entityManager}, _itemFactory{ItemFactory{}}, _random{Random{}} {
     _itemMap[0] = "PowerupCoffee";
     _itemMap[1] = "PowerupPill";
     _weaponMap[0] = "carrot";
@@ -29,18 +29,19 @@ void PowerupSystem::spawnDrop(const std::unordered_map<int, std::string> &dropMa
     int dropHeight = 40;
 
     int dropID = _entityManager->createEntity();
-    int dropChance = _random.between(0, dropMap.size()-1);
+    int dropChance = _random.between(0, dropMap.size() - 1);
 
     const std::string &name = dropMap.at(dropChance);
     auto weaponType = _itemFactory.createItem(name);
     _entityManager->addComponentToEntity(dropID, std::make_unique<ItemComponent>(weaponType));
     _entityManager->addComponentToEntity<DrawableComponent>(dropID,
-                                                            std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX, dropY,
+                                                            std::make_unique<ShapeSprite>(dropWidth, dropHeight, dropX,
+                                                                                          dropY,
                                                                                           name + ".png", 3));
 
-    typedef std::unordered_map<int,std::string>::value_type map_value_type;
-    if (_itemMap.end() == find_if(_itemMap.begin(),_itemMap.end(),[&name](const map_value_type& vt)
-    { return vt.second == name; })) {
+    typedef std::unordered_map<int, std::string>::value_type map_value_type;
+    if (_itemMap.end() ==
+        find_if(_itemMap.begin(), _itemMap.end(), [&name](const map_value_type &vt) { return vt.second == name; })) {
         const int amountOfSprites = 6;
         std::vector<std::unique_ptr<IShape>> animationShapes{amountOfSprites};
         for (int i = 1; i < amountOfSprites; i++) {
@@ -49,10 +50,11 @@ void PowerupSystem::spawnDrop(const std::unordered_map<int, std::string> &dropMa
         }
         _entityManager->addComponentToEntity<AnimationComponent>(dropID, std::move(animationShapes), 0.1);
     }
-    _entityManager->addComponentToEntity<BoxCollider>(dropID, dropWidth, dropHeight);
+    _entityManager->addComponentToEntity<BoxCollider>(dropID, dropWidth, dropHeight, true);
     _entityManager->addComponentToEntity<PositionComponent>(dropID, dropX, dropY);
     _entityManager->addComponentToEntity<GravityComponent>(dropID, 5);
 }
+
 bool PowerupSystem::canHandle(const CollisionEvent &collisionEvent) {
     int player = collisionEvent.getEntity();
     int item = collisionEvent.getOtherEntity();
@@ -63,7 +65,7 @@ bool PowerupSystem::canHandle(const CollisionEvent &collisionEvent) {
 void PowerupSystem::handleCollisionEvent(const CollisionEvent &collisionEvent) {
     int item = collisionEvent.getOtherEntity();
     auto itemComponent = _entityManager->getComponentFromEntity<ItemComponent>(item);
-    if(!itemComponent) {
+    if (!itemComponent) {
         item = collisionEvent.getEntity();
         itemComponent = _entityManager->getComponentFromEntity<ItemComponent>(item);
     }
@@ -78,7 +80,7 @@ void PowerupSystem::update(double deltaTime) {
 
 void PowerupSystem::handleTurnSwitchedEvent(const TurnSwitchedEvent &turnSwitchedEvent) {
     Random random;
-    if (random.between(0,1) == 0) { spawnDrop(_itemMap);}
+    if (random.between(0, 1) == 0) { spawnDrop(_itemMap); }
     spawnDrop(_weaponMap);
 }
 

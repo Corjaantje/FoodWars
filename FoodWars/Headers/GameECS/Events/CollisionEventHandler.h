@@ -7,8 +7,10 @@
 
 class CollisionEventHandler : IObserver<CollisionEvent> {
 private:
+    IObservable<CollisionEvent>* _collisionEventObservable;
 public:
-    CollisionEventHandler(IObservable<CollisionEvent>& collisionEventObservable);
+    explicit CollisionEventHandler(IObservable<CollisionEvent> &collisionEventObservable);
+    ~CollisionEventHandler();
     virtual void handleCollisionEvent(const CollisionEvent& collisionEvent) = 0;
     virtual bool canHandle(const CollisionEvent& collisionEvent) = 0;
     void update(const CollisionEvent& collisionEvent) final;

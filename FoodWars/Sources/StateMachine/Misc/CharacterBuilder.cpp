@@ -8,6 +8,7 @@
 #include "../../../Headers/GameECS/Components/AnimationComponent.h"
 #include "../../../Headers/GameECS/Components/DamageableComponent.h"
 #include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../Headers/GameECS/Components/AIComponent.h"
 
 bool CharacterBuilder::getIsBot() const {
     return _isBot;
@@ -30,12 +31,12 @@ Difficulty CharacterBuilder::getDifficulty() const {
 }
 
 void CharacterBuilder::increaseDifficulty() {
-    _botDifficulty = static_cast<Difficulty>((_botDifficulty + 1) % (3));
+    _botDifficulty = static_cast<Difficulty>((_botDifficulty + 1) % (4));
 }
 
 void CharacterBuilder::decreaseDifficulty() {
     if(_botDifficulty - 1 < 0){
-        _botDifficulty = static_cast<Difficulty>(2);
+        _botDifficulty = static_cast<Difficulty>(3);
     }
     else{
         _botDifficulty = static_cast<Difficulty>(_botDifficulty - 1);
@@ -61,16 +62,12 @@ void CharacterBuilder::buildCharacterEntity(GameLevel &gameLevel, int playerID, 
     entityManager->addComponentToEntity<GravityComponent>(player);
     entityManager->addComponentToEntity<AnimationComponent>(player, std::move(spawnAnimation), 0.1);
     entityManager->addComponentToEntity<DamageableComponent>(player);
-    if(startTurn){
+    entityManager->addComponentToEntity<PlayerComponent>(player, playerID, getFaction());
+    if (startTurn) {
         turnComponent.switchTurn(true);
         turnComponent.setRemainingTime(30);
     }
-    if(getIsBot()){
-        //TODO Add an AI component to the entity if this Entity is a Bot;
-        //TODO Remove Player Component
-        entityManager->addComponentToEntity<PlayerComponent>(player, playerID, getFaction());
-    }
-    else{
-        entityManager->addComponentToEntity<PlayerComponent>(player, playerID, getFaction());
+    if (getIsBot()) {
+        entityManager->addComponentToEntity<AIComponent>(player, _botDifficulty);
     }
 }

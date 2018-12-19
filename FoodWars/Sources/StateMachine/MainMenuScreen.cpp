@@ -58,13 +58,18 @@ MainMenuScreen::MainMenuScreen(ScreenStateManager& context) :
             Colour{255,255,255,0})->addToRender(&_renderList);
 
     // Advertisement
-    _advertisement = createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), _fileManager.readFileLines("./Assets/Sprites/Advertisements/current.txt")[0],
-            [c = _context]() {
-                c->createOrSetActiveScreen<AdvertisingScreen>();
-            },
-            400, 150, 300, 750,
-            Colour{255,255,255,0});
-    _advertisement->addToRender(&_renderList);
+    auto f = _fileManager.readFileLines("./Assets/Sprites/Advertisements/current.txt");
+    if (!f.empty())
+    {
+        _advertisement = createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), f[0],
+                [c = _context]() {
+                    c->createOrSetActiveScreen<AdvertisingScreen>();
+                },
+                300, 110, 280, 780,
+                Colour{255,255,255,0});
+        _advertisement->addToRender(&_renderList);
+    }
+
 
     // Quit
     createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
@@ -89,7 +94,10 @@ void MainMenuScreen::update(double deltaTime) {
     _visualFacade->render(_renderList);
     _audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
-    _advertisement->changeImageURL(_fileManager.readFileLines("./Assets/Sprites/Advertisements/current.txt")[0]);
+    auto f = _fileManager.readFileLines("./Assets/Sprites/Advertisements/current.txt");
+    if (!f.empty()) {
+        _advertisement->changeImageURL(f[0]);
+    }
 }
 
 void MainMenuScreen::update(const KeyEvent& event){

@@ -1,6 +1,6 @@
 #include "../../../Headers/StateMachine/Misc/LevelBuilder.h"
 
-LevelBuilder::LevelBuilder() : _gameLevel(), _entityManager(_gameLevel.getEntityManager()), _selectedMusic(0),
+LevelBuilder::LevelBuilder() : _gameLevel(), _entityManager(_gameLevel.getEntityManager()), _selectedMusic(-1),
           _colorBlue(0),
           _colorRed(0),
           _colorGreen(0),
@@ -203,7 +203,7 @@ void LevelBuilder::setPreviousMusic() {
 }
 
 std::string LevelBuilder::getSelectedSong() const {
-    if (_musicList[_selectedMusic].empty()) {
+    if (_selectedMusic == -1 || _musicList[_selectedMusic].empty()) {
         return "none";
     } else {
         return _musicList[_selectedMusic];
@@ -274,8 +274,5 @@ bool LevelBuilder::canBuildLevel() {
     if(_spawnPoints.size() < 2){
         return false;
     }
-    if(_CoordinateEntityMap.size() < 8){
-        return false;
-    }
-    return true;
+    return _CoordinateEntityMap.size() >= 8;
 }

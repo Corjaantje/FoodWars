@@ -51,3 +51,7 @@ void VisualFacade::pollEvents() {
 bool VisualFacade::isWindowClosed() {
     return _windowManager->isWindowClosed();
 }
+
+void VisualFacade::toggleFullscreen() {
+    _windowManager->toggleFullscreen();
+}

@@ -31,7 +31,7 @@ void DamageableSystem::update(double deltaTime) {
 
     for (auto splashDamage = _splashDamages.begin(); splashDamage != _splashDamages.end();) {
         splashDamage->increaseTime(deltaTime);
-        if (splashDamage->getElapsedTime() >= 1.0) {
+        if (splashDamage->remove()) {
             splashDamage->hide();
             splashDamage = _splashDamages.erase(splashDamage);
             continue;

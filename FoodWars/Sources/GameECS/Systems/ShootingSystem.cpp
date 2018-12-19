@@ -161,8 +161,7 @@ void ShootingSystem::resetShooting() {
 
 void ShootingSystem::setPlayerTurn() {
     auto turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
-    if(turnComponent->getIsShooting() && !turnComponent->isMyTurn()) {
-        std::cout << "Turn switched!" << std::endl;
+    if(/*turnComponent->getIsShooting() && */!turnComponent->isMyTurn()) {
         resetShooting();
         int player = _currentPlayer;
         _currentPlayer = _otherPlayer;

@@ -10,9 +10,13 @@
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeSprite.h"
 #include "../Components/PositionComponent.h"
 #include "../Components/Collider/BoxCollider.h"
+#include "../Components/AnimationComponent.h"
 
 class SplashDamage {
 private:
+    unsigned int amountOfSprites = 6;
+    double animationInterval = 0.2;
+
     int _entityId;
     int _playerId;
     int _width;
@@ -29,18 +33,29 @@ public:
                                                                                 _entityManager->getComponentFromEntity<PositionComponent>(
                                                                                         _playerId)}, _playerCollider{
                     _entityManager->getComponentFromEntity<BoxCollider>(_playerId)} {
+
+        double x = _playerPosition->X + _playerCollider->width / 2.0 -
+                   _width / 2.0;
+
+        double y =  _playerPosition->Y + _playerCollider->height / 2.0 -
+                    _height / 2.0;
         _entityManager->addComponentToEntity<DrawableComponent>(_entityId,
-                                                                std::make_unique<ShapeSprite>(_width, _height, 0, 0,
-                                                                                              "SplashDamage.png", 3));
-        _entityManager->addComponentToEntity<PositionComponent>(_entityId,
-                                                                _playerPosition->X + _playerCollider->width / 2.0 -
-                                                                _width / 2.0,
-                                                                _playerPosition->Y + _playerCollider->height / 2.0 -
-                                                                _height / 2.0);
+                                                                std::make_unique<ShapeSprite>(_width, _height, x, y, "SplashDamage3.png", 2));
+
+        std::vector<std::unique_ptr<IShape>> animationShapes{amountOfSprites};
+        for(int i = 1; i <= amountOfSprites; i++) {
+            animationShapes[i - 1]  = std::make_unique<ShapeSprite>(_width, _height, x, y, "SplashDamage" + std::to_string(i) + ".png", 3);
+        }
+        _entityManager->addComponentToEntity<AnimationComponent>(_entityId, std::move(animationShapes), animationInterval);
+        _entityManager->addComponentToEntity<PositionComponent>(_entityId, x, y );
     }
 
     ~SplashDamage() {
         hide();
+    }
+
+    bool remove() const {
+        return _elapsedTime >= amountOfSprites * animationInterval;
     }
 
     double getElapsedTime() const {

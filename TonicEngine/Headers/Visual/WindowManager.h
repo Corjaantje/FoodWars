@@ -29,6 +29,7 @@ public:
 
     void enableFullscreen();
     void disablefullscreen();
+    void toggleFullscreen();
 
     void pollEvents();
     bool isWindowClosed();

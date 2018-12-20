@@ -5,15 +5,20 @@
 #include "Component.h"
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
 
-class MoveComponent : public Component, public ISerializable {
+class MoveComponent : public Component {
 public:
     double xVelocity;
     double yVelocity;
     MoveComponent();
     explicit MoveComponent(double velocity);
+
+    MoveComponent(double xVelocity, double yVelocity);
     MoveComponent& operator+=(const MoveComponent& other);
     ~MoveComponent() override;
-    std::vector<std::string> serialize() override;
+
+    void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
 };
 
 #endif //PROJECT_SWA_MOVECOMPONENT_H

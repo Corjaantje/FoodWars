@@ -1,74 +1,96 @@
 #include "../../Headers/StateMachine/AdvertisingScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
-#include "../../../TonicEngine/Headers/Storage/AdvertisingManager.h"
 
 
-AdvertisingScreen::AdvertisingScreen(std::shared_ptr<ScreenStateManager> context, const AdvertisingManager& manager) : IScreen(context), _advertisingManager(&manager)
+AdvertisingScreen::AdvertisingScreen(ScreenStateManager& context) :
+        IScreen(context),
+        _fileManager(FileManager{}),
+        _currentIndex(0)
 {
-    visualFacade = context->getFacade<VisualFacade>();
-    audioFacade = context->getFacade<AudioFacade>();
-    _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
-    _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
+    _inputFacade->getKeyEventObservable().registerKeyEventObserver(this);
+    auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenAdvertisements.png");
+    wallpaper->layer = 0;
+    wallpaper->addToRender(&_renderList);
 
-    _renderList._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenAdvertisements.png"));
+    std::string filePath = "./Assets/Sprites/Advertisements/";
+    auto file = _fileManager.readFileLines(filePath + "current.txt");
+    if (!file.empty()) _currentAD = file[0];
+    _advertisements = _fileManager.getFiles(filePath, {"png"}, true, false);
 
-    if (_advertisingManager->getAdvertisements().empty())
+    auto shapeText = createShape<ShapeText>((1600/2)-200, 375, "No ADs found.", 80, 400, 100, Colour(0,0,0,0));
+    if (_advertisements.empty())
     {
-        _renderList._shapes[1].push_back(createShape<ShapeText>((1600/2)-200, 550, "No ADs found.", 80, 400, 100, Colour(0,0,0,0)));
+        shapeText->addToRender(&_renderList);
         return;
     }
+    if (_currentAD.empty() ||
+        std::find(_advertisements.begin(), _advertisements.end(), _currentAD) == _advertisements.end()) {
+        shapeText->text = "No Current AD.";
+        shapeText->addToRender(&_renderList);
+    }
 
-    //get index from currentAd
-    currentIndex = 0;
-    shownAD = new ShapeSprite(400, 150, (1600/2)-200, (900/2)-90, _advertisingManager->getCurrentAd());
 
-    _renderList._shapes[1].push_back(shownAD);
+    _shownAD = createShape<ShapeSprite>(400, 150, (1600/2)-200, (900/2)-90, _currentAD);
+    _shownAD->addToRender(&_renderList);
 
-    _renderList._shapes[1].push_back(createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 120, 120, 10, 10, Colour{0,0,0,0}));
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
+            [c = _context]() {
+                c->setActiveScreen<MainMenuScreen>();
+            },
+            120, 120, 10, 10,
+            Colour{0,0,0,0})->addToRender(&_renderList);
 
-    _renderList._shapes[1].push_back(createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
-            [this] { swapAdvertisement(false); }, 50, 50, 440, 400, Colour(0,0,0,0)));
-    _renderList._shapes[1].push_back(createShape<SpriteButton>(*_inputFacade->getMouseEventObservable(), "",
-            [this] { swapAdvertisement(true); }, 50, 50, 1110, 400, Colour(0,0,0,0)));
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
+            [this, shapeText]() {
+                swapAdvertisement(false);
+                shapeText->text = "";
+            },
+            50, 50, 440, 400,
+            Colour(0,0,0,0))->addToRender(&_renderList);
 
-    _renderList._shapes[1].push_back(createShape<TextButton>(*_inputFacade->getMouseEventObservable(),
-                                                             "", [c = context, a = _advertisingManager, this] { a->setCurrentAd(shownAD->imageURL); c->setActiveScreen<MainMenuScreen>();  }, 400, 100, (1600/2)-200, 600));
+    createShape<SpriteButton>(_inputFacade->getMouseEventObservable(), "",
+            [this, shapeText]() {
+                swapAdvertisement(true);
+                shapeText->text = "";
+            },
+            50, 50, 1110, 400,
+            Colour(0,0,0,0))->addToRender(&_renderList);
+
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(), "",
+            [c = _context, f = _fileManager, this, filePath]() {
+                f.writeFileContent(filePath + "current.txt", _shownAD->imageURL);
+                c->setActiveScreen<MainMenuScreen>();
+            },
+            400, 100, (1600/2)-200, 600)->addToRender(&_renderList);
 }
 
-AdvertisingScreen::~AdvertisingScreen()
-{
-    delete shownAD;
-}
-
-void AdvertisingScreen::update(double deltaTime)
-{
-    visualFacade->render(_renderList);
-    audioFacade->playMusic("menu");
+void AdvertisingScreen::update(double deltaTime) {
+    _visualFacade->render(_renderList);
+    _audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
 }
 
-void AdvertisingScreen::update(std::shared_ptr<KeyEvent> event)
+void AdvertisingScreen::update(const KeyEvent& event)
 {
-    if(event->getKey() == KEY::KEY_ESCAPE)
+    if(event.getKey() == KEY::KEY_ESCAPE)
     {
         _context->setActiveScreen<MainMenuScreen>();
     }
 }
 
-//TODO: get advertisements nog maar 1 keer ophalen.
 void AdvertisingScreen::swapAdvertisement(bool directionNext) {
     if (directionNext) {
-        currentIndex++;
-        if (currentIndex >= _advertisingManager->getAdvertisements().size()) {
-            currentIndex = 0;
+        _currentIndex++;
+        if (_currentIndex >= _advertisements.size()) {
+            _currentIndex = 0;
         }
-        shownAD->imageURL = _advertisingManager->getAdvertisements()[currentIndex];
+        _shownAD->imageURL = _advertisements[_currentIndex];
     } else {
-        currentIndex--;
-        if (currentIndex < 0)
+        _currentIndex--;
+        if (_currentIndex < 0)
         {
-            currentIndex = _advertisingManager->getAdvertisements().size() - 1;
+            _currentIndex = _advertisements.size() - 1;
         }
-        shownAD->imageURL = _advertisingManager->getAdvertisements()[currentIndex];
+        _shownAD->imageURL = _advertisements[_currentIndex];
     }
 }

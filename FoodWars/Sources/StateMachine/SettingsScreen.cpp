@@ -1,99 +1,131 @@
 #include "../../Headers/StateMachine/SettingsScreen.h"
 #include "../../Headers/StateMachine/MainMenuScreen.h"
 
-SettingsScreen::SettingsScreen(std::shared_ptr<ScreenStateManager> context) : IScreen(context) {
-    visualFacade = context->getFacade<VisualFacade>();
-    audioFacade = context->getFacade<AudioFacade>();
-    _inputFacade->getKeyEventObservable()->IObservable<KeyEvent>::registerObserver(this);
-    _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
-
-    _renderList._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenSettings.png"));
+SettingsScreen::SettingsScreen(ScreenStateManager& context) : IScreen(context) {
+    _inputFacade->getKeyEventObservable().registerKeyEventObserver(this);
+    auto wallpaper = createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenSettings.png");
+    wallpaper->layer = 0;
+    wallpaper->addToRender(&_renderList);
 
     // MainMenu
-    SpriteButton* backButton = new SpriteButton {*_inputFacade->getMouseEventObservable(), "", [c = _context]() {  c->setActiveScreen<MainMenuScreen>(); }, 140, 140, 12, 12, Colour{0,0,0,0}};
-    backButton->addToRender(&_renderList);
-    _sprites.push_back(backButton);
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(), "",
+            [c = _context]() {
+                c->setActiveScreen<MainMenuScreen>();
+            },
+            140, 140, 12, 12,
+            Colour{0,0,0,0})->addToRender(&_renderList);
 
-    //TODO: setresolution via visual facade
-    // Aspect ratios
-    TextButton* resizeButton1 = new TextButton {*_inputFacade->getMouseEventObservable(),"800x450", [v = visualFacade]() {  v->setResolution(800,450); }, 560, 60, 205, 280, 200, 10, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    resizeButton1->addToRender(&_renderList);
-    _sprites.push_back(resizeButton1);
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"800x450",
+            [v = _visualFacade]() {
+                v->setResolution(800,450);
+            },
+            560, 60, 205, 280, 200, 10,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 
-    TextButton* resizeButton2 = new TextButton {*_inputFacade->getMouseEventObservable(),"1024x576", [v = visualFacade]() {  v->setResolution(1020,576); }, 560, 60, 205, 362, 200, 10, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    resizeButton2->addToRender(&_renderList);
-    _sprites.push_back(resizeButton2);
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"1024x576",
+            [v = _visualFacade]() {
+                v->setResolution(1020,576);
+            },
+            560, 60, 205, 362, 200, 10,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 
-    TextButton* resizeButton3 = new TextButton {*_inputFacade->getMouseEventObservable(),"1152x648", [v = visualFacade]() {  v->setResolution(1152,648); }, 560, 60, 205, 446, 200, 10, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    resizeButton3->addToRender(&_renderList);
-    _sprites.push_back(resizeButton3);
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"1152x648",
+            [v = _visualFacade]() {
+                v->setResolution(1152,648);
+            },
+            560, 60, 205, 446, 200, 10,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 
-    TextButton* resizeButton4 = new TextButton {*_inputFacade->getMouseEventObservable(),"1280x720", [v = visualFacade]() {  v->setResolution(1280,720); }, 560, 60, 205, 528, 200, 10, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    resizeButton4->addToRender(&_renderList);
-    _sprites.push_back(resizeButton4);
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"1280x720",
+            [v = _visualFacade]() {
+                v->setResolution(1280,720);
+            },
+            560, 60, 205, 528, 200, 10,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 
-    TextButton* resizeButton5 = new TextButton {*_inputFacade->getMouseEventObservable(),"1366x768", [v = visualFacade]() {  v->setResolution(1366,768); }, 560, 60, 205, 609, 200, 10, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    resizeButton5->addToRender(&_renderList);
-    _sprites.push_back(resizeButton5);
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"1366x768",
+            [v = _visualFacade]() {
+                v->setResolution(1366,768);
+            },
+            560, 60, 205, 609, 200, 10,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 
-    TextButton* resizeButton6 = new TextButton {*_inputFacade->getMouseEventObservable(),"1600x900", [v = visualFacade]() {  v->setResolution(1600,900); }, 560, 60, 205, 692, 200, 10, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    resizeButton6->addToRender(&_renderList);
-    _sprites.push_back(resizeButton6);
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"1600x900",
+            [v = _visualFacade]() {
+                v->setResolution(1600,900);
+            },
+            560, 60, 205, 692, 200, 10,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 
-    TextButton* resizeButton7 = new TextButton {*_inputFacade->getMouseEventObservable(),"1920x1080", [v = visualFacade]() {  v->setResolution(1920,1080); }, 560, 60, 205, 773, 200, 10, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    resizeButton7->addToRender(&_renderList);
-    _sprites.push_back(resizeButton7);
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(),"1920x1080",
+            [v = _visualFacade]() {
+                v->setResolution(1920,1080);
+            },
+            560, 60, 205, 773, 200, 10,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
+
+    musicVolume = createShape<ShapeText>(1240, 287, std::to_string(_audioFacade->getMusicVolume()), 12, 40, 40, Colour{255, 255, 255, 0});
+    musicVolume->addToRender(&_renderList);
+    effectVolume = createShape<ShapeText>(1240, 377, std::to_string(_audioFacade->getEffectVolume()), 12, 40, 40, Colour{255, 255, 255, 0});
+    effectVolume->addToRender(&_renderList);
 
     // Music volume control
-    TextButton* lowerMusicVolumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"", [a = audioFacade]() {  a->setMusicVolume(a->getMusicVolume() - 5); }, 42, 42, 1126, 282, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    lowerMusicVolumeButton->addToRender(&_renderList);
-    _sprites.push_back(lowerMusicVolumeButton);
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(), "",
+            [a = _audioFacade, m = musicVolume]() {
+                a->decreaseMusicVolume();
+                m->text = std::to_string(a->getMusicVolume());
+            },
+            42, 42, 1126, 282,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 
-    TextButton* raiseMusicVolumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"", [a = audioFacade]() {  a->setMusicVolume(a->getMusicVolume() + 5); }, 42, 42, 1352, 282, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    raiseMusicVolumeButton->addToRender(&_renderList);
-    _sprites.push_back(raiseMusicVolumeButton);
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(), "",
+            [a = _audioFacade, m = musicVolume]() {
+                a->increaseMusicVolume();
+                m->text = std::to_string(a->getMusicVolume());
+            },
+            42, 42, 1352, 282,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 
-    // Music volume control
-    TextButton* lowerEffectVolumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"", [a = audioFacade]() {  a->setEffectVolume(a->getEffectVolume() - 5); }, 42, 42, 1126, 375, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    lowerEffectVolumeButton->addToRender(&_renderList);
-    _sprites.push_back(lowerEffectVolumeButton);
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(), "",
+            [a = _audioFacade, e = effectVolume]() {
+                a->decreaseEffectVolume();
+                e->text = std::to_string(a->getEffectVolume());
+            },
+            42, 42, 1126, 375,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 
-    musicVolume = (ShapeText *) createShape<ShapeText>(1240, 287, std::to_string(audioFacade->getMusicVolume()), 12, 40,
-                                                       40, Colour{255, 255, 255, 0});
-    effectVolume = (ShapeText *) createShape<ShapeText>(1240, 377, std::to_string(audioFacade->getEffectVolume()), 12,
-                                                        40, 40, Colour{255, 255, 255, 0});
-
-    TextButton* raiseEffectVolumeButton = new TextButton {*_inputFacade->getMouseEventObservable(),"", [a = audioFacade]() {  a->setEffectVolume(a->getEffectVolume() + 5); }, 42, 42, 1352, 375, Colour{255,255,255,0}, Colour{255,255,255,0}};
-    raiseEffectVolumeButton->addToRender(&_renderList);
-    _sprites.push_back(raiseEffectVolumeButton);
+    createShape<TextButton>(_inputFacade->getMouseEventObservable(), "",
+            [a = _audioFacade, e = effectVolume]() {
+                a->increaseEffectVolume();
+                e->text = std::to_string(a->getEffectVolume());
+            },
+            42, 42, 1352, 375,
+            Colour{255,255,255,0},
+            Colour{255,255,255,0})->addToRender(&_renderList);
 }
 
 SettingsScreen::~SettingsScreen() = default;
 
 void SettingsScreen::update(double deltaTime) {
-    _renderList.clearLists();
-    _renderList._shapes[0].push_back(createShape<ShapeSprite>(1600, 900, 0, 0, "ScreenSettings.png"));
-
-    // Update music volume
-    musicVolume->text = std::to_string(audioFacade->getMusicVolume());
-    effectVolume->text = std::to_string(audioFacade->getEffectVolume());
-
-    // Add to render
-    _renderList._shapes[1].push_back(musicVolume);
-    _renderList._shapes[1].push_back(effectVolume);
-
-    for (int i = 0; i < _sprites.size(); i++) {
-        _sprites[i]->addToRender(&_renderList);
-    }
-
-    visualFacade->render(_renderList);
-    audioFacade->playMusic("menu");
+    _visualFacade->render(_renderList);
+    _audioFacade->playMusic("menu");
     _inputFacade->pollEvents();
 }
 
-void SettingsScreen::update(std::shared_ptr<KeyEvent> event){
-    if(event->getKey() == KEY::KEY_ESCAPE)
-    {
+void SettingsScreen::update(const KeyEvent& event){
+    if(event.getKey() == KEY::KEY_ESCAPE) {
         _context->setActiveScreen<MainMenuScreen>();
+    } else if(event.getKeyEventType() == KeyEventType::Down && event.getKey() == KEY::KEY_F) {
+        _context->getFacade<VisualFacade>()->toggleFullscreen();
     }
 }

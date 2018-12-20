@@ -8,6 +8,6 @@ KeyEvent::KeyEvent(KEY pressedKey, KeyEventType eventType) : _pressedKey(pressed
 
 }
 
-KeyEventType KeyEvent::getKeyEventType() {
+KeyEventType KeyEvent::getKeyEventType() const {
     return _eventType;
 }

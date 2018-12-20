@@ -14,7 +14,7 @@
 
 class WindowManager : public IRenderer {
 public:
-    WindowManager(std::shared_ptr<WindowResolutionCalculator> windowResCalc);
+    WindowManager(WindowResolutionCalculator& windowResCalc);
     ~WindowManager();
 
     void render(Renderlist &renderlist);
@@ -29,6 +29,7 @@ public:
 
     void enableFullscreen();
     void disablefullscreen();
+    void toggleFullscreen();
 
     void pollEvents();
     bool isWindowClosed();
@@ -42,7 +43,7 @@ private:
     AssetManager* _assetManager = nullptr;
     Window *_window = nullptr;
     SDL_Renderer *_renderer = nullptr;
-    std::shared_ptr<WindowResolutionCalculator> _windowResCalc = nullptr;
+    WindowResolutionCalculator* _windowResCalc = nullptr;
     std::string _title = "Default Title";
     int _windowHeight = DEFAULT_HEIGHT;
     int _windowWidth = DEFAULT_WIDTH;

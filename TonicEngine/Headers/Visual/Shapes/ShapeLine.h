@@ -6,16 +6,19 @@
 
 class ShapeLine : public IShape {
 public:
+    ShapeLine();
     ShapeLine(int xPos, int yPos, int xPos2, int yPos2, const Colour& colour);
     ~ShapeLine() override;
     void addToRender(Renderlist* renderlist) override;
 public:
     Colour colour;
-    int layer;
     int xPos2, yPos2;
     void render(IRenderer &renderer) const override;
     int getWidth() const override  { return 0; }
     int getHeight() const override { return 0; }
-    std::vector<std::string> serialize() override;
+
+    void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
 };
 #endif //PROJECT_SWA_SHAPELINE_H

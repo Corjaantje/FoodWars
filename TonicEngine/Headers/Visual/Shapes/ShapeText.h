@@ -7,7 +7,8 @@
 
 class ShapeText : public IShape {
 public:
-    ShapeText(int x, int y, std::string string, int fontSize, int width, int height, Colour colour);
+    ShapeText();
+    ShapeText(int x, int y, const std::string &string, int fontSize, int width, int height, Colour colour);
     ~ShapeText() override;
     void addToRender(Renderlist* renderlist) override;
     void render(IRenderer &renderer) const override;
@@ -18,11 +19,14 @@ public:
     int width;
     int height;
     Colour colour;
-    int layer;
 
-    int getWidth() const  { return width; }
-    int getHeight() const { return height; }
-    std::vector<std::string> serialize() override;
+    int getWidth() const override { return width; }
+
+    int getHeight() const override { return height; }
+
+    void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
 };
 
 

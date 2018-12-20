@@ -7,30 +7,37 @@
 #include "../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../../../TonicEngine/Headers/Visual/VisualFacade.h"
 #include "../../../TonicEngine/Headers/Audio/AudioFacade.h"
+#include "../../../TonicEngine/Headers/Storage/StorageFacade.h"
 #include "ScreenStateManager.h"
 
 class IScreen : IObserver<WindowEvent> {
 protected:
-    std::shared_ptr<InputFacade> _inputFacade;
-    std::shared_ptr<VisualFacade> visualFacade;
-    std::shared_ptr<AudioFacade> audioFacade;
+    std::unique_ptr<InputFacade> _inputFacade;
+    VisualFacade* _visualFacade;
+    AudioFacade* _audioFacade;
+    StorageFacade* _storageFacade;
     Renderlist _renderList;
-    std::shared_ptr<ScreenStateManager> _context;
+    LevelLoader* _levelManager;
+    ScreenStateManager* _context;
     bool _isClosed;
     std::vector<IShape *> _sprites;
 public:
 
-    explicit IScreen(const std::shared_ptr<ScreenStateManager> &context) : _context(context),
-                                                           _inputFacade(std::make_shared<InputFacade>()),
-                                                           visualFacade(context->getFacade<VisualFacade>()),
-                                                           audioFacade(context->getFacade<AudioFacade>()),
-                                                           _isClosed(false) {
-        _inputFacade->setWindowResolutionCalculator(_context->getWindowResolutionCalculator());
-        _inputFacade->getWindowEventObservable()->registerObserver(this);
+    IScreen(ScreenStateManager &context) : _context(&context),
+                                                           _inputFacade(std::make_unique<InputFacade>()),
+                                                           _visualFacade(context.getFacade<VisualFacade>()),
+                                                           _audioFacade(context.getFacade<AudioFacade>()),
+                                                           _storageFacade(context.getFacade<StorageFacade>()),
+                                                           _renderList(),
+                                                           _isClosed(false),
+                                                           _levelManager(&context.getLevelManager())
+    {
+        _inputFacade->setWindowResolutionCalculator(context.getWindowResolutionCalculator());
+        _inputFacade->getWindowEventObservable().registerObserver(this);
     }
 
     ~IScreen() {
-        _inputFacade->getWindowEventObservable()->unregisterObserver(this);
+        _inputFacade->getWindowEventObservable().unregisterObserver(this);
         for (IShape *shape: _sprites) {
             delete shape;
         }
@@ -38,17 +45,17 @@ public:
 
     virtual void update(double deltaTime) = 0;
 
-    void update(std::shared_ptr<WindowEvent> event) override {
-        if (event->GetWindowEventType() == WindowEventType::Quit) {
+    void update(const WindowEvent& event) override {
+        if (event.GetWindowEventType() == WindowEventType::Quit) {
             _isClosed = true;
         }
-        if (event->GetWindowEventType() == WindowEventType::Resize) {
-            visualFacade->setResolution(event->getWidth(), event->getHeight());
+        if (event.GetWindowEventType() == WindowEventType::Resize) {
+            _visualFacade->setResolution(event.getWidth(), event.getHeight());
         }
     }
 
     template<typename T, typename... Args>
-    IShape *createShape(Args &&... args) {
+    T *createShape(Args &&... args) {
         T *shape = new T(std::forward<Args>(args)...);
         _sprites.push_back(shape);
         return shape;

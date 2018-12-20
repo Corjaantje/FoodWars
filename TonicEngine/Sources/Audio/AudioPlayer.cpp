@@ -3,13 +3,15 @@
 
 
 
-AudioPlayer::AudioPlayer() {
+AudioPlayer::AudioPlayer() : _effectVolume{2}, _musicVolume{2}{
     AudioPlayer::init();
+    Mix_VolumeMusic(_musicVolume);
+    Mix_Volume(-1, _effectVolume);
 }
 
 AudioPlayer::~AudioPlayer() {
-
-    Mix_Quit();
+    while(Mix_Init(0))
+        Mix_Quit();
 }
 
 bool AudioPlayer::init() {

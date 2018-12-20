@@ -1,129 +1,186 @@
+#include <cmath>
 #include "../../../Headers/GameECS/Systems/ShootingSystem.h"
 #include "../../../Headers/GameECS/Components/TurnComponent.h"
-#include "../../../Headers/GameECS/Components/GravityComponent.h"
-#include "../../../Headers/GameECS/Components/DamageableComponent.h"
-#include "../../../Headers/GameECS/Components/DamagingComponent.h"
-#include "../../../Headers/GameECS/Components/DrawableComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/ShapeLine.h"
+#include "../../../Headers/GameECS/Components/PlayerComponent.h"
+#include "../../../Headers/GameECS/Components/AIComponent.h"
+#include "../../../Headers/GameECS/Components/JumpComponent.h"
 
-ShootingSystem::ShootingSystem(std::shared_ptr<EntityManager> entityManager,
-                            std::shared_ptr<AudioFacade> audioFacade,
-                            std::shared_ptr<VisualFacade> visualFacade,
-                                std::shared_ptr<InputFacade> inputFacade) :
-                                                _audioFacade(std::move(audioFacade)),
-                                                _entityManager{std::move(entityManager)},
-                                                _visualFacade{std::move(visualFacade)},
-                                                _isShooting{false},
-                                                _projectileFired{false},
-                                                _projectile{0}
-{
-    inputFacade->getMouseEventObservable()->registerObserver(this);
+ShootingSystem::ShootingSystem(EntityManager &entityManager,
+                               AudioFacade &audioFacade,
+                               VisualFacade &visualFacade,
+                               InputFacade &inputFacade) :
+        _shootingLine{entityManager},
+        _audioFacade(&audioFacade),
+        _entityManager{&entityManager},
+        _visualFacade{&visualFacade},
+        _projectileBuilder{entityManager},
+        _projectileFired{false},
+        _projectile{-1},
+        _mouseDown{false},
+        _currentPlayer(-1),
+        _otherPlayer(-1),
+        _powerBar(entityManager) {
+    inputFacade.getMouseEventObservable().registerObserver(this);
+    for(const auto &iterator: _entityManager->getAllEntitiesWithComponent<TurnComponent>()){
+        if(iterator.second->isMyTurn())
+            _currentPlayer = iterator.first;
+        else
+            _otherPlayer = iterator.first;
+    }
 }
-
-ShootingSystem::~ShootingSystem() = default;
 
 void ShootingSystem::update(double deltaTime) {
     if (!_entityManager->exists(_projectile)) _projectileFired = false;
-    if(_projectileFired)
-    {
+
+    setPlayerTurn();
+
+    if (_projectileFired) {
         auto projectilePos = _entityManager->getComponentFromEntity<PositionComponent>(_projectile);
         auto projectileSize = _entityManager->getComponentFromEntity<BoxCollider>(_projectile);
-        auto projectileMove = _entityManager->getComponentFromEntity<MoveComponent>(_projectile);
 
         if ((projectilePos->X + projectileSize->width) >= 1590 || projectilePos->X <= 1
-                || (projectilePos->Y + projectileSize->height) >= 890) {
+            || (projectilePos->Y + projectileSize->height) >= 890) {
             _projectileFired = false;
             _entityManager->removeEntity(_projectile);
         }
     }
-}
 
-void ShootingSystem::update(std::shared_ptr<MouseEvent> event) {
-    if(_isShooting && !_projectileFired)
-    {
-        int currentPlayer = 0;
-        auto turnComponents = _entityManager->getAllEntitiesWithComponent<TurnComponent>();
-        for (auto const &x : turnComponents)
-        {
-            if (x.second->isMyTurn()) {
-                currentPlayer = x.first;
-                break;
-            }
-        }
-        auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(currentPlayer);
-        auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(currentPlayer);
-        int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
-        int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
-        double deltaX = event->getXPosition() - playerCenterX;
-        double deltaY = event->getYPosition() - playerCenterY;
-        if (deltaX > 250) deltaX = 250;
-        else if (deltaX < -250) deltaX = -250;
-        if (deltaY > 250) deltaY = 250;
-        else if (deltaY < -250) deltaY = -250;
-        double toX = playerCenterX + deltaX;
-        double toY = playerCenterY + deltaY;
-
-        if (event->getMouseEventType() == MouseEventType::Down && event->getMouseClickType() == MouseClickType::Left) {
-            createShootingLine(playerCenterX, playerCenterY, toX, toY);
-        }
-
-        if (event->getMouseEventType() == MouseEventType::Drag) {
-            if (!_entityManager->exists(_shootingLine)) createShootingLine(playerCenterX, playerCenterY, toX, toY);
-            auto drawable = _entityManager->getComponentFromEntity<DrawableComponent>(_shootingLine);
-            auto line = static_cast<ShapeLine *>(drawable->shape);
-            line->xPos = playerCenterX;
-            line->yPos = playerCenterY;
-            line->xPos2 = toX;
-            line->yPos2 = toY;
-        }
-
-        if (event->getMouseEventType() == MouseEventType::Up && event->getMouseClickType() == MouseClickType::Left) {
-            generateProjectile(*currentPlayerPos.get(), *playerSize.get(), deltaX, deltaY);
-            _isShooting = false;
-            _projectileFired = true;
-            _entityManager->removeEntity(_shootingLine);
-            _entityManager->getComponentFromEntity<TurnComponent>(currentPlayer)->lowerEnergy(20);
-            _audioFacade->playEffect("jump");
-        }
+    if (_mouseDown && _powerBar.isVisible()) {
+        _powerBar.update(deltaTime);
     }
 }
 
-void ShootingSystem::createShootingLine(int fromX, int fromY, int toX, int toY) {
-    _shootingLine = _entityManager->createEntity();
-    auto d = new DrawableComponent();
-    d->shape = new ShapeLine(fromX, fromY, toX, toY, Colour(0, 0, 0, 0));
-    _entityManager->addComponentToEntity(_shootingLine, d);
+void ShootingSystem::update(const MouseEvent &event) {
+    if (!_projectileFired) {
+        auto turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
+        if (!_entityManager->getComponentFromEntity<TurnComponent>(_otherPlayer)->getIsShooting() &&
+            turnComponent->getIsShooting()) {
+
+            if(turnComponent->getRemainingTime() <= 0.0) {
+                resetShooting();
+                return;
+            }
+
+            Weapon *selectedWeapon = _entityManager->getComponentFromEntity<PlayerComponent>(
+                    _currentPlayer)->getSelectedWeapon();
+
+            _powerBar.show();
+            _powerBar.unlock();
+
+            auto currentPlayerPos = _entityManager->getComponentFromEntity<PositionComponent>(_currentPlayer);
+            auto playerSize = _entityManager->getComponentFromEntity<BoxCollider>(_currentPlayer);
+            int playerCenterX = currentPlayerPos->X + playerSize->width / 2.0;
+            int playerCenterY = currentPlayerPos->Y + playerSize->height / 2.0;
+
+            double deltaX = event.getXPosition() - playerCenterX;
+            double deltaY = event.getYPosition() - playerCenterY;
+
+            // shooting in a circle
+            double totalLength = sqrt(deltaX * deltaX + deltaY * deltaY);
+            double length =
+                    totalLength > _projectileBuilder.maxVeloctiy ? _projectileBuilder.maxVeloctiy : totalLength;
+            double scale = length / totalLength;
+
+            deltaX *= scale;
+            deltaY *= scale;
+
+            double toX = playerCenterX + deltaX;
+            double toY = playerCenterY + deltaY;
+
+            if (event.getMouseEventType() == MouseEventType::Down &&
+                event.getMouseClickType() == MouseClickType::Left) {
+                _shootingLine.setFromX(playerCenterX);
+                _shootingLine.setFromY(playerCenterY);
+                _shootingLine.setToX(toX);
+                _shootingLine.setToY(toY);
+                _shootingLine.show();
+                _mouseDown = true;
+            }
+
+            if (event.getMouseEventType() == MouseEventType::Drag) {
+                _shootingLine.setFromX(playerCenterX);
+                _shootingLine.setFromY(playerCenterY);
+                _shootingLine.setToX(toX);
+                _shootingLine.setToY(toY);
+                _shootingLine.show();
+            }
+
+            if (event.getMouseEventType() == MouseEventType::Up &&
+                event.getMouseClickType() == MouseClickType::Left && _mouseDown) {
+                generateProjectile(*currentPlayerPos, *playerSize, deltaX, deltaY, selectedWeapon, playerCenterX,
+                                   playerCenterY);
+                _projectileFired = true;
+                _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->lowerEnergy(
+                        _entityManager->getComponentFromEntity<PlayerComponent>(
+                                _currentPlayer)->getSelectedWeapon()->getEnergyCost());
+                _audioFacade->playEffect("throwing");
+                resetShooting();
+            }
+        }
+    } else {
+        resetShooting();
+    }
 }
 
 void ShootingSystem::toggleShooting() {
-    if (!_projectileFired)
-        _isShooting = !_isShooting;
+    if (!_projectileFired) {
+        auto playerTurn = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
+        auto playerJump = _entityManager->getComponentFromEntity<JumpComponent>(_currentPlayer);
+        if (playerTurn != nullptr &&
+            playerJump == nullptr &&
+            _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeaponAvailability() > 0 &&
+            _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() >=
+            _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost() &&
+            !_entityManager->getComponentFromEntity<AIComponent>(_currentPlayer)) {
+            playerTurn->changeIsShooting();
+
+            if (!playerTurn->getIsShooting())
+                resetShooting();
+            else {
+                _entityManager->getComponentFromEntity<MoveComponent>(_currentPlayer)->xVelocity = 0;
+                _powerBar.lockToPlayer(_currentPlayer);
+                _powerBar.show();
+                _powerBar.lock();
+            }
+        }
+    }
+    if (_entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->getEnergy() <
+        _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getEnergyCost() ||
+        _entityManager->getComponentFromEntity<PlayerComponent>(_currentPlayer)->getSelectedWeapon()->getAmmo() <= 0 ||
+        _entityManager->getComponentFromEntity<AIComponent>(_currentPlayer))
+        _audioFacade->playEffect("negative");
 }
 
-void
-ShootingSystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
-                                double velocityX, double velocityY) {
-    _projectile = _entityManager->createEntity();
-    int projectileWidth = 11;
-    int projectileHeight = 32;
-    int posX = playerPositionComponent.X;
-    int posY = playerPositionComponent.Y;
-    if (velocityX > 0) posX += projectileWidth + playerCollider.width + 1;
-    else posX -= projectileWidth + 1;
-    if (velocityY < 0) posY -= projectileHeight + 1;
+void ShootingSystem::resetShooting() {
+    _mouseDown = false;
+    _shootingLine.hide();
+    _powerBar.hide();
+    _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer)->setIsShooting(false);
+}
 
-    auto drawableComponent = new DrawableComponent;
-    drawableComponent->shape = new ShapeSprite(projectileWidth, projectileHeight, posX, posY, "carrot.png");
-    const double speedModifier = 2.5;
-    _entityManager->addComponentToEntity(_projectile, drawableComponent);
-    _entityManager->addComponentToEntity(_projectile, new PositionComponent(posX, posY));
-    _entityManager->addComponentToEntity(_projectile, new BoxCollider(projectileWidth, projectileHeight));
-    _entityManager->addComponentToEntity(_projectile, new DamagingComponent(25));
-    _entityManager->addComponentToEntity(_projectile, new DamageableComponent { 10 });
-    _entityManager->addComponentToEntity(_projectile, new GravityComponent(6.5 * speedModifier));
+void ShootingSystem::setPlayerTurn() {
+    auto turnComponent = _entityManager->getComponentFromEntity<TurnComponent>(_currentPlayer);
+    if(/*turnComponent->getIsShooting() && */!turnComponent->isMyTurn()) {
+        resetShooting();
+        int player = _currentPlayer;
+        _currentPlayer = _otherPlayer;
+        _otherPlayer = player;
+    }
+}
 
-    auto moveComponent = new MoveComponent();
-    moveComponent->xVelocity = velocityX * speedModifier;
-    moveComponent->yVelocity = velocityY * speedModifier;
-    _entityManager->addComponentToEntity(_projectile, moveComponent);
+void ShootingSystem::generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
+                                   double velocityX, double velocityY, Weapon *selectedWeapon, int playerCenterX,
+                                   int playerCenterY) {
+    _projectile = _projectileBuilder
+            .setPlayerPostion(playerPositionComponent)
+            .setPlayerCollider(playerCollider)
+            .setXVelocity(velocityX)
+            .setYVelocity(velocityY)
+            .setPower(_powerBar.getPower())
+            .setWeapon(*selectedWeapon)
+            .setPlayerCenterX(playerCenterX)
+            .setPlayerCenterY(playerCenterY)
+            .build();
+    selectedWeapon->lowerAmmo();
 }

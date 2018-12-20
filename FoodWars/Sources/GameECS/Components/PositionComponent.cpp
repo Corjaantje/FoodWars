@@ -26,11 +26,22 @@ PositionComponent &PositionComponent::operator--(int) {
     return *this;
 }
 
-std::vector<std::string> PositionComponent::serialize() {
-    std::vector<std::string> data;
-    data.push_back(std::to_string(X));
-    data.push_back(std::to_string(Y));
+void PositionComponent::accept(SerializationVisitor &visitor) {
+    visitor.visit("x", X);
+    visitor.visit("y", Y);
+}
 
+std::string PositionComponent::getName() const {
+    return "PositionComponent";
+}
 
-    return data;
+PositionComponent::PositionComponent(const PositionComponent& other) {
+    X = other.X;
+    Y = other.Y;
+}
+
+PositionComponent &PositionComponent::operator=(const PositionComponent &other) {
+    X = other.X;
+    Y = other.Y;
+    return *this;
 }

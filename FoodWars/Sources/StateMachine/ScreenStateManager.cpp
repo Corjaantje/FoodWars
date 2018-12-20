@@ -1,38 +1,35 @@
 #include <utility>
-
-#include <utility>
 #include "../../Headers/StateMachine/ScreenStateManager.h"
+#include "../../Headers/StateMachine/IScreen.h"
 
-ScreenStateManager::ScreenStateManager() : _currentState(nullptr) {
+ScreenStateManager::ScreenStateManager() = default;
+ScreenStateManager::~ScreenStateManager() = default;
 
+IScreen& ScreenStateManager::getCurrentState() const {
+    return *_currentState;
 }
 
-std::shared_ptr<IScreen> ScreenStateManager::getCurrentState() const {
-    return _currentState;
+const WindowResolutionCalculator& ScreenStateManager::getWindowResolutionCalculator() const {
+    return *_windowResCalc;
 }
 
-void ScreenStateManager::setActiveScreen(const std::string &screenName) {
-    if(_screenStates.count(screenName) > 0){
-        _currentState = _screenStates[screenName];
-    }
-}
-
-
-void ScreenStateManager::setWindowResolutionCalculator(std::shared_ptr<WindowResolutionCalculator> windowResCalc) {
-    _windowResCalc = std::move(windowResCalc);
+void ScreenStateManager::setWindowResolutionCalculator(const WindowResolutionCalculator& windowResCalc) {
+    _windowResCalc = &windowResCalc;
 }
 
 void ScreenStateManager::setTimeModifier(double modifiedTime) {
-    if (modifiedTime == 1)
+    if (modifiedTime >= 0 && modifiedTime <= 2.40)
         timeModifier = modifiedTime;
-    else {
-        double newTime = timeModifier * modifiedTime;
-
-        if (newTime >= 0.40 && newTime <= 2.50)
-            timeModifier = newTime;
-    }
 }
 
 double ScreenStateManager::getTimeModifier() const {
     return timeModifier;
+}
+
+LevelLoader& ScreenStateManager::getLevelManager() const {
+    return *_levelManager;
+}
+
+void ScreenStateManager::setLevelManager(LevelLoader &levelManager) {
+    _levelManager = &levelManager;
 }

@@ -14,6 +14,7 @@ class TextButton : public ShapeRectangle, public IObserver<MouseEvent>{
 private:
     MouseEventObservable *observable;
     std::function<void()> _onClickFunction;
+protected:
     std::string _text;
     ShapeText shapeText;
 
@@ -34,7 +35,7 @@ public:
     void setButtonColor(const Colour& colour);
     void setOnClickFunction(const std::function<void()>& onClick);
 
-    void update(std::shared_ptr<MouseEvent> event) override;
+    void update(const MouseEvent& event) override;
     void addToRender(Renderlist* renderlist) override;
 
     void render(IRenderer &renderer) const override;

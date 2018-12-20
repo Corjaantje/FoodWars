@@ -7,11 +7,10 @@
 
 class CollisionSystem : public IBaseSystem, public IObservable<CollisionEvent> {
 private:
-    std::shared_ptr<EntityManager> _entityManager;
+    EntityManager *_entityManager;
 public:
-    CollisionSystem(std::shared_ptr<EntityManager> entityManager);
+    explicit CollisionSystem(EntityManager &entityManager);
     void update(double dt) override;
-
 };
 
 #endif //PROJECT_SWA_COLLISIONSYSTEM_H

@@ -1,7 +1,6 @@
 #ifndef PROJECT_SWA_AUDIO_H
 #define PROJECT_SWA_AUDIO_H
 
-#include <SDL2/SDL.h>
 #include "AudioPlayer.h"
 #include "../../Facades/IFacade.h"
 #include <string>
@@ -14,15 +13,19 @@ public:
     ~AudioFacade();
     int getEffectVolume();
     int getMusicVolume();
-    void setEffectVolume(int volume);
-    void setMusicVolume(int volume);
+    void increaseEffectVolume();
+    void decreaseEffectVolume();
+    void increaseMusicVolume();
+    void decreaseMusicVolume();
     void playMusic(const char* filename);
     void playEffect(const char* filename);
-    void addAudio(const char* key,const char* path);
+    void addAudio(std::string key,std::string path);
 private:
     std::map<std::string, std::string> *_audioMap = nullptr;
     AudioPlayer* _audioPlayer = nullptr;
     std::string _backgroundMusic;
+    int _effectPercentage = 0;
+    int _musicPercentage = 0;
     void init();
     const char* getAudio(const char* audioName);
 };

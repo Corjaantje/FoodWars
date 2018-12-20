@@ -3,20 +3,30 @@
 
 #include "Component.h"
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
+#include "../../StateMachine/Misc/FactionEnum.h"
 
-class DamageableComponent: public Component, ISerializable {
+class DamageableComponent : public Component {
 
 public:
     DamageableComponent();
-    DamageableComponent(int health);
+    explicit DamageableComponent(int health);
+    DamageableComponent(int health, int resist);
     ~DamageableComponent() override;
-    const int GetHealth();
-    void LowerHealth(int value);
-    void IncreaseHealth(int value);
-    void Destroy();
-    const bool IsAlive();
-    std::vector<std::string> serialize() override;
+    const int getHealth();
+    const int getResistance();
+    void lowerHealth(int value);
+    void increaseHealth(int value);
+    void setResistance(int value);
+    void destroy();
+
+    bool isAlive() const;
+
+    void accept(SerializationVisitor &visitor) override;
+
+    std::string getName() const override;
+
 private:
     int _health; // 0 - 100
+    int _resistance;
 };
 #endif //PROJECT_SWA_DAMAGEABLECOMPONENT_H

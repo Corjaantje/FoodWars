@@ -7,7 +7,10 @@
 
 class ShapeSprite : public IShape {
 public:
-    ShapeSprite(int width, int height, int xPos, int yPos, std::string imageURL);
+    ShapeSprite();
+    ShapeSprite(int width, int height, int xPos, int yPos, const std::string &imageURL);
+
+    ShapeSprite(int width, int height, int xPos, int yPos, const std::string &imageURL, int layer);
     ~ShapeSprite() override;
     void addToRender(Renderlist* renderlist) override;
     void render(IRenderer &renderer) const override;
@@ -19,8 +22,9 @@ public:
     int getWidth() const override { return width; }
     int getHeight() const override { return height; }
 
+    void accept(SerializationVisitor &visitor) override;
 
-    std::vector<std::string> serialize() override;
+    std::string getName() const override;
 };
 
 

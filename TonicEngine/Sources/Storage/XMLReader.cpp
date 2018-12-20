@@ -1,70 +1,60 @@
-//
-// Created by pietb on 01-Oct-18.
-//
-
 #include "../../Headers/Storage/XMLReader.h"
-#include <sstream>
 
 #ifndef XMLCheckResult
 #define XMLCheckResult(a_eResult) if (a_eResult != XML_SUCCESS) { printf("Error: %i\n", a_eResult); return a_eResult; }
 #endif
 
 
-void XMLReader::ReadRecursively(XMLElement & elem, MyNode & parent)
-{
-    MyNode* current_node = new MyNode(elem.Value(), &parent);  // TODO: Fix stack/heap
-
-    Attribute a;
+void XMLReader::ReadRecursively(XMLElement &elem, MyNode &parent) {
+    MyNode current_node{elem.Name()};
     const XMLAttribute* xml_attr = elem.FirstAttribute();
-    if (xml_attr != nullptr)
-    {
-        for (const XMLAttribute* attr = xml_attr; attr; attr = attr->Next())
-        {
-            a.name = attr->Name();
-            a.value = attr->Value();
-            current_node->AddAttribute(a);
+    if (xml_attr != nullptr) {
+        for (const XMLAttribute *attr = xml_attr; attr; attr = attr->Next()) {
+            current_node.AddAttribute(attr->Name(), attr->Value());
         }
     }
 
-    //MyNode* cur_node_ptr = current_node;
-
-    if (elem.GetText() != NULL)
-    {
-        current_node->SetValue(elem.GetText());
+    if (elem.GetText() != nullptr) {
+        current_node.SetValue(elem.GetText());
     }
 
-    if (elem.FirstChildElement() != nullptr) // child exists
-    {
-        ReadRecursively(*elem.FirstChildElement(), *current_node);
+    if (elem.FirstChildElement() != nullptr) {// child exists
+        ReadRecursively(*elem.FirstChildElement(), current_node);
     }
 
-    if (elem.NextSiblingElement() != nullptr) // no child, but sibling
-    {
+    if (elem.NextSiblingElement() != nullptr) { // no child, but sibling
         ReadRecursively(*elem.NextSiblingElement(), parent);
     }
-    &parent.AddChild(*current_node);  // TODO: Fix stack/heap
+    parent.AddChild(current_node);
 }
 
-XMLReader::XMLReader()
-{
-}
+XMLReader::XMLReader() = default;
 
 
-XMLReader::~XMLReader()
-{
-}
+XMLReader::~XMLReader() = default;
 
-std::unique_ptr<MyDocument> XMLReader::LoadFile(string file_name)
-{
+MyDocument XMLReader::LoadFile(const string &file_name) {
     XMLDocument d;
     d.LoadFile(file_name.c_str());
-
-    return ReadXMLFile(d);
+    MyDocument myDocument = ReadXMLFile(d);
+    return myDocument;
 }
 
-std::unique_ptr<MyDocument> XMLReader::ReadXMLFile(XMLDocument & doc)
-{
+MyDocument XMLReader::ReadXMLFile(XMLDocument &doc) {
     XMLNode* docRoot = doc.FirstChild();
+    MyNode rootNode{docRoot->Value()};
+    XMLElement *firstElem = docRoot->FirstChildElement();
+
+    ReadRecursively(*firstElem, rootNode);
+
+    return MyDocument{rootNode};
+}
+
+std::unique_ptr<MyDocument> XMLReader::LoadFile2(const string &fileName) {
+    XMLDocument d;
+    d.LoadFile(fileName.c_str());
+
+    XMLNode *docRoot = d.FirstChild();
 
     if (docRoot != nullptr) {
         MyNode rootNode{docRoot->Value(), nullptr};
@@ -72,7 +62,7 @@ std::unique_ptr<MyDocument> XMLReader::ReadXMLFile(XMLDocument & doc)
 
         ReadRecursively(*firstElem, rootNode);
 
-        MyDocument *myDoc = new MyDocument{rootNode};
+        auto *myDoc = new MyDocument{rootNode};
 
 
         return std::unique_ptr<MyDocument>{myDoc};

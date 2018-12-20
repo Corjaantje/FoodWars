@@ -1,25 +1,17 @@
-//
-// Created by pietb on 01-Oct-18.
-//
 
 #include "../../Headers/Storage/MyDocument.h"
-MyDocument::MyDocument(MyNode& root)
-        :_root(root)
-{
+
+MyDocument::MyDocument(const MyNode &root) : _root(root) {
 
 }
 
-MyDocument::~MyDocument()
-{
+MyDocument::~MyDocument() = default;
 
-}
-
-MyNode MyDocument::GetRoot()
-{
+const MyNode &MyDocument::GetRoot() const {
     return _root;
 }
 
-void MyDocument::AddToRoot(MyNode addition)
-{
-    _root.AddChild(addition);
-}
+/*
+void MyDocument::AddToRoot(MyNode addition) {
+    _root->AddChild(std::move(addition));
+}*/

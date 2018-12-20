@@ -8,18 +8,23 @@ MoveComponent::MoveComponent(double velocity) {
     this->yVelocity = velocity;
 }
 
+MoveComponent::MoveComponent(double xVelocity, double yVelocity) : xVelocity(xVelocity), yVelocity(yVelocity) {
+
+}
+
 MoveComponent &MoveComponent::operator+=(const MoveComponent &other) {
     xVelocity += other.xVelocity;
     yVelocity += other.yVelocity;
     return *this;
 }
 
-std::vector<std::string> MoveComponent::serialize() {
-    std::vector<std::string> data;
-    data.push_back(std::to_string(xVelocity));
-    data.push_back(std::to_string(yVelocity));
+void MoveComponent::accept(SerializationVisitor &visitor) {
+    visitor.visit("xVelocity", xVelocity);
+    visitor.visit("yVelocity", yVelocity);
+}
 
-    return data;
+std::string MoveComponent::getName() const {
+    return "MoveComponent";
 }
 
 MoveComponent::~MoveComponent() = default;

@@ -1,7 +1,8 @@
+#include <algorithm>
 #include "../../../Headers/GameECS/Entities/EntityManager.h"
 
-EntityManager::EntityManager() {
-    _lowestUnassignedEntityId = -1;
+EntityManager::EntityManager() : _componentsByClass(), _lowestUnassignedEntityId(-1) {
+
 }
 
 EntityManager::~EntityManager() = default;
@@ -10,15 +11,6 @@ int EntityManager::createEntity() {
     return ++_lowestUnassignedEntityId;
 }
 
-int EntityManager::createEntity(Component components[], int size) {
-    for(int i=0; i < size; i++){
-        // kan momenteel niet, omdat de name van de components altijd component zou zijn. Om dit op te lossen zou
-        // component een virtual functie getname ofzo moeten hebben welke in elk component wordt override
-    }
-    return ++_lowestUnassignedEntityId;
-}
-
-
 void EntityManager::removeEntity(int entityId) {
     for (auto &iterator : _componentsByClass) {
         std::string key = iterator.first;
@@ -26,13 +18,22 @@ void EntityManager::removeEntity(int entityId) {
     }
 }
 
-bool EntityManager::exists(int entityId) {
+bool EntityManager::exists(int entityId) const {
     for (auto &iterator : _componentsByClass) {
-        if (iterator.second.find(entityId) != iterator.second.end())
-        {
+        if (iterator.second.find(entityId) != iterator.second.end()) {
             return true;
         }
-        //return iterator.second.find(entityId)->second != nullptr;
     }
     return false;
+}
+
+std::map<int, std::vector<Component *>> EntityManager::getAllEntitiesWithAllComponents() const {
+    std::map<int, std::vector<Component *>> componentsOfEntities;
+    //construct map where all components of an entity are grouped
+    for (const auto &iterator: _componentsByClass) {
+        for (const auto &componentIterator: iterator.second) {
+            componentsOfEntities[componentIterator.first].push_back(componentIterator.second.get());
+        }
+    }
+    return componentsOfEntities;
 }

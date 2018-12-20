@@ -10,29 +10,24 @@
 #include "../GameECS/Systems/StorageSystem.h"
 #include "Misc/Coordinate.h"
 #include "Misc/GameLevel.h"
+#include "../../../TonicEngine/Headers/Visual/Shapes/FlashingTextButton.h"
+#include <unordered_map>
 
 class GameScreen : public IScreen, public IObserver<KeyEvent> {
 private:
-    std::shared_ptr<EntityManager> _entityManager;
-    std::string _wallpaper;
-    std::string _backgroundMusic;
-    std::vector<Coordinate> _spawnPoints;
-
-    std::shared_ptr<AudioFacade> _audioFacade;
-    std::shared_ptr<VisualFacade> _visualFacade;
-    std::vector<IBaseSystem*> _systems;
-    DrawSystem* drawSystem = nullptr;
-    AnimationManager* _animationManager;
-    ShootingSystem* _shootingSystem = nullptr;
-    StorageSystem* _storage;
+    std::unique_ptr<GameLevel> _gameLevel;
+    EntityManager *_entityManager;
+    std::vector<std::unique_ptr<IBaseSystem>> _systems;
+    TurnSystem* _turnSystem;
+    FlashingTextButton* nextButton;
     int playerOne;
     int playerTwo;
+    std::unordered_map<KEY, std::function<void()>> _keyMap;
 public:
-    explicit GameScreen(const std::shared_ptr<ScreenStateManager>& context, GameLevel* gameLevel);
+    GameScreen(ScreenStateManager& context, std::unique_ptr<GameLevel> &gameLevel);
     ~GameScreen();
     void update(double deltaTime) override;
-    void update(std::shared_ptr<KeyEvent> event) override;
-    void addBackground();
+    void update(const KeyEvent& event) override;
 };
 
 #endif //PROJECT_SWA_GAMESCREEN_H

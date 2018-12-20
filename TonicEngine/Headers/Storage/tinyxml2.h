@@ -496,6 +496,7 @@ namespace tinyxml2
 
         /// Visit a declaration.
         virtual bool Visit( const XMLDeclaration& /*declaration*/ )		{
+
             return true;
         }
         /// Visit a text node.

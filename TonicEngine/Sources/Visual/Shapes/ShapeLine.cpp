@@ -1,8 +1,12 @@
 #include "../../../Headers/Visual/Shapes/ShapeLine.h"
 #include "../../../Headers/Visual/Renderlist.h"
 
+ShapeLine::ShapeLine() : ShapeLine(0, 0, 0, 0, Colour{}) {
+
+}
+
 ShapeLine::ShapeLine(int xPos, int yPos, int xPos2, int yPos2, const Colour& colour)
-        : IShape(xPos, yPos), xPos2 {xPos2}, yPos2 {yPos2}, colour{colour}, layer(1) {
+        : IShape(xPos, yPos, 1), xPos2 {xPos2}, yPos2 {yPos2}, colour{colour} {
 
 }
 
@@ -16,6 +20,15 @@ void ShapeLine::render(IRenderer &renderer) const {
     renderer.renderLine(*this);
 }
 
-std::vector<std::string> ShapeLine::serialize() {
-    return std::vector<std::string>();
+void ShapeLine::accept(SerializationVisitor &visitor) {
+    IShape::accept(visitor);
+    visitor.visit("x2", xPos2);
+    visitor.visit("y2", yPos2);
+    visitor.visit("colour", colour);
 }
+
+std::string ShapeLine::getName() const {
+    return "Line";
+}
+
+

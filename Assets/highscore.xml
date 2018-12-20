@@ -1,11 +1,19 @@
-<highscore>
-  <level>
-    <score>150</score>
-  </level>
-  <level>
-    <score>500</score>
-  </level>
-  <level>
-    <score>235</score>
-  </level>
-</highscore>
+<root>
+    <highscore>
+        <highscore0 typeName="Highscore">
+            <score>15</score>
+            <date>2018-12-10 11:00</date>
+			<levelID>0</levelID>
+        </highscore0>
+        <highscore1 typeName="Highscore">
+            <score>40</score>
+            <date>2018-12-10 12:00</date>
+			<levelID>1</levelID>
+        </highscore1>
+        <highscore2 typeName="Highscore">
+            <score>0</score>
+            <date>2018-12-10 13:00</date>
+			<levelID>2</levelID>
+        </highscore2>
+    </highscore>
+</root>

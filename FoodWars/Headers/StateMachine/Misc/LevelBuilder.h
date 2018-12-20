@@ -1,12 +1,12 @@
 #ifndef PROJECT_SWA_LEVELBUILDER_H
 #define PROJECT_SWA_LEVELBUILDER_H
 
-
 #include "../../GameECS/Entities/EntityManager.h"
 #include "EntityMemento.h"
 #include "../../../../TonicEngine/Headers/Visual/Renderlist.h"
 #include "GameLevel.h"
 #include "../../GameECS/Systems/StorageSystem.h"
+#include "../../../../TonicEngine/Headers/Storage/FileManager.h"
 
 const int SHAPE_DIMENSION = 32;
 //const int MAXIMAL_SHAPE_DIM = 64;
@@ -17,42 +17,40 @@ const int SPAWNPOINT_ID = -1;
 class LevelBuilder {
 public:
     LevelBuilder();
-
     ~LevelBuilder();
 private:
-    EntityManager* _entityManager = nullptr;
+    GameLevel _gameLevel;
+    EntityManager &_entityManager;
     std::vector<EntityMemento*> _mementoList;
     std::map<std::string, int> _CoordinateEntityMap;
     std::vector<Coordinate> _spawnPoints;
+    std::vector<std::unique_ptr<ShapeSprite>> _spawnPointSprites;
     bool _buildCollidable = true;
     bool _buildDamageable = true;
 
     int _shapeDimension = SHAPE_DIMENSION;
 
-    int _colorRed = 0; //Between 0 and 255
-    int _colorGreen = 0; //Between 0 and 255
-    int _colorBlue = 0; //Between 0 and 255
+    const FileManager _fileManager;
+    int _colorRed; //Between 0 and 255
+    int _colorGreen; //Between 0 and 255
+    int _colorBlue; //Between 0 and 255
 
     std::vector<std::string> _wallpaperList;
-    int _selectedWallpaper = 0;
+    int _selectedWallpaper;
 
     std::vector<std::string> _musicList;
-    int _selectedMusic = 0;
+    int _selectedMusic;
     std::vector<IShape *> _sprites;
+    ShapeSprite* wallpaper;
+    ShapeRectangle previewColor;
 
     template<typename T, typename... Args>
-    IShape *createShape(Args &&... args) {
+    T *createShape(Args &&... args) {
         T *shape = new T(std::forward<Args>(args)...);
         _sprites.push_back(shape);
         return shape;
     }
 public:
-    void resetEntityManager();
-    EntityManager* getEntityManager();
-
-//    void incrementShapeSize();
-//    void decrementShapeSize();
-
     void incrementColorRed();
     void incrementColorGreen();
     void incrementColorBlue();
@@ -63,33 +61,29 @@ public:
 
     void placeBlock(int x, int y);
     void removeBlock(int x, int y);
-//    void undoPlaceBlock();
 
     void placeSpawnPoint(int x, int y);
     void removeSpawnPoint(int x, int y);
-    std::vector<Coordinate> getSpawnPoints() const;
 
     bool toggleCollidable();
     bool toggleDamageable();
 
     void setNextWallpaper();
     void setPreviousWallpaper();
-    std::string getCurrentWallpaper();
 
     void setNextMusic();
     void setPreviousMusic();
-    std::string getSelectedSong();
+
+    std::string getSelectedSong() const;
     void drawCurrentScene(Renderlist &renderlist);
 
-    void addWallpaperConfig(std::string music);
-    void addMusicConfig(std::string wallpaper);
+    const GameLevel &getConstructedLevel() const;
+    GameLevel &getConstructedLevelNonConst();
 
-    GameLevel buildConstructedLevel();
+    bool canBuildLevel();
 private:
     int roundXCoordToGrid(int x);
     int roundYCoordToGrid(int y);
-
-    void drawAdditionalItems(Renderlist &renderlist);
 };
 
 

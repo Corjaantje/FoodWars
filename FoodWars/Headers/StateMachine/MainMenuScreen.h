@@ -10,18 +10,17 @@
 #include "../../../TonicEngine/Headers/Input/IObserver.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/TextButton.h"
 #include "../../../TonicEngine/Headers/Visual/Shapes/SpriteButton.h"
-#include "../../../TonicEngine/Headers/Storage/AdvertisingManager.h"
 
 class MainMenuScreen : public IScreen, public IObserver<KeyEvent> {
 private:
     void quitGame();
-    const AdvertisingManager* advertisingManager;
-    SpriteButton* advertisement;
+    SpriteButton* _advertisement;
+    const FileManager _fileManager;
 public:
-    explicit MainMenuScreen(std::shared_ptr<ScreenStateManager> context, const AdvertisingManager& advertisingManager);
+    explicit MainMenuScreen(ScreenStateManager& context);
     ~MainMenuScreen();
     void update(double deltaTime) override;
-    void update(std::shared_ptr<KeyEvent> event) override;
+    void update(const KeyEvent& event) override;
 };
 
 #endif //PROJECT_SWA_MAINMENUSCREEN_H

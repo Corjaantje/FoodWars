@@ -1,10 +1,14 @@
 #include "../../../Headers/GameECS/Events/CollisionEventHandler.h"
 
-void CollisionEventHandler::update(std::shared_ptr<CollisionEvent> collisionEvent) {
-    if(canHandle(*collisionEvent.get()))
-        handleCollisionEvent(*collisionEvent.get());
+void CollisionEventHandler::update(const CollisionEvent& collisionEvent) {
+    if(canHandle(collisionEvent))
+        handleCollisionEvent(collisionEvent);
 }
 
-CollisionEventHandler::CollisionEventHandler(IObservable<CollisionEvent> &collisionEventObservable) {
+CollisionEventHandler::CollisionEventHandler(IObservable<CollisionEvent> &collisionEventObservable) : _collisionEventObservable(&collisionEventObservable) {
     collisionEventObservable.registerObserver(this);
+}
+
+CollisionEventHandler::~CollisionEventHandler() {
+    _collisionEventObservable->unregisterObserver(this);
 }

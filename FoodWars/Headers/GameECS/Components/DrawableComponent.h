@@ -1,19 +1,30 @@
 #ifndef PROJECT_SWA_DRAWABLECOMPONENT_H
 #define PROJECT_SWA_DRAWABLECOMPONENT_H
 
-
-#include <bits/unique_ptr.h>
+#include <memory>
 #include "Component.h"
 #include "../../../../TonicEngine/Headers/Visual/Shapes/IShape.h"
 #include "../../../../TonicEngine/Headers/Storage/ISerializable.h"
 
-class DrawableComponent: public Component, public ISerializable {
+class DrawableComponent : public Component {
+private:
+    std::unique_ptr<IShape> _shape;
 public:
     DrawableComponent();
+    explicit DrawableComponent(std::unique_ptr<IShape> shape);
     ~DrawableComponent() override;
-    IShape* shape;
-//    std::unique_ptr<IShape> shape;
-    std::vector<std::string> serialize() override;
+
+    void setShape(IShape *shape);
+
+    void setShape(std::unique_ptr<IShape> shape);
+
+    virtual IShape *getShape() const;
+
+    void accept(SerializationVisitor &visitor) override;
+
+    void accept(DeserializationVisitor &visitor) override;
+
+    std::string getName() const override;
 };
 
 

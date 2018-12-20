@@ -2,8 +2,8 @@
 #include "../../Headers/Visual/VisualFacade.h"
 #include "../../Headers/Visual/Window.h"
 
-VisualFacade::VisualFacade(std::shared_ptr<WindowResolutionCalculator> windowResolutionCalculator) {
-    _windowResCalc = windowResolutionCalculator;
+VisualFacade::VisualFacade(WindowResolutionCalculator& windowResolutionCalculator) {
+    _windowResCalc = &windowResolutionCalculator;
     VisualFacade::init();
 }
 
@@ -12,7 +12,7 @@ VisualFacade::~VisualFacade() {
 }
 
 bool VisualFacade::init(){
-    _windowManager = new WindowManager(_windowResCalc);
+    _windowManager = new WindowManager(*_windowResCalc);
 }
 
 void VisualFacade::openWindow() {
@@ -50,4 +50,8 @@ void VisualFacade::pollEvents() {
 
 bool VisualFacade::isWindowClosed() {
     return _windowManager->isWindowClosed();
+}
+
+void VisualFacade::toggleFullscreen() {
+    _windowManager->toggleFullscreen();
 }

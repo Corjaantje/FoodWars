@@ -5,34 +5,43 @@
 #include "../../../../TonicEngine/Headers/Events/MouseEvent.h"
 #include "../../../../TonicEngine/Headers/Input/IObserver.h"
 #include "../../../Headers/GameECS/Components/MoveComponent.h"
+#include "../../../Headers/GameECS/Components/AnimationComponent.h"
 #include "../../../../TonicEngine/Headers/Visual/VisualFacade.h"
 #include "../../../../TonicEngine/Headers/Input/InputFacade.h"
 #include "../../../../TonicEngine/Headers/Audio/AudioFacade.h"
 #include "../Components/Collider/BoxCollider.h"
+#include "../../StateMachine/Misc/Weapon.h"
+#include "Misc/ProjectileBuilder.h"
+#include "Misc/LineDrawer.h"
+#include "Misc/PowerBar.h"
 
-class ShootingSystem : public IBaseSystem, public IObserver<MouseEvent>
-{
+class ShootingSystem : public IBaseSystem, public IObserver<MouseEvent> {
 public:
-    explicit ShootingSystem(std::shared_ptr<EntityManager> entityManager, std::shared_ptr<AudioFacade> audioFacade, std::shared_ptr<VisualFacade> visualFacade, std::shared_ptr<InputFacade> inputFacade);
-    ~ShootingSystem() override;
+    ShootingSystem(EntityManager &entityManager, AudioFacade& audioFacade, VisualFacade& visualFacade, InputFacade& inputFacade);
 
     void update(double deltaTime) override;
-    void update(std::shared_ptr<MouseEvent> event) override;
+    void update(const MouseEvent& event) override;
     void toggleShooting();
-
-    void createShootingLine(int fromX, int fromY, int toX, int toY);
+    void resetShooting();
 private:
-    bool _isShooting;
+    LineDrawer _shootingLine;
+    PowerBar _powerBar;
     bool _projectileFired;
+    bool _mouseDown;
     int _projectile;
-    int _shootingLine;
-    std::shared_ptr<AudioFacade> _audioFacade;
-    std::shared_ptr<EntityManager> _entityManager;
-    std::shared_ptr<VisualFacade> _visualFacade;
+
+    int _currentPlayer;
+    int _otherPlayer;
+
+    AudioFacade* _audioFacade;
+    VisualFacade* _visualFacade;
+    EntityManager *_entityManager;
     Renderlist _renderList;
 
+    ProjectileBuilder _projectileBuilder;
+    void setPlayerTurn();
     void generateProjectile(const PositionComponent &playerPositionComponent, const BoxCollider &playerCollider,
-                            double velocityX, double velocityY);
+                            double velocityX, double velocityY, Weapon* selectedWeapon, int playerCenterX, int playerCenterY);
 };
 
 #endif //PROJECT_SWA_SHOOTSYSTEM_H

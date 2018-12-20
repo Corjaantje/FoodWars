@@ -1,5 +1,5 @@
 #include <memory>
-
+#include <iostream>
 #include "TonicEngine/Headers/Visual/VisualFacade.h"
 #include "TonicEngine/Headers/Input/InputFacade.h"
 #include "TonicEngine/Headers/Audio/AudioFacade.h"
@@ -12,88 +12,81 @@
 
 #include "FoodWars/Headers/StateMachine/UpgradesScreen.h"
 #include "FoodWars/Headers/StateMachine/LevelTransitionScreen.h"
-#include "FoodWars/Headers/StateMachine/LoseTransitionScreen.h"
-#include "FoodWars/Headers/StateMachine/WinTransitionScreen.h"
-#include "FoodWars/Headers/StateMachine/DrawTransitionScreen.h"
 #include "FoodWars/Headers/StateMachine/PauseScreen.h"
 #include "FoodWars/Headers/StateMachine/HighscoreScreen.h"
 #include "FoodWars/Headers/StateMachine/AdvertisingScreen.h"
+#include "TonicEngine/Headers/Storage/FileManager.h"
+
 
 
 int main(int argc, char** argv)
 {
-    std::shared_ptr<WindowResolutionCalculator> windowResolutionCalculator =  std::make_shared<WindowResolutionCalculator>();
-    VisualFacade* visualFacade = new VisualFacade(windowResolutionCalculator);
+    WindowResolutionCalculator windowResolutionCalculator {};
+    VisualFacade visualFacade {windowResolutionCalculator};
+    AudioFacade audioFacade{};
+    GeneralFacade generalFacade{};
 
-    visualFacade->setTitle("Food Wars");
-    visualFacade->setResolution(800, 450);
-    visualFacade->disablefullscreen();
-    visualFacade->openWindow();
+    LevelLoader levelManager{};
+    FileManager fileManager{};
+    ScreenStateManager screenStateManager{};
 
-    AudioFacade* audioFacade = new AudioFacade();
-    audioFacade->setMusicVolume(5);
-    audioFacade->setEffectVolume(10);
+    visualFacade.setTitle("Food Wars");
+    visualFacade.setResolution(800, 450);
+    visualFacade.disablefullscreen();
+    visualFacade.openWindow();
 
-    GeneralFacade* generalFacade = new GeneralFacade();
+    for (auto const &file : fileManager.getFiles("./Assets/Audio/", {"mp3", "wav"}, true, true))
+    {
+        unsigned int startPos = file.find_last_of('/') + 1;
+        std::string audioName = file.substr(startPos, file.find_last_of('.') - startPos);
+        audioFacade.addAudio(audioName, file);
+    }
 
-    // Music
-    audioFacade->addAudio("wildwest", "./Assets/Audio/wildwest.mp3");
-    audioFacade->addAudio("menu", "./Assets/Audio/menu.mp3");
-    audioFacade->addAudio("space", "./Assets/Audio/space.mp3");
-    audioFacade->addAudio("space2", "./Assets/Audio/space2.mp3");
-    audioFacade->addAudio("nature", "./Assets/Audio/nature.mp3");
-
-    // Sound Effects
-    audioFacade->addAudio("oof", "./Assets/Audio/oof.wav");
-    audioFacade->addAudio("jump", "./Assets/Audio/jump.wav");
-
-    std::shared_ptr<LevelManager> levelManager = std::make_shared<LevelManager>();
-    AdvertisingManager advertisingManager = AdvertisingManager();
-    std::shared_ptr<ScreenStateManager> screenStateManager = std::make_shared<ScreenStateManager>();
-    InputFacade* inputFacade = new InputFacade();
-    inputFacade->setWindowResolutionCalculator(windowResolutionCalculator);
-    screenStateManager->setWindowResolutionCalculator(windowResolutionCalculator);
-    screenStateManager->addFacade(visualFacade);
-    screenStateManager->addFacade(inputFacade);
-    screenStateManager->addFacade(audioFacade);
-    screenStateManager->addOrSetScreenState(new MainMenuScreen(screenStateManager, advertisingManager));
-    screenStateManager->addOrSetScreenState(new UpgradesScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new CreditScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new GameScreen(screenStateManager, new GameLevel()));
-    screenStateManager->addOrSetScreenState(new LevelSelectionScreen(screenStateManager, levelManager));
-    screenStateManager->addOrSetScreenState(new LevelCreationScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new HelpScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new SettingsScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new PauseScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new HighscoreScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new AdvertisingScreen(screenStateManager, advertisingManager));
-    screenStateManager->addOrSetScreenState(new LoseTransitionScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new WinTransitionScreen(screenStateManager));
-    screenStateManager->addOrSetScreenState(new DrawTransitionScreen(screenStateManager));
-
-    screenStateManager->setActiveScreen<MainMenuScreen>();
+    screenStateManager.setLevelManager(levelManager);
+    screenStateManager.setWindowResolutionCalculator(windowResolutionCalculator);
+    screenStateManager.addFacade(visualFacade);
+    screenStateManager.addFacade(audioFacade);
+    screenStateManager.setActiveScreen(std::make_unique<MainMenuScreen>(screenStateManager));
 
     //Config
     double frameRateCap = 61.0;
     double amountOfUpdatesAllowedPerSecond = 1.0 / frameRateCap; //= 16.666
-    //End of config
-
     double timeModifier = 1.0;
-    // Modifier for changing the gameplay speed
-
     std::chrono::duration<double> timeLast = std::chrono::steady_clock::now().time_since_epoch();
 
-    while(!screenStateManager->getCurrentState()->isWindowClosed()) {
+    //framerate Update
+    std::chrono::duration<double> timeLastFPS = std::chrono::steady_clock::now().time_since_epoch();
+    int _updateCallCount = 0;
+    //End of framerate update
+    while(!screenStateManager.getCurrentState().isWindowClosed()) {
+        _updateCallCount++;
         std::chrono::duration<double> currentTime = std::chrono::steady_clock::now().time_since_epoch();
         double deltaTime = (currentTime.count() - timeLast.count()) * timeModifier;
         if (deltaTime > 1) deltaTime = 1;
         timeLast = currentTime;
-        screenStateManager->getCurrentState()->update(deltaTime);
+        screenStateManager.getCurrentState().update(deltaTime);
         double sleepTime = amountOfUpdatesAllowedPerSecond * 1000 - deltaTime;
+
+        //framerate update
+        std::chrono::duration<double> currentTimeFPS = std::chrono::steady_clock::now().time_since_epoch();
+        double loggen = currentTimeFPS.count() - timeLastFPS.count();
+        if (loggen >= 0.25) {
+            if(_updateCallCount < 16){
+                frameRateCap+= frameRateCap/8;
+                amountOfUpdatesAllowedPerSecond = 1.0 / frameRateCap;
+            }
+            else{
+                frameRateCap-= frameRateCap/16;
+                amountOfUpdatesAllowedPerSecond = 1.0 / frameRateCap;
+            }
+            timeLastFPS = std::chrono::steady_clock::now().time_since_epoch();
+            _updateCallCount = 0;
+        }
+        //End of framerate update
+
         if (sleepTime > 0.0)
-            generalFacade->sleep(sleepTime);
+            generalFacade.sleep(sleepTime);
     }
-    delete generalFacade;
     return 0;
 }
 
